@@ -10,12 +10,23 @@ TEMPLATE = lib
 DEFINES += FRAME_WORK_LIBRARY
 
 SOURCES += \
-    QFrameWork.cpp
+    QFrameWork.cpp \
+    base/CCommand.cpp \
+    base/CCommandExecutor.cpp \
+    qt/QPacketCollector.cpp \
+    qt/QCommandExecutor.cpp \
+    qt/QCommand.cpp
 
 HEADERS +=\
         frame_work_global.h \
     interfaces.h \
-    QFrameWork.h
+    QFrameWork.h \
+    base/CCommand.h \
+    base/CCommandExecutor.h \
+    qt/QPacketCollector.h \
+    qt/QCommandExecutor.h \
+    qt/QCommand.h \
+    base/global.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

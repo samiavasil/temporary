@@ -1,0 +1,139 @@
+format 76
+
+classcanvas 128002 class_ref 128002 // CFrameWork
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyzwh 331 21 2000 143 41
+end
+classcanvas 128130 class_ref 128258 // CControlView
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 112 134 2000
+end
+classcanvas 128258 class_ref 128130 // CDataPlot
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 4 132 2000
+end
+classcanvas 128642 class_ref 135298 // CCommandExecutor
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 704 132 2000
+end
+classcanvas 128770 class_ref 128386 // CPortIO
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 215 134 2000
+end
+classcanvas 128898 class_ref 134914 // CPacketCollector
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyzwh 345 134 2000 139 121
+end
+classcanvas 129026 class_ref 135042 // CPacket
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 378 529 2000
+end
+classcanvas 129154 class_ref 135554 // CProtocolPackFactory
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyzwh 512 133 2000 169 331
+end
+classcanvas 129282 class_ref 135170 // CProtocolLoader
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 566 502 2000
+end
+classcanvas 130178 class_ref 135426 // CCommand
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 732 390 2000
+end
+relationcanvas 128386 relation_ref 134530 // <directional aggregation>
+  geometry VHr
+  decenter_begin 777
+  from ref 128002 z 2001 to point 154 50
+  line 130306 z 2001 to ref 128130
+  role_a_pos 166 116 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 128514 relation_ref 134658 // <directional aggregation>
+  geometry VHr
+  decenter_begin 216
+  from ref 128002 z 2001 to point 36 27
+  line 129794 z 2001 to ref 128258
+  role_a_pos 48 114 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 129666 relation_ref 134786 // <directional composition>
+  geometry HV
+  decenter_begin 216
+  from ref 128002 z 2001 to point 790 27
+  line 130050 z 2001 to ref 128642
+  role_a_pos 802 114 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 130434 relation_ref 141314 // <directional aggregation>
+  geometry HV
+  decenter_begin 777
+  from ref 128002 z 2001 to point 593 50
+  line 131970 z 2001 to ref 129154
+  role_a_pos 605 115 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 130562 relation_ref 141442 // <dependency>
+  decenter_begin 656
+  from ref 129154 z 2001 to ref 129282
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 130690 relation_ref 141570 // <directional aggregation>
+  decenter_begin 172
+  from ref 128002 z 2001 to point 353 90
+  line 130946 z 2001 to point 260 90
+  line 130818 z 2001 to ref 128770
+  role_a_pos 272 116 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 131074 relation_ref 141698 // <directional composition>
+  decenter_begin 349
+  decenter_end 256
+  from ref 128002 z 2001 to ref 128898
+  role_a_pos 390 116 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 131714 relation_ref 142082 // <directional aggregation>
+  decenter_begin 762
+  decenter_end 837
+  from ref 128898 z 2001 to ref 128002
+  role_a_pos 460 67 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 132098 relation_ref 142210 // <dependency>
+  decenter_begin 384
+  decenter_end 254
+  from ref 128898 z 2001 to ref 129026
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 132226 relation_ref 142338 // <dependency>
+  geometry VHV unfixed
+  decenter_begin 209
+  decenter_end 847
+  from ref 129154 z 2001 to point 545 483
+  line 132738 z 2001 to point 436 483
+  line 132866 z 2001 to ref 129026
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 132994 relation_ref 142466 // <dependency>
+  from ref 128642 z 2001 to ref 130178
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 133122 relation_ref 148994 // <dependency>
+  decenter_begin 601
+  decenter_end 223
+  from ref 128898 z 2001 to ref 129154
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 133250 relation_ref 149122 // <dependency>
+  decenter_begin 479
+  decenter_end 541
+  from ref 128898 z 2001 to ref 128770
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+end

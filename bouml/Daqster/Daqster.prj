@@ -1,7 +1,8 @@
 format 76
-"Daqster."
-  revision 1
+"Daqster"
+  revision 7
   modified_by 2 "vasil"
+  cpp_root_dir "Z:/mnt/sda4/Projects/QT/Daqster/src/frame_work/"
 
 
   
@@ -38,4 +39,9 @@ format 76
 
   mark_for_import
   
+  package_ref 128002 // BaseFrameWorkPackage
+
+  package_ref 134530 // QTFrameWorkPackage
+
+  package_ref 141058 // External
 end

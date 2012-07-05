@@ -1,0 +1,16 @@
+class QCommand
+!!!182658.cpp!!!	~QCommand()
+qDebug("QCommand Deleted");
+!!!182530.cpp!!!	handler() : int
+   static int a;                        
+   int ret =  1;                        
+   a++;                                 
+   if(a < 1000 ){                       
+       qDebug("QCommand Executed %d",a);
+   }                                    
+   else{                                
+       ret =  0;                        
+       qDebug("QCommand Finished");     
+   }                                    
+                                        
+ return ret;                            

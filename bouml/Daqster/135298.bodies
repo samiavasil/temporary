@@ -1,0 +1,21 @@
+class CCommandExecutor
+!!!181634.cpp!!!	CCommandExecutor()
+m_CommandLoopTime = 5;
+!!!166530.cpp!!!	timerHandlerExecuteAllCommands() : void
+fprintf(stderr,"ExecCommands:");     
+lockObject();                        
+int com_num = getCommNum();          
+for( int i = 0; i < com_num; i++ ){  
+    if( 0 == executeCommand( i ) )   
+    {                                
+        removeCommand(i);            
+    }                                
+}                                    
+if( 0 < getCommNum() ){              
+  startTimer( );   
+}                                    
+unlockObject();                      
+!!!181250.cpp!!!	setCommandLoopTime(in time_ms : int) : void
+m_CommandLoopTime = time_ms;
+!!!181378.cpp!!!	getCommandLoopTime() : int
+return m_CommandLoopTime;
