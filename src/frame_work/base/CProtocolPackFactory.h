@@ -2,54 +2,63 @@
 #define _CPROTOCOLPACKFACTORY_H
 
 
+#include "global.h"
+typedef int pack_id_t;
+typedef int msg_id_t;
+
+#define  PACK_ID_TYPE_BIT_SIZE  (sizeof(pack_id_t)*8)
+#define  MSG_ID_TYPE_BIT_SIZE    (sizeof(msg_id_t)*8)
+#define  PKT_ID_INVALID   (  (  (1<<(PACK_ID_TYPE_BIT_SIZE-1) ) - 1  )|(PACK_ID_TYPE_BIT_SIZE-1)  )
+#define  MSG_ID_INVALID     (  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - 1  )|(MSG_ID_TYPE_BIT_SIZE-1)  )
+
 class CProtocolLoader;
 class CPacket;
 
 class CProtocolPackFactory {
   public:
-    CProtocolPackFactory();
+    CProtocolPackFactory(CProtocolLoader * pLoader);
 
 
   protected:
-    int clearMsgDefinitions();
+    virtual int clearMsgDefinitions();
 
-    int clearProtDeinfitions();
+    virtual int clearProtDeinfitions();
 
 
   public:
-    int addPacket();
+    virtual int addPacket(const pack_id_t & id);
 
-    int addMessage();
+    virtual int addMessage(const msg_id_t & id);
 
-    int addMessageToPacket();
+    virtual int addMessageToPacket(const pack_id_t & packID, const msg_id_t & msgID);
 
-    int addPacketHeader();
+    virtual int addPacketHeader();
 
-    int addPacketPostFix();
+    virtual int addPacketPostFix();
 
-    int createPacket();
+    virtual int createPacket();
 
-    int createPacketFromData();
+    virtual int createPacketFromData();
 
-    int findPacketStart();
+    virtual int findPacketStart();
 
-    int getMaxPacketSize();
+    virtual int getMaxPacketSize();
 
-    int getPacketLen();
+    virtual int getPacketLen();
 
-    int getPacketType();
+    virtual int getPacketType();
 
-    int getProtocolHeaderSize();
+    virtual int getProtocolHeaderSize();
 
-    int setProtocolHeaderSize();
+    virtual int setProtocolHeaderSize();
 
-    int getProtocolPostFixLen();
+    virtual int getProtocolPostFixLen();
 
-    int setProtolPostFixLen();
+    virtual int setProtolPostFixLen();
 
-    int setMaxPacketSize();
+    virtual int setMaxPacketSize(int max_size);
 
-    int setMessage();
+    virtual int setMessage();
 
 };
 #endif

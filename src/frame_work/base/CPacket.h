@@ -2,6 +2,7 @@
 #define _CPACKET_H
 
 
+#include "global.h"
 class CPacket {
   public:
     CPacket();

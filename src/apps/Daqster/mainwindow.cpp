@@ -22,6 +22,6 @@ void MainWindow::on_actionNew_triggered()
     PluginList pList(this);
     //if( QDialog::Accepted == pList.exec() )
     {
-        qDebug("%d", pList.exec());
+        DEBUG("%d", pList.exec());
     }
 }

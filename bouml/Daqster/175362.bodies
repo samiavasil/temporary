@@ -1,0 +1,46 @@
+class QProtocolLoader
+!!!203266.cpp!!!	readProtocolData() : int
+return NO_ERR;
+
+!!!203394.cpp!!!	getMsgCount() : int
+return MSGS_NUM;
+!!!203522.cpp!!!	getMsgId(in number : int) : int
+if( MSGS_NUM > number ){      
+    return msgs[ number ].id; 
+}                             
+else{                         
+    return MSG_ID_INVALID;    
+}                             
+!!!203650.cpp!!!	getMaxPacketSize() : int
+return MAX_PACKET_SIZE_BIT;
+!!!203778.cpp!!!	getPacketCount() : int
+return PKT_NUM;
+!!!203906.cpp!!!	getPackId(in number : int) : pack_id_t
+if( PKT_NUM > number ){     
+    return packs[number].id;
+}                           
+else{                       
+    return PKT_ID_INVALID;  
+}                           
+                            
+!!!204034.cpp!!!	getMsgsCountForPack(in packID : pack_id_t) : int
+int i;                               
+for( i=0; i < PKT_NUM ;i++ ){        
+    if( packs[i].id == packID ){     
+        return packs[i].msg_num;     
+    }                                
+}                                    
+return 0;                                                     
+!!!204162.cpp!!!	getMsgIdForPack(in packID : pack_id_t, in idx : int) : msg_id_t
+int i;                                        
+for( i=0; i < PKT_NUM ;i++ ){                 
+    if( packs[i].id == packID ){              
+        if( packs[i].msg_num > idx ){         
+            return packs[i].msg_arrea[idx];   
+        }                                     
+        else{                                 
+            break;                            
+        }                                     
+    }                                         
+}                                             
+return MSG_ID_INVALID;                        

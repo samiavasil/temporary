@@ -7,7 +7,7 @@ frameworkinterface::frameworkinterface(QObject* parent ):QObject(parent)
 
 frameworkinterface::~frameworkinterface(  )
 {
-    qDebug("frameworkinterface object removed");
+    DEBUG("frameworkinterface object removed");
 }
 
 QFrameWork* frameworkinterface::getFrameWork(){

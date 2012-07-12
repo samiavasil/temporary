@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 9
+  revision 18
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -429,6 +429,22 @@ ${inlines}
 	  b parent class_ref 142210 // QObject
       end
 
+      operation 189186 "QCommand"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "fWork" type class_ref 168706 // QFrameWork
+	    defaultvalue "NULL"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 182658 "~QCommand"
 	public explicit_return_type ""
 	nparams 0
@@ -456,6 +472,186 @@ ${inlines}
 	
 	
 	comment "Command handler"
+      end
+    end
+
+    class 168706 "QFrameWork"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 182914 // <generalisation>
+	relation 182914 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 182914 // <generalisation>
+	  b parent class_ref 128002 // CFrameWork
+      end
+    end
+
+    class 175234 "QProtocolPackFactory"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 195970 // <generalisation>
+	relation 195970 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 195970 // <generalisation>
+	  b parent class_ref 135554 // CProtocolPackFactory
+      end
+    end
+
+    class 175362 "QProtocolLoader"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 196098 // <generalisation>
+	relation 196098 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 196098 // <generalisation>
+	  b parent class_ref 135170 // CProtocolLoader
+      end
+
+      operation 203266 "readProtocolData"
+	cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 203394 "getMsgCount"
+	cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 203522 "getMsgId"
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "number" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 203650 "getMaxPacketSize"
+	cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 203778 "getPacketCount"
+	cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 203906 "getPackId"
+	cpp_virtual public explicit_return_type "pack_id_t"
+	nparams 1
+	  param in name "number" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 204034 "getMsgsCountForPack"
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "packID" explicit_type "pack_id_t"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 204162 "getMsgIdForPack"
+	cpp_virtual public explicit_return_type "msg_id_t"
+	nparams 2
+	  param in name "packID" explicit_type "pack_id_t"
+	  param in name "idx" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
   end
@@ -530,6 +726,194 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 148994 // QCommand
+      end
+    end
+
+    artifact 148994 "QFrameWork"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 168706 // QFrameWork
+      end
+    end
+
+    artifact 155522 "QProtocolPackFactory"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 175234 // QProtocolPackFactory
+      end
+    end
+
+    artifact 155650 "QProtocolLoader"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+
+#define MAX_PACKET_SIZE_BIT (100)
+
+struct msg_desc{
+    msg_id_t id;
+    const char* description;
+    int len;
+};
+
+struct pack_desc{
+    pack_id_t id;
+    const msg_id_t *msg_arrea;
+    int msg_num;
+};
+
+typedef struct msg_desc  msg_desc_t;
+typedef struct pack_desc pack_desc_t;
+
+
+enum{
+#define GEN_MSG_ENUMS
+#include\"ProtoGen.h\"
+    MSGS_NUM
+};
+
+
+enum{
+#define GEN_PKT_ENUMS
+#include\"ProtoGen.h\"
+    PKT_NUM
+};
+
+const msg_desc_t msgs[]={
+#define GEN_MSGS
+#include\"ProtoGen.h\"
+};
+
+#define GEN_MSGS_PKT_MAPS
+#include\"ProtoGen.h\"
+
+const pack_desc_t packs[]={
+#define GEN_PKTS
+#include\"ProtoGen.h\"
+};
+
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 175362 // QProtocolLoader
+      end
+    end
+
+    artifact 162178 "ProtoGen"
+      stereotype "source"
+      cpp_h "#ifdef GEN_MSG_ENUMS
+#define ADD_MESSAGE(a,b,c,d)   a = b,
+#define PACKET_DESC(a,b)
+#define PACKET_DESC_END()
+#define ADD_MESSAGE_TO_PACKET(a)
+#endif
+#ifdef  GEN_PKT_ENUMS
+#define ADD_MESSAGE(a,b,c,d)
+#define PACKET_DESC(a,b)       a = b,
+#define PACKET_DESC_END()
+#define ADD_MESSAGE_TO_PACKET(a)
+#endif
+#ifdef  GEN_MSGS
+#define ADD_MESSAGE(a,b,c,d)   {a,c,d},
+#define PACKET_DESC(a,b)
+#define PACKET_DESC_END()
+#define ADD_MESSAGE_TO_PACKET(a)
+#endif
+#ifdef GEN_MSGS_PKT_MAPS
+#define ADD_MESSAGE(a,b,c,d)
+#define PACKET_DESC(a,b)           msg_id_t arrea##a[]={
+#define PACKET_DESC_END()          };
+#define ADD_MESSAGE_TO_PACKET(a)   ((msg_id_t)a),
+#endif
+
+#ifdef GEN_PKTS
+#define ADD_MESSAGE(a,b,c,d)
+#define PACKET_DESC(a,b)        {a,arrea##a,(sizeof(arrea##a)/sizeof(arrea##a))},
+#define PACKET_DESC_END()
+#define ADD_MESSAGE_TO_PACKET(a)
+#endif
+
+ADD_MESSAGE( MSG1_ID,10,\"MSG1 descriptor\",6  )
+ADD_MESSAGE( MSG2_ID,11,\"MSG2 descriptor\",7  )
+ADD_MESSAGE( MSG3_ID,12,\"MSG3 descriptor\",11 )
+ADD_MESSAGE( MSG4_ID,13,\"MSG4 descriptor\",4  )
+ADD_MESSAGE( MSG5_ID,14,\"MSG5 descriptor\",12 )
+ADD_MESSAGE( MSG6_ID,15,\"MSG6 descriptor\",9  )
+ADD_MESSAGE( MSG7_ID,16,\"MSG7 descriptor\",4  )
+ADD_MESSAGE( MSG8_ID,17,\"MSG8 descriptor\",5  )
+
+PACKET_DESC(PACK1_ID,2)
+ADD_MESSAGE_TO_PACKET(MSG4_ID)
+ADD_MESSAGE_TO_PACKET(MSG2_ID)
+ADD_MESSAGE_TO_PACKET(MSG3_ID)
+ADD_MESSAGE_TO_PACKET(MSG1_ID)
+PACKET_DESC_END()
+PACKET_DESC(PACK2_ID,3)
+ADD_MESSAGE_TO_PACKET(MSG6_ID)
+PACKET_DESC_END()
+PACKET_DESC(PACK3_ID,4)
+ADD_MESSAGE_TO_PACKET(MSG7_ID)
+ADD_MESSAGE_TO_PACKET(MSG8_ID)
+PACKET_DESC_END()
+PACKET_DESC(PACK4_ID,5)
+ADD_MESSAGE_TO_PACKET(MSG5_ID)
+PACKET_DESC_END()
+
+#undef ADD_MESSAGE
+#undef PACKET_DESC
+#undef PACKET_DESC_END
+#undef ADD_MESSAGE_TO_PACKET
+#undef GEN_MSG_ENUMS
+#undef GEN_PKT_ENUMS
+#undef GEN_MSGS_PKT_MAPS
+#undef GEN_MSGS
+#undef GEN_PKTS
+"
+      associated_classes
       end
     end
   end

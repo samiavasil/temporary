@@ -2,6 +2,7 @@
 #define _CCOMMAND_H
 
 
+#include "global.h"
 class CCommand {
   public:
     /**

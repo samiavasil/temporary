@@ -1,0 +1,5 @@
+class CProtocolPackFactory
+!!!142082.cpp!!!	CProtocolPackFactory(in pLoader : CProtocolLoader)
+if(  pLoader ) {
+    pLoader->loadProtocolDefinition(this);
+}

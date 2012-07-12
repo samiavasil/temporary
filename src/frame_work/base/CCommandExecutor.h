@@ -1,7 +1,7 @@
 #ifndef _CCOMMANDEXECUTOR_H
 #define _CCOMMANDEXECUTOR_H
-#include "global.h"
 
+#include "global.h"
 class CCommand;
 
 class CCommandExecutor {
@@ -67,10 +67,10 @@ class CCommandExecutor {
     int m_CommandLoopTime;
 
 };
-#include<stdio.h>
 /**
  * Timer based Commands handling loop
  */
+#include<stdio.h>
 inline void CCommandExecutor::timerHandlerExecuteAllCommands() {
   fprintf(stderr,"ExecCommands:");     
   lockObject();                        

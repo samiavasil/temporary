@@ -1,6 +1,6 @@
 #ifndef FRAME_WORK_GLOBAL_H
 #define FRAME_WORK_GLOBAL_H
-
+#include "base/global.h"
 #include <QtCore/qglobal.h>
 
 #if defined(FRAME_WORK_LIBRARY)

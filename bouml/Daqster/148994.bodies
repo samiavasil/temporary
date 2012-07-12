@@ -1,4 +1,6 @@
 class QCommand
+!!!189186.cpp!!!	QCommand(in fWork : QFrameWork = NULL)
+
 !!!182658.cpp!!!	~QCommand()
 qDebug("QCommand Deleted");
 !!!182530.cpp!!!	handler() : int

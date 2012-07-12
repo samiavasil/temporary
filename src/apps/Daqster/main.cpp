@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     QCommandExecutor exec;
-    QCommand* comm = new QCommand();
+    QCommand* comm = new QCommand(NULL);
     exec.appendCommand(comm);
     exec.startExecution(true);
     return a.exec();

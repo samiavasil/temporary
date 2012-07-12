@@ -6,8 +6,12 @@
 #include <QObject>
 
 
+class QFrameWork;
+
 class QCommand : public CCommand, public QObject {
   public:
+    QCommand(QFrameWork * fWork = NULL);
+
     ~QCommand();
 
     /**

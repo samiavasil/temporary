@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 15
+  revision 24
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -330,7 +330,7 @@ ${inlines}
       comment "Frame Work class. Contain referenses to all framework object primitives."
       classrelation 134530 // m_ControlView (<directional aggregation>)
 	relation 134530 o-->
-	  a role_name "m_ControlView" private
+	  a role_name "m_ControlView" protected
 	    comment "pointer to Control view widget"
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
@@ -340,7 +340,7 @@ ${inlines}
 
       classrelation 134658 // m_DataPlot (<directional aggregation>)
 	relation 134658 o-->
-	  a role_name "m_DataPlot" private
+	  a role_name "m_DataPlot" protected
 	    comment "Pointer to Data Plot widget"
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
@@ -348,22 +348,22 @@ ${inlines}
 	  b parent class_ref 128130 // CDataPlot
       end
 
-      classrelation 134786 // mExecutor (<directional composition>)
-	relation 134786 *-->
-	  a role_name "mExecutor" private
+      classrelation 134786 // m_Executor (<directional aggregation>)
+	relation 134786 o-->
+	  a role_name "m_Executor" protected
 	    comment "Frame Work command executor. Thread based class which have a command queue. This class have a thread and  timer.
  If there have some command in queue, it start timer and execute coresponding command handler. If handler return not 0,
 handler is called again after timer period. If handler return different from 0 value, command is unloaded from queue. 
 If queue is empty timer is stoped and task go to sleep."
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
-	    classrelation_ref 134786 // mExecutor (<directional composition>)
+	    classrelation_ref 134786 // m_Executor (<directional aggregation>)
 	  b parent class_ref 135298 // CCommandExecutor
       end
 
       classrelation 141314 // m_Protocol (<directional aggregation>)
 	relation 141314 o-->
-	  a role_name "m_Protocol" private
+	  a role_name "m_Protocol" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 141314 // m_Protocol (<directional aggregation>)
@@ -372,20 +372,104 @@ If queue is empty timer is stoped and task go to sleep."
 
       classrelation 141570 // m_PortIO (<directional aggregation>)
 	relation 141570 o-->
-	  a role_name "m_PortIO" private
+	  a role_name "m_PortIO" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 141570 // m_PortIO (<directional aggregation>)
 	  b parent class_ref 128386 // CPortIO
       end
 
-      classrelation 141698 // m_Colector (<directional composition>)
-	relation 141698 *-->
-	  a role_name "m_Colector" private
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+      classrelation 141698 // m_Colector (<directional aggregation>)
+	relation 141698 o-->
+	  a role_name "m_Colector" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
-	    classrelation_ref 141698 // m_Colector (<directional composition>)
+	    classrelation_ref 141698 // m_Colector (<directional aggregation>)
 	  b parent class_ref 134914 // CPacketCollector
+      end
+
+      operation 210818 "getPortIO"
+	cpp_virtual public explicit_return_type "CPortIO *"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 210946 "getColector"
+	volatile public explicit_return_type "CPacketCollector  *"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 211074 "getProtocol"
+	public explicit_return_type "CProtocolPackFactory *"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 217858 "geExecutor"
+	public explicit_return_type "CCommandExecutor*"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 217986 "getDataPlot"
+	public explicit_return_type "CDataPlot *"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 218114 "getControlView"
+	public explicit_return_type "CControlView*"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
 
@@ -402,6 +486,17 @@ ${inlines}
       explicit_switch_type ""
       
       associated_diagram classdiagram_ref 128002 // FrameWorkClassDiagram
+      operation 210690 "bytesAvailable"
+	abstract cpp_virtual public explicit_return_type "int64"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
       operation 142210 "read"
 	abstract cpp_virtual public explicit_return_type "int64"
 	nparams 2
@@ -513,6 +608,32 @@ ${inlines}
 	  b parent class_ref 128002 // CFrameWork
       end
 
+      operation 231170 "CPacketCollector"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "fWk" explicit_type "CFrameWork"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 224642 "collectPacket"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
       operation 159874 "getRecPacket"
 	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
@@ -535,6 +656,17 @@ ${inlines}
 	
       end
 
+      operation 231298 "getReceivedBytes"
+	abstract cpp_virtual protected explicit_return_type "int64"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
       operation 142850 "packetReceivedSignal"
 	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
@@ -547,9 +679,50 @@ ${inlines}
       end
 
       operation 142978 "receivedBytesSlot"
-	abstract cpp_virtual public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 134658 "typedef states_t"
+	
+	cpp "protected:
+typedef enum {
+      COL_IDLE,
+      COL_WAIT_FOR_HEADER,
+      COL_WAIT_FOR_PACK
+} states_t ;
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      attribute 141314 "state"
+	protected explicit_type "states_t"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 231426 "appendReceivedBytes"
+	abstract cpp_virtual protected explicit_return_type "int"
+	nparams 2
+	  param in name "data" explicit_type "char"
+	  param in name "len" explicit_type "int64"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}, const ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -712,7 +885,7 @@ ${inlines}
     end
 
     class 135170 "CProtocolLoader"
-      visibility package 
+      abstract visibility package 
       cpp_decl "${comment}${template}class ${name}${inherit} {
 ${members}};
 ${inlines}
@@ -723,12 +896,21 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      operation 141826 "CProtocolLoader"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+      classrelation 189442 // <dependency>
+	relation 189442 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 189442 // <dependency>
+	  b parent class_ref 135554 // CProtocolPackFactory
+      end
+
+      operation 141954 "loadProtocolDefinition"
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "protoFactory" type class_ref 135554 // CProtocolPackFactory
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -737,13 +919,92 @@ ${inlines}
 	
       end
 
-      operation 141954 "loadProtocolDinition"
-	cpp_virtual public explicit_return_type "void"
+      operation 195714 "readProtocolData"
+	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
+	
+	
+	
+	
+      end
+
+      operation 195842 "getMsgCount"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 195970 "getMsgId"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "number" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 196098 "getMaxPacketSize"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 196226 "getPacketCount"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 196354 "getPackId"
+	abstract cpp_virtual public explicit_return_type "pack_id_t"
+	nparams 1
+	  param in name "number" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 196482 "getMsgsCountForPack"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "packID" explicit_type "pack_id_t"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 196610 "getMsgIdForPack"
+	abstract cpp_virtual public explicit_return_type "msg_id_t"
+	nparams 2
+	  param in name "packID" explicit_type "pack_id_t"
+	  param in name "idx" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -781,11 +1042,12 @@ ${inlines}
       end
 
       operation 142082 "CProtocolPackFactory"
-	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+	cpp_virtual public explicit_return_type ""
+	nparams 1
+	  param in name "pLoader" type class_ref 135170 // CProtocolLoader
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -795,7 +1057,7 @@ ${inlines}
       end
 
       operation 151042 "clearMsgDefinitions"
-	protected explicit_return_type "int"
+	cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -809,7 +1071,7 @@ ${inlines}
       end
 
       operation 151170 "clearProtDeinfitions"
-	protected explicit_return_type "int"
+	cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -823,11 +1085,12 @@ ${inlines}
       end
 
       operation 157698 "addPacket"
-	public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "id" explicit_type "pack_id_t"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -837,11 +1100,12 @@ ${inlines}
       end
 
       operation 157826 "addMessage"
-	public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "id" explicit_type "msg_id_t"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -851,11 +1115,13 @@ ${inlines}
       end
 
       operation 157954 "addMessageToPacket"
-	public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_virtual public explicit_return_type "int"
+	nparams 2
+	  param in name "packID" explicit_type "pack_id_t"
+	  param in name "msgID" explicit_type "msg_id_t"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}, const ${t1} & ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, const ${t1} & ${p1}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -865,7 +1131,7 @@ ${inlines}
       end
 
       operation 158082 "addPacketHeader"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -879,7 +1145,7 @@ ${inlines}
       end
 
       operation 158210 "addPacketPostFix"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -893,7 +1159,7 @@ ${inlines}
       end
 
       operation 158338 "createPacket"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -907,7 +1173,7 @@ ${inlines}
       end
 
       operation 158466 "createPacketFromData"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -921,7 +1187,7 @@ ${inlines}
       end
 
       operation 158594 "findPacketStart"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -935,7 +1201,7 @@ ${inlines}
       end
 
       operation 158722 "getMaxPacketSize"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -949,7 +1215,7 @@ ${inlines}
       end
 
       operation 158850 "getPacketLen"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -963,7 +1229,7 @@ ${inlines}
       end
 
       operation 158978 "getPacketType"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -977,7 +1243,7 @@ ${inlines}
       end
 
       operation 159106 "getProtocolHeaderSize"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -991,7 +1257,7 @@ ${inlines}
       end
 
       operation 159234 "setProtocolHeaderSize"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1005,7 +1271,7 @@ ${inlines}
       end
 
       operation 159362 "getProtocolPostFixLen"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1019,7 +1285,7 @@ ${inlines}
       end
 
       operation 159490 "setProtolPostFixLen"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1033,11 +1299,12 @@ ${inlines}
       end
 
       operation 159618 "setMaxPacketSize"
-	public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "max_size" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1047,7 +1314,7 @@ ${inlines}
       end
 
       operation 159746 "setMessage"
-	public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1072,6 +1339,7 @@ ${inlines}
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1093,8 +1361,8 @@ ${namespace_end}"
       stereotype "source"
       cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
 #define ${NAMESPACE}_${NAME}_H
-#include \"global.h\"
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1118,6 +1386,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1164,6 +1433,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1187,6 +1457,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1211,6 +1482,15 @@ ${namespace_end}"
 
 ${comment}
 ${includes}
+#include \"global.h\"
+typedef int pack_id_t;
+typedef int msg_id_t;
+
+#define  PACK_ID_TYPE_BIT_SIZE  (sizeof(pack_id_t)*8)
+#define  MSG_ID_TYPE_BIT_SIZE    (sizeof(msg_id_t)*8)
+#define  PKT_ID_INVALID   (  (  (1<<(PACK_ID_TYPE_BIT_SIZE-1) ) - 1  )|(PACK_ID_TYPE_BIT_SIZE-1)  )
+#define  MSG_ID_INVALID     (  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - 1  )|(MSG_ID_TYPE_BIT_SIZE-1)  )
+
 ${declarations}
 ${namespace_start}
 ${definition}
@@ -1233,6 +1513,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1256,6 +1537,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1279,6 +1561,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -1298,12 +1581,26 @@ ${namespace_end}"
 
     artifact 129282 "global"
       stereotype "source"
-      cpp_h "typedef long long int int64;
+      cpp_h "#ifndef __GLOBAL_H__
+#define __GLOBAL_H__
+typedef long long int int64;
 
 enum{
 	NO_ERR,
-	WRONG_PARAMS
-};"
+    WRONG_PARAMS,
+    WRONG_DATA,
+    NULL_POINTER,
+    SOME_ERROR
+};
+
+/*TODO: FIX ME*/
+#include  <QtGlobal>
+#define DEBUG    qDebug
+#define CRITICAL qCritical
+#define FATAL    qFatal
+
+#endif
+"
       associated_classes
       end
     end

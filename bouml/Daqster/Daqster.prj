@@ -1,8 +1,8 @@
 format 76
 "Daqster"
-  revision 7
+  revision 8
   modified_by 2 "vasil"
-  cpp_root_dir "Z:/mnt/sda4/Projects/QT/Daqster/src/frame_work/"
+  cpp_root_dir "Z:/home/vasil/Projects/Daqster/src/frame_work/"
 
 
   

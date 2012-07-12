@@ -2,6 +2,7 @@
 #define _CCONTROLVIEW_H
 
 
+#include "global.h"
 class CControlView {
 };
 #endif

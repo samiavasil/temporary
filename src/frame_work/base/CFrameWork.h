@@ -2,19 +2,19 @@
 #define _CFRAMEWORK_H
 
 
-#include "base/CCommandExecutor.h"
-#include "base/CPacketCollector.h"
-
+#include "global.h"
 class CControlView;
 class CDataPlot;
+class CCommandExecutor;
 class CProtocolPackFactory;
 class CPortIO;
+class CPacketCollector;
 
 /**
  * Frame Work class. Contain referenses to all framework object primitives.
  */
 class CFrameWork {
-  private:
+  protected:
     /**
      * pointer to Control view widget
      */
@@ -31,13 +31,27 @@ class CFrameWork {
      * handler is called again after timer period. If handler return different from 0 value, command is unloaded from queue. 
      * If queue is empty timer is stoped and task go to sleep.
      */
-    CCommandExecutor mExecutor;
+    CCommandExecutor * m_Executor;
 
     CProtocolPackFactory * m_Protocol;
 
     CPortIO * m_PortIO;
 
-    CPacketCollector m_Colector;
+    CPacketCollector * m_Colector;
+
+
+  public:
+    virtual CPortIO * getPortIO();
+
+    CPacketCollector  * getColector() volatile;
+
+    CProtocolPackFactory * getProtocol();
+
+    CCommandExecutor* geExecutor();
+
+    CDataPlot * getDataPlot();
+
+    CControlView* getControlView();
 
 };
 #endif

@@ -1,0 +1,13 @@
+class CFrameWork
+!!!210818.cpp!!!	getPortIO() : CPortIO *
+return mPortIO;
+!!!210946.cpp!!!	getColector() : CPacketCollector  *
+return m_Colector;
+!!!211074.cpp!!!	getProtocol() : CProtocolPackFactory *
+return m_Protocol;
+!!!217858.cpp!!!	geExecutor() : CCommandExecutor*
+return m_Executor;
+!!!217986.cpp!!!	getDataPlot() : CDataPlot *
+return m_DataPlot;
+!!!218114.cpp!!!	getControlView() : CControlView*
+return m_ControlView;

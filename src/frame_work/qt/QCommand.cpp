@@ -1,5 +1,10 @@
 
 #include "qt/QCommand.h"
+#include "qt/QFrameWork.h"
+
+QCommand::QCommand(QFrameWork * fWork) {
+  
+}
 
 QCommand::~QCommand() {
   qDebug("QCommand Deleted");

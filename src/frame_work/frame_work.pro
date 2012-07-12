@@ -15,7 +15,12 @@ SOURCES += \
     base/CCommandExecutor.cpp \
     qt/QPacketCollector.cpp \
     qt/QCommandExecutor.cpp \
-    qt/QCommand.cpp
+    qt/QCommand.cpp \
+    base/CProtocolLoader.cpp \
+    base/CProtocolPackFactory.cpp \
+    qt/QProtocolPackFactory.cpp \
+    qt/QProtocolLoader.cpp \
+    base/CPacketCollector.cpp
 
 HEADERS +=\
         frame_work_global.h \
@@ -26,7 +31,13 @@ HEADERS +=\
     qt/QPacketCollector.h \
     qt/QCommandExecutor.h \
     qt/QCommand.h \
-    base/global.h
+    base/global.h \
+    base/CProtocolLoader.h \
+    base/CProtocolPackFactory.h \
+    qt/QProtocolPackFactory.h \
+    qt/QProtocolLoader.h \
+    qt/ProtoGen.h \
+    base/CPacketCollector.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
