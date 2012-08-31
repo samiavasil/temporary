@@ -3,6 +3,7 @@
 
 
 #include "global.h"
+class CFrameWorkElementsFactory;
 class CControlView;
 class CDataPlot;
 class CCommandExecutor;
@@ -14,6 +15,12 @@ class CPacketCollector;
  * Frame Work class. Contain referenses to all framework object primitives.
  */
 class CFrameWork {
+  public:
+    CFrameWork(CFrameWorkElementsFactory * elementsFactory);
+
+    ~CFrameWork();
+
+
   protected:
     /**
      * pointer to Control view widget
@@ -39,6 +46,11 @@ class CFrameWork {
 
     CPacketCollector * m_Colector;
 
+    /**
+     * Factory witch constructs ControlView, DataPlot, Executor, Protocol, PortIO,Colector (elements of CFrameWork).
+     */
+    CFrameWorkElementsFactory* m_ElementsFactory;
+
 
   public:
     virtual CPortIO * getPortIO();
@@ -52,6 +64,17 @@ class CFrameWork {
     CDataPlot * getDataPlot();
 
     CControlView* getControlView();
+
+    /**
+     * This function attach elements factory for FrameWork. If there allready have a factory,
+     * this function make deallocation of all ellements, created with current factory, 
+     * deallocate current factory and allocate new elements with new factory.
+     */
+    int attachElementsFactory(CFrameWorkElementsFactory * elementsFactory);
+
+
+  protected:
+    int deattachCurrentElementsFactory();
 
 };
 #endif

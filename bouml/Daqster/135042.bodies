@@ -1,0 +1,141 @@
+class CPacket
+!!!143362.cpp!!!	CPacket(in packType : pack_id_t, in packLenBytes : int, in packHdrLenBytes : int = 2, in packPostFixLenBytes : int = 2)
+if( 0 < packLenBytes ){                          
+  m_data = new u8[packLenBytes];                 
+}                                                
+else{                                            
+  m_data = NULL;                                 
+}                                                
+m_packLenBytes    = packLenBytes;                
+m_packType        = packType;                    
+m_hdrLenBytes     = packHdrLenBytes;             
+m_postFixLenBytes = packPostFixLenBytes;         
+!!!143490.cpp!!!	~CPacket()
+if( m_data ){        
+    delete [] m_data;
+}                    
+!!!143746.cpp!!!	setData(in data : u8) : int
+int ret = NO_ERR;                           
+if( data )                                  
+{                                           
+    memcpy( m_data, data, m_packLenBytes ); 
+}                                           
+else{                                       
+    ret = WRONG_PARAMS;                     
+}                                           
+return ret;                                 
+!!!144258.cpp!!!	data() : const u8*
+return m_data;
+!!!144386.cpp!!!	dataLen() : int
+return m_packLenBytes;
+!!!150914.cpp!!!	packType() : pack_id_t
+return m_packType;
+!!!244738.cpp!!!	setBits(in bit_offset : int, in bit_num : int, in data : u8) : int
+int ret = NO_ERR;                                                                 
+int byte_offset    = bit_offset/8;                                                
+int offset_in_byte = bit_offset%8;                                                
+int bytes_num      = BITS_TO_BYTES_CEIL( bit_num);                                
+int i = 0;                                                                        
+                                                                                  
+if( ( 0 > bit_offset )||( 0 > bit_num )||(NULL == data) ){                        
+    return WRONG_PARAMS;                                                          
+}                                                                                 
+                                                                                  
+if( 0 != (bit_offset%8) ){                                                        
+    if( 0 < bit_num ){                                                            
+        u16 shifter = 0;                                                          
+        shifter    = (data[0] << offset_in_byte);                                 
+        if( bit_num > ( 8 - offset_in_byte ) ){                                   
+            m_data[byte_offset] &= (BIT_MASK_BEFORE_BIT_U8( offset_in_byte ));    
+            m_data[byte_offset] |= (shifter&0xff);                                
+            bit_num   -= (8-offset_in_byte);                                      
+            if( 1 < bytes_num ){                                                  
+                                                                                  
+                for( i = 0;i < bytes_num-1;i++ ){                                 
+                    shifter   >>= offset_in_byte;                                 
+                    shifter    |= (data[i+1]<<8);                                 
+                    shifter   >>= (8-offset_in_byte);                             
+                    m_data[i+1+byte_offset] =   shifter&0xff;                     
+                    bit_num  -= 8;                                                
+                }                                                                 
+                shifter >>= 8 ;                                                   
+            }                                                                     
+            else{                                                                 
+                shifter >>= ( offset_in_byte + (8-offset_in_byte) );              
+            }                                                                     
+            if( 0 < bit_num ){                                                    
+                shifter   &= BIT_MASK_BEFORE_BIT_U8( bit_num );                   
+                m_data[i+1+byte_offset] &= (BIT_MASK_AFTER_BIT_U8( bit_num ));    
+                m_data[i+1+byte_offset] |= shifter;                               
+            }                                                                     
+        }                                                                         
+        else{                                                                     
+            m_data[byte_offset] &= (BIT_MASK_BEFORE_BIT_U8( offset_in_byte ));    
+            m_data[byte_offset] |= (shifter&0xff);                                
+        }                                                                         
+    }                                                                             
+}                                                                                 
+else{                                                                             
+    int remainder = (bit_num%8);                                                  
+    /*For high speed when offset are byte alligned*/                              
+    for( i=0; i < (bytes_num-1); i++ ){                                           
+        m_data[i+byte_offset] = data[i];                                          
+    }                                                                             
+    if( 0 ==  remainder ){                                                        
+        m_data[i+byte_offset] = data[i];                                          
+    }                                                                             
+    else{                                                                         
+        m_data[i+byte_offset] &= BIT_MASK_AFTER_BIT_U8( remainder );              
+        m_data[i+byte_offset] |= ((data[i])&BIT_MASK_BEFORE_BIT_U8( remainder )); 
+    }                                                                             
+                                                                                  
+}                                                                                 
+return ret;                                                                       
+!!!244866.cpp!!!	getBits(in bit_offset : int, in bit_num : int, in res_data : u8) : int
+int ret = NO_ERR;                                                                               
+int byte_offset    = bit_offset/8;                                                              
+int offset_in_byte = bit_offset%8;                                                              
+int bytes_num      = BITS_TO_BYTES_CEIL( bit_num );                                             
+int i = 0;                                                                                      
+                                                                                                
+if( ( 0 > bit_offset )||( 0 > bit_num )||(NULL == res_data) ){                                  
+    return WRONG_PARAMS;                                                                        
+}                                                                                               
+if( 0 != (bit_offset%8) ){                                                                      
+                                                                                                
+    if( 0 < bit_num ){                                                                          
+        u16 shifter = 0;                                                                        
+        shifter    = ( m_data[ byte_offset ] ) & BIT_MASK_AFTER_BIT_U8( offset_in_byte );       
+        if( bit_num > ( 8 - offset_in_byte ) ){                                                 
+                                                                                                
+            for( i = 0; i < bytes_num-1; i++ ){                                                 
+                shifter      |= ( ( m_data[ byte_offset + i + 1 ] )<<8 );                       
+                shifter     >>= offset_in_byte;                                                 
+                res_data[i]   = shifter&0xff;                                                   
+                shifter     >>= (8 - offset_in_byte);                                           
+                bit_num      -= 8;                                                              
+            }                                                                                   
+            shifter      |= ( ( m_data[ byte_offset + i + 1 ] )<<8 );                           
+        }                                                                                       
+        if( 0 < bit_num ){                                                                      
+            shifter   >>= offset_in_byte;                                                       
+            res_data[i] = shifter & BIT_MASK_BEFORE_BIT_U8( bit_num );                          
+        }                                                                                       
+    }                                                                                           
+}                                                                                               
+else{                                                                                           
+    int remainder = (bit_num%8);                                                                
+    /*For high speed when offset are byte alligned*/                                            
+    for( i=0; i < (bytes_num-1); i++ ){                                                         
+        res_data[i] = m_data[i+byte_offset];                                                    
+    }                                                                                           
+    if( 0 ==  remainder ){                                                                      
+        res_data[i] = m_data[i+byte_offset];                                                    
+    }                                                                                           
+    else{                                                                                       
+        (res_data[i])  = 0;                                                                     
+        (res_data[i]) |= ( (m_data[ i + byte_offset ])&BIT_MASK_BEFORE_BIT_U8( remainder ) );   
+    }                                                                                           
+                                                                                                
+}                                                                                               
+return ret;                                                                                     

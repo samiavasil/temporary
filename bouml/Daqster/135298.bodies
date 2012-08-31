@@ -2,7 +2,6 @@ class CCommandExecutor
 !!!181634.cpp!!!	CCommandExecutor()
 m_CommandLoopTime = 5;
 !!!166530.cpp!!!	timerHandlerExecuteAllCommands() : void
-fprintf(stderr,"ExecCommands:");     
 lockObject();                        
 int com_num = getCommNum();          
 for( int i = 0; i < com_num; i++ ){  

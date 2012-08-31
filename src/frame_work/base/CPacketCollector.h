@@ -16,15 +16,21 @@ class CPacketCollector {
   public:
     CPacketCollector(CFrameWork * fWk);
 
-    virtual void collectPacket() = 0;
+    virtual int collectPacket(const CPacket * packet) = 0;
 
     virtual int getRecPacket() = 0;
 
     virtual int getRecPacketNum() = 0;
 
+    virtual int getNumberOfReceivedBytes() = 0;
+
 
   protected:
-    virtual int64 getReceivedBytes() = 0;
+    virtual int appendReceivedBytes(const u8 * data, const int64 len) = 0;
+
+    virtual const u8* getReceivedBytes() = 0;
+
+    virtual void removeReceivedBytes(int byteNum) = 0;
 
 
   public:
@@ -41,8 +47,6 @@ typedef enum {
 
   protected:
     states_t state;
-
-    virtual int appendReceivedBytes(const char * data, const int64 len) = 0;
 
 };
 #endif

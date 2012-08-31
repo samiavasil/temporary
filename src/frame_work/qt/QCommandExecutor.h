@@ -23,6 +23,8 @@ Q_OBJECT
   public:
     QCommandExecutor(QObject * parent = 0);
 
+    ~QCommandExecutor();
+
     /**
      * Append new command to queue.
      */
@@ -85,6 +87,11 @@ protected slots:
      * Timer based Commands handling loop
      */
     void timerHandlerExecuteCommands();
+
+signals:
+    void runTimer(int time);
+
+    void stopTimer();
 
 };
 inline int QCommandExecutor::getCommNum() {

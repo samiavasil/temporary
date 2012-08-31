@@ -1,5 +1,6 @@
 #include "frameworkinterface.h"
 #include "QFraFrameWork.h"
+#include "qt/QFrameWorkElementsFactory.h"
 frameworkinterface::frameworkinterface(QObject* parent ):QObject(parent)
 {
     strcpy(nameto,"FrameWorkInterface");
@@ -11,7 +12,7 @@ frameworkinterface::~frameworkinterface(  )
 }
 
 QFrameWork* frameworkinterface::getFrameWork(){
-    return new QFraFrameWork();
+    return new QFraFrameWork(new QFrameWorkElementsFactory());
 }
 
 

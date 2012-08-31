@@ -9,6 +9,8 @@ class CProtocolLoader {
   public:
     virtual int loadProtocolDefinition(CProtocolPackFactory * protoFactory);
 
+
+  protected:
     virtual int readProtocolData() = 0;
 
     virtual int getMsgCount() = 0;
@@ -23,7 +25,13 @@ class CProtocolLoader {
 
     virtual int getMsgsCountForPack(const pack_id_t & packID) = 0;
 
+    virtual int getMsgIdLen(const msg_id_t & id) = 0;
+
     virtual msg_id_t getMsgIdForPack(const pack_id_t & packID, int idx) = 0;
+
+    virtual int getHeaderSize() = 0;
+
+    virtual int getPostFixSize() = 0;
 
 };
 #endif

@@ -15,7 +15,7 @@ public:
     frameworkinterface(QObject* parent=0);
     ~frameworkinterface(  );
     virtual  QFrameWork* getFrameWork();
-    virtual const char* name()        { return nameto;}
+    virtual const char* name()        {return nameto;}
 protected:
     char nameto[100];
 };

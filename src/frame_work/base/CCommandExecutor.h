@@ -70,9 +70,7 @@ class CCommandExecutor {
 /**
  * Timer based Commands handling loop
  */
-#include<stdio.h>
 inline void CCommandExecutor::timerHandlerExecuteAllCommands() {
-  fprintf(stderr,"ExecCommands:");     
   lockObject();                        
   int com_num = getCommNum();          
   for( int i = 0; i < com_num; i++ ){  

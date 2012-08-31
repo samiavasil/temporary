@@ -1,29 +1,39 @@
 #ifndef _CPACKET_H
 #define _CPACKET_H
 
-
 #include "global.h"
+#include"base/CProtocolPackFactory.h"
 class CPacket {
   public:
-    CPacket();
+    CPacket(const pack_id_t & packType, int packLenBytes, int packHdrLenBytes = 2, int packPostFixLenBytes = 2);
 
     ~CPacket();
 
-    virtual int setMsg();
+    virtual int setData(const u8 * data);
 
-    virtual int setData();
+    virtual const u8* data();
 
-    virtual int setHeader();
+    virtual int packLen();
 
-    virtual int setPostFix();
+    virtual pack_id_t packType();
 
-    virtual int pack();
+    int setBits(int bit_offset, int bit_num, const u8 * data);
 
-    virtual int data();
+    int getBits(int bit_offset, int bit_num, u8 * res_data);
 
-    virtual int dataLen();
 
-    virtual int packType();
+  protected:
+    u8* m_data;
+
+    int m_packLenBytes;
+
+    pack_id_t m_packType;
+
+
+  private:
+    int m_hdrLenBytes;
+
+    int m_postFixLenBytes;
 
 };
 #endif

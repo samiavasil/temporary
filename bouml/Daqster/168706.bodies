@@ -1,0 +1,9 @@
+class QFrameWork
+!!!314498.cpp!!!	QFrameWork(in factory : QFrameWorkElementsFactory, in parent : QWidget = 0)
+if( m_Executor ){                        
+    QCommand* comm = new QCommand(NULL); 
+    m_Executor->appendCommand(comm);     
+    /*TODO FIX ME*/                      
+    sleep(1);                            
+    m_Executor->pauseExecution(false);   
+}                                        

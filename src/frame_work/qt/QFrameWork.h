@@ -3,7 +3,14 @@
 
 
 #include "base/CFrameWork.h"
+#include <QWidget>
 
-class QFrameWork : public CFrameWork {
+
+class QFrameWorkElementsFactory;
+
+class QFrameWork : public CFrameWork, public QWidget {
+  public:
+    QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent = 0);
+
 };
 #endif

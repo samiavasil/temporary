@@ -10,7 +10,6 @@ TEMPLATE = lib
 DEFINES += FRAME_WORK_LIBRARY
 
 SOURCES += \
-    QFrameWork.cpp \
     base/CCommand.cpp \
     base/CCommandExecutor.cpp \
     qt/QPacketCollector.cpp \
@@ -20,12 +19,16 @@ SOURCES += \
     base/CProtocolPackFactory.cpp \
     qt/QProtocolPackFactory.cpp \
     qt/QProtocolLoader.cpp \
-    base/CPacketCollector.cpp
+    base/CPacketCollector.cpp \
+    base/CFrameWork.cpp \
+    base/CPacket.cpp \
+    qt/QFrameWork.cpp \
+    base/CFrameWorkElementsFactory.cpp \
+    qt/QFrameWorkElementsFactory.cpp
 
 HEADERS +=\
         frame_work_global.h \
     interfaces.h \
-    QFrameWork.h \
     base/CCommand.h \
     base/CCommandExecutor.h \
     qt/QPacketCollector.h \
@@ -37,7 +40,12 @@ HEADERS +=\
     qt/QProtocolPackFactory.h \
     qt/QProtocolLoader.h \
     qt/ProtoGen.h \
-    base/CPacketCollector.h
+    base/CPacketCollector.h \
+    base/CFrameWork.h \
+    base/CPacket.h \
+    qt/QFrameWork.h \
+    base/CFrameWorkElementsFactory.h \
+    qt/QFrameWorkElementsFactory.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

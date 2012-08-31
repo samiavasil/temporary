@@ -1,6 +1,18 @@
 class QCommandExecutor
 !!!174722.cpp!!!	QCommandExecutor(in parent : QObject = 0)
 m_timer = NULL;
+!!!328706.cpp!!!	~QCommandExecutor()
+int ret = NO_ERR;                                              
+DEBUG( "Destroy Command Executor" );                           
+ret = startExecution( false );                                 
+if( NO_ERR == ret){                                            
+    if( false == wait( 1000 ) ){                               
+        ret = SOME_ERROR;                                      
+    }                                                          
+}                                                              
+if( NO_ERR != ret ){                                           
+   DEBUG(" Can't terminate Command Executor thread corectly"); 
+}                                                              
 !!!173826.cpp!!!	appendCommand(in command : CCommand) : int
 int ret = NO_ERR;                                     
 if( command ){                                        
@@ -15,10 +27,13 @@ else{
 }                                                     
 return ret; 
 !!!181890.cpp!!!	removeCommand(in comm : int) : int
+int ret = WRONG_PARAMS;                   
 QCommand * cmd = m_commands.takeAt(comm); 
 if( cmd ){                                
     cmd->deleteLater();                   
+    ret = NO_ERR;                         
 }                                         
+return ret;                               
 !!!174466.cpp!!!	executeCommand(in comm_num : int) : int
 int ret = 0;                                           
 CCommand * comm = m_commands.value( comm_num, NULL);   
@@ -26,6 +41,10 @@ if( comm ){
     ret = comm->handler();                             
 }                                                      
 return ret;                                            
+!!!173570.cpp!!!	lockObject() : void
+m_mutex.lock();
+!!!173698.cpp!!!	unlockObject() : void
+m_mutex.unlock();
 !!!174210.cpp!!!	flushCommands() : void
 QCommand * comm;                 
 while( 0 < m_commands.count() ){ 
@@ -41,14 +60,13 @@ int ret = NO_ERR;
 lockObject();                                      
 if( true == isRunning() ){                         
     if( m_timer ){                                 
-        if( true == pause ){                       
-            m_timer->stop();                       
+        if( true == pause ){
+            DEBUG("Pause Commands Execution loop");
+            emit stopTimer();
         }                                          
-        else{                                      
-            if( 0 < m_commands.count() )           
-            {                                      
-                m_timer->start(m_CommandLoopTime); 
-            }                                      
+        else{
+            DEBUG("Run Command Execution loop");
+            emit runTimer(m_CommandLoopTime);
         }                                          
     }                                              
     else{                                          
@@ -60,7 +78,7 @@ else{
     ret = SOME_ERROR;                              
 }                                                  
 unlockObject();                                    
-return ret;                                        
+return ret;             
 !!!174082.cpp!!!	startExecution(in starting : bool) : int
 if( true == starting ){     
     if( 0 == isRunning() ){ 
@@ -70,30 +88,27 @@ if( true == starting ){
 else{                       
     exit(0);                
 }                                               
-!!!182402.cpp!!!	startTimer() : void
-if( m_timer ){
-    m_timer->start(m_CommandLoopTime);
-}
-!!!173570.cpp!!!	lockObject() : void
-m_mutex.lock();
-!!!174594.cpp!!!	run() : void
-int retCode = 0;                            
-lockObject();                               
-initTimer();                                
-unlockObject();                             
-if( NO_ERR != pauseExecution( false ) ){    
-    exit(1);                                
-}                                           
-retCode = exec();                           
-qDebug("Thread exit with code: %d",retCode);                                                                                                  
-!!!173698.cpp!!!	unlockObject() : void
-m_mutex.unlock();
-!!!182274.cpp!!!	initTimer() : int
- if( NULL == m_timer ){
-        m_timer = new QTimer();
-        m_timer->setSingleShot( true );
-        connect( m_timer, SIGNAL(timeout()), this, SLOT( timerHandlerExecuteCommands() ),Qt::DirectConnection );
- }
 return NO_ERR;
+!!!182402.cpp!!!	startTimer() : void
+if( 0 == m_timer ){                         
+     DEBUG("Timer isn't initialised");
+} 
+emit runTimer(m_CommandLoopTime);                                        
+!!!174594.cpp!!!	run() : void
+  int retCode = NO_ERR;
+  DEBUG("Run Command Executor thread");
+  lockObject();                                               
+  retCode = initTimer();
+  unlockObject();                                             
+  retCode = exec();                                           
+  DEBUG("Exit Command Executor Thread with code: %d",retCode);
+!!!182274.cpp!!!	initTimer() : int
+if( NULL == m_timer ){                                                                                       
+    m_timer = new QTimer();                                                                                  
+    m_timer->setSingleShot( true );                                                                          
+    connect( this, SIGNAL(runTimer(int)),m_timer , SLOT( start(int) ),Qt::AutoConnection );                  
+    connect( m_timer, SIGNAL(timeout()), this, SLOT( timerHandlerExecuteCommands() ),Qt::DirectConnection ); 
+}                                                                                                            
+return NO_ERR;                                                                                               
 !!!181506.cpp!!!	timerHandlerExecuteCommands() : void
 timerHandlerExecuteAllCommands();

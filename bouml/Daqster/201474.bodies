@@ -1,0 +1,39 @@
+class QFrameWorkElementsFactory
+!!!335234.cpp!!!	createPortIO() : CPortIO*
+DEBUG("Create PortIo");
+return NULL;           
+!!!335362.cpp!!!	createPrtocol() : CProtocolPackFactory*
+DEBUG("Create Protocol"); 
+return NULL;              
+!!!335490.cpp!!!	createCommandExecutor() : CCommandExecutor*
+DEBUG("Create Command Executor");                        
+QCommandExecutor* exec = new QCommandExecutor(NULL);     
+if( 0 != exec ){                                         
+    if( NO_ERR != exec->startExecution( true ) ){        
+        CRITICAL( "Can't start Executor thread" );       
+    }                                                    
+}                                                        
+return ( exec );                                         
+!!!335618.cpp!!!	createPacketCollector() : CPacketCollector*
+DEBUG("Create Packet Collector");   
+return NULL;                        
+!!!335746.cpp!!!	createControlView() : CControlView*
+DEBUG("Create Control View");
+return NULL;                 
+!!!335874.cpp!!!	createDataPlot() : CDataPlot*
+DEBUG("Create Data Plot");
+ return NULL;
+!!!343170.cpp!!!	deleteExecutor(in executor : CCommandExecutor) : void
+if( executor ){
+     delete (QCommandExecutor*) executor;
+}
+!!!343298.cpp!!!	deleteProtocol(in protocol : CProtocolPackFactory) : void
+DEBUG("TODO: Not implemented");
+!!!343426.cpp!!!	deletePortIO(in port : CPortIO) : void
+DEBUG("TODO: Not implemented");
+!!!343554.cpp!!!	deleteColector(in collector : CPacketCollector) : void
+DEBUG("TODO: Not implemented");
+!!!343682.cpp!!!	deleteControlView(in ctrlView : CControlView) : void
+DEBUG("TODO: Not implemented");
+!!!343810.cpp!!!	deleteDataPlot(in dataPlot : CDataPlot) : void
+DEBUG("TODO: Not implemented");

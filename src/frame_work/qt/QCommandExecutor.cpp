@@ -6,6 +6,20 @@ QCommandExecutor::QCommandExecutor(QObject * parent) :QThread(parent){
   m_timer = NULL;
 }
 
+QCommandExecutor::~QCommandExecutor() {
+  int ret = NO_ERR;                                              
+  DEBUG( "Destroy Command Executor" );                           
+  ret = startExecution( false );                                 
+  if( NO_ERR == ret){                                            
+      if( false == wait( 1000 ) ){                               
+          ret = SOME_ERROR;                                      
+      }                                                          
+  }                                                              
+  if( NO_ERR != ret ){                                           
+     DEBUG(" Can't terminate Command Executor thread corectly"); 
+  }                                                              
+}
+
 /**
  * Append new command to queue.
  */
@@ -30,10 +44,13 @@ int QCommandExecutor::appendCommand(CCommand * command) {
  * have a object lock ( for more see CCOmandExecutor souce ).
  */
 int QCommandExecutor::removeCommand(int comm) {
+  int ret = WRONG_PARAMS;                   
   QCommand * cmd = m_commands.takeAt(comm); 
   if( cmd ){                                
       cmd->deleteLater();                   
+      ret = NO_ERR;                         
   }                                         
+  return ret;                               
 }
 
 int QCommandExecutor::executeCommand(int comm_num) {
@@ -74,14 +91,13 @@ int QCommandExecutor::pauseExecution(bool pause) {
   lockObject();                                      
   if( true == isRunning() ){                         
       if( m_timer ){                                 
-          if( true == pause ){                       
-              m_timer->stop();                       
+          if( true == pause ){
+              DEBUG("Pause Commands Execution loop");
+              emit stopTimer();
           }                                          
-          else{                                      
-              if( 0 < m_commands.count() )           
-              {                                      
-                  m_timer->start(m_CommandLoopTime); 
-              }                                      
+          else{
+              DEBUG("Run Command Execution loop");
+              emit runTimer(m_CommandLoopTime);
           }                                          
       }                                              
       else{                                          
@@ -93,7 +109,7 @@ int QCommandExecutor::pauseExecution(bool pause) {
       ret = SOME_ERROR;                              
   }                                                  
   unlockObject();                                    
-  return ret;                                        
+  return ret;             
 }
 
 /**
@@ -108,33 +124,34 @@ int QCommandExecutor::startExecution(bool starting) {
   else{                       
       exit(0);                
   }                                               
+  return NO_ERR;
 }
 
 void QCommandExecutor::startTimer() {
-  if( m_timer ){
-      m_timer->start(m_CommandLoopTime);
-  }
+  if( 0 == m_timer ){                         
+       DEBUG("Timer isn't initialised");
+  } 
+  emit runTimer(m_CommandLoopTime);                                        
 }
 
 void QCommandExecutor::run() {
-  int retCode = 0;                            
-  lockObject();                               
-  initTimer();                                
-  unlockObject();                             
-  if( NO_ERR != pauseExecution( false ) ){    
-      exit(1);                                
-  }                                           
-  retCode = exec();                           
-  qDebug("Thread exit with code: %d",retCode);                                                                                                  
+    int retCode = NO_ERR;
+    DEBUG("Run Command Executor thread");
+    lockObject();                                               
+    retCode = initTimer();
+    unlockObject();                                             
+    retCode = exec();                                           
+    DEBUG("Exit Command Executor Thread with code: %d",retCode);
 }
 
 int QCommandExecutor::initTimer() {
-   if( NULL == m_timer ){
-          m_timer = new QTimer();
-          m_timer->setSingleShot( true );
-          connect( m_timer, SIGNAL(timeout()), this, SLOT( timerHandlerExecuteCommands() ),Qt::DirectConnection );
-   }
-  return NO_ERR;
+  if( NULL == m_timer ){                                                                                       
+      m_timer = new QTimer();                                                                                  
+      m_timer->setSingleShot( true );                                                                          
+      connect( this, SIGNAL(runTimer(int)),m_timer , SLOT( start(int) ),Qt::AutoConnection );                  
+      connect( m_timer, SIGNAL(timeout()), this, SLOT( timerHandlerExecuteCommands() ),Qt::DirectConnection ); 
+  }                                                                                                            
+  return NO_ERR;                                                                                               
 }
 
 /**

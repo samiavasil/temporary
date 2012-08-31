@@ -1,6 +1,6 @@
 format 76
 "External" // External
-  revision 4
+  revision 6
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -95,6 +95,32 @@ format 76
     end
 
     class 162178 "QTimer"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 181890 "QMap"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 188418 "QWidget"
       visibility package 
       cpp_external cpp_decl "${name}
 #include <${name}>

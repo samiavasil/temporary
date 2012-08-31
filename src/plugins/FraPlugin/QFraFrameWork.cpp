@@ -1,6 +1,7 @@
 #include "QFraFrameWork.h"
 
-QFraFrameWork::QFraFrameWork(QWidget *parent):QFrameWork( parent ),ui(new Ui::QFrameWorkView)
+QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent):
+    QFrameWork( factory, parent ),ui(new Ui::QFrameWorkView)
 {
    ui->setupUi(this);
 }

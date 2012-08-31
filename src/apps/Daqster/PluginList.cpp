@@ -3,7 +3,7 @@
 #include "interfaces.h"
 #include <QPluginLoader>
 #include <QDir>
-#include "QFrameWork.h"
+#include "qt/QFrameWork.h"
 
 PluginList::PluginList(QWidget *parent) :
     QDialog(parent),
