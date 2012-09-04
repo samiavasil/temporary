@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     testBits();
 #endif
      QFrameWork frameWork( new QFrameWorkElementsFactory() ,&w );
- //   QCommandExecutor exec;
+  //  QCommandExecutor exec;
   //  QCommand* comm = new QCommand(NULL);
   //  exec.appendCommand(comm);
   //  exec.startExecution(true);

@@ -4,7 +4,17 @@
 
 #include "global.h"
 class CPortIO {
+public:
+typedef enum{       
+  SIMULATOR_IO ,    
+  SERIALPORT_IO,    
+  USBPORT_IO,
+  UNDEFINED_IO
+} portIo_type;      
+
   public:
+    CPortIO();
+
     virtual int64 bytesAvailable() = 0;
 
     virtual int64 read(char * data, const int64 maxlen) = 0;
@@ -13,9 +23,17 @@ class CPortIO {
 
     virtual int open() = 0;
 
-    int close();
+    virtual int close() = 0;
 
-    void readyReadSignal();
+    virtual void readyReadSignal() = 0;
+
+
+  protected:
+    portIo_type m_PortType;
+
+
+  public:
+    CPortIO::portIo_type type();
 
 };
 #endif

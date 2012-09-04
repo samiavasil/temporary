@@ -1,0 +1,36 @@
+class QPacketCollector
+!!!365186.cpp!!!	QPacketCollector(in cFwk : CFrameWork)
+DEBUG("Create QPacketCollector");
+!!!379778.cpp!!!	~QPacketCollector()
+DEBUG("Destroy QPacketCollector");
+!!!364034.cpp!!!	getRecPacket() : int
+DEBUG("TODO:Not implemented");
+!!!364290.cpp!!!	getRecPacketNum() : int
+DEBUG("TODO:Not implemented");
+!!!371714.cpp!!!	receivedBytesSlot() : void
+receiveBytes();
+!!!364546.cpp!!!	appendReceivedBytes(in data : u8, in len : int64) : int
+int ret = NO_ERR;                               
+if( data ){                                     
+    m_Data.append( (const char*) data, len );   
+}                                               
+else{                                           
+    ret = WRONG_PARAMS;                         
+}                                               
+return ret;                                     
+!!!364674.cpp!!!	collectPacket(in packet : CPacket) : int
+int ret = NO_ERR;                                                 
+if( packet ){                                                     
+    DEBUG("Append Packet pointer: TODO free pointer after usage");
+    m_PacketsList.append( packet );                               
+}                                                                 
+else{                                                             
+    ret = WRONG_PARAMS;                                           
+}                                                                 
+return ret;                                                       
+!!!364802.cpp!!!	getNumberOfReceivedBytes() : int
+return m_Data.size();
+!!!364930.cpp!!!	getReceivedBytes() : const u8*
+return (const u8*)m_Data.constData();
+!!!365058.cpp!!!	removeReceivedBytes(in byteNum : int) : void
+m_Data.remove(0,byteNum);

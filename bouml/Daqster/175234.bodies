@@ -1,7 +1,14 @@
 class QProtocolPackFactory
+!!!379266.cpp!!!	QProtocolPackFactory(in pLoader : QProtocolLoader)
+DEBUG("Create QProtocolPackFactory");
 !!!300290.cpp!!!	clearProtDefinitions() : void
-m_packMap.clear();
-m_msgMap.clear(); 
+m_packMap.clear();                               
+QMapIterator<msg_id_t , msg_desc_t> i(m_msgMap); 
+while (i.hasNext()) {                            
+    i.next();                                    
+    delete [] (i.value().data);                  
+}                                                
+m_msgMap.clear();                                
 !!!300418.cpp!!!	addPacket(in id : pack_id_t) : int
 int ret = NO_ERR;                                                    
 if( ( id < PKT_ID_INVALID )&&(false == m_packMap.contains( id )) ){  
@@ -13,18 +20,20 @@ else{
 }                                                                    
 return ret;                                                          
 !!!300546.cpp!!!	addMessage(in id : msg_id_t, in len : int) : int
-int ret = NO_ERR;                                                  
-if( ( id < MSG_ID_INVALID )&&(false == m_msgMap.contains( id )) ){ 
-    msg_desc_t descMsg;                                            
-    descMsg.msgID  = id;                                           
-    descMsg.bitLen = len;                                          
-    m_msgMap.insert( id, descMsg );                                
-}                                                                  
-else{                                                              
-    DEBUG("Message Id[%d] already exist.",id);                     
-    ret = WRONG_PARAMS;                                            
-}                                                                  
-return ret;                                                        
+int ret = NO_ERR;                                                              
+if( ( id < MSG_ID_INVALID )&&(false == m_msgMap.contains( id )) ){             
+    msg_desc_t descMsg;                                                        
+    descMsg.msgID  = id;                                                       
+    descMsg.bitLen = len;                                                      
+    descMsg.data   = new u8[ BITS_TO_BYTES_CEIL( len ) ]; 
+    memset(  descMsg.data, 0, BITS_TO_BYTES_CEIL( len ) );
+    m_msgMap.insert( id, descMsg );                                            
+}                                                                              
+else{                                                                          
+    DEBUG("Message Id[%d] already exist.",id);                                 
+    ret = WRONG_PARAMS;                                                        
+}                                                                              
+return ret;                                                                    
 !!!300674.cpp!!!	addMessageToPacket(in packID : pack_id_t, in msgID : msg_id_t) : int
 int ret = NO_ERR;                                                                                        
 if( ( packID < PKT_ID_INVALID )&&( msgID < MSG_ID_INVALID )&&(true == m_packMap.contains( packID ))  ){  
@@ -41,51 +50,131 @@ else{
     ret = WRONG_PARAMS;                                                                                  
 }                                                                                                        
 return ret;                                                                                                                                                                             
+!!!307842.cpp!!!	getMessage(in id : msg_id_t, in data : u8) : int
+int ret = NO_ERR;
+if( ( 0 != data ) && ( true == m_msgMap.contains( id ) ) ){   
+    data = m_msgMap[id].data;                                 
+}                                                             
+else{                                                         
+    ret = WRONG_PARAMS;                                       
+}                                                             
+return ret;
+!!!307970.cpp!!!	setMessage(in msgId : msg_id_t, in data : u8) : int
+int ret = NO_ERR;                                                                        
+if( ( 0 != data ) && ( true == m_msgMap.contains( msgId ) ) ){                           
+    mempcpy( m_msgMap[msgId].data, data, BITS_TO_BYTES_CEIL( m_msgMap[msgId].bitLen ) ); 
+}                                                                                        
+else{                                                                                    
+    ret = WRONG_PARAMS;                                                                  
+}                                                                                        
+return ret;
 !!!307330.cpp!!!	getMessageBitLen(in msgId : msg_id_t, in msgLen : int) : int
-int ret = NO_ERR;                                               
-if( ( msgId < MSG_ID_INVALID ) && ( 0 != msgLen ) ){            
-    if( false != m_msgMap.contains( msgId ) ){                  
-        *msgLen = m_msgMap[ msgId ].bitLen;                     
-    }                                                           
-    else{                                                       
-        DEBUG("Message Id[%d] already exist.",msgId);           
-        *msgLen = 0;                                            
-        ret     = WRONG_PARAMS;                                 
-    }                                                           
-}                                                               
-else{                                                           
-    DEBUG("Invalid Message Id[%d]",msgId);                      
-    ret = WRONG_PARAMS;                                         
-}                                                               
+int ret = NO_ERR;                                      
+if( ( msgId < MSG_ID_INVALID ) && ( 0 != msgLen ) ){   
+    if( false != m_msgMap.contains( msgId ) ){         
+        *msgLen = m_msgMap[ msgId ].bitLen;            
+    }                                                  
+    else{                                              
+        DEBUG("Message Id[%d] already exist.",msgId);  
+        *msgLen = 0;                                   
+        ret     = WRONG_PARAMS;                        
+    }                                                  
+}                                                      
+else{                                                  
+    DEBUG("Invalid Message Id[%d]",msgId);             
+    ret = WRONG_PARAMS;                                
+}                                                      
+return ret;                                            
 !!!307458.cpp!!!	getMessageBitOffsetInPack(in packId : pack_id_t, in msgId : msg_id_t, in offset : int) : int
-int ret = NO_ERR;                                                                         
-int i, msgPos = 0;                                                                        
-if( ( packId < PKT_ID_INVALID )&&( msgId < MSG_ID_INVALID ) && ( 0 != offset ) ){         
-    int msgIdx = m_packMap[packId].indexOf( msgId );                                      
-    if( 0 <= msgIdx ){                                                                    
-        QList<msg_id_t> listPackMsg = m_packMap[packId];                                  
-        for( i=0 ; i < msgIdx;i++){                                                       
-            if( m_msgMap.contains( listPackMsg[i] ) ){     
-              DOBAWI OBRABOTKA ZA RAZMER -1			
-                msgPos +=  m_msgMap[ listPackMsg[i] ].bitLen;                             
-            }                                                                             
-            else{                                                                         
-                msgPos = -1;                                                              
-                DEBUG("Wrong Message Id[%d] for packet Id[%d].",listPackMsg[i],packId );  
-                ret = SOME_ERROR;                                                         
-            }                                                                             
-        }                                                                                 
-    }                                                                                     
-    else{                                                                                 
-        DEBUG("Message Id[%d] already exist.",msgId);                                     
-        msgPos  = -1;                                                                     
-        ret     = WRONG_PARAMS;                                                           
-    }                                                                                     
-    if( 0 <= msgPos ){                                                                    
-       *offset = msgPos;                                                                  
-    }                                                                                     
-}                                                                                         
-else{                                                                                     
-    DEBUG("Invalid Input parameters");                                                    
-    ret = WRONG_PARAMS;                                                                   
-}                                                                                         
+int ret = NO_ERR;                                                                                                                                     
+int i, msgPos = 0;                                                                                                                                    
+if(  ( packId < PKT_ID_INVALID )&&( msgId < MSG_ID_INVALID ) && ( 0 != offset ) && m_packMap.contains(packId) ){                                                                     
+    int msgIdx = m_packMap[packId].indexOf( msgId );                                                                                                  
+    if( 0 <= msgIdx ){                                                                                                                                
+        QList<msg_id_t> listPackMsg = m_packMap[packId];                                                                                              
+        for( i=0 ; i < msgIdx;i++){                                                                                                                   
+            if( m_msgMap.contains( listPackMsg[i] ) ){                                                                                                
+                if( 0 < m_msgMap[ listPackMsg[i] ].bitLen ){                                                                                          
+                    msgPos +=  m_msgMap[ listPackMsg[i] ].bitLen;                                                                                     
+                }                                                                                                                                     
+                else{                                                                                                                                 
+                    if( 0 == m_msgMap[ listPackMsg[i] ].bitLen ){                                                                                     
+                        DEBUG("Someting Wrong!!!: Size equal to 0 for MessageId[%d] in PacketId[%d]",listPackMsg[i] ,packId);                         
+                    }                                                                                                                                 
+                    else{                                                                                                                             
+                        msgPos = -1;                                                                                                                  
+                        DEBUG("Can't'find MessageId[%d] offset for packet Id[%d]: maybe packet max size is reached ==> Last MessageId[%d] size=%d",   
+                              msgId, packId, listPackMsg[i], m_msgMap[ listPackMsg[i] ].bitLen );                                                     
+                        ret = SOME_ERROR;                                                                                                             
+                        break;                                                                                                                        
+                    }                                                                                                                                 
+                }                                                                                                                                     
+            }                                                                                                                                         
+            else{                                                                                                                                     
+                msgPos = -1;                                                                                                                          
+                DEBUG("Wrong Message Id[%d] for packetId[%d].",listPackMsg[i],packId );                                                               
+                ret = SOME_ERROR;                                                                                                                     
+                break;                                                                                                                                
+            }                                                                                                                                         
+        }                                                                                                                                             
+    }                                                                                                                                                 
+    else{                                                                                                                                             
+        DEBUG("Message Id[%d] doesn't' exist in packetId[%d]",msgId,packId);                                                                          
+        msgPos  = -1;                                                                                                                                 
+        ret     = WRONG_PARAMS;                                                                                                                       
+    }                                                                                                                                                 
+    if( 0 <= msgPos ){                                                                                                                                
+        *offset = msgPos;                                                                                                                             
+    }                                                                                                                                                 
+}                                                                                                                                                     
+else{                                                                                                                                                 
+    DEBUG("Invalid Input parameters");                                                                                                                
+    ret = WRONG_PARAMS;                                                                                                                               
+}                                                                                                                                                     
+return ret;
+!!!357250.cpp!!!	getPacketMessagesNumber(in packId : pack_id_t, in msgNum : int) : int
+int ret = NO_ERR;                                
+if( ( 0 != msgNum )&&(packId < PKT_ID_INVALID) ){
+    *msgNum = m_packMap[packId].count();         
+}                                                
+else{                                            
+     ret = WRONG_PARAMS;                         
+}                                                
+return ret;                                      
+!!!357122.cpp!!!	packetLen(in packId : pack_id_t, in packLenBits : int) : int
+ int ret = NO_ERR;                                                                                
+ int i;                                                                                           
+ if( ( packId < PKT_ID_INVALID )&&( m_packMap.contains(packId) ) ){                               
+     int msgNum = m_packMap[packId].count();                                                      
+     *packLenBits = 0;                                                                            
+     for( i=0 ; i < msgNum; i++ ){                                                                
+         if( m_msgMap.contains( m_packMap[packId].value(i) ) ){                                   
+             if( 0 < m_msgMap[ m_packMap[packId].value(i) ].bitLen ){                             
+                 *packLenBits += m_msgMap[ m_packMap[packId].value(i) ].bitLen;                   
+             }                                                                                    
+             else{                                                                                
+                 *packLenBits = m_maxPacketSize;                                                  
+             }                                                                                    
+         }                                                                                        
+         else{                                                                                    
+             *packLenBits = 0;                                                                    
+             DEBUG("Wrong Message Id[%d] for packetId[%d].",m_packMap[packId].value(i),packId );  
+             ret = SOME_ERROR;                                                                    
+             break;                                                                               
+         }                                                                                        
+     }                                                                                            
+     if( *packLenBits > m_maxPacketSize){                                                         
+         DEBUG("!!!! Packet Size > maxPacketSize for packetId[%d].", packId );                    
+         *packLenBits = 0;                                                                        
+         ret = SOME_ERROR;                                                                        
+     }                                                                                            
+ }                                                                                                
+ else{                                                                                            
+     DEBUG("Invalid Input parameters");                                                           
+     ret = WRONG_PARAMS;                                                                          
+ }                                                                                                                                                        
+ return ret;                                                                                      
+!!!300162.cpp!!!	checkPacketConsistency(in data : u8) : int
+return NO_ERR;
+!!!356994.cpp!!!	findPacketStart() : int
+return 0;

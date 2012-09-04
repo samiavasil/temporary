@@ -1,10 +1,38 @@
 class QFrameWorkElementsFactory
-!!!335234.cpp!!!	createPortIO() : CPortIO*
-DEBUG("Create PortIo");
-return NULL;           
+!!!379010.cpp!!!	QFrameWorkElementsFactory()
+DEBUG("Create QFrameWorkElementsFactory");
+!!!379138.cpp!!!	~QFrameWorkElementsFactory()
+DEBUG("Destroy QFrameWorkElementsFactory");
+!!!335234.cpp!!!	createPortIO(in type : CPortIO::portIo_type) : CPortIO*
+CPortIO* port = NULL;                            
+DEBUG("Create PortIo");                          
+switch( type ) {                                 
+case CPortIO::SIMULATOR_IO :{      
+     port = new QPortIOSimulator();                 
+    break;                                       
+}                                                
+case CPortIO::SERIALPORT_IO :{                   
+    port = new QSerialPortIO();                  
+    break;                                       
+}                                                
+case CPortIO::USBPORT_IO :{                      
+    break;                                       
+}                                                
+default:{                                        
+    break;                                       
+}                                                
+}                                                
+if( 0 == port ){                                 
+    CRITICAL( "Can't create QPortIO" );          
+}                                                
+return port;                                     
 !!!335362.cpp!!!	createPrtocol() : CProtocolPackFactory*
 DEBUG("Create Protocol"); 
-return NULL;              
+CProtocolPackFactory* protocol = new QProtocolPackFactory(NULL);
+if( 0 == protocol ){
+    CRITICAL( "Can't create QProtocolPackFactory" );
+}
+return protocol;
 !!!335490.cpp!!!	createCommandExecutor() : CCommandExecutor*
 DEBUG("Create Command Executor");                        
 QCommandExecutor* exec = new QCommandExecutor(NULL);     
@@ -15,8 +43,12 @@ if( 0 != exec ){
 }                                                        
 return ( exec );                                         
 !!!335618.cpp!!!	createPacketCollector() : CPacketCollector*
-DEBUG("Create Packet Collector");   
-return NULL;                        
+DEBUG("Create Packet Collector");                
+QPacketCollector* coll = new QPacketCollector(NULL);//TODO
+if( 0 == coll ){                                 
+    CRITICAL( "Can't create QPacketCollector" ); 
+}                                                
+return ( coll );                                 
 !!!335746.cpp!!!	createControlView() : CControlView*
 DEBUG("Create Control View");
 return NULL;                 
@@ -28,11 +60,37 @@ if( executor ){
      delete (QCommandExecutor*) executor;
 }
 !!!343298.cpp!!!	deleteProtocol(in protocol : CProtocolPackFactory) : void
-DEBUG("TODO: Not implemented");
+if( protocol ){                              
+    delete (QProtocolPackFactory*) protocol; 
+}                                            
 !!!343426.cpp!!!	deletePortIO(in port : CPortIO) : void
-DEBUG("TODO: Not implemented");
+  if( port ){                 
+      DEBUG("Delete PortIo");
+      switch( port->type() ) {
+      case CPortIO::SIMULATOR_IO :{
+		  delete (QPortIOSimulator*) port;
+          break;
+      }
+      case CPortIO::SERIALPORT_IO :{
+          delete (QSerialPortIO*) port;
+          break;
+      }
+      case CPortIO::USBPORT_IO :{
+          break;
+      }
+      default:{
+          break;
+      }
+      }
+      if( 0 == port ){
+          CRITICAL( "Can't create QPortIO" );
+      }
+  }
+  
 !!!343554.cpp!!!	deleteColector(in collector : CPacketCollector) : void
-DEBUG("TODO: Not implemented");
+if( collector ){                          
+    delete (QPacketCollector*) collector; 
+}                                         
 !!!343682.cpp!!!	deleteControlView(in ctrlView : CControlView) : void
 DEBUG("TODO: Not implemented");
 !!!343810.cpp!!!	deleteDataPlot(in dataPlot : CDataPlot) : void

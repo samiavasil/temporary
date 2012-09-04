@@ -1,9 +1,9 @@
 
 #include "base/CPortIO.h"
 
-int CPortIO::close() {
+CPortIO::CPortIO() {
 }
 
-void CPortIO::readyReadSignal() {
+CPortIO::portIo_type CPortIO::type() {
 }
 

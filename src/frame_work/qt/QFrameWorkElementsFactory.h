@@ -4,20 +4,26 @@
 
 #include "base/CFrameWorkElementsFactory.h"
 
+class QCommandExecutor;
+class QProtocolPackFactory;
+class QPacketCollector;
+class QProtocolLoader;
+class QSerialPortIO;
 class CPortIO;
 class CProtocolPackFactory;
 class CCommandExecutor;
 class CPacketCollector;
 class CControlView;
 class CDataPlot;
-class QCommandExecutor;
-class QProtocolPackFactory;
-class QPacketCollector;
-class QProtocolLoader;
+class QPortIOSimulator;
 
 class QFrameWorkElementsFactory : public CFrameWorkElementsFactory {
   public:
-    virtual CPortIO* createPortIO();
+    QFrameWorkElementsFactory();
+
+    ~QFrameWorkElementsFactory();
+
+    virtual CPortIO* createPortIO(const CPortIO::portIo_type type);
 
     virtual CProtocolPackFactory* createPrtocol();
 

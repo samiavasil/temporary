@@ -1,0 +1,18 @@
+class QSerialPortIO
+!!!379522.cpp!!!	QSerialPortIO()
+DEBUG("Create QSerialPortIO");
+m_PortType = SERIALPORT_IO;
+!!!379650.cpp!!!	~QSerialPortIO()
+DEBUG("Destroy QPortIO");
+!!!378242.cpp!!!	bytesAvailable() : int64
+DEBUG("TODO: TBI ");
+!!!378370.cpp!!!	read(in data : char, in maxlen : int64) : int64
+DEBUG("TODO: TBI ");
+!!!378498.cpp!!!	write(in data : char, in len : qint64) : int64
+DEBUG("TODO: TBI ");
+!!!378626.cpp!!!	open() : int
+DEBUG("TODO: TBI ");
+!!!378754.cpp!!!	close() : int
+DEBUG("TODO: TBI ");
+!!!378882.cpp!!!	readyReadSignal() : void
+DEBUG("TODO: TBI ");

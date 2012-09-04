@@ -1,0 +1,4 @@
+class QPortIOSimulator
+!!!386562.cpp!!!	QPortIOSimulator()
+DEBUG("Create QPortIOSimulator");
+m_PortType = SIMULATOR_IO;

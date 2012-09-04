@@ -29,8 +29,6 @@ class CPacket {
 
     pack_id_t m_packType;
 
-
-  private:
     int m_hdrLenBytes;
 
     int m_postFixLenBytes;

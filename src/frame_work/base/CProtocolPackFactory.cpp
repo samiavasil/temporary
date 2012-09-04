@@ -13,31 +13,33 @@ CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
 }
 
 CPacket* CProtocolPackFactory::createPacket(const pack_id_t packId) {
-  CPacket * packet = NULL;                                                                 
-  if( PKT_ID_INVALID < packId ){                                                           
-      return packet;                                                                       
-  }                                                                                        
-  packet = new CPacket( packId, packetLen(packId), getProtocolHeaderLen(), getProtocolPostFixLen() ); 
-  int num = getPacketMessagesNumber(packId);                                               
-  if( 0 < num  ){                                                                          
-      msg_id_t msgArr[num];                                                                
-      if( NO_ERR == getPacketMessagesId( packId, msgArr, num ) ){                          
-          const u8 *data;                                                                  
-          for( int i=0; i < num; i++ ){                                                    
-              if( NO_ERR == getMessage( msgArr[i], data ) ){                               
-                  setPacketMessage( packet,msgArr[i], data );                              
-              }                                                                            
-              else{                                                                        
-                 CRITICAL( "Wrong Message Id[%d] for Packet Id[%d]",msgArr[i] , packId );  
-                 delete packet;                                                            
-                 packet = NULL;                                                            
-                 break;                                                                    
-              }                                                                            
-          }                                                                                
-      }                                                                                    
-  }                                                                                        
-                                                                                           
-  return packet;                                                                           
+  CPacket * packet = NULL;                                                                      
+  if( PKT_ID_INVALID < packId ){                                                                
+      return packet;                                                                            
+  }                                                                                             
+  int packLen=0;                                                                                
+  if( NO_ERR == packetLen(packId, &packLen )){                                                  
+      packet = new CPacket( packId,packLen, getProtocolHeaderLen(), getProtocolPostFixLen() );  
+      int num;                                                                                  
+      if( ( NO_ERR == getPacketMessagesNumber( packId,&num ) )&&( 0 < num ) ){                  
+          msg_id_t msgArr[num];                                                                 
+          if( NO_ERR == getPacketMessagesId( packId, msgArr, num ) ){                           
+              const u8 *data;                                                                   
+              for( int i=0; i < num; i++ ){                                                     
+                  if( NO_ERR == getMessage( msgArr[i], data ) ){                                
+                      setPacketMessage( packet,msgArr[i], data );                               
+                  }                                                                             
+                  else{                                                                         
+                      CRITICAL( "Wrong Message Id[%d] for Packet Id[%d]",msgArr[i] , packId );  
+                      delete packet;                                                            
+                      packet = NULL;                                                            
+                      break;                                                                    
+                  }                                                                             
+              }                                                                                 
+          }                                                                                     
+      }                                                                                         
+  }                                                                                             
+  return packet;                                                                                
 }
 
 CPacket* CProtocolPackFactory::createPacketFromData(const u8 * data) {
@@ -94,11 +96,11 @@ int CProtocolPackFactory::getPacketMessage(CPacket * packet, msg_id_t msgId, u8 
   return ret;                                                               
 }
 
-int CProtocolPackFactory::getMaxPacketSize() {
+int CProtocolPackFactory::getMaxPacketLen() {
   return m_maxPacketSize;
 }
 
-void CProtocolPackFactory::setMaxPacketSize(int max_size) {
+void CProtocolPackFactory::setMaxPacketLen(int max_size) {
   m_maxPacketSize = max_size;
 }
 

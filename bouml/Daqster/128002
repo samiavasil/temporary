@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 50
+  revision 59
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -559,8 +559,9 @@ ${inlines}
       
       operation 321410 "createPortIO"
 	abstract cpp_virtual public explicit_return_type "CPortIO*"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	nparams 1
+	  param in name "type" explicit_type "CPortIO::portIo_type"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -694,6 +695,14 @@ ${inlines}
 	
 	
       end
+
+      classrelation 249986 // <dependency>
+	relation 249986 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 249986 // <dependency>
+	  b parent class_ref 128386 // CPortIO
+      end
     end
 
     class 128386 "CPortIO"
@@ -709,6 +718,37 @@ ${inlines}
       explicit_switch_type ""
       
       associated_diagram classdiagram_ref 128002 // FrameWorkClassDiagram
+      extra_member 173954 "portIo_type"
+	
+	cpp "public:
+typedef enum{       
+  SIMULATOR_IO ,    
+  SERIALPORT_IO,    
+  USBPORT_IO,
+  UNDEFINED_IO
+} portIo_type;      
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 386306 "CPortIO"
+	public explicit_return_type ""
+	nparams 0
+	constraint "m_PortType = UNDEFINED_IO;"
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 210690 "bytesAvailable"
 	abstract cpp_virtual public explicit_return_type "int64"
 	nparams 0
@@ -758,12 +798,9 @@ ${inlines}
       end
 
       operation 142594 "close"
-	public explicit_return_type "int"
+	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
@@ -772,7 +809,28 @@ ${inlines}
       end
 
       operation 160002 "readyReadSignal"
-	public explicit_return_type "void"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      attribute 200834 "m_PortType"
+	protected explicit_type "portIo_type"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 386434 "type"
+	public explicit_return_type "CPortIO::portIo_type"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -846,11 +904,10 @@ ${inlines}
 	
       end
 
-      operation 224642 "collectPacket"
+      operation 159874 "getRecPacket"
 	abstract cpp_virtual public explicit_return_type "int"
-	nparams 1
-	  param in name "packet" explicit_type "CPacket"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -858,7 +915,7 @@ ${inlines}
 	
       end
 
-      operation 159874 "getRecPacket"
+      operation 142850 "packetReceivedSignal"
 	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -880,10 +937,13 @@ ${inlines}
 	
       end
 
-      operation 244482 "getNumberOfReceivedBytes"
-	abstract cpp_virtual public explicit_return_type "int"
+      operation 142978 "receiveBytes"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
 "
 	
 	
@@ -897,6 +957,29 @@ ${inlines}
 	  param in name "data" explicit_type "u8"
 	  param in name "len" explicit_type "int64"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}, const ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 224642 "collectPacket"
+	abstract cpp_virtual protected explicit_return_type "int"
+	nparams 1
+	  param in name "packet" explicit_type "CPacket"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 244482 "getNumberOfReceivedBytes"
+	abstract cpp_virtual protected explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -920,31 +1003,6 @@ ${inlines}
 	nparams 1
 	  param in name "byteNum" explicit_type "int"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-	
-	
-      end
-
-      operation 142850 "packetReceivedSignal"
-	abstract cpp_virtual public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-	
-	
-      end
-
-      operation 142978 "receivedBytesSlot"
-	cpp_virtual public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
@@ -1147,7 +1205,7 @@ ${inlines}
       end
 
       attribute 161026 "m_hdrLenBytes"
-	private explicit_type "int"
+	protected explicit_type "int"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	java_decl ""
@@ -1157,7 +1215,7 @@ ${inlines}
       end
 
       attribute 161154 "m_postFixLenBytes"
-	private explicit_type "int"
+	protected explicit_type "int"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	java_decl ""
@@ -1597,7 +1655,7 @@ return ret;"
 	
       end
 
-      operation 158722 "getMaxPacketSize"
+      operation 158722 "getMaxPacketLen"
 	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1611,7 +1669,7 @@ return ret;"
 	
       end
 
-      operation 159618 "setMaxPacketSize"
+      operation 159618 "setMaxPacketLen"
 	cpp_virtual public explicit_return_type "void"
 	nparams 1
 	  param in name "max_size" explicit_type "int"
@@ -1692,9 +1750,10 @@ return ret;"
 
       operation 272130 "packetLen"
 	abstract cpp_virtual protected explicit_return_type "int"
-	nparams 1
+	nparams 2
 	  param in name "packId" explicit_type "pack_id_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "packLenBits" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1704,9 +1763,10 @@ return ret;"
 
       operation 272258 "getPacketMessagesNumber"
 	abstract cpp_virtual protected explicit_return_type "int"
-	nparams 1
+	nparams 2
 	  param in name "packId" explicit_type "pack_id_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "msgNum" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1742,7 +1802,7 @@ return ret;"
 	
       end
 
-      operation 293378 "setProtocolHeaderSize"
+      operation 293378 "setProtocolHeaderLen"
 	cpp_inline public explicit_return_type "void"
 	nparams 1
 	  param in name "size" explicit_type "int"

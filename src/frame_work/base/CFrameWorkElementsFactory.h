@@ -2,7 +2,8 @@
 #define _CFRAMEWORKELEMENTSFACTORY_H
 
 
-class CPortIO;
+#include "base/CPortIO.h"
+
 class CProtocolPackFactory;
 class CCommandExecutor;
 class CPacketCollector;
@@ -11,7 +12,7 @@ class CDataPlot;
 
 class CFrameWorkElementsFactory {
   public:
-    virtual CPortIO* createPortIO() = 0;
+    virtual CPortIO* createPortIO(const CPortIO::portIo_type type) = 0;
 
     virtual CProtocolPackFactory* createPrtocol() = 0;
 

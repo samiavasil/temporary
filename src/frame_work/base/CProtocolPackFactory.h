@@ -58,9 +58,9 @@ class CProtocolPackFactory {
 
 
   public:
-    virtual int getMaxPacketSize();
+    virtual int getMaxPacketLen();
 
-    virtual void setMaxPacketSize(int max_size);
+    virtual void setMaxPacketLen(int max_size);
 
 
   protected:
@@ -72,9 +72,9 @@ class CProtocolPackFactory {
 
     int getPacketPostFix(CPacket * packet, u8 * retPostFix);
 
-    virtual int packetLen(const pack_id_t packId) = 0;
+    virtual int packetLen(const pack_id_t packId, int * packLenBits) = 0;
 
-    virtual int getPacketMessagesNumber(const pack_id_t & packId) = 0;
+    virtual int getPacketMessagesNumber(const pack_id_t packId, int * msgNum) = 0;
 
     virtual int getPacketMessagesId(const pack_id_t packId, msg_id_t * msgArr, int num) = 0;
 
@@ -82,7 +82,7 @@ class CProtocolPackFactory {
   public:
     inline int getProtocolHeaderLen() const;
 
-    inline void setProtocolHeaderSize(int size);
+    inline void setProtocolHeaderLen(int size);
 
     inline int getProtocolPostFixLen() const;
 
@@ -101,7 +101,7 @@ inline int CProtocolPackFactory::getProtocolHeaderLen() const {
   return m_hDrSize;
 }
 
-inline void CProtocolPackFactory::setProtocolHeaderSize(int size) {
+inline void CProtocolPackFactory::setProtocolHeaderLen(int size) {
   m_hDrSize = size;
 }
 

@@ -1,19 +1,49 @@
 
 #include "qt/QFrameWorkElementsFactory.h"
+#include "qt/QCommandExecutor.h"
+#include "qt/QProtocolPackFactory.h"
+#include "qt/QPacketCollector.h"
+#include "qt/QProtocolLoader.h"
+#include "qt/QSerialPortIO.h"
 #include "base/CPortIO.h"
 #include "base/CProtocolPackFactory.h"
 #include "base/CCommandExecutor.h"
 #include "base/CPacketCollector.h"
 #include "base/CControlView.h"
 #include "base/CDataPlot.h"
-#include "qt/QCommandExecutor.h"
-#include "qt/QProtocolPackFactory.h"
-#include "qt/QPacketCollector.h"
-#include "qt/QProtocolLoader.h"
+#include "qt/QPortIOSimulator.h"
 
-CPortIO* QFrameWorkElementsFactory::createPortIO() {
-  DEBUG("Create PortIo");
-  return NULL;           
+QFrameWorkElementsFactory::QFrameWorkElementsFactory() {
+  DEBUG("Create QFrameWorkElementsFactory");
+}
+
+QFrameWorkElementsFactory::~QFrameWorkElementsFactory() {
+  DEBUG("Destroy QFrameWorkElementsFactory");
+}
+
+CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type) {
+  CPortIO* port = NULL;                            
+  DEBUG("Create PortIo");                          
+  switch( type ) {                                 
+  case CPortIO::SIMULATOR_IO :{      
+       port = new QPortIOSimulator();                 
+      break;                                       
+  }                                                
+  case CPortIO::SERIALPORT_IO :{                   
+      port = new QSerialPortIO();                  
+      break;                                       
+  }                                                
+  case CPortIO::USBPORT_IO :{                      
+      break;                                       
+  }                                                
+  default:{                                        
+      break;                                       
+  }                                                
+  }                                                
+  if( 0 == port ){                                 
+      CRITICAL( "Can't create QPortIO" );          
+  }                                                
+  return port;                                     
 }
 
 CProtocolPackFactory* QFrameWorkElementsFactory::createPrtocol() {
@@ -37,8 +67,12 @@ CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
 }
 
 CPacketCollector* QFrameWorkElementsFactory::createPacketCollector() {
-  DEBUG("Create Packet Collector");   
-  return NULL;                        
+  DEBUG("Create Packet Collector");                
+  QPacketCollector* coll = new QPacketCollector(NULL);//TODO
+  if( 0 == coll ){                                 
+      CRITICAL( "Can't create QPacketCollector" ); 
+  }                                                
+  return ( coll );                                 
 }
 
 CControlView* QFrameWorkElementsFactory::createControlView() {
@@ -58,15 +92,41 @@ void QFrameWorkElementsFactory::deleteExecutor(CCommandExecutor * executor) {
 }
 
 void QFrameWorkElementsFactory::deleteProtocol(CProtocolPackFactory * protocol) {
-  DEBUG("TODO: Not implemented");
+  if( protocol ){                              
+      delete (QProtocolPackFactory*) protocol; 
+  }                                            
 }
 
 void QFrameWorkElementsFactory::deletePortIO(CPortIO * port) {
-  DEBUG("TODO: Not implemented");
+    if( port ){                 
+        DEBUG("Delete PortIo");
+        switch( port->type() ) {
+        case CPortIO::SIMULATOR_IO :{
+  		  delete (QPortIOSimulator*) port;
+            break;
+        }
+        case CPortIO::SERIALPORT_IO :{
+            delete (QSerialPortIO*) port;
+            break;
+        }
+        case CPortIO::USBPORT_IO :{
+            break;
+        }
+        default:{
+            break;
+        }
+        }
+        if( 0 == port ){
+            CRITICAL( "Can't create QPortIO" );
+        }
+    }
+    
 }
 
 void QFrameWorkElementsFactory::deleteColector(CPacketCollector * collector) {
-  DEBUG("TODO: Not implemented");
+  if( collector ){                          
+      delete (QPacketCollector*) collector; 
+  }                                         
 }
 
 void QFrameWorkElementsFactory::deleteControlView(CControlView * ctrlView) {
