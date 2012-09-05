@@ -18,9 +18,17 @@ class QProtocolLoader : public CProtocolLoader {
 
     virtual pack_id_t getPackId(int number);
 
-    virtual int getMsgsCountForPack(const pack_id_t & packID);
+    virtual int getMsgsCountForPack(const pack_id_t packID);
 
-    virtual msg_id_t getMsgIdForPack(const pack_id_t & packID, int idx);
+    virtual msg_id_t getMsgIdForPack(const pack_id_t packID, int idx);
+
+
+  protected:
+    virtual int getMsgIdLen(const msg_id_t id, int *len);
+
+    virtual int getHeaderSize();
+
+    virtual int getPostFixSize();
 
 };
 #endif

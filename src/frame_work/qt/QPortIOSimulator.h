@@ -5,6 +5,10 @@
 #include <QObject>
 
 #include "base/CPortIO.h"
+#include <QByteArray>
+
+#include <QMutex>
+
 
 class QPortIOSimulator : public QObject, public CPortIO {
 Q_OBJECT
@@ -23,6 +27,28 @@ Q_OBJECT
     virtual int close();
 
     virtual void readyReadSignal();
+
+
+  protected:
+    void reloadSimulatorTask();
+
+    QByteArray m_WriteData;
+
+    QByteArray m_Data;
+
+    QMutex m_Mutex;
+
+    int m_ReadCounter;
+
+    int m_WriteCounter;
+
+    bool m_TaskRuned;
+
+signals:
+    void readyReadBytesSignal();
+
+protected slots:
+    void simulatorTask();
 
 };
 #endif

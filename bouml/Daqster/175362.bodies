@@ -16,31 +16,45 @@ return MAX_PACKET_SIZE_BIT;
 !!!203778.cpp!!!	getPacketCount() : int
 return PKT_NUM;
 !!!203906.cpp!!!	getPackId(in number : int) : pack_id_t
-if( PKT_NUM > number ){     
-    return packs[number].id;
-}                           
-else{                       
-    return PKT_ID_INVALID;  
-}                           
-                            
+if( PKT_NUM > number ){           
+    return packs[number].id;      
+}                                 
+else{                             
+    return PKT_ID_INVALID;        
+}                                 
 !!!204034.cpp!!!	getMsgsCountForPack(in packID : pack_id_t) : int
-int i;                               
-for( i=0; i < PKT_NUM ;i++ ){        
-    if( packs[i].id == packID ){     
-        return packs[i].msg_num;     
-    }                                
-}                                    
-return 0;                                                     
+int i;                                   
+for( i=0; i < PKT_NUM ;i++ ){            
+    if( packs[i].id == packID ){         
+        return packs[i].msg_num;         
+    }                                    
+}                                        
+return 0;                                
 !!!204162.cpp!!!	getMsgIdForPack(in packID : pack_id_t, in idx : int) : msg_id_t
-int i;                                        
-for( i=0; i < PKT_NUM ;i++ ){                 
-    if( packs[i].id == packID ){              
-        if( packs[i].msg_num > idx ){         
-            return packs[i].msg_arrea[idx];   
-        }                                     
-        else{                                 
-            break;                            
-        }                                     
-    }                                         
-}                                             
-return MSG_ID_INVALID;                        
+int i;                                              
+for( i=0; i < PKT_NUM ;i++ ){                       
+    if( packs[i].id == packID ){                    
+        if( packs[i].msg_num > idx ){               
+            return packs[i].msg_arrea[idx];         
+        }                                           
+        else{                                       
+            break;                                  
+        }                                           
+    }                                               
+}                                                   
+return MSG_ID_INVALID;                              
+!!!401026.cpp!!!	getMsgIdLen(in id : msg_id_t, in len : int) : int
+int i;                                         
+if( 0 != len ){                                
+    for( i=0; i < MSGS_NUM ;i++ ){             
+        if( msgs[i].id == id ){                
+            msgs[i].len;                       
+            return NO_ERR;                     
+        }                                      
+    }                                          
+}                                              
+return WRONG_PARAMS;                           
+!!!401154.cpp!!!	getHeaderSize() : int
+return PROTOCOL_HEADER_SIZE;
+!!!401282.cpp!!!	getPostFixSize() : int
+return PROTOCOL_POSTFIX_SIZE;

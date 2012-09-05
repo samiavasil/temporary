@@ -1,4 +1,65 @@
 class QPortIOSimulator
 !!!386562.cpp!!!	QPortIOSimulator()
-DEBUG("Create QPortIOSimulator");
-m_PortType = SIMULATOR_IO;
+DEBUG("Create QPortIOSimulator");   
+m_PortType = SIMULATOR_IO;          
+qsrand ( qrand() );                 
+m_ReadCounter  = 0;                 
+m_WriteCounter = 0;                 
+m_TaskRuned = false;                
+!!!393090.cpp!!!	bytesAvailable() : int64
+int Len;            
+m_Mutex.lock();     
+Len = m_Data.size();
+m_Mutex.unlock();   
+return Len;         
+!!!393218.cpp!!!	read(in data : char, in maxlen : int64) : int64
+int Len = 0;                                             
+m_Mutex.lock();                                          
+if( 0 != data ){                                         
+    if( m_Data.size() < maxlen ){                        
+        Len = m_Data.size();                             
+    }                                                    
+    else{                                                
+        Len = maxlen;                                    
+    }                                                    
+    if( 0 < Len ){                                       
+        memcpy( data,m_Data.left(maxlen),Len);           
+        m_Data.remove(0,Len);                            
+        m_ReadCounter += Len;                            
+    }                                                    
+}                                                        
+m_Mutex.unlock();                                        
+return Len;                                              
+!!!393346.cpp!!!	write(in data : char, in len : qint64) : int64
+m_Mutex.lock();                   
+m_WriteData.append(data,len);     
+if( false == m_TaskRuned ){       
+    reloadSimulatorTask();        
+}                                 
+m_WriteCounter += len;            
+m_Mutex.unlock();                 
+return len;                       
+!!!393730.cpp!!!	readyReadSignal() : void
+emit readyReadBytesSignal();
+!!!400386.cpp!!!	reloadSimulatorTask() : void
+int randTime = (qrand()%20);                               
+QTimer::singleShot( randTime, this, SLOT(simulatorTask()));
+m_TaskRuned = true;                                        
+!!!400258.cpp!!!	simulatorTask() : void
+int randSize = (qrand()%100) + 1;                                             
+m_Mutex.lock();                                                               
+if(   randSize > m_WriteData.size() ){                                        
+    randSize = m_WriteData.size();                                            
+}                                                                             
+if( 0 < randSize ){                                                           
+    m_Data.append( m_WriteData.left(randSize) );                              
+    m_WriteData.remove( 0, randSize );                                        
+}                                                                             
+if( 0 < m_WriteData.size() ){                                                 
+    reloadSimulatorTask();                                                    
+}                                                                             
+else{                                                                         
+     DEBUG("m_ReadCounter = %d m_WriteCounter = %d",m_ReadCounter,m_WriteCounter);                                                                        
+}                                                                             
+m_Mutex.unlock();                                                             
+readyReadSignal();                                                            

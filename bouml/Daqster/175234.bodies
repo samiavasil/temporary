@@ -1,6 +1,9 @@
 class QProtocolPackFactory
 !!!379266.cpp!!!	QProtocolPackFactory(in pLoader : QProtocolLoader)
 DEBUG("Create QProtocolPackFactory");
+if(  attachProtocolLoader(pLoader) ) {                                                             
+    DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");  
+}                                                                                                  
 !!!300290.cpp!!!	clearProtDefinitions() : void
 m_packMap.clear();                               
 QMapIterator<msg_id_t , msg_desc_t> i(m_msgMap); 

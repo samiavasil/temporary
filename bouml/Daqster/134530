@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 53
+  revision 54
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -712,7 +712,7 @@ ${inlines}
       end
 
       operation 182530 "handler"
-	const cpp_virtual public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -724,6 +724,26 @@ ${inlines}
 	
 	
 	comment "Command handler"
+      end
+
+      attribute 208258 "m_fWork"
+	protected explicit_type "QFrameWork*"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 207362 "a"
+	protected explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
       end
     end
 
@@ -763,7 +783,7 @@ ${inlines}
 	    defaultvalue "0"
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :CFrameWork( ${p0}){
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :CFrameWork( ${p0}),QWidget( ${p1}){
   ${body}}
 "
 	
@@ -884,7 +904,7 @@ ${inlines}
 	
       end
 
-      operation 335362 "createPrtocol"
+      operation 335362 "createProtocol"
 	cpp_virtual public explicit_return_type "CProtocolPackFactory*"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1499,9 +1519,9 @@ ${inlines}
 	cpp_virtual public explicit_return_type "int"
 	nparams 1
 	  param in name "packID" explicit_type "pack_id_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1515,9 +1535,53 @@ ${inlines}
 	nparams 2
 	  param in name "packID" explicit_type "pack_id_t"
 	  param in name "idx" explicit_type "int"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 401026 "getMsgIdLen"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 2
+	  param in name "id" explicit_type "msg_id_t"
+	  param in name "len" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 401154 "getHeaderSize"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 401282 "getPostFixSize"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1680,7 +1744,6 @@ ${inlines}
 	
 	
       end
-
     end
 
     class 221058 "QPortIOSimulator"
@@ -1695,6 +1758,22 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      classrelation 256642 // <generalisation>
+	relation 256642 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 256642 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
+
+      classrelation 256770 // <generalisation>
+	relation 256770 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 256770 // <generalisation>
+	  b parent class_ref 128386 // CPortIO
+      end
+
       extra_member 180482 "Q_OBJECT"
 	
 	cpp "Q_OBJECT
@@ -1717,22 +1796,6 @@ ${inlines}
 	
 	
 	
-      end
-
-      classrelation 256642 // <generalisation>
-	relation 256642 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 256642 // <generalisation>
-	  b parent class_ref 142210 // QObject
-      end
-
-      classrelation 256770 // <generalisation>
-	relation 256770 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 256770 // <generalisation>
-	  b parent class_ref 128386 // CPortIO
       end
 
       operation 393090 "bytesAvailable"
@@ -1821,6 +1884,133 @@ ${inlines}
 	
 	
 	
+      end
+
+      operation 400386 "reloadSimulatorTask"
+	protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      attribute 207490 "m_WriteData"
+	protected type class_ref 208002 // QByteArray
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 207618 "m_Data"
+	protected type class_ref 208002 // QByteArray
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 207746 "m_Mutex"
+	protected type class_ref 155522 // QMutex
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 207874 "m_ReadCounter"
+	protected explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 208002 "m_WriteCounter"
+	protected explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 208130 "m_TaskRuned"
+	protected explicit_type "bool"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      extra_member 187010 "signals"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 400770 "readyReadBytesSignal"
+	protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      extra_member 187138 "protected slots"
+	
+	cpp "protected slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 400258 "simulatorTask"
+	protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      classrelation 263298 // <dependency>
+	relation 263298 -_->
+	  a package
+	    cpp default "#include in source"
+	    classrelation_ref 263298 // <dependency>
+	  b parent class_ref 162178 // QTimer
       end
     end
   end
@@ -1963,7 +2153,9 @@ ${namespace_end}
 ${includes}
 ${namespace_start}
 
-#define MAX_PACKET_SIZE_BIT (100)
+#define MAX_PACKET_SIZE_BIT  (100)
+#define PROTOCOL_HEADER_SIZE (2+2+1)
+#define PROTOCOL_POSTFIX_SIZE (0)
 
 struct msg_desc{
     msg_id_t id;
@@ -1984,28 +2176,31 @@ typedef struct pack_desc pack_desc_t;
 enum{
 #define GEN_MSG_ENUMS
 #include\"ProtoGen.h\"
-    MSGS_NUM
+
 };
 
 
 enum{
 #define GEN_PKT_ENUMS
 #include\"ProtoGen.h\"
-    PKT_NUM
+
 };
 
 const msg_desc_t msgs[]={
-#define GEN_MSGS
-#include\"ProtoGen.h\"
+    #define GEN_MSGS
+    #include\"ProtoGen.h\"
 };
 
 #define GEN_MSGS_PKT_MAPS
 #include\"ProtoGen.h\"
 
 const pack_desc_t packs[]={
-#define GEN_PKTS
-#include\"ProtoGen.h\"
+    #define GEN_PKTS
+    #include\"ProtoGen.h\"
 };
+
+#define PKT_NUM  (sizeof(packs)/sizeof(pack_desc_t))
+#define MSGS_NUM (sizeof(msgs)/sizeof(msg_desc_t))
 
 ${members}
 ${namespace_end}"

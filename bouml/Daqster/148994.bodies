@@ -1,20 +1,32 @@
 class QCommand
 !!!189186.cpp!!!	QCommand(in fWork : QFrameWork = NULL)
-
+m_fWork = fWork;
+a=0;         
 !!!182658.cpp!!!	~QCommand()
 qDebug("QCommand Deleted");
 !!!182530.cpp!!!	handler() : int
-static int a;                              
-int ret =  1;                              
-a++;                                       
-if(a >= 1000 ){                            
-    ret =  0;                              
-    DEBUG("QCommand Finished");            
-}                                          
-else{                                      
-    if( a == 1 ){                          
-        DEBUG("QCommand Execution start"); 
-    }                                      
-}                                          
-                                           
-return ret;                                
+int ret =  1;                                            
+a++;                                                     
+if(a >= 1000 ){                                          
+    ret =  0;                                            
+    DEBUG("QCommand Finished");                          
+}                                                        
+else{                                                    
+    if( a == 1 ){                                        
+        DEBUG("QCommand Execution start");               
+    }                                                    
+    if( m_fWork ){                                          
+       CPortIO* port = m_fWork->getPortIO();                
+       if( port ){                                       
+           int randNum = qrand()%120;                    
+           u8 data[randNum];                             
+           for( int i=0; i< randNum; i++ ){              
+               data[i] = qrand();                        
+           }                                             
+           port->write((const char *) data,randNum);     
+       }                                                 
+    }                                                    
+                                                         
+}                                                        
+                                                         
+return ret;                                              

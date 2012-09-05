@@ -18,6 +18,8 @@ class CProtocolPackFactory {
   public:
     CProtocolPackFactory(CProtocolLoader * pLoader);
 
+     int attachProtocolLoader(CProtocolLoader * pLoader);
+
 
   protected:
     virtual int checkPacketConsistency(const u8 * data) = 0;

@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 59
+  revision 60
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -63,7 +63,7 @@ ${inlines}
       explicit_switch_type ""
       
       operation 134786 "handler"
-	abstract const cpp_virtual public explicit_return_type "int"
+	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -557,6 +557,7 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      comment " "
       operation 321410 "createPortIO"
 	abstract cpp_virtual public explicit_return_type "CPortIO*"
 	nparams 1
@@ -569,7 +570,7 @@ ${inlines}
 	
       end
 
-      operation 321538 "createPrtocol"
+      operation 321538 "createProtocol"
 	abstract cpp_virtual public explicit_return_type "CProtocolPackFactory*"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1332,7 +1333,7 @@ ${inlines}
 	abstract cpp_virtual protected explicit_return_type "int"
 	nparams 1
 	  param in name "packID" explicit_type "pack_id_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1342,9 +1343,10 @@ ${inlines}
 
       operation 237954 "getMsgIdLen"
 	abstract cpp_virtual protected explicit_return_type "int"
-	nparams 1
+	nparams 2
 	  param in name "id" explicit_type "msg_id_t"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "len" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1357,7 +1359,7 @@ ${inlines}
 	nparams 2
 	  param in name "packID" explicit_type "pack_id_t"
 	  param in name "idx" explicit_type "int"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1423,6 +1425,21 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 400898 "attachProtocolLoader"
+	public explicit_return_type "int"
+	nparams 1
+	  param in name "pLoader" explicit_type "CProtocolLoader"
+	cpp_decl "     ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	

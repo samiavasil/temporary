@@ -25,7 +25,7 @@ class QFrameWorkElementsFactory : public CFrameWorkElementsFactory {
 
     virtual CPortIO* createPortIO(const CPortIO::portIo_type type);
 
-    virtual CProtocolPackFactory* createPrtocol();
+    virtual CProtocolPackFactory* createProtocol();
 
     virtual CCommandExecutor* createCommandExecutor();
 

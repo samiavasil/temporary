@@ -7,9 +7,19 @@ CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
   m_hDrSize       = 0;                         
   m_postFixSize   = 0;                         
   m_maxPacketSize = 0;                         
-  if(  pLoader ) {                             
-      pLoader->loadProtocolDefinition(this);   
-  }                                            
+                                         
+}
+
+int CProtocolPackFactory::attachProtocolLoader(CProtocolLoader * pLoader) {
+    int ret = NO_ERR;
+    if(  pLoader ) { 
+       clearProtDefinitions();  
+       pLoader->loadProtocolDefinition(this);   
+    } 
+    else{
+       ret = WRONG_PARAMS;
+   }
+   return ret;
 }
 
 CPacket* CProtocolPackFactory::createPacket(const pack_id_t packId) {

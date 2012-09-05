@@ -8,7 +8,7 @@ class CCommand {
     /**
      * Command handler
      */
-    virtual int handler() const = 0;
+    virtual int handler() = 0;
 
 };
 #endif

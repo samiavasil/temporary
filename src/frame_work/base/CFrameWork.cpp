@@ -70,7 +70,7 @@ int CFrameWork::attachElementsFactory(CFrameWorkElementsFactory * elementsFactor
       m_ControlView = m_ElementsFactory->createControlView();        
       m_DataPlot    = m_ElementsFactory->createDataPlot();           
       m_Executor    = m_ElementsFactory->createCommandExecutor();    
-      m_Protocol    = m_ElementsFactory->createPrtocol();            
+      m_Protocol    = m_ElementsFactory->createProtocol();            
       m_PortIO      = m_ElementsFactory->createPortIO(CPortIO::SIMULATOR_IO);//TODO FIX ME            
       m_Colector    = m_ElementsFactory->createPacketCollector();                                                                
   }                                                                  

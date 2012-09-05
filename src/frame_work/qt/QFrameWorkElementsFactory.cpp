@@ -46,9 +46,9 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
   return port;                                     
 }
 
-CProtocolPackFactory* QFrameWorkElementsFactory::createPrtocol() {
+CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
   DEBUG("Create Protocol"); 
-  CProtocolPackFactory* protocol = new QProtocolPackFactory(NULL);
+  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader() );
   if( 0 == protocol ){
       CRITICAL( "Can't create QProtocolPackFactory" );
   }

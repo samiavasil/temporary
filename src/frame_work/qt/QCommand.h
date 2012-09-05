@@ -17,7 +17,13 @@ class QCommand : public CCommand, public QObject {
     /**
      * Command handler
      */
-    virtual int handler() const;
+    virtual int handler();
+
+
+  protected:
+    QFrameWork* m_fWork;
+
+    int a;
 
 };
 #endif

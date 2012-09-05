@@ -14,7 +14,7 @@ class CFrameWorkElementsFactory {
   public:
     virtual CPortIO* createPortIO(const CPortIO::portIo_type type) = 0;
 
-    virtual CProtocolPackFactory* createPrtocol() = 0;
+    virtual CProtocolPackFactory* createProtocol() = 0;
 
     virtual CCommandExecutor* createCommandExecutor() = 0;
 

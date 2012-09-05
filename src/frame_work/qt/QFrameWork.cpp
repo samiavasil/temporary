@@ -4,9 +4,9 @@
 
 #include "qt/QCommand.h"
 #include "qt/QCommandExecutor.h"
-QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :CFrameWork( factory){
+QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :CFrameWork( factory),QWidget( parent){
   if( m_Executor ){                        
-      QCommand* comm = new QCommand(NULL); 
+      QCommand* comm = new QCommand(this); 
       m_Executor->appendCommand(comm);     
       /*TODO FIX ME*/                      
       sleep(1);                            

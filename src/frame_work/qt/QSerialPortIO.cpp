@@ -1,7 +1,7 @@
 
 #include "qt/QSerialPortIO.h"
 
-QSerialPortIO::QSerialPortIO() {
+QSerialPortIO::QSerialPortIO(){
   DEBUG("Create QSerialPortIO");
   m_PortType = SERIALPORT_IO;
 }

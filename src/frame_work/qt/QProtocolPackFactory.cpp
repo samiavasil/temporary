@@ -4,6 +4,9 @@
 
 QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader) :CProtocolPackFactory(pLoader){
   DEBUG("Create QProtocolPackFactory");
+  if(  attachProtocolLoader(pLoader) ) {                                                             
+      DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");  
+  }                                                                                                  
 }
 
 QProtocolPackFactory::~QProtocolPackFactory() {

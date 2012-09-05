@@ -3,9 +3,17 @@ class CProtocolPackFactory
 m_hDrSize       = 0;                         
 m_postFixSize   = 0;                         
 m_maxPacketSize = 0;                         
-if(  pLoader ) {                             
-    pLoader->loadProtocolDefinition(this);   
-}                                            
+                                       
+!!!400898.cpp!!!	attachProtocolLoader(in pLoader : CProtocolLoader) : int
+  int ret = NO_ERR;
+  if(  pLoader ) { 
+     clearProtDefinitions();  
+     pLoader->loadProtocolDefinition(this);   
+  } 
+  else{
+     ret = WRONG_PARAMS;
+ }
+ return ret;
 !!!158338.cpp!!!	createPacket(in packId : pack_id_t) : CPacket*
 CPacket * packet = NULL;                                                                      
 if( PKT_ID_INVALID < packId ){                                                                
