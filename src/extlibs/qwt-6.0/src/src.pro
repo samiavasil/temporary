@@ -17,7 +17,8 @@ include( $${QWT_ROOT}/qwtfunctions.pri )
 TEMPLATE          = lib
 TARGET            = $$qwtLibraryTarget(qwt)
 
-DESTDIR           = $${QWT_ROOT}/lib
+################PIPANO OT MEN
+DESTDIR           = $${QWT_ROOT}/../../../bin/extlibs
 
 contains(QWT_CONFIG, QwtDll) {
 

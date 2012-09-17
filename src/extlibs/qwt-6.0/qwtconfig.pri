@@ -58,7 +58,7 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
 # it will be a static library.
 ######################################################################
 
-QWT_CONFIG           += QwtDll
+#QWT_CONFIG           += QwtDll
 
 ######################################################################
 # QwtPlot enables all classes, that are needed to use the QwtPlot 
@@ -98,7 +98,7 @@ QWT_CONFIG     += QwtMathML
 # Otherwise you have to build it from the designer directory.
 ######################################################################
 
-QWT_CONFIG     += QwtDesigner
+#QWT_CONFIG     += QwtDesigner
 
 ######################################################################
 # If you want to auto build the examples, enable the line below

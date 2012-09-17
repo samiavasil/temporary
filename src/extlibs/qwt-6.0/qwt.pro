@@ -7,6 +7,7 @@
 # modify it under the terms of the Qwt License, Version 1.0
 ################################################################
 
+
 include( qwtconfig.pri )
 
 TEMPLATE = subdirs
