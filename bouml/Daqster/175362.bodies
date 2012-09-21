@@ -48,13 +48,13 @@ int i;
 if( 0 != len ){                                
     for( i=0; i < MSGS_NUM ;i++ ){             
         if( msgs[i].id == id ){                
-            msgs[i].len;                       
+            *len = msgs[i].len;                      
             return NO_ERR;                     
         }                                      
     }                                          
 }                                              
 return WRONG_PARAMS;                           
-!!!401154.cpp!!!	getHeaderSize() : int
-return PROTOCOL_HEADER_SIZE;
-!!!401282.cpp!!!	getPostFixSize() : int
-return PROTOCOL_POSTFIX_SIZE;
+!!!401154.cpp!!!	getHeaderLenBits() : int
+return PROTOCOL_HEADER_SIZE_BIT;
+!!!401282.cpp!!!	getPostFixLenBits() : int
+return PROTOCOL_POSTFIX_SIZE_BIT;

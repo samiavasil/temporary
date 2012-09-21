@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 54
+  revision 70
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -88,6 +88,32 @@ ${inlines}
 	  b parent class_ref 134914 // CPacketCollector
       end
 
+      classrelation 276994 // <dependency>
+	relation 276994 -_->
+	  a default
+	    cpp default "#include in source"
+	    classrelation_ref 276994 // <dependency>
+	  b parent class_ref 128386 // CPortIO
+      end
+
+      classrelation 283522 // <dependency>
+	relation 283522 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 283522 // <dependency>
+	  b parent class_ref 155522 // QMutex
+      end
+
+      classrelation 230018 // m_PacketsList (<directional aggregation>)
+	relation 230018 o-->
+	  stereotype "QList"
+	  a role_name "m_PacketsList" multiplicity "*" protected
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+"
+	    classrelation_ref 230018 // m_PacketsList (<directional aggregation>)
+	  b parent class_ref 135042 // CPacket
+      end
+
       operation 365186 "QPacketCollector"
 	public explicit_return_type ""
 	nparams 1
@@ -123,6 +149,21 @@ ${inlines}
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 414466 "transmitPacket"
+	cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -235,6 +276,34 @@ ${inlines}
 	
       end
 
+      operation 421378 "lockData"
+	cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 421634 "unlockData"
+	cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 364930 "getReceivedBytes"
 	cpp_virtual protected explicit_return_type "const u8*"
 	nparams 0
@@ -273,14 +342,14 @@ ${inlines}
 	  b parent class_ref 208002 // QByteArray
       end
 
-      classrelation 230018 // m_PacketsList (<directional aggregation>)
-	relation 230018 o-->
-	  stereotype "QList"
-	  a role_name "m_PacketsList" multiplicity "*" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type} *> ${name}${value};
+      attribute 227842 "m_Mutex"
+	protected explicit_type "QMutex"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
-	    classrelation_ref 230018 // m_PacketsList (<directional aggregation>)
-	  b parent class_ref 135042 // CPacket
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
       end
     end
 
@@ -866,7 +935,7 @@ ${inlines}
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${throw} {
   ${body}}
 "
 	
@@ -934,10 +1003,11 @@ ${inlines}
 
       operation 335618 "createPacketCollector"
 	cpp_virtual public explicit_return_type "CPacketCollector*"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	nparams 1
+	  param in name "cFwk" explicit_type "CFrameWork"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1240,9 +1310,9 @@ ${inlines}
 	nparams 2
 	  param in name "id" explicit_type "msg_id_t"
 	  param in name "data" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}, const ${t1} * ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}, const ${t1} ** ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, const ${t1} * ${p1}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}, const ${t1} ** ${p1}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1333,11 +1403,11 @@ ${inlines}
 	
       end
 
-      operation 357122 "packetLen"
+      operation 357122 "packetPayloadBitLen"
 	cpp_virtual protected explicit_return_type "int"
 	nparams 2
 	  param in name "packId" explicit_type "pack_id_t"
-	  param in name "packLenBits" explicit_type "int"
+	  param in name "payloadLenBits" explicit_type "int"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${staticnl}{
@@ -1352,10 +1422,10 @@ ${inlines}
       operation 300162 "checkPacketConsistency"
 	cpp_virtual protected explicit_return_type "int"
 	nparams 1
-	  param in name "data" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1366,10 +1436,12 @@ ${inlines}
 
       operation 356994 "findPacketStart"
 	cpp_virtual public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	nparams 2
+	  param in name "data" explicit_type "u8"
+	  param in name "len" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1400,6 +1472,52 @@ ${inlines}
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 414594 "addPacketHeader"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 1
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 414722 "addPacketPostFix"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 1
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 428162 "calCulateCrc8"
+	protected explicit_return_type "int"
+	nparams 2
+	  param in name "data" explicit_type "u8"
+	  param in name "numBits" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}, ${t1} ${p1}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1562,7 +1680,7 @@ ${inlines}
 	
       end
 
-      operation 401154 "getHeaderSize"
+      operation 401154 "getHeaderLenBits"
 	cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1576,7 +1694,7 @@ ${inlines}
 	
       end
 
-      operation 401282 "getPostFixSize"
+      operation 401282 "getPostFixLenBits"
 	cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -2080,6 +2198,18 @@ ${namespace_end}
 "
       cpp_src "${comment}
 ${includes}
+#include \"base/CPacket.h\"
+#include \"base/CPacketCollector.h\"
+#include \"qt/QProtocolPackFactory.h\"
+#include \"qt/QProtocolLoader.h\"
+#include<stdio.h>
+pack_id_t pId[4]={
+    PACK1_ID,
+    PACK2_ID,
+    PACK3_ID,
+    PACK4_ID,
+};
+
 ${namespace_start}
 ${members}
 ${namespace_end}"
@@ -2105,6 +2235,9 @@ ${namespace_end}
 ${includes}
 #include \"qt/QCommand.h\"
 #include \"qt/QCommandExecutor.h\"
+#include \"qt/QPortIOSimulator.h\"
+#include \"qt/QPacketCollector.h\"
+
 ${namespace_start}
 ${members}
 ${namespace_end}"
@@ -2144,6 +2277,19 @@ ${namespace_end}"
 ${comment}
 ${includes}
 ${declarations}
+enum{
+#define GEN_MSG_ENUMS
+#include\"ProtoGen.h\"
+
+};
+
+
+enum{
+#define GEN_PKT_ENUMS
+#include\"ProtoGen.h\"
+
+};
+
 ${namespace_start}
 ${definition}
 ${namespace_end}
@@ -2153,9 +2299,9 @@ ${namespace_end}
 ${includes}
 ${namespace_start}
 
-#define MAX_PACKET_SIZE_BIT  (100)
-#define PROTOCOL_HEADER_SIZE (2+2+1)
-#define PROTOCOL_POSTFIX_SIZE (0)
+#define MAX_PACKET_SIZE_BIT        (101)
+#define PROTOCOL_HEADER_SIZE_BIT   ((2+2)*8)
+#define PROTOCOL_POSTFIX_SIZE_BIT  ((1)*8)
 
 struct msg_desc{
     msg_id_t id;
@@ -2172,19 +2318,6 @@ struct pack_desc{
 typedef struct msg_desc  msg_desc_t;
 typedef struct pack_desc pack_desc_t;
 
-
-enum{
-#define GEN_MSG_ENUMS
-#include\"ProtoGen.h\"
-
-};
-
-
-enum{
-#define GEN_PKT_ENUMS
-#include\"ProtoGen.h\"
-
-};
 
 const msg_desc_t msgs[]={
     #define GEN_MSGS
@@ -2238,7 +2371,7 @@ ${namespace_end}"
 
 #ifdef GEN_PKTS
 #define ADD_MESSAGE(a,b,c,d)
-#define PACKET_DESC(a,b)        {a,arrea##a,(sizeof(arrea##a)/sizeof(arrea##a))},
+#define PACKET_DESC(a,b)        {a,arrea##a,(sizeof(arrea##a)/sizeof(msg_id_t))},
 #define PACKET_DESC_END()
 #define ADD_MESSAGE_TO_PACKET(a)
 #endif

@@ -5,16 +5,23 @@
 #include <QObject>
 
 #include "base/CPacketCollector.h"
-#include <QByteArray>
+#include <QMutex>
 
 #include <QList>
 
+#include <QByteArray>
 
-class CFrameWork;
+
+class CPortIO;
 class CPacket;
+class CFrameWork;
 
 class QPacketCollector : public QObject, public CPacketCollector {
 Q_OBJECT
+
+  protected:
+    QList<CPacket *> m_PacketsList;
+
 
   public:
     QPacketCollector(CFrameWork * cFwk);
@@ -22,6 +29,8 @@ Q_OBJECT
     ~QPacketCollector();
 
     virtual int getRecPacket();
+
+    virtual int transmitPacket(CPacket * packet);
 
     virtual int getRecPacketNum();
 
@@ -39,6 +48,10 @@ public slots:
 
     virtual int getNumberOfReceivedBytes();
 
+    virtual void lockData();
+
+    virtual void unlockData();
+
     virtual const u8* getReceivedBytes();
 
     virtual void removeReceivedBytes(int byteNum);
@@ -49,7 +62,7 @@ public slots:
 
 
   protected:
-    QList<CPacket *> m_PacketsList;
+    QMutex m_Mutex;
 
 };
 #endif

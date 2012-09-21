@@ -29,9 +29,9 @@ class CProtocolLoader {
 
     virtual msg_id_t getMsgIdForPack(const pack_id_t packID, int idx) = 0;
 
-    virtual int getHeaderSize() = 0;
+    virtual int getHeaderLenBits() = 0;
 
-    virtual int getPostFixSize() = 0;
+    virtual int getPostFixLenBits() = 0;
 
 };
 #endif

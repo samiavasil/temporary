@@ -81,12 +81,13 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    MainWindow w;
+    MainWindow w;//,w1;
     w.show();
+  //  w1.show();
 #ifdef TEST_ENBL_BIT_TEST
     testBits();
 #endif
-     QFrameWork frameWork( new QFrameWorkElementsFactory() ,&w );
+  //  QFrameWork frameWork( new QFrameWorkElementsFactory() ,&w );
   //  QCommandExecutor exec;
   //  QCommand* comm = new QCommand(NULL);
   //  exec.appendCommand(comm);

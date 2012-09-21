@@ -9,7 +9,7 @@ class CPortIO;
 class CFrameWork;
 
 class CPacketCollector {
-  private:
+  protected:
     CFrameWork * m_fWork;
 
 
@@ -32,17 +32,33 @@ class CPacketCollector {
 
     virtual int getNumberOfReceivedBytes() = 0;
 
+    virtual void lockData() = 0;
+
+    virtual void unlockData() = 0;
+
     virtual const u8* getReceivedBytes() = 0;
 
     virtual void removeReceivedBytes(int byteNum) = 0;
+
+
+  public:
+    virtual int transmitPacket(CPacket * packet) = 0;
 
 protected:
 typedef enum {
       COL_IDLE,
       COL_WAIT_FOR_HEADER,
       COL_WAIT_FOR_PACK
-} states_t ;
-    states_t state;
+} rec_states_t;
+protected:
+typedef enum {
+      TBD
+} trans_states_t;
+
+  protected:
+    rec_states_t m_RecState;
+
+    trans_states_t m_TransState;
 
 };
 #endif

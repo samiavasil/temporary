@@ -5,24 +5,33 @@
 #include <QList>
 #include "frame_work_global.h"
 class QFrameWork;
-class FRAME_WORKSHARED_EXPORT AnyTypeInterface{
+typedef enum{
+  FRAME_WORK,
+  PORT_IO
+}FrameWorktInterfaces_t;
+
+class plugin_interface{
+public:
+    virtual const char* name() const = 0;
+    virtual const FrameWorktInterfaces_t type()=0;
+};
+
+class FRAME_WORKSHARED_EXPORT AnyTypeInterface:public plugin_interface{
 public:
     virtual ~AnyTypeInterface() {}
     virtual QList<QObject*> getInterfaces()= 0;
-    virtual const char* name() const = 0;
+
 };
 
-class FRAME_WORKSHARED_EXPORT FrameWorkInterface{
+class FRAME_WORKSHARED_EXPORT FrameWorkInterface:public plugin_interface{
 public:
     virtual ~FrameWorkInterface() {}
-    virtual const char* name() = 0;
-    virtual  QFrameWork* getFrameWork() = 0;
+    virtual  QFrameWork* getFrameWork(QWidget* parent) = 0;
 };
 
-class FRAME_WORKSHARED_EXPORT IoInterface {
+class FRAME_WORKSHARED_EXPORT IoInterface:public plugin_interface{
 public:
     virtual ~IoInterface () {}
-    virtual const char* name() const = 0;
 };
 
 

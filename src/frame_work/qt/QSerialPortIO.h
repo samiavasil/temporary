@@ -3,6 +3,7 @@
 
 
 #include <QObject>
+
 #include "base/CPortIO.h"
 
 class QSerialPortIO : public QObject, public CPortIO {
@@ -24,7 +25,6 @@ Q_OBJECT
     int close();
 
     void readyReadSignal();
-
 
 };
 #endif

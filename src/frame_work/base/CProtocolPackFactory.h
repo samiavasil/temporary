@@ -22,7 +22,7 @@ class CProtocolPackFactory {
 
 
   protected:
-    virtual int checkPacketConsistency(const u8 * data) = 0;
+    virtual int checkPacketConsistency(CPacket * packet) = 0;
 
 
   public:
@@ -34,7 +34,7 @@ class CProtocolPackFactory {
 
     virtual int addMessageToPacket(const pack_id_t packID, const msg_id_t msgID) = 0;
 
-    virtual int findPacketStart() = 0;
+    virtual int findPacketStart(const u8 * data, int len) = 0;
 
     virtual int getMessageBitLen(msg_id_t msgId, int * msgLen) = 0;
 
@@ -44,7 +44,7 @@ class CProtocolPackFactory {
 
     virtual pack_id_t getPacketTypeFromData(const u8 * data) = 0;
 
-    virtual int getMessage(msg_id_t id, const u8 * data) = 0;
+    virtual int getMessage(msg_id_t id, const u8 ** data) = 0;
 
     virtual int setMessage(const msg_id_t msgId, const u8 * data) = 0;
 
@@ -68,13 +68,17 @@ class CProtocolPackFactory {
   protected:
     int getPacketHeader(CPacket * packet, u8 * header);
 
-    int setPacketHeader(CPacket * packet, u8 * header);
 
-    int setPacketPostFix(CPacket * packet, u8 * postfix);
+  public:
+    virtual int addPacketHeader(CPacket * packet) = 0;
 
+    virtual int addPacketPostFix(CPacket * packet) = 0;
+
+
+  protected:
     int getPacketPostFix(CPacket * packet, u8 * retPostFix);
 
-    virtual int packetLen(const pack_id_t packId, int * packLenBits) = 0;
+    virtual int packetPayloadBitLen(const pack_id_t packId, int * payloadLenBits) = 0;
 
     virtual int getPacketMessagesNumber(const pack_id_t packId, int * msgNum) = 0;
 
@@ -82,37 +86,37 @@ class CProtocolPackFactory {
 
 
   public:
-    inline int getProtocolHeaderLen() const;
+    inline int getProtocolHeaderLenBits() const;
 
-    inline void setProtocolHeaderLen(int size);
+    inline void setProtocolHeaderLenBits(int lenBits);
 
-    inline int getProtocolPostFixLen() const;
+    inline int getProtocolPostFixLenBits() const;
 
-    inline void setProtocolPostFixLen(int size);
+    inline void setProtocolPostFixLenBits(int lenBits);
 
 
   protected:
-    int m_hDrSize;
+    int m_hDrLenBits;
 
-    int m_postFixSize;
+    int m_postFixLenBits;
 
     int m_maxPacketSize;
 
 };
-inline int CProtocolPackFactory::getProtocolHeaderLen() const {
-  return m_hDrSize;
+inline int CProtocolPackFactory::getProtocolHeaderLenBits() const {
+  return m_hDrLenBits;
 }
 
-inline void CProtocolPackFactory::setProtocolHeaderLen(int size) {
-  m_hDrSize = size;
+inline void CProtocolPackFactory::setProtocolHeaderLenBits(int lenBits) {
+  m_hDrLenBits = lenBits;
 }
 
-inline int CProtocolPackFactory::getProtocolPostFixLen() const {
-  return m_postFixSize;
+inline int CProtocolPackFactory::getProtocolPostFixLenBits() const {
+  return m_postFixLenBits;
 }
 
-inline void CProtocolPackFactory::setProtocolPostFixLen(int size) {
-  m_postFixSize = size;
+inline void CProtocolPackFactory::setProtocolPostFixLenBits(int lenBits) {
+  m_postFixLenBits = lenBits;
 }
 
 #endif

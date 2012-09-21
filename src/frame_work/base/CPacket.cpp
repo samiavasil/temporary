@@ -2,43 +2,50 @@
 #include "base/CPacket.h"
 
 #include <string.h>
-CPacket::CPacket(const pack_id_t & packType, int packLenBytes, int packHdrLenBytes, int packPostFixLenBytes) {
-  if( 0 < packLenBytes ){                          
-    m_data = new u8[packLenBytes];                 
-  }                                                
-  else{                                            
-    m_data = NULL;                                 
-  }                                                
-  m_packLenBytes    = packLenBytes;                
-  m_packType        = packType;                    
-  m_hdrLenBytes     = packHdrLenBytes;             
-  m_postFixLenBytes = packPostFixLenBytes;         
+CPacket::CPacket(const pack_id_t packType, int packLenBit) {
+  DEBUG( "Create Packet[%d] - Bit size =%d",packType, packLenBit );                          
+  m_packType        = packType;                                                              
+  m_packLenBits     = packLenBit;                                                            
+  if( 0 < m_packLenBits ){                                                                   
+    m_data = new u8[BITS_TO_BYTES_CEIL(m_packLenBits)];    
+    memset( m_data,0,BITS_TO_BYTES_CEIL(m_packLenBits) );  
+  }                                                                                          
+  else{                                                                                      
+    CRITICAL( "Can't memory allocate Packet[%d] - Bit size =%d",m_packType, m_packLenBits ); 
+    m_packType = PKT_ID_INVALID;                                                             
+    m_data = NULL;                                                                           
+  }                                                                                          
 }
 
 CPacket::~CPacket() {
+  DEBUG("Destroy Packet[%d]",m_packType);
   if( m_data ){        
       delete [] m_data;
   }                    
 }
 
 int CPacket::setData(const u8 * data) {
-  int ret = NO_ERR;                           
-  if( data )                                  
-  {                                           
-      memcpy( m_data, data, m_packLenBytes ); 
-  }                                           
-  else{                                       
-      ret = WRONG_PARAMS;                     
-  }                                           
-  return ret;                                 
+  int ret = NO_ERR;                                                
+  if( data )                                                       
+  {                                                                
+      memcpy( m_data, data, BITS_TO_BYTES_CEIL(m_packLenBits) );   
+  }                                                                
+  else{                                                            
+      ret = WRONG_PARAMS;                                          
+  }                                                                
+  return ret;                                                      
 }
 
-const u8* CPacket::data() {
+const u8* CPacket::data() const {
   return m_data;
 }
 
-int CPacket::packLen() {
-  return m_packLenBytes;
+int CPacket::packLenBits() const {
+  return m_packLenBits;
+}
+
+int CPacket::packLenBytes() const {
+  return BITS_TO_BYTES_CEIL(m_packLenBits);
 }
 
 pack_id_t CPacket::packType() {
@@ -52,9 +59,14 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
   int bytes_num      = BITS_TO_BYTES_CEIL( bit_num);                                
   int i = 0;                                                                        
                                                                                     
-  if( ( 0 > bit_offset )||( 0 > bit_num )||(NULL == data) ){                        
-      return WRONG_PARAMS;                                                          
-  }                                                                                 
+  if(  ( 0 > bit_offset )||( 0 > bit_num )||
+       ( m_packLenBits < ( bit_offset + bit_num ) )||
+       ( NULL == data )
+    )
+  {
+      return WRONG_PARAMS;
+  }
+                                                                                                                                                         
                                                                                     
   if( 0 != (bit_offset%8) ){                                                        
       if( 0 < bit_num ){                                                            

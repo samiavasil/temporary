@@ -3,13 +3,17 @@
 
 
 #include "base/CPortIO.h"
+#include "base/CProtocolPackFactory.h"
+#include "base/CCommandExecutor.h"
+#include "base/CPacketCollector.h"
+#include "base/CControlView.h"
+#include "base/CDataPlot.h"
 
-class CProtocolPackFactory;
-class CCommandExecutor;
-class CPacketCollector;
-class CControlView;
-class CDataPlot;
+class CFrameWork;
 
+/**
+ *  
+ */
 class CFrameWorkElementsFactory {
   public:
     virtual CPortIO* createPortIO(const CPortIO::portIo_type type) = 0;
@@ -18,7 +22,7 @@ class CFrameWorkElementsFactory {
 
     virtual CCommandExecutor* createCommandExecutor() = 0;
 
-    virtual CPacketCollector* createPacketCollector() = 0;
+    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk) = 0;
 
     virtual CControlView* createControlView() = 0;
 

@@ -18,6 +18,10 @@ public:
 private slots:
     void on_actionNew_triggered();
 
+    void on_actionFullScreen_triggered(bool checked);
+
+    void on_actionHideToolbar_triggered(bool checked);
+
 private:
     Ui::MainWindow *ui;
 };

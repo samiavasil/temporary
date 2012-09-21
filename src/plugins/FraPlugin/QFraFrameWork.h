@@ -2,7 +2,7 @@
 #define QFRAFRAMEWORK_H
 #include "qt/QFrameWork.h"
 
-#include <ui_qframeworkview.h>
+#include <ui_qfra_frame_work_view.h>
 #include "fra_plugin_global.h"
 class QWidget;
 
@@ -13,7 +13,7 @@ public:
    ~QFraFrameWork();
 
 protected:
-   Ui::QFrameWorkView * ui;
+   Ui::QFraFrameWorkView * ui;
 };
 
 #endif // QFRAFRAMEWORK_H

@@ -15,7 +15,8 @@ include( $${QWT_ROOT}/qwtfunctions.pri )
 
 TEMPLATE  = lib
 
-DESTDIR         = $${QWT_ROOT}/lib
+################PIPANO OT MEN
+DESTDIR           = $${QWT_ROOT}/../../../bin/extlibs
 INCLUDEPATH    += $${QWT_ROOT}/src
 DEPENDPATH     += $${QWT_ROOT}/src
 

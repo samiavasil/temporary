@@ -1,5 +1,5 @@
 class QFrameWorkElementsFactory
-!!!379010.cpp!!!	QFrameWorkElementsFactory()
+!!!379010.cpp!!!	QFrameWorkElementsFactory(in cFwk : CFrameWork)
 DEBUG("Create QFrameWorkElementsFactory");
 !!!379138.cpp!!!	~QFrameWorkElementsFactory()
 DEBUG("Destroy QFrameWorkElementsFactory");
@@ -26,9 +26,9 @@ if( 0 == port ){
     CRITICAL( "Can't create QPortIO" );          
 }                                                
 return port;                                     
-!!!335362.cpp!!!	createPrtocol() : CProtocolPackFactory*
+!!!335362.cpp!!!	createProtocol() : CProtocolPackFactory*
 DEBUG("Create Protocol"); 
-CProtocolPackFactory* protocol = new QProtocolPackFactory(NULL);
+CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader());
 if( 0 == protocol ){
     CRITICAL( "Can't create QProtocolPackFactory" );
 }
@@ -43,12 +43,12 @@ if( 0 != exec ){
 }                                                        
 return ( exec );                                         
 !!!335618.cpp!!!	createPacketCollector() : CPacketCollector*
-DEBUG("Create Packet Collector");                
-QPacketCollector* coll = new QPacketCollector(NULL);//TODO
-if( 0 == coll ){                                 
-    CRITICAL( "Can't create QPacketCollector" ); 
-}                                                
-return ( coll );                                 
+  DEBUG("Create Packet Collector");                
+  QPacketCollector* coll = new QPacketCollector(cFwk);//TODO
+  if( 0 == coll ){                                 
+      CRITICAL( "Can't create QPacketCollector" ); 
+  }                                                
+  return ( coll ); 
 !!!335746.cpp!!!	createControlView() : CControlView*
 DEBUG("Create Control View");
 return NULL;                 

@@ -3,7 +3,7 @@
 #include "base/CCommand.h"
 
 CCommandExecutor::CCommandExecutor() {
-  m_CommandLoopTime = 5;
+  m_CommandLoopTime = 10;
 }
 
 /**

@@ -4,6 +4,19 @@
 
 #include "base/CProtocolLoader.h"
 
+enum{
+#define GEN_MSG_ENUMS
+#include"ProtoGen.h"
+
+};
+
+
+enum{
+#define GEN_PKT_ENUMS
+#include"ProtoGen.h"
+
+};
+
 class QProtocolLoader : public CProtocolLoader {
   public:
     virtual int readProtocolData();
@@ -24,11 +37,11 @@ class QProtocolLoader : public CProtocolLoader {
 
 
   protected:
-    virtual int getMsgIdLen(const msg_id_t id, int *len);
+    virtual int getMsgIdLen(const msg_id_t id, int * len);
 
-    virtual int getHeaderSize();
+    virtual int getHeaderLenBits();
 
-    virtual int getPostFixSize();
+    virtual int getPostFixLenBits();
 
 };
 #endif

@@ -90,7 +90,7 @@ QWT_CONFIG     += QwtSvg
 # to your qmake project file.
 ######################################################################
 
-QWT_CONFIG     += QwtMathML
+#QWT_CONFIG     += QwtMathML
 
 ######################################################################
 # If you want to build the Qwt designer plugin, 

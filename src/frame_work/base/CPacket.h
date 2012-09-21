@@ -5,15 +5,17 @@
 #include"base/CProtocolPackFactory.h"
 class CPacket {
   public:
-    CPacket(const pack_id_t & packType, int packLenBytes, int packHdrLenBytes = 2, int packPostFixLenBytes = 2);
+    CPacket(const pack_id_t packType, int packLenBit);
 
     ~CPacket();
 
     virtual int setData(const u8 * data);
 
-    virtual const u8* data();
+    virtual const u8* data() const;
 
-    virtual int packLen();
+    virtual int packLenBits() const;
+
+    int packLenBytes() const;
 
     virtual pack_id_t packType();
 
@@ -25,13 +27,12 @@ class CPacket {
   protected:
     u8* m_data;
 
-    int m_packLenBytes;
-
     pack_id_t m_packType;
 
-    int m_hdrLenBytes;
-
-    int m_postFixLenBytes;
+    /**
+     * Packet data size in bytes. Should be used for read/write check.
+     */
+    int m_packLenBits;
 
 };
 #endif

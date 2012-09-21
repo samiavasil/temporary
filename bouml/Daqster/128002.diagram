@@ -22,7 +22,7 @@ classcanvas 128770 class_ref 128386 // CPortIO
 end
 classcanvas 128898 class_ref 134914 // CPacketCollector
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyzwh 260 330 2000 169 191
+  xyzwh 260 330 2000 169 251
 end
 classcanvas 129026 class_ref 135042 // CPacket
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -42,7 +42,7 @@ classcanvas 130178 class_ref 135426 // CCommand
 end
 classcanvas 133506 class_ref 194946 // CFrameWorkElementsFactory
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 44 534 3005
+  xyz 12 545 3005
 end
 relationcanvas 128386 relation_ref 134530 // <directional aggregation>
   geometry VHr
@@ -114,7 +114,7 @@ end
 relationcanvas 132226 relation_ref 142338 // <dependency>
   geometry VHr
   decenter_end 685
-  from ref 129154 z 2001 to point 369 528
+  from ref 129154 z 2001 to point 357 528
   line 133634 z 2001 to ref 129026
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -146,7 +146,38 @@ relationcanvas 133378 relation_ref 189442 // <dependency>
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 133762 relation_ref 249986 // <dependency>
+  decenter_begin 458
   from ref 133506 z 3006 to ref 128770
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 133890 relation_ref 269954 // <dependency>
+  decenter_end 966
+  from ref 133506 z 3006 to ref 129154
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 134018 relation_ref 270082 // <dependency>
+  from ref 133506 z 3006 to ref 128642
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 134146 relation_ref 270210 // <dependency>
+  from ref 133506 z 3006 to ref 128898
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 134274 relation_ref 270338 // <dependency>
+  decenter_begin 921
+  decenter_end 773
+  from ref 133506 z 3006 to ref 128130
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 134402 relation_ref 270466 // <dependency>
+  decenter_begin 86
+  decenter_end 293
+  from ref 133506 z 3006 to ref 128258
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

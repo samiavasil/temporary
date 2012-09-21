@@ -9,6 +9,7 @@
 #include "base/CProtocolPackFactory.h"
 #include "base/CCommandExecutor.h"
 #include "base/CPacketCollector.h"
+#include "base/CFrameWork.h"
 #include "base/CControlView.h"
 #include "base/CDataPlot.h"
 #include "qt/QPortIOSimulator.h"
@@ -48,7 +49,7 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
 
 CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
   DEBUG("Create Protocol"); 
-  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader() );
+  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader());
   if( 0 == protocol ){
       CRITICAL( "Can't create QProtocolPackFactory" );
   }
@@ -66,13 +67,13 @@ CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
   return ( exec );                                         
 }
 
-CPacketCollector* QFrameWorkElementsFactory::createPacketCollector() {
-  DEBUG("Create Packet Collector");                
-  QPacketCollector* coll = new QPacketCollector(NULL);//TODO
-  if( 0 == coll ){                                 
-      CRITICAL( "Can't create QPacketCollector" ); 
-  }                                                
-  return ( coll );                                 
+CPacketCollector* QFrameWorkElementsFactory::createPacketCollector(CFrameWork * cFwk) {
+    DEBUG("Create Packet Collector");                
+    QPacketCollector* coll = new QPacketCollector(cFwk);//TODO
+    if( 0 == coll ){                                 
+        CRITICAL( "Can't create QPacketCollector" ); 
+    }                                                
+    return ( coll ); 
 }
 
 CControlView* QFrameWorkElementsFactory::createControlView() {

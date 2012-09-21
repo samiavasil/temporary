@@ -10,17 +10,24 @@ TARGET = DeviceFabriquePlugin
 TEMPLATE = lib
 
 INCLUDEPATH += ../../frame_work
-INCLUDEPATH += ../../new_src
-DEFINES += DEVICEFABRIQUEPLUGIN_LIBRARY
+INCLUDEPATH += ../../extlibs/include
+#INCLUDEPATH += ../../new_src
+LIBS += -L../../../bin/extlibs -L../../../bin/libs  -lframe_work -lqwt
+
+DEFINES += DEVICE_FACTORY_PLUGIN_LIBRARY
 
 SOURCES += \
     frameworkinterface.cpp \
-    QFraFrameWork.cpp
+    QFraFrameWork.cpp \
+    qtestcommand.cpp \
+    QDataPlot.cpp
 
 HEADERS += \
     frameworkinterface.h \
     QFraFrameWork.h \
-    fra_plugin_global.h
+    fra_plugin_global.h \
+    qtestcommand.h \
+    QDataPlot.h
 
 CONFIG      += plugin
 
@@ -31,4 +38,8 @@ CONFIG      += plugin
 #LIBS += -L../../  -lfra
 
 FORMS += \
-    qframeworkview.ui
+    qdataplot.ui \
+    qfra_frame_work_view.ui
+
+RESOURCES += \
+    proba.qrc

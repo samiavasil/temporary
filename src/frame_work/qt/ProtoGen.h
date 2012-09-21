@@ -25,7 +25,7 @@
 
 #ifdef GEN_PKTS
 #define ADD_MESSAGE(a,b,c,d)
-#define PACKET_DESC(a,b)        {a,arrea##a,(sizeof(arrea##a)/sizeof(arrea##a))},
+#define PACKET_DESC(a,b)        {a,arrea##a,(sizeof(arrea##a)/sizeof(msg_id_t))},
 #define PACKET_DESC_END()
 #define ADD_MESSAGE_TO_PACKET(a)
 #endif

@@ -9,6 +9,7 @@
 
 
 class QProtocolLoader;
+class CPacket;
 
 class QProtocolPackFactory : public CProtocolPackFactory {
   public:
@@ -39,7 +40,7 @@ class QProtocolPackFactory : public CProtocolPackFactory {
 
     virtual int addMessageToPacket(const pack_id_t packID, const msg_id_t msgID);
 
-    virtual int getMessage(msg_id_t id, const u8 * data);
+    virtual int getMessage(msg_id_t id, const u8 ** data);
 
     virtual int setMessage(const msg_id_t msgId, const u8 * data);
 
@@ -53,17 +54,25 @@ class QProtocolPackFactory : public CProtocolPackFactory {
 
     virtual int getPacketMessagesNumber(const pack_id_t packId, int * msgNum);
 
-    virtual int packetLen(const pack_id_t packId, int * packLenBits);
+    virtual int packetPayloadBitLen(const pack_id_t packId, int * payloadLenBits);
 
-    virtual int checkPacketConsistency(const u8 * data);
+    virtual int checkPacketConsistency(CPacket * packet);
 
 
   public:
-    virtual int findPacketStart();
+    virtual int findPacketStart(const u8 * data, int len);
 
     virtual int getPacketLenFromData(const u8 * data);
 
     virtual pack_id_t getPacketTypeFromData(const u8 * data);
+
+
+  protected:
+    virtual int addPacketHeader(CPacket * packet);
+
+    virtual int addPacketPostFix(CPacket * packet);
+
+    int calCulateCrc8(const u8 * data, int numBits);
 
 };
 #endif

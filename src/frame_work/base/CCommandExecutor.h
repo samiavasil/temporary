@@ -71,19 +71,18 @@ class CCommandExecutor {
  * Timer based Commands handling loop
  */
 inline void CCommandExecutor::timerHandlerExecuteAllCommands() {
-  lockObject();                        
- // int com_num = ;
-  for( int i = 0; i < getCommNum(); i++ ){
-      if( 0 == executeCommand( i ) )   
-      {                                
-          removeCommand(i);
-          i--;
-      }                                
-  }                                    
-  if( 0 < getCommNum() ){              
-    startTimer( );   
-  }                                    
-  unlockObject();                      
+    lockObject();                        
+     for( int i = 0; i < getCommNum(); i++ ){
+        if( 0 == executeCommand( i ) )   
+        {                                
+            removeCommand(i);
+            i--;
+        }                                
+    }                                    
+    if( 0 < getCommNum() ){              
+      startTimer( );   
+    }                                    
+    unlockObject();                               
 }
 
 #endif

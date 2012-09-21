@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 60
+  revision 74
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -558,6 +558,14 @@ ${inlines}
       explicit_switch_type ""
       
       comment " "
+      classrelation 249986 // <dependency>
+	relation 249986 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 249986 // <dependency>
+	  b parent class_ref 128386 // CPortIO
+      end
+
       operation 321410 "createPortIO"
 	abstract cpp_virtual public explicit_return_type "CPortIO*"
 	nparams 1
@@ -594,8 +602,9 @@ ${inlines}
 
       operation 321794 "createPacketCollector"
 	abstract cpp_virtual public explicit_return_type "CPacketCollector*"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	nparams 1
+	  param in name "cFwk" explicit_type "CFrameWork"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -697,12 +706,44 @@ ${inlines}
 	
       end
 
-      classrelation 249986 // <dependency>
-	relation 249986 -_->
+      classrelation 269954 // <dependency>
+	relation 269954 -_->
 	  a package
 	    cpp default "#include in header"
-	    classrelation_ref 249986 // <dependency>
-	  b parent class_ref 128386 // CPortIO
+	    classrelation_ref 269954 // <dependency>
+	  b parent class_ref 135554 // CProtocolPackFactory
+      end
+
+      classrelation 270082 // <dependency>
+	relation 270082 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270082 // <dependency>
+	  b parent class_ref 135298 // CCommandExecutor
+      end
+
+      classrelation 270210 // <dependency>
+	relation 270210 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270210 // <dependency>
+	  b parent class_ref 134914 // CPacketCollector
+      end
+
+      classrelation 270338 // <dependency>
+	relation 270338 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270338 // <dependency>
+	  b parent class_ref 128258 // CControlView
+      end
+
+      classrelation 270466 // <dependency>
+	relation 270466 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270466 // <dependency>
+	  b parent class_ref 128130 // CDataPlot
       end
     end
 
@@ -883,7 +924,7 @@ ${inlines}
 
       classrelation 142082 // m_fWork (<directional aggregation>)
 	relation 142082 o-->
-	  a role_name "m_fWork" private
+	  a role_name "m_fWork" protected
 	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
 "
 	    classrelation_ref 142082 // m_fWork (<directional aggregation>)
@@ -988,6 +1029,28 @@ ${inlines}
 	
       end
 
+      operation 421250 "lockData"
+	abstract cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 421506 "unlockData"
+	abstract cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
       operation 231298 "getReceivedBytes"
 	abstract cpp_virtual protected explicit_return_type "const u8*"
 	nparams 0
@@ -1011,14 +1074,26 @@ ${inlines}
 	
       end
 
-      extra_member 134658 "typedef states_t"
+      operation 414338 "transmitPacket"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 1
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      extra_member 134658 "rec_states_t"
 	
 	cpp "protected:
 typedef enum {
       COL_IDLE,
       COL_WAIT_FOR_HEADER,
       COL_WAIT_FOR_PACK
-} states_t ;
+} rec_states_t;
 " ""
 	java ""
 	php ""
@@ -1026,8 +1101,31 @@ typedef enum {
 	idl ""
       end
 
-      attribute 141314 "state"
-	protected explicit_type "states_t"
+      extra_member 193666 "trans_states_t"
+	
+	cpp "protected:
+typedef enum {
+      TBD
+} trans_states_t;
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      attribute 141314 "m_RecState"
+	protected explicit_type "rec_states_t"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 221314 "m_TransState"
+	protected explicit_type "trans_states_t"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
 	java_decl ""
@@ -1051,16 +1149,12 @@ ${inlines}
       
       operation 143362 "CPacket"
 	public explicit_return_type ""
-	nparams 4
+	nparams 2
 	  param in name "packType" explicit_type "pack_id_t"
-	  param in name "packLenBytes" explicit_type "int"
-	  param in name "packHdrLenBytes" explicit_type "int"
-	    defaultvalue "2"
-	  param in name "packPostFixLenBytes" explicit_type "int"
-	    defaultvalue "2"
-	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} & ${p0}${v0}, ${t1} ${p1}${v1}, ${t2} ${p2}${v2}, ${t3} ${p3}${v3}${)}${volatile}${throw};
+	  param in name "packLenBit" explicit_type "int"
+	cpp_decl "    ${comment}${inline}${name}${(}const ${t0} ${p0}${v0}, ${t1} ${p1}${v1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, ${t1} ${p1}, ${t2} ${p2}, ${t3} ${p3}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} ${p0}, ${t1} ${p1}${)}${throw} {
   ${body}}
 "
 	
@@ -1099,7 +1193,7 @@ ${inlines}
       end
 
       operation 144258 "data"
-	cpp_virtual public explicit_return_type "const u8*"
+	const cpp_virtual public explicit_return_type "const u8*"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1112,8 +1206,22 @@ ${inlines}
 	
       end
 
-      operation 144386 "packLen"
-	cpp_virtual public explicit_return_type "int"
+      operation 144386 "packLenBits"
+	const cpp_virtual public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 407810 "packLenBytes"
+	const public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1184,17 +1292,6 @@ ${inlines}
 	idl_decl ""
       end
 
-      attribute 154370 "m_packLenBytes"
-	protected explicit_type "int"
-	init_value "0"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
-      end
-
       attribute 160898 "m_packType"
 	protected explicit_type "pack_id_t"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
@@ -1205,7 +1302,7 @@ ${inlines}
 	idl_decl ""
       end
 
-      attribute 161026 "m_hdrLenBytes"
+      attribute 214786 "m_packLenBits"
 	protected explicit_type "int"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
@@ -1213,16 +1310,7 @@ ${inlines}
 	php_decl ""
 	python_decl ""
 	idl_decl ""
-      end
-
-      attribute 161154 "m_postFixLenBytes"
-	protected explicit_type "int"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
+	comment "Packet data size in bytes. Should be used for read/write check."
       end
     end
 
@@ -1367,7 +1455,7 @@ ${inlines}
 	
       end
 
-      operation 279042 "getHeaderSize"
+      operation 279042 "getHeaderLenBits"
 	abstract cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1378,7 +1466,7 @@ ${inlines}
 	
       end
 
-      operation 279170 "getPostFixSize"
+      operation 279170 "getPostFixLenBits"
 	abstract cpp_virtual protected explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1451,8 +1539,8 @@ ${inlines}
       operation 272002 "checkPacketConsistency"
 	abstract cpp_virtual protected explicit_return_type "int"
 	nparams 1
-	  param in name "data" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "packet" type class_ref 135042 // CPacket
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1511,8 +1599,10 @@ ${inlines}
 
       operation 158594 "findPacketStart"
 	abstract cpp_virtual public explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+	nparams 2
+	  param in name "data" explicit_type "u8"
+	  param in name "len" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}, ${t1} ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1576,7 +1666,7 @@ ${inlines}
 	nparams 2
 	  param in name "id" explicit_type "msg_id_t"
 	  param in name "data" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}, const ${t1} * ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}, const ${t1} ** ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1717,15 +1807,11 @@ return ret;"
 	
       end
 
-      operation 245378 "setPacketHeader"
-	protected explicit_return_type "int"
-	nparams 2
+      operation 245378 "addPacketHeader"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 1
 	  param in name "packet" type class_ref 135042 // CPacket
-	  param in name "header" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1733,15 +1819,11 @@ return ret;"
 	
       end
 
-      operation 252034 "setPacketPostFix"
-	protected explicit_return_type "int"
-	nparams 2
+      operation 252034 "addPacketPostFix"
+	abstract cpp_virtual public explicit_return_type "int"
+	nparams 1
 	  param in name "packet" type class_ref 135042 // CPacket
-	  param in name "postfix" explicit_type "u8"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1765,11 +1847,11 @@ return ret;"
 	
       end
 
-      operation 272130 "packetLen"
+      operation 272130 "packetPayloadBitLen"
 	abstract cpp_virtual protected explicit_return_type "int"
 	nparams 2
 	  param in name "packId" explicit_type "pack_id_t"
-	  param in name "packLenBits" explicit_type "int"
+	  param in name "payloadLenBits" explicit_type "int"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} ${p0}, ${t1} * ${p1}${)}${const}${volatile}${throw}${abstract};
 "
 	
@@ -1805,7 +1887,7 @@ return ret;"
 	
       end
 
-      operation 293250 "getProtocolHeaderLen"
+      operation 293250 "getProtocolHeaderLenBits"
 	const cpp_inline public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1819,10 +1901,10 @@ return ret;"
 	
       end
 
-      operation 293378 "setProtocolHeaderLen"
+      operation 293378 "setProtocolHeaderLenBits"
 	cpp_inline public explicit_return_type "void"
 	nparams 1
-	  param in name "size" explicit_type "int"
+	  param in name "lenBits" explicit_type "int"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
@@ -1834,7 +1916,7 @@ return ret;"
 	
       end
 
-      operation 293506 "getProtocolPostFixLen"
+      operation 293506 "getProtocolPostFixLenBits"
 	const cpp_inline public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
@@ -1848,10 +1930,10 @@ return ret;"
 	
       end
 
-      operation 293634 "setProtocolPostFixLen"
+      operation 293634 "setProtocolPostFixLenBits"
 	cpp_inline public explicit_return_type "void"
 	nparams 1
-	  param in name "size" explicit_type "int"
+	  param in name "lenBits" explicit_type "int"
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
@@ -1863,7 +1945,7 @@ return ret;"
 	
       end
 
-      attribute 167682 "m_hDrSize"
+      attribute 167682 "m_hDrLenBits"
 	protected explicit_type "int"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
@@ -1873,7 +1955,7 @@ return ret;"
 	idl_decl ""
       end
 
-      attribute 167810 "m_postFixSize"
+      attribute 167810 "m_postFixLenBits"
 	protected explicit_type "int"
 	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
@@ -2112,6 +2194,7 @@ ${namespace_end}
 "
       cpp_src "${comment}
 ${includes}
+#include<stdio.h>//TODO DELL ME
 ${namespace_start}
 ${members}
 ${namespace_end}"
@@ -2197,7 +2280,7 @@ enum{
 #define FATAL    qFatal
 
 /* Calculate number of bytes needed for X bits */
-#define  BITS_TO_BYTES_CEIL(x) (( x/8 ) + (( x%8 )?1:0))
+#define BITS_TO_BYTES_CEIL(x) (( x/8 ) + (( x%8 )?1:0))
 #define BIT_MASK_BEFORE_BIT_U8( x )  (( ( 1 << x ) - 1  )&0xff)
 #define BIT_MASK_AFTER_BIT_U8( x )   ((~BIT_MASK_BEFORE_BIT_U8( x ))&0xff)
 

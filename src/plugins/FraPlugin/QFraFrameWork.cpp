@@ -1,12 +1,15 @@
 #include "QFraFrameWork.h"
 
 QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent):
-    QFrameWork( factory, parent ),ui(new Ui::QFrameWorkView)
+    QFrameWork( factory, parent ),ui(new Ui::QFraFrameWorkView)
 {
+   qDebug("Create QFraFrameWork");
    ui->setupUi(this);
+   //setCentralWidget(ui->mdiArea);
 }
 
 
 QFraFrameWork::~QFraFrameWork(){
-     delete ui;
+    qDebug("Destroy QFraFrameWork");
+    delete ui;
 }

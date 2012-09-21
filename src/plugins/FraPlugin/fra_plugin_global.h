@@ -3,7 +3,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(DEVICEFABRIQUEPLUGIN_LIBRARY)
+#if defined(DEVICE_FACTORY_PLUGIN_LIBRARY)
 #  define FRA_PLUGIN_EXPORT Q_DECL_EXPORT
 #else
 #  define FRA_PLUGIN_EXPORT Q_DECL_IMPORT

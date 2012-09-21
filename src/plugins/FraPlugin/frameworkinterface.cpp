@@ -11,8 +11,8 @@ frameworkinterface::~frameworkinterface(  )
     DEBUG("frameworkinterface object removed");
 }
 
-QFrameWork* frameworkinterface::getFrameWork(){
-    return new QFraFrameWork(new QFrameWorkElementsFactory());
+QFrameWork* frameworkinterface::getFrameWork(QWidget* parent){
+    return new QFraFrameWork(new QFrameWorkElementsFactory(),parent);
 }
 
 

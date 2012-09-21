@@ -1,17 +1,14 @@
-window_sizes 1280 964 392 882 855 35
+window_sizes 1280 964 290 984 855 35
 diagrams
   classdiagram_ref 128002 // FrameWorkClassDiagram
-    953 847 100 4 0 0
+    862 847 100 4 0 0
   active  classdiagram_ref 134530 // QTFrameWorkClassDiagram
-    882 855 70 18 0 0
+    984 855 90 18 0 0
 end
 show_stereotypes
-selected class_ref 135170 // CProtocolLoader
+selected class_ref 175234 // QProtocolPackFactory
 open
-  class_ref 135170 // CProtocolLoader
-  deploymentview_ref 128002 // BaseFrameWorkClassView
-  class_ref 175362 // QProtocolLoader
-  deploymentview_ref 134530 // QTFrameWorkClassView
-  classview_ref 141058 // ExternalClassView
+  class_ref 135042 // CPacket
+  classview_ref 134530 // QTFrameWorkClassView
 end
 end

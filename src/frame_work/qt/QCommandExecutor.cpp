@@ -18,6 +18,9 @@ QCommandExecutor::~QCommandExecutor() {
   if( NO_ERR != ret ){                                           
      DEBUG(" Can't terminate Command Executor thread corectly"); 
   }                                                              
+  if( m_timer ){
+      m_timer->deleteLater();
+  }
 }
 
 /**

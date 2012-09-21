@@ -13,6 +13,9 @@ if( NO_ERR == ret){
 if( NO_ERR != ret ){                                           
    DEBUG(" Can't terminate Command Executor thread corectly"); 
 }                                                              
+if( m_timer ){
+    m_timer->deleteLater();
+}
 !!!173826.cpp!!!	appendCommand(in command : CCommand) : int
 int ret = NO_ERR;                                     
 if( command ){                                        

@@ -62,29 +62,30 @@ void QPortIOSimulator::readyReadSignal() {
 }
 
 void QPortIOSimulator::reloadSimulatorTask() {
-  int randTime = (qrand()%20);                               
+  int randTime = (qrand()%5);
   QTimer::singleShot( randTime, this, SLOT(simulatorTask()));
-  m_TaskRuned = true;                                        
+  m_TaskRuned = true;          
 }
 
 void QPortIOSimulator::simulatorTask() {
-  int randSize = (qrand()%100) + 1;                                             
+  int randSize = (qrand()%10 ) + 1;
   m_Mutex.lock();                                                               
   if(   randSize > m_WriteData.size() ){                                        
       randSize = m_WriteData.size();                                            
   }                                                                             
   if( 0 < randSize ){                                                           
       m_Data.append( m_WriteData.left(randSize) );                              
-      m_WriteData.remove( 0, randSize );                                        
-      m_ReadCounter += randSize;                                                
+      m_WriteData.remove( 0, randSize );     
+  
   }                                                                             
   if( 0 < m_WriteData.size() ){                                                 
       reloadSimulatorTask();                                                    
   }                                                                             
   else{                                                                         
-    DEBUG("m_ReadCounter = %d m_WriteCounter = %d",m_ReadCounter,m_WriteCounter);
+    //  DEBUG("m_ReadCounter = %d m_WriteCounter = %d",m_ReadCounter,m_WriteCounter);
+       m_TaskRuned = false;	 
   }                                                                             
   m_Mutex.unlock();                                                             
-  readyReadSignal();                                                            
+  readyReadSignal();        
 }
 

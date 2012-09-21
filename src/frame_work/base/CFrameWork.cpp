@@ -72,7 +72,7 @@ int CFrameWork::attachElementsFactory(CFrameWorkElementsFactory * elementsFactor
       m_Executor    = m_ElementsFactory->createCommandExecutor();    
       m_Protocol    = m_ElementsFactory->createProtocol();            
       m_PortIO      = m_ElementsFactory->createPortIO(CPortIO::SIMULATOR_IO);//TODO FIX ME            
-      m_Colector    = m_ElementsFactory->createPacketCollector();                                                                
+      m_Colector    = m_ElementsFactory->createPacketCollector(this);                                                               
   }                                                                  
   else{                                                              
       DEBUG("Attach NULL to  ElementsFactory");                      

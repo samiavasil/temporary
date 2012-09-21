@@ -13,6 +13,7 @@ class CPortIO;
 class CProtocolPackFactory;
 class CCommandExecutor;
 class CPacketCollector;
+class CFrameWork;
 class CControlView;
 class CDataPlot;
 class QPortIOSimulator;
@@ -29,7 +30,7 @@ class QFrameWorkElementsFactory : public CFrameWorkElementsFactory {
 
     virtual CCommandExecutor* createCommandExecutor();
 
-    virtual CPacketCollector* createPacketCollector();
+    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk);
 
     virtual CControlView* createControlView();
 

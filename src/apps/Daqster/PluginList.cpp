@@ -4,6 +4,18 @@
 #include <QPluginLoader>
 #include <QDir>
 #include "qt/QFrameWork.h"
+#include <QMdiArea>
+
+/*class WMyWI:public QTableWidgetItem{
+public:
+    WMyWI( const QString &text ):QTableWidgetItem ( text ){
+        DEBUG("CREATE WMyWI");
+    }
+    ~WMyWI( ){
+        DEBUG("DELETE WMyWI");
+    }
+};*/
+
 
 PluginList::PluginList(QWidget *parent) :
     QDialog(parent),
@@ -15,31 +27,26 @@ PluginList::PluginList(QWidget *parent) :
 
 PluginList::~PluginList()
 {
+    //ui->pluginList->clear();
     delete ui;
 }
-
+#include <QMdiSubWindow>
 void PluginList::populatePluginList(){
     QDir pluginsDir(qApp->applicationDirPath());
     pluginsDir.cd("plugins");
-    ui->pluginList->setColumnCount(3);
-    ui->pluginList->setRowCount(0);
-
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        ui->pluginList->insertRow( ui->pluginList->rowCount() );
         QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if( plugin ){
             FrameWorkInterface *frame = qobject_cast<FrameWorkInterface *>(plugin);
             if( frame ){
-                ui->pluginList->setItem( ui->pluginList->rowCount() - 1, 0,new QTableWidgetItem( frame->name()) );
-                ui->pluginList->setItem( ui->pluginList->rowCount() - 1, 2,new QTableWidgetItem( fileName ) );
+                ui->activePluginList->addItem( frame->name() );
                 //ui->pluginList->setItem( ui->pluginList->rowCount() - 1, 2,new QTableWidgetItem( fileName ) );
                 //ui->pluginList->addItem(QString("Plugin: %1   PluginFileName: %2").arg(frame->name()).arg(fileName));
             }
         }
         loader.unload();
     }
-    //ui->pluginList->setCurrentRow(0);
 }
 
 void PluginList::on_okButton_clicked()

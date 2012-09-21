@@ -4,7 +4,7 @@
 
 #include "base/CFrameWork.h"
 #include <QWidget>
-
+#include <QMainWindow>
 
 class QFrameWorkElementsFactory;
 

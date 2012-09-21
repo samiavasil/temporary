@@ -24,7 +24,7 @@ enum{
 #define FATAL    qFatal
 
 /* Calculate number of bytes needed for X bits */
-#define  BITS_TO_BYTES_CEIL(x) (( x/8 ) + (( x%8 )?1:0))
+#define BITS_TO_BYTES_CEIL(x) (( x/8 ) + (( x%8 )?1:0))
 #define BIT_MASK_BEFORE_BIT_U8( x )  (( ( 1 << x ) - 1  )&0xff)
 #define BIT_MASK_AFTER_BIT_U8( x )   ((~BIT_MASK_BEFORE_BIT_U8( x ))&0xff)
 
