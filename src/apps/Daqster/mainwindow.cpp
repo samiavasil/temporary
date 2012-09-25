@@ -4,7 +4,7 @@
 #include"qt/QFrameWork.h"
 #include"PluginList.h"
 #include<QMdiSubWindow>
-
+#include<QMouseEvent>
 
 #if 0
 void PluginList::populatePluginList(){
@@ -40,20 +40,20 @@ void PluginList::populatePluginList(){
                 fw_old = mdi->addSubWindow(fw);
 #if 0
                 QTabBar* tabbar = mdi->findChild<QTabBar*>();
-                  if( tabbar ){
-                      QSize size( 30,30);
+                if( tabbar ){
+                    QSize size( 30,30);
 
-                   //   tabbar->setSizePolicy( QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred) );
-                   //   tabbar->resize(size);
-                      //size = tabbar->iconSize();
-                      //size.setHeight(2*size.height());
-                      //size.setWidth(2*size.width());
-                      tabbar->setIconSize(size);
-                      tabbar->setTabIcon( tabbar->count()-1,QIcon(QString::fromUtf8(":/new/prefix1/icons/radiobutton_on.png")));
-                  }
+                    //   tabbar->setSizePolicy( QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred) );
+                    //   tabbar->resize(size);
+                    //size = tabbar->iconSize();
+                    //size.setHeight(2*size.height());
+                    //size.setWidth(2*size.width());
+                    tabbar->setIconSize(size);
+                    tabbar->setTabIcon( tabbar->count()-1,QIcon(QString::fromUtf8(":/new/prefix1/icons/radiobutton_on.png")));
+                }
 
 #endif
-                  fw->show();
+                fw->show();
 
             }
             else
@@ -69,7 +69,7 @@ void PluginList::populatePluginList(){
                 }
 */
             }
-a++;
+            a++;
 
 
         }
@@ -88,13 +88,39 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setCentralWidget(ui->mdiArea);
+    addAction(ui->actionNew);
+    addAction(ui->actionSave);
+    addAction(ui->actionOpen);
+    addAction(ui->actionFullScreen);
+    addAction(ui->actionHideMainMenu);
+    addAction(ui->actionHideToolbar);
+    setMouseTracking(true);
+    ui->mainToolBar->setMouseTracking(true);
+    ui->mdiArea->setMouseTracking(true);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+#include<QDebug>
+void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
+    if( event ){
+        if( !menuBar()->isVisible() ){
+            if( ( 10 >= event->pos().y() ) && ( 10 >= event->pos().x() ) ){
+                menuBar()->show();
+            }
+        }
+        else{
+            int height = menuBar()->size().height();
+            if( ( ui->actionHideMainMenu->isChecked() ) && ( height < event->pos().y() )  ){
+                menuBar()->hide();
+            }
+        }
+    }
+    QMainWindow::mouseMoveEvent(event);
+}
 
 void MainWindow::on_actionNew_triggered()
 {
@@ -102,7 +128,7 @@ void MainWindow::on_actionNew_triggered()
 
     if( QDialog::Accepted == pList.exec() )
     {
-       //DEBUG("%d", pList.exec());
+        //DEBUG("%d", pList.exec());
     }
 }
 
@@ -111,27 +137,9 @@ void MainWindow::on_actionFullScreen_triggered(bool checked)
     static QMdiSubWindow* old;
     if( checked ){
         showFullScreen();
-        /*if( ui->mdiArea->currentSubWindow() ){
-           //setCentralWidget(ui->centralWidget);
-           old = ui->mdiArea->currentSubWindow();
-           ui->mdiArea->removeSubWindow( old );//showMinimized();
-           old->setParent(NULL);
-           old->showFullScreen();
-           old->show();
-           //ui->mdiArea->currentSubWindow()->;
-        }*/
-
-    //    ui->mainToolBar->hide();
-    //    ui->statusBar->hide();
-        //ui->mdiArea->showMaximized();
-     //   menuBar()->hide();
     }
     else{
         showNormal();
-        //old
-     //   menuBar()->show();
-     //   ui->mainToolBar->show();
-     //   ui->statusBar->show();
     }
 
 }
@@ -139,11 +147,22 @@ void MainWindow::on_actionFullScreen_triggered(bool checked)
 void MainWindow::on_actionHideToolbar_triggered(bool checked)
 {
     if( checked ){
-       ui->mainToolBar->hide();
-       ui->statusBar->hide();
+        ui->mainToolBar->hide();
+        ui->statusBar->hide();
     }
     else{
         ui->mainToolBar->show();
         ui->statusBar->show();
+    }
+}
+
+
+void MainWindow::on_actionHideMainMenu_triggered(bool checked)
+{
+    if( checked ){
+        menuBar()->hide();
+    }
+    else{
+        menuBar()->show();
     }
 }

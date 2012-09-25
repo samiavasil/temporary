@@ -3,7 +3,7 @@
 #include "qt/QFrameWorkElementsFactory.h"
 frameworkinterface::frameworkinterface(QObject* parent ):QObject(parent)
 {
-    strcpy(nameto,"FrameWorkInterface");
+    strcpy(nameto,"Fra FrameWork");
 }
 
 frameworkinterface::~frameworkinterface(  )

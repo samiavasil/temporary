@@ -22,6 +22,10 @@ private slots:
 
     void on_actionHideToolbar_triggered(bool checked);
 
+    void on_actionHideMainMenu_triggered(bool checked);
+
+protected:
+    virtual void mouseMoveEvent ( QMouseEvent * event );
 private:
     Ui::MainWindow *ui;
 };

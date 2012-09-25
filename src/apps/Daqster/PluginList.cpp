@@ -40,7 +40,7 @@ void PluginList::populatePluginList(){
         if( plugin ){
             FrameWorkInterface *frame = qobject_cast<FrameWorkInterface *>(plugin);
             if( frame ){
-                ui->activePluginList->addItem( frame->name() );
+              //  ui->availablePlugins->( frame->name() );
                 //ui->pluginList->setItem( ui->pluginList->rowCount() - 1, 2,new QTableWidgetItem( fileName ) );
                 //ui->pluginList->addItem(QString("Plugin: %1   PluginFileName: %2").arg(frame->name()).arg(fileName));
             }
