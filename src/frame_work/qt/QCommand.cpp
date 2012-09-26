@@ -29,7 +29,7 @@ int QCommand::handler() {
   int ret =  1;
   static CPacket* packet = NULL;
   
-  if( a >= 1000 ){
+  if( a >= 1 ){
       ret =  0;
    //  DEBUG("QCommand Finished");
   }

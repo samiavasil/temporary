@@ -31,12 +31,6 @@ public:
     }
     virtual QIcon       icon() const {
         QIcon icon( ":/fra/icons/FrameWork.png" );
-        QList<QSize> list = icon.availableSizes();
-  //      qDebug()<<"List Sizes\n";
-        for(int i=0;i<list.count();i++){
-       //     qDebug()<<list[i];
-        }
-
         return icon;
     }
 
