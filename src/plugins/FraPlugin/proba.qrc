@@ -6,4 +6,8 @@
         <file>icons/Move Row Down.png</file>
         <file>icons/Search.png</file>
     </qresource>
+    <qresource prefix="/fra">
+        <file>icons/FrameWork.png</file>
+        <file>icons/Io.png</file>
+    </qresource>
 </RCC>

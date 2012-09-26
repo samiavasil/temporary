@@ -7,13 +7,13 @@ namespace Ui {
 class PluginList;
 }
 
-class PluginList : public QDialog
+class QPluginList : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit PluginList(QWidget *parent = 0);
-    ~PluginList();
+    explicit QPluginList(QWidget *parent = 0);
+    ~QPluginList();
     
 private slots:
     void on_okButton_clicked();

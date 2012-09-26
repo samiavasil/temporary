@@ -124,7 +124,7 @@ void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
 void MainWindow::on_actionNew_triggered()
 {
-    PluginList pList(ui->mdiArea);
+    QPluginList pList(ui->mdiArea);
 
     if( QDialog::Accepted == pList.exec() )
     {

@@ -17,17 +17,17 @@ LIBS += -L../../../bin/extlibs -L../../../bin/libs  -lframe_work -lqwt
 DEFINES += DEVICE_FACTORY_PLUGIN_LIBRARY
 
 SOURCES += \
-    frameworkinterface.cpp \
     QFraFrameWork.cpp \
     qtestcommand.cpp \
-    QDataPlot.cpp
+    QDataPlot.cpp \
+    FraFrameWorkInterface.cpp
 
 HEADERS += \
-    frameworkinterface.h \
     QFraFrameWork.h \
     fra_plugin_global.h \
     qtestcommand.h \
-    QDataPlot.h
+    QDataPlot.h \
+    FraFrameWorkInterface.h
 
 CONFIG      += plugin
 
