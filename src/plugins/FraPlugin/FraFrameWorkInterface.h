@@ -29,11 +29,13 @@ public:
     virtual const char* description() const{
         return "Frequency Response Analyzer\n This softwer is a nekaw software.\rProba ";
     }
-    virtual QIcon       icon() const {
-        QIcon icon( ":/fra/icons/FrameWork.png" );
-        return icon;
+    virtual QIcon    const   icon() const {
+        m_Icon.availableSizes();
+        return m_Icon;
     }
 
+protected:
+    QIcon m_Icon;
 };
 
 #endif // FRAMEWORKINTERFACE_H

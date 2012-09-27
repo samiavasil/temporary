@@ -3,6 +3,7 @@
 #include "qt/QFrameWorkElementsFactory.h"
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QObject(parent)
 {
+    m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 FraFrameWorkInterface::~FraFrameWorkInterface(  )
