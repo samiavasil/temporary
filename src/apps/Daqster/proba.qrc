@@ -1,17 +1,13 @@
 <RCC>
     <qresource prefix="/new/prefix1">
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/Line Graph 48 n p.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/Move Row Down 48 n p.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/Search 48 h p.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/services.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/radiobutton_on.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/channel.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/channel_scan.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/exit.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/new.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/open.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/satellite.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/save.png</file>
-        <file>../../../media/disk/data/Projects/NEW_FRA/QT_/src/icons/transponder.png</file>
+        <file>icons/radiobutton_on.png</file>
+        <file>icons/services.png</file>
+        <file>icons/Line Graph.png</file>
+        <file>icons/Move Row Down.png</file>
+        <file>icons/Search.png</file>
+    </qresource>
+    <qresource prefix="/fra">
+        <file>icons/FrameWork.png</file>
+        <file>icons/Io.png</file>
     </qresource>
 </RCC>
