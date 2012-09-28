@@ -3,17 +3,23 @@
 
 #include <QtPlugin>
 #include <QList>
+#include <QIcon>
 #include "frame_work_global.h"
+
 class QFrameWork;
 typedef enum{
   FRAME_WORK,
   PORT_IO
-}FrameWorktInterfaces_t;
+}InterfaceType_t;
 
 class plugin_interface{
 public:
-    virtual const char* name() const = 0;
-    virtual const FrameWorktInterfaces_t type()=0;
+    virtual const char* name() const        = 0;
+    virtual const InterfaceType_t type()  = 0;
+    virtual const char* category() const    = 0;
+    virtual const char* version() const     = 0;
+    virtual const char* description() const = 0;
+    virtual QIcon      icon() const = 0;
 };
 
 class FRAME_WORKSHARED_EXPORT AnyTypeInterface:public plugin_interface{

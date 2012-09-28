@@ -17,7 +17,7 @@ public:
 };*/
 
 
-PluginList::PluginList(QWidget *parent) :
+QPluginList::QPluginList(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginList)
 {
@@ -25,22 +25,44 @@ PluginList::PluginList(QWidget *parent) :
     populatePluginList();
 }
 
-PluginList::~PluginList()
+QPluginList::~QPluginList()
 {
     //ui->pluginList->clear();
     delete ui;
 }
 #include <QMdiSubWindow>
-void PluginList::populatePluginList(){
+#include<QDebug>
+void QPluginList::populatePluginList(){
     QDir pluginsDir(qApp->applicationDirPath());
     pluginsDir.cd("plugins");
+    ui->availablePlugins->setColumnCount(3);
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = loader.instance();
         if( plugin ){
             FrameWorkInterface *frame = qobject_cast<FrameWorkInterface *>(plugin);
-            if( frame ){
-                ui->activePluginList->addItem( frame->name() );
+            if(0){// frame ){
+                ui->availablePlugins->insertRow(0);
+                QTableWidgetItem *item = new QTableWidgetItem(frame->name());
+                if( !frame->icon().isNull() ){
+
+                    item->setIcon( frame->icon() );
+setWindowIcon(frame->icon());
+                    QList<QSize> list = frame->icon().availableSizes();
+                    qDebug()<<"List Sizes\n";
+                    for(int i=0;i<list.count();i++){
+                        qDebug()<<list[i];
+                    }
+                }
+                ui->availablePlugins->setItem( 0, 0, item );
+
+                item = new QTableWidgetItem(frame->category());
+                ui->availablePlugins->setItem( 0, 1, item );
+
+               // item = new QTableWidgetItem();
+                /*frame->description()
+                ui->availablePlugins->setItem( 0, 2, item );*/
+
                 //ui->pluginList->setItem( ui->pluginList->rowCount() - 1, 2,new QTableWidgetItem( fileName ) );
                 //ui->pluginList->addItem(QString("Plugin: %1   PluginFileName: %2").arg(frame->name()).arg(fileName));
             }
@@ -49,13 +71,13 @@ void PluginList::populatePluginList(){
     }
 }
 
-void PluginList::on_okButton_clicked()
+void QPluginList::on_okButton_clicked()
 {
     close();
     setResult( Accepted );
 }
 
-void PluginList::on_cancelButton_clicked()
+void QPluginList::on_cancelButton_clicked()
 {
     close();
     setResult( Rejected );
