@@ -160,11 +160,7 @@
                <item>
                 <widget class="QPlainTextEdit" name="pluginDescription">
                  <property name="plainText">
-                  <string>Version: 0.10
-Source:
-Plugin Description:
-
-As far as I can tell the only way to change the default look is to hack the CSS and JSPs by hand. I noticed the icons to minimize a portlet, maximize it, edit it, etc had transparent backgrounds, therefore it gave me some hope that they should be able to be used when simply changing the background color of the portlet bar. I made a simple modification to the CSS to test this, unfortulately it seems like some of the pink background creeped into the icons.</string>
+                  <string/>
                  </property>
                  <property name="backgroundVisible">
                   <bool>false</bool>

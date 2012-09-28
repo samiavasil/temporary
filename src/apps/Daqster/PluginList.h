@@ -2,7 +2,10 @@
 #define PLUGINLIST_H
 
 #include <QDialog>
-
+#include <QString>
+#include <QMap>
+#include <QPluginLoader>
+#include <QTableWidgetItem>
 namespace Ui {
 class PluginList;
 }
@@ -20,10 +23,18 @@ private slots:
     void on_cancelButton_clicked();
 
 protected:
+    void readPluginsDir( );
     void populatePluginList();
-private:
 
+protected slots:
+    void listSelectionChanged(QTableWidgetItem *item);
+
+protected:
+    QMap< QString,QPluginLoader*  > m_PluginList;
+private:
     Ui::PluginList *ui;
+
+
 };
 
 #endif // PLUGINLIST_H
