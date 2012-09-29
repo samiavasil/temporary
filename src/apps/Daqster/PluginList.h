@@ -10,6 +10,8 @@ namespace Ui {
 class PluginList;
 }
 
+
+
 class QPluginList : public QDialog
 {
     Q_OBJECT
@@ -26,11 +28,18 @@ protected:
     void readPluginsDir( );
     void populatePluginList();
 
+
+signals:
+    void reload();
+public slots:
+    void reloadPlugins( );
 protected slots:
     void listSelectionChanged(QTableWidgetItem *item);
 
+
 protected:
     QMap< QString,QPluginLoader*  > m_PluginList;
+
 private:
     Ui::PluginList *ui;
 

@@ -33,7 +33,6 @@ public:
         QIcon icon( ":/fra/icons/FrameWork.png" );
         return icon;
     }
-
 };
 
 #endif // FRAMEWORKINTERFACE_H

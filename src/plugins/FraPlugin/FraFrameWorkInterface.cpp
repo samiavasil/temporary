@@ -3,6 +3,7 @@
 #include "qt/QFrameWorkElementsFactory.h"
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QObject(parent)
 {
+    DEBUG("frameworkinterface object created");
 }
 
 FraFrameWorkInterface::~FraFrameWorkInterface(  )
