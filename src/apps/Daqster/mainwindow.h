@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include "base/global.h"
 #include <QMainWindow>
+#include"PluginList.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,8 +27,11 @@ private slots:
 
 protected:
     virtual void mouseMoveEvent ( QMouseEvent * event );
+protected:
+    QPluginList m_PluginList;
 private:
     Ui::MainWindow *ui;
+
 };
 
 #endif // MAINWINDOW_H

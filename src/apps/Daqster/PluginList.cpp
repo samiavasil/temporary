@@ -46,12 +46,16 @@ void QPluginList::readPluginsDir( ){
         if(  false == m_PluginList.contains( fileName ) ){
             QPluginLoader* loader = new QPluginLoader(pluginsDir.absoluteFilePath(fileName));
             if( 0 != loader ){
-                if( loader->load() ){
-                    m_PluginList.insert( fileName, loader );
-                }
-                if( loader->unload() ){
-                if( loader->load() )
-                  plugin =  loader->instance();
+                if( 1 ){//loader->load() ){
+                     plugin =  loader->instance();
+                     if( plugin && (!m_PluginList.contains(fileName) ) ){
+                         m_PluginList.insert( fileName, loader );
+                         delete plugin;
+                     }
+                     else{
+                         qDebug()<<"Can't create instance from plugin file: "<< pluginsDir.absoluteFilePath(fileName);
+                         delete loader;
+                     }
                 }
             }
         }
@@ -81,7 +85,6 @@ void QPluginList::populatePluginList(){
                 if( !frame->icon().isNull() ){
                     QIcon icon = frame->icon();
                     item->setIcon( icon );
-                    setWindowIcon(icon);
                 }
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
                 ui->availablePlugins->setItem( 0, 0, item );
