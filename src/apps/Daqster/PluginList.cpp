@@ -48,7 +48,7 @@ void QPluginList::readPluginsDir( ){
         QMapIterator<QString,QPluginLoader* > loader(m_PluginList);
         while( loader.hasNext() ){
             loader.next();
-            if( loader.value()->instance() ){
+            if( loader.value() && loader.value()->instance() ){
                 if( loader.value()->unload() ){
                     qDebug()<<"Suxesfully unload before delete"<<loader.value()->fileName();
                 }
@@ -64,6 +64,7 @@ void QPluginList::readPluginsDir( ){
             if( 0 != loader ){
                 plugin =  loader->instance();
                 if( 0 != plugin ){
+                    qDebug() << fileName << ":vvv: " << loader << endl;
                     m_PluginList.insert( fileName, loader );
                     plugin->deleteLater();
                 }
@@ -82,7 +83,7 @@ void QPluginList::readPluginsDir( ){
 
 void QPluginList::populatePluginList(){
     plugin_interface *plugin;
-
+    int i =0;
     ui->availablePlugins->clear();
     ui->availablePlugins->setRowCount(0);
     ui->availablePlugins->setColumnCount(3);
@@ -95,24 +96,25 @@ void QPluginList::populatePluginList(){
             QObject *object = pluginLoader->instance();
             plugin = dynamic_cast<plugin_interface *>(qobject_cast<FrameWorkInterface*>(object));//qobject_cast
             if( plugin ){
-                ui->availablePlugins->insertRow(0);
+                ui->availablePlugins->insertRow( i );
                 QTableWidgetItem *item = new QTableWidgetItem(plugin->name());
                 if( !plugin->icon().isNull() ){
                     QIcon icon = plugin->icon();
                     item->setIcon( icon );
                 }
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 0, item );
+                ui->availablePlugins->setItem( i, 0, item );
 
                 item = new QTableWidgetItem(plugin->category());
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 1, item );
+                ui->availablePlugins->setItem( i, 1, item );
 
                 item = new QTableWidgetItem( pluginLoader->fileName() );
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
                 item->setCheckState ( Qt::Checked );
-                ui->availablePlugins->setItem( 0, 2, item );
+                ui->availablePlugins->setItem( i, 2, item );
                 object->deleteLater();
+                i++;
             }
         }
     }
