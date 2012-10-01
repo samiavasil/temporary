@@ -179,3 +179,8 @@ void QPluginList::on_cancelButton_clicked()
     close();
     setResult( Rejected );
 }
+
+QList<QPluginLoader*>  QPluginList::getAllActivePlugins( InterfaceType_t type ){
+    reloadPlugins();
+    m_PluginList;;
+}

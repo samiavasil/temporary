@@ -4,6 +4,7 @@
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QObject(parent)
 {
     DEBUG("frameworkinterface object created");
+    m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 FraFrameWorkInterface::~FraFrameWorkInterface(  )

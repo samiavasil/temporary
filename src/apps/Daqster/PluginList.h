@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QPluginLoader>
 #include <QTableWidgetItem>
+#include "interfaces.h"
 namespace Ui {
 class PluginList;
 }
@@ -19,6 +20,7 @@ class QPluginList : public QDialog
 public:
     explicit QPluginList(QWidget *parent = 0);
     ~QPluginList();
+    QList<QPluginLoader*> getAllActivePlugins( InterfaceType_t type );
     
 private slots:
     void on_okButton_clicked();
