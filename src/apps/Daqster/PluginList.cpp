@@ -2,30 +2,34 @@
 #include "ui_pluginlist.h"
 #include "interfaces.h"
 #include <QDir>
-#include "qt/QFrameWork.h"
-#include <QMdiArea>
+#include<QDebug>
 
-class QPluginLoaderMy:public QPluginLoader{
-public:
-    QPluginLoaderMy( const QString &fileName,QObject *parent = 0):QPluginLoader ( fileName,parent ){
-        DEBUG("CREATE QPluginLoaderMy");
-    }
-    ~QPluginLoaderMy( ){
-        DEBUG("DELETE QPluginLoaderMy");
-    }
-};
 
+
+//class QMyTableWidgetItem:public QTableWidgetItem{
+//public:
+//    QMyTableWidgetItem( const QString &fileName,QObject *parent = 0):QTableWidgetItem ( fileName  ){
+//        qDebug("CREATE QMyTableWidgetItem");
+//    }
+//    ~QMyTableWidgetItem( ){
+//        qDebug("DELETE QMyTableWidgetItem");
+//    }
+//};
+//#define QTableWidgetItem QMyTableWidgetItem
 
 QPluginList::QPluginList(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginList)
 {
     ui->setupUi(this);
-    readPluginsDir();
+
     //populatePluginList();
     ui->availablePlugins->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->availablePlugins,SIGNAL(itemSelectionChanged ()),this, SLOT(listSelectionChanged()));
+    connect(ui->availablePlugins,SIGNAL(itemChanged(QTableWidgetItem*) ),this, SLOT(listSelectionChanged(QTableWidgetItem*)));
+    connect(this,SIGNAL(reload()) ,this, SLOT(reloadPlugins()));
+    connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
+    emit reload();
 }
 
 QPluginList::~QPluginList()
@@ -34,111 +38,135 @@ QPluginList::~QPluginList()
     delete ui;
 }
 
-#include <QMdiSubWindow>
-#include<QDebug>
+
 
 void QPluginList::readPluginsDir( ){
     QDir pluginsDir(qApp->applicationDirPath());
     QObject *plugin;
     pluginsDir.cd("plugins");
-    ui->availablePlugins->setColumnCount(3);
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        if(  false == m_PluginList.contains( fileName ) ){
-            QPluginLoader* loader = new QPluginLoader(pluginsDir.absoluteFilePath(fileName));
-            if( 0 != loader ){
-                if( 1 ){//loader->load() ){
-                     plugin =  loader->instance();
-                     if( plugin && (!m_PluginList.contains(fileName) ) ){
-                         m_PluginList.insert( fileName, loader );
-                         delete plugin;
-                     }
-                     else{
-                         qDebug()<<"Can't create instance from plugin file: "<< pluginsDir.absoluteFilePath(fileName);
-                         delete loader;
-                     }
+    if( m_PluginList.count() ){
+        QMapIterator<QString,QPluginLoader* > loader(m_PluginList);
+        while( loader.hasNext() ){
+            loader.next();
+            if( loader.value() && loader.value()->instance() ){
+                if( loader.value()->unload() ){
+                    qDebug()<<"Suxesfully unload before delete"<<loader.value()->fileName();
                 }
+            }
+            delete (loader.value());
+        }
+        m_PluginList.clear();
+    }
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        fileName = pluginsDir.absoluteFilePath(fileName);
+        if(  false == m_PluginList.contains( fileName ) ){
+            QPluginLoader* loader = new QPluginLoader(fileName);
+            if( 0 != loader ){
+                plugin =  loader->instance();
+                if( 0 != plugin ){
+                    qDebug() << fileName << ":vvv: " << loader << endl;
+                    m_PluginList.insert( fileName, loader );
+                    plugin->deleteLater();
+                }
+                else{
+                    qDebug()<<"Can't load plugin from file " << loader->fileName();
+                    loader->deleteLater();
+                }
+            }
+            else{
+                qDebug()<<"Can't create plugin loader from file " << pluginsDir.absoluteFilePath(fileName);
             }
         }
     }
-   populatePluginList();
+    populatePluginList();
 }
 
 void QPluginList::populatePluginList(){
-    QObject *plugin;
-    FrameWorkInterface *frame;
-    QDir pluginsDir(qApp->applicationDirPath());
-    pluginsDir.cd("plugins");
-
+    plugin_interface *plugin;
+    int i =0;
+    ui->availablePlugins->clear();
+    ui->availablePlugins->setRowCount(0);
     ui->availablePlugins->setColumnCount(3);
-
     QMapIterator<QString,QPluginLoader* > loader(m_PluginList);
     while ( loader.hasNext() ) {
         loader.next();
         qDebug() << loader.key() << ": " << loader.value() << endl;
         QPluginLoader* pluginLoader = loader.value();
         if( true == pluginLoader->load() ){
-            plugin = pluginLoader->instance();
-            frame = qobject_cast<FrameWorkInterface *>(plugin);
-            if( frame ){
-                ui->availablePlugins->insertRow(0);
-                QTableWidgetItem *item = new QTableWidgetItem(frame->name());
-                if( !frame->icon().isNull() ){
-                    QIcon icon = frame->icon();
+            QObject *object = pluginLoader->instance();
+            plugin = dynamic_cast<plugin_interface *>(qobject_cast<FrameWorkInterface*>(object));//qobject_cast
+            if( plugin ){
+                ui->availablePlugins->insertRow( i );
+                QTableWidgetItem *item = new QTableWidgetItem(plugin->name());
+                if( !plugin->icon().isNull() ){
+                    QIcon icon = plugin->icon();
                     item->setIcon( icon );
                 }
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 0, item );
+                ui->availablePlugins->setItem( i, 0, item );
 
-                item = new QTableWidgetItem(frame->category());
+                item = new QTableWidgetItem(plugin->category());
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 1, item );
+                ui->availablePlugins->setItem( i, 1, item );
 
-                item = new QTableWidgetItem();
+                item = new QTableWidgetItem( pluginLoader->fileName() );
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
                 item->setCheckState ( Qt::Checked );
-                ui->availablePlugins->setItem( 0, 2, item );
+                ui->availablePlugins->setItem( i, 2, item );
+                object->deleteLater();
+                i++;
             }
-            //m_PluginMap.insert();
         }
-
     }
-    /*
-    QPluginLoader* loader = new QPluginLoader(pluginsDir.absoluteFilePath(fileName));
-    if( 0 != loader ){
-        QObject *plugin = loader->instance();
-        if( plugin ){
-            FrameWorkInterface *frame = qobject_cast<FrameWorkInterface *>(plugin);
-            if( frame ){
-                ui->availablePlugins->insertRow(0);
-                QTableWidgetItem *item = new QTableWidgetItem(frame->name());
-                if( !frame->icon().isNull() ){
-                    QIcon icon = frame->icon();
-                    item->setIcon( icon );
-                    setWindowIcon(icon);
+}
+
+void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
+    int row = ui->availablePlugins->row(item);
+    if( 0 <= row ) {
+        QMap<QString,QPluginLoader* >::iterator loader = m_PluginList.begin();
+        qDebug()<<"Curent Row"<<row;
+
+        if(  Qt::Checked == ui->availablePlugins->item(row,2)->checkState() ){
+            if( NULL != (loader+row).value() ){
+                qDebug()<<"Hm..Someting Wrogng!!! Unloaded plugin but not NULL pointer";
+            }
+            QPluginLoader* plLoader = new QPluginLoader((loader+row).key());
+            if( plLoader ){
+                if( plLoader->instance() ){
+                    qDebug()<<"Suxesfully load "<<plLoader->fileName();
+                    (loader+row).value()=plLoader;
                 }
-                item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 0, item );
-
-                item = new QTableWidgetItem(frame->category());
-                item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-                ui->availablePlugins->setItem( 0, 1, item );
-
-                item = new QTableWidgetItem();
-                item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
-                item->setCheckState ( Qt::Checked );
-                ui->availablePlugins->setItem( 0, 2, item );
-                //m_PluginMap.insert();
+                else{
+                    qDebug()<<"Can't create instance - reload list ' "<<plLoader->fileName();
+                    emit reload();
+                }
             }
-            m_PluginList.insert( fileName, loader );
         }
-        //loader->unload();
+        else{
+
+            if( NULL != (loader+row).value() ){
+                delete (loader+row).value()->instance();
+                if( (loader+row).value()->unload() ){
+                    qDebug()<<"Suxesfully unload "<<(loader+row).value()->fileName();
+                }
+                else{
+                    qDebug()<<"Can't create instance - reload list ' "<< (loader+row).value()->fileName();
+                    emit reload();
+                }
+                delete (loader+row).value();
+                (loader+row).value()=NULL;
+            }
+        }
     }
-    */
 }
 
-void QPluginList::listSelectionChanged(){
-    qDebug()<<"Curent Row"<<ui->availablePlugins->currentRow();
+void QPluginList::reloadPlugins( ){
+    qDebug("Reload List");
+    ui->availablePlugins->blockSignals(true);
+    readPluginsDir();
+    ui->availablePlugins->blockSignals(false);
 }
+
 
 void QPluginList::on_okButton_clicked()
 {

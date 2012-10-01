@@ -82,8 +82,7 @@ void PluginList::populatePluginList(){
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),m_PluginList(this)
+    QMainWindow(parent),ui(new Ui::MainWindow),m_PluginList( this )
 {
     ui->setupUi(this);
     setCentralWidget(ui->mdiArea);
@@ -123,8 +122,6 @@ void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
 void MainWindow::on_actionNew_triggered()
 {
-
-
     if( QDialog::Accepted == m_PluginList.exec() )
     {
         //DEBUG("%d", pList.exec());

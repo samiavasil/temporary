@@ -5,10 +5,12 @@
 #include <QString>
 #include <QMap>
 #include <QPluginLoader>
-
+#include <QTableWidgetItem>
 namespace Ui {
 class PluginList;
 }
+
+
 
 class QPluginList : public QDialog
 {
@@ -26,11 +28,18 @@ protected:
     void readPluginsDir( );
     void populatePluginList();
 
+
+signals:
+    void reload();
+public slots:
+    void reloadPlugins( );
 protected slots:
-    void listSelectionChanged();
+    void listSelectionChanged(QTableWidgetItem *item);
+
 
 protected:
     QMap< QString,QPluginLoader*  > m_PluginList;
+
 private:
     Ui::PluginList *ui;
 

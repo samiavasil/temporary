@@ -33,7 +33,6 @@ public:
         m_Icon.availableSizes();
         return m_Icon;
     }
-
 protected:
     QIcon m_Icon;
 };
