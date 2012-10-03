@@ -45,7 +45,7 @@ void QPluginList::readPluginsDir( ){
     QObject *plugin;
     pluginsDir.cd("plugins");
     if( m_PluginList.count() ){
-        QMapIterator<QString,QPluginLoader* > loader(m_PluginList);
+        QMapIterator<QString,QPluginLoaderExt* > loader(m_PluginList);
         while( loader.hasNext() ){
             loader.next();
             if( loader.value() && loader.value()->instance() ){
@@ -60,17 +60,18 @@ void QPluginList::readPluginsDir( ){
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
-            QPluginLoader* loader = new QPluginLoader(fileName);
+            QPluginLoaderExt* loader = new QPluginLoaderExt(fileName);
             if( 0 != loader ){
+                loader->load();
                 plugin =  loader->instance();
                 if( 0 != plugin ){
                     qDebug() << fileName << ":vvv: " << loader << endl;
                     m_PluginList.insert( fileName, loader );
-                    plugin->deleteLater();
+                   // plugin->deleteLater();
                 }
                 else{
                     qDebug()<<"Can't load plugin from file " << loader->fileName();
-                    loader->deleteLater();
+                  //  loader->deleteLater();
                 }
 
             }
@@ -89,15 +90,17 @@ void QPluginList::populatePluginList(){
     ui->availablePlugins->clear();
     ui->availablePlugins->setRowCount(0);
     ui->availablePlugins->setColumnCount(3);
-    QMapIterator<QString,QPluginLoader* > loader(m_PluginList);
+    QMapIterator<QString,QPluginLoaderExt* > loader(m_PluginList);
     while ( loader.hasNext() ) {
         loader.next();
         qDebug() << loader.key() << ": " << loader.value() << endl;
-        QPluginLoader* pluginLoader = loader.value();
+        QPluginLoaderExt* pluginLoader = loader.value();
         if( true == pluginLoader->load() ){
             QObject *object = pluginLoader->instance();
             plugin = dynamic_cast<plugin_interface *>(qobject_cast<FrameWorkInterface*>(object));//qobject_cast
             if( plugin ){
+                QFrameWork* nn = (qobject_cast<FrameWorkInterface*>(object))->getFrameWork(0);
+                delete nn;
                 ui->availablePlugins->insertRow( i );
                 QTableWidgetItem *item = new QTableWidgetItem(plugin->name());
                 if( !plugin->icon().isNull() ){
@@ -115,7 +118,7 @@ void QPluginList::populatePluginList(){
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
                 item->setCheckState ( Qt::Checked );
                 ui->availablePlugins->setItem( i, 2, item );
-                object->deleteLater();
+                //object->deleteLater();
                 i++;
             }
         }
@@ -125,14 +128,14 @@ void QPluginList::populatePluginList(){
 void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
     int row = ui->availablePlugins->row(item);
     if( 0 <= row ) {
-        QMap<QString,QPluginLoader* >::iterator loader = m_PluginList.begin();
+        QMap<QString,QPluginLoaderExt* >::iterator loader = m_PluginList.begin();
         qDebug()<<"Curent Row"<<row;
 
         if(  Qt::Checked == ui->availablePlugins->item(row,2)->checkState() ){
             if( NULL != (loader+row).value() ){
                 qDebug()<<"Hm..Someting Wrogng!!! Unloaded plugin but not NULL pointer";
             }
-            QPluginLoader* plLoader = new QPluginLoader((loader+row).key());
+            QPluginLoaderExt* plLoader = new QPluginLoaderExt((loader+row).key());
             if( plLoader ){
                 if( plLoader->instance() ){
                     qDebug()<<"Suxesfully load "<<plLoader->fileName();
@@ -182,7 +185,7 @@ void QPluginList::on_cancelButton_clicked()
     setResult( Rejected );
 }
 
-QList<QPluginLoader*>  QPluginList::getAllActivePlugins( InterfaceType_t type ){
+QList<QPluginLoaderExt*>  QPluginList::getAllActivePlugins( InterfaceType_t type ){
     reloadPlugins();
     m_PluginList;;
 }

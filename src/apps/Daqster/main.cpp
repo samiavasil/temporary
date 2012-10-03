@@ -77,38 +77,8 @@ void testBits(){
 }
 #endif
 
-class base{
-public:
-    base(){
-        fprintf(stderr,"create base");
-    }
-    ~base(){
-        fprintf(stderr,"destroy base");
-    }
 
-};
 
-class first_child:public base{
-public:
-    first_child(){
-        fprintf(stderr,"create first_child");
-    }
-    ~first_child(){
-        fprintf(stderr,"destroy first_child");
-    }
-
-};
-
-class second_child :public first_child{
-public:
-    second_child(){
-        fprintf(stderr,"create second_child");
-    }
-    ~second_child(){
-        fprintf(stderr,"destroy second_child");
-    }
-
-};
 
 
 int main(int argc, char *argv[])
@@ -116,16 +86,6 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     MainWindow w;//,w1;
-
-    base* base_obj;
-    second_child* second_child_obj = new second_child;
-    base_obj = second_child_obj;
-
-    //delete base_obj;
-
-    delete second_child_obj;
-
-
     w.show();
   //  w1.show();
 #ifdef TEST_ENBL_BIT_TEST

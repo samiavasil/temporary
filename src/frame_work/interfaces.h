@@ -14,7 +14,7 @@ typedef enum{
 
 class plugin_interface{
 public:
-    virtual const InterfaceType_t  type()              = 0;
+    virtual     InterfaceType_t  type()           = 0;
     virtual const char*            name() const        = 0;
     virtual const char*            category() const    = 0;
     virtual const char*            version() const     = 0;

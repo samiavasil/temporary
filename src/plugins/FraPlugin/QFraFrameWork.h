@@ -8,9 +8,10 @@ class QWidget;
 
 class FRA_PLUGIN_EXPORT QFraFrameWork:public QFrameWork
 {
+
 public:
    QFraFrameWork(QFrameWorkElementsFactory * factory,QWidget * parent = 0 );
-   ~QFraFrameWork();
+   virtual ~QFraFrameWork();
 
 protected:
    Ui::QFraFrameWorkView * ui;

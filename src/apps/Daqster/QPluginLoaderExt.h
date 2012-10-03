@@ -7,8 +7,11 @@ class QPluginLoaderExt : public QPluginLoader
 {
     Q_OBJECT
 public:
-    explicit QPluginLoaderExt(QObject *parent = 0);
-    
+    explicit QPluginLoaderExt(const QString &fileName,QObject *parent = 0);
+    ~QPluginLoaderExt(){
+       qDebug("Destroy QPluginLoaderExt");
+    }
+
     QObject *instance();
 signals:
     

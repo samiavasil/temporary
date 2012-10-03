@@ -4,12 +4,15 @@
 
 #include "base/CFrameWork.h"
 #include <QWidget>
-#include <QMainWindow>
+
 
 class QFrameWorkElementsFactory;
 
-class QFrameWork : public CFrameWork, public QWidget {
-  public:
+class QFrameWork : public QWidget,public CFrameWork  {
+Q_OBJECT
+public:
     QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent = 0);
+    virtual ~QFrameWork(){ qDebug("Destroy QFrameWork");}
+
 };
 #endif

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QString>
 #include <QMap>
-#include <QPluginLoader>
+#include "QPluginLoaderExt.h"
 #include <QTableWidgetItem>
 #include "interfaces.h"
 namespace Ui {
@@ -20,7 +20,7 @@ class QPluginList : public QDialog
 public:
     explicit QPluginList(QWidget *parent = 0);
     ~QPluginList();
-    QList<QPluginLoader*> getAllActivePlugins( InterfaceType_t type );
+    QList<QPluginLoaderExt*> getAllActivePlugins( InterfaceType_t type );
     
 private slots:
     void on_okButton_clicked();
@@ -40,7 +40,7 @@ protected slots:
 
 
 protected:
-    QMap< QString,QPluginLoader*  > m_PluginList;
+    QMap< QString,QPluginLoaderExt*  > m_PluginList;
 
 private:
     Ui::PluginList *ui;

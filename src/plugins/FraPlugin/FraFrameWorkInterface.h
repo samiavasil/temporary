@@ -2,9 +2,10 @@
 #define FRAMEWORKINTERFACE_H
 
 #include <QObject>
-#include <QStringList>
+#include <QList>
 #include "fra_plugin_global.h"
 #include "interfaces.h"
+#include "QFraFrameWork.h"
 class QFrameWork;
 
 #define FRA_VERSION    "0.0"
@@ -19,7 +20,7 @@ public:
     ~FraFrameWorkInterface(  );
     virtual  QFrameWork* getFrameWork( QWidget *parent  );
     virtual const char* name() const     {return "FRA";}
-    virtual const InterfaceType_t type() {return FRAME_WORK;}
+    virtual  InterfaceType_t type()    {return FRAME_WORK;}
     virtual const char* category() const{
         return "FrameWork";
     }
@@ -32,8 +33,11 @@ public:
     virtual QIcon    const   icon() const {
         return m_Icon;
     }
+public slots:
+    void frameWorkDestroyed( QObject* fw );
 protected:
     QIcon m_Icon;
+    QList<QObject*> m_fw_objects;
 };
 
 #endif // FRAMEWORKINTERFACE_H
