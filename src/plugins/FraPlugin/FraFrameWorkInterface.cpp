@@ -12,8 +12,16 @@ FraFrameWorkInterface::~FraFrameWorkInterface(  )
     DEBUG("frameworkinterface object removed");
 }
 
-QFrameWork* FraFrameWorkInterface::getFrameWork(QWidget* parent){
-    return new QFraFrameWork(new QFrameWorkElementsFactory(),parent);
+QFrameWork* FraFrameWorkInterface::getFrameWork( QWidget* parent ){
+    // FIX ME - remove input params. New creted here framework should
+    // have a parent this - In this way we can attach new created QFrameWork
+    // destroy signal whit FrameWorkInterface onFrameDestroySlot.
+    // There we check is have aFraFrameWorkInterface->childs, aand
+    // if No we can call deleteLater  FrameWorkInterface (there are no
+    // objects associated with FraFrameWorkInterface). This will
+    // send destroy signal to assoxiates QPluginLoaderExt object and it
+    // can unload plugin wthout crashes
+    return new QFraFrameWork( new QFrameWorkElementsFactory(), parent/*this*/ );
 }
 
 

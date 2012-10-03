@@ -10,10 +10,12 @@ DESTDIR = ../../../bin
 INCLUDEPATH += ../../frame_work
 SOURCES += main.cpp\
         mainwindow.cpp \
-    PluginList.cpp
+    PluginList.cpp \
+    QPluginLoaderExt.cpp
 
 HEADERS  += mainwindow.h \
-    PluginList.h
+    PluginList.h \
+    QPluginLoaderExt.h
 
 FORMS    += mainwindow.ui \
     pluginlist.ui

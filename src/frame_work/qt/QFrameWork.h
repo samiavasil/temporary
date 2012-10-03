@@ -11,6 +11,5 @@ class QFrameWorkElementsFactory;
 class QFrameWork : public CFrameWork, public QWidget {
   public:
     QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent = 0);
-
 };
 #endif

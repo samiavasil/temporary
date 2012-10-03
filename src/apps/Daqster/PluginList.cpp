@@ -72,6 +72,7 @@ void QPluginList::readPluginsDir( ){
                     qDebug()<<"Can't load plugin from file " << loader->fileName();
                     loader->deleteLater();
                 }
+
             }
             else{
                 qDebug()<<"Can't create plugin loader from file " << pluginsDir.absoluteFilePath(fileName);
@@ -80,6 +81,7 @@ void QPluginList::readPluginsDir( ){
     }
     populatePluginList();
 }
+#include<qt/QFrameWork.h>
 
 void QPluginList::populatePluginList(){
     plugin_interface *plugin;
