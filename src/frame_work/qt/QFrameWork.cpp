@@ -7,7 +7,7 @@
 #include "qt/QPortIOSimulator.h"
 #include "qt/QPacketCollector.h"
 
-QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :CFrameWork( factory),QWidget( parent){
+QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :QWidget( parent),CFrameWork( factory){
     if( m_PortIO && m_Colector ){
         QPortIOSimulator* port            = dynamic_cast<QPortIOSimulator*> (m_PortIO);
         QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);

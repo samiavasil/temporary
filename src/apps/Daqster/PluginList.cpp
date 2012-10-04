@@ -3,7 +3,7 @@
 #include "interfaces.h"
 #include <QDir>
 #include<QDebug>
-
+#include "qt/QFrameWork.h"
 
 
 //class QMyTableWidgetItem:public QTableWidgetItem{
@@ -38,11 +38,11 @@ QPluginList::~QPluginList()
     delete ui;
 }
 
-
+#include<QtDesigner/QDesignerExtraInfoExtension>
 
 void QPluginList::readPluginsDir( ){
     QDir pluginsDir(qApp->applicationDirPath());
-    QObject *plugin;
+    QObject *plugin,*plugin1;
     pluginsDir.cd("plugins");
     if( m_PluginList.count() ){
         QMapIterator<QString,QPluginLoaderExt* > loader(m_PluginList);
@@ -61,13 +61,29 @@ void QPluginList::readPluginsDir( ){
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
             QPluginLoaderExt* loader = new QPluginLoaderExt(fileName);
+
+
             if( 0 != loader ){
                 loader->load();
+                QPluginLoaderExt* loader1 = new QPluginLoaderExt(fileName);
                 plugin =  loader->instance();
+                if( loader1->isLoaded() ){
+                    qDebug()<<"Already Loaded";
+                }
+
+                 plugin1 =  loader1->instance();
+//                FrameWorkInterface* interface = qobject_cast<FrameWorkInterface*>(plugin);
+
+
+
                 if( 0 != plugin ){
                     qDebug() << fileName << ":vvv: " << loader << endl;
-                    m_PluginList.insert( fileName, loader );
-                   // plugin->deleteLater();
+                    /*QFrameWork* nn = (qobject_cast<FrameWorkInterface*>(plugin))->getFrameWork(0);
+                    nn->show();
+                    for(int i=0;i<5;i++)
+                      ((qobject_cast<FrameWorkInterface*>(plugin))->getFrameWork(0))->show();*/
+                     m_PluginList.insert( fileName, loader );
+                     plugin->deleteLater();
                 }
                 else{
                     qDebug()<<"Can't load plugin from file " << loader->fileName();
@@ -80,7 +96,7 @@ void QPluginList::readPluginsDir( ){
             }
         }
     }
-    populatePluginList();
+ //   populatePluginList();
 }
 #include<qt/QFrameWork.h>
 
@@ -96,18 +112,17 @@ void QPluginList::populatePluginList(){
         qDebug() << loader.key() << ": " << loader.value() << endl;
         QPluginLoaderExt* pluginLoader = loader.value();
         if( true == pluginLoader->load() ){
-            QObject *object = pluginLoader->instance();
+            QObject* object = pluginLoader->instance();
             plugin = dynamic_cast<plugin_interface *>(qobject_cast<FrameWorkInterface*>(object));//qobject_cast
             if( plugin ){
-                QFrameWork* nn = (qobject_cast<FrameWorkInterface*>(object))->getFrameWork(0);
-                delete nn;
+
                 ui->availablePlugins->insertRow( i );
                 QTableWidgetItem *item = new QTableWidgetItem(plugin->name());
                 if( !plugin->icon().isNull() ){
                     QIcon icon = plugin->icon();
                     item->setIcon( icon );
                 }
-                item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+                   item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
                 ui->availablePlugins->setItem( i, 0, item );
 
                 item = new QTableWidgetItem(plugin->category());
@@ -118,7 +133,7 @@ void QPluginList::populatePluginList(){
                 item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
                 item->setCheckState ( Qt::Checked );
                 ui->availablePlugins->setItem( i, 2, item );
-                //object->deleteLater();
+                object->deleteLater();
                 i++;
             }
         }

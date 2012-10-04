@@ -8,11 +8,10 @@
 
 class QFrameWorkElementsFactory;
 
-class QFrameWork : public QWidget,public CFrameWork  {
+class Q_DECL_EXPORT QFrameWork : public QWidget,public CFrameWork  {
 Q_OBJECT
 public:
     QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent = 0);
     virtual ~QFrameWork(){ qDebug("Destroy QFrameWork");}
-
 };
 #endif

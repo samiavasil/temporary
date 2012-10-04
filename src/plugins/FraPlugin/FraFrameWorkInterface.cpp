@@ -25,7 +25,7 @@ QFrameWork* FraFrameWorkInterface::getFrameWork( QWidget* parent ){
     QFraFrameWork *new_fw =  new QFraFrameWork( new QFrameWorkElementsFactory(), parent/*this*/ );
     if( 0 != new_fw ){
         qDebug("Create QFraFrameWork[%x]",(unsigned int)new_fw);
-        connect( new_fw,SIGNAL(destroyed(QObject*)), this, SLOT(frameWorkDestroyed(QObject*)));
+        connect( new_fw,SIGNAL(destroyed(QObject*)), this, SLOT(frameWorkDestroyed(QObject*)),Qt::QueuedConnection);
         m_fw_objects.append( new_fw );
     }
     return new_fw;
@@ -37,10 +37,9 @@ void FraFrameWorkInterface::frameWorkDestroyed( QObject* fw ){
         m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
         qDebug("On List %d",m_fw_objects.count());
         if( 0 == m_fw_objects.count() ){
-            deleteLater();
+           deleteLater();
         }
     }
 }
-
 
 Q_EXPORT_PLUGIN2(pnp_graplugin, FraFrameWorkInterface)

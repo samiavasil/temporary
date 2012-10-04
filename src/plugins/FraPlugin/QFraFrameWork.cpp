@@ -11,5 +11,9 @@ QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent
 
 QFraFrameWork::~QFraFrameWork(){
     qDebug("Destroy QFraFrameWork");
+
     delete ui;
+}
+void QFraFrameWork::closeEvent ( QCloseEvent * event ){
+    deleteLater();
 }

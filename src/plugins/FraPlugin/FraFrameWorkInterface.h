@@ -33,6 +33,8 @@ public:
     virtual QIcon    const   icon() const {
         return m_Icon;
     }
+
+
 public slots:
     void frameWorkDestroyed( QObject* fw );
 protected:
