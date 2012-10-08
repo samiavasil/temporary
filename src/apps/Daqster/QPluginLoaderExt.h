@@ -9,12 +9,7 @@ class QPluginLoaderExt : public QPluginLoader
     Q_OBJECT
 public:
     explicit QPluginLoaderExt(const QString &fileName,QObject *parent = 0);
-    ~QPluginLoaderExt(){
-       qDebug("Destroy QPluginLoaderExt %d",m_ctr);
-       m_Ploaders.takeAt(m_Ploaders.indexOf(this));
-       ctr--;
-    }
-
+    ~QPluginLoaderExt();
     QObject *instance();
 signals:
     

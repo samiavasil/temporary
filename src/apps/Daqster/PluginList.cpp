@@ -42,7 +42,7 @@ QPluginList::~QPluginList()
 
 void QPluginList::readPluginsDir( ){
     QDir pluginsDir(qApp->applicationDirPath());
-    QObject *plugin,*plugin1;
+    QObject *plugin = 0,*plugin1=0;
     pluginsDir.cd("plugins");
     if( m_PluginList.count() ){
         QMapIterator<QString,QPluginLoaderExt* > loader(m_PluginList);
@@ -65,14 +65,17 @@ void QPluginList::readPluginsDir( ){
 
             if( 0 != loader ){
                 loader->load();
+                plugin =  loader->instance();
+                /*
                 QPluginLoaderExt* loader1 = new QPluginLoaderExt(fileName);
                 plugin =  loader->instance();
                 if( loader1->isLoaded() ){
                     qDebug()<<"Already Loaded";
                 }
+                */
 
-                 plugin1 =  loader1->instance();
-//                FrameWorkInterface* interface = qobject_cast<FrameWorkInterface*>(plugin);
+//              plugin1 =  loader1->instance();
+//              FrameWorkInterface* interface = qobject_cast<FrameWorkInterface*>(plugin);
 
 
 
@@ -83,6 +86,7 @@ void QPluginList::readPluginsDir( ){
                     for(int i=0;i<5;i++)
                       ((qobject_cast<FrameWorkInterface*>(plugin))->getFrameWork(0))->show();*/
                      m_PluginList.insert( fileName, loader );
+                     if(plugin)
                      plugin->deleteLater();
                 }
                 else{
