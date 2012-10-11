@@ -11,11 +11,13 @@ INCLUDEPATH += ../../frame_work
 SOURCES += main.cpp\
         mainwindow.cpp \
     PluginList.cpp \
-    QPluginLoaderExt.cpp
+    QPluginLoaderExt.cpp \
+    plugin_descriptor.cpp
 
 HEADERS  += mainwindow.h \
     PluginList.h \
-    QPluginLoaderExt.h
+    QPluginLoaderExt.h \
+    plugin_descriptor.h
 
 FORMS    += mainwindow.ui \
     pluginlist.ui

@@ -9,12 +9,13 @@
 class QFrameWork;
 typedef enum{
   FRAME_WORK,
-  PORT_IO
+  PORT_IO,
+  UNDEFINED
 }InterfaceType_t;
 
 class plugin_interface{
 public:
-    virtual     InterfaceType_t  type()           = 0;
+    virtual     InterfaceType_t    type()           = 0;
     virtual const char*            name() const        = 0;
     virtual const char*            category() const    = 0;
     virtual const char*            version() const     = 0;

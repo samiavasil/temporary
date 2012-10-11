@@ -8,7 +8,7 @@
 #include "QFraFrameWork.h"
 class QFrameWork;
 
-#define FRA_VERSION    "0.0"
+#define FRA_VERSION    "V0.0"
 #include<QDebug>
 
 class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public FrameWorkInterface
@@ -19,8 +19,10 @@ public:
     FraFrameWorkInterface(QObject* parent=0);
     ~FraFrameWorkInterface(  );
     virtual  QFrameWork* getFrameWork( QWidget *parent  );
-    virtual const char* name() const     {return "FRA";}
-    virtual  InterfaceType_t type()    {return FRAME_WORK;}
+    virtual const char* name() const     {return "FRA NAME";}
+    virtual  InterfaceType_t type()      {
+       return FRAME_WORK;
+    }
     virtual const char* category() const{
         return "FrameWork";
     }

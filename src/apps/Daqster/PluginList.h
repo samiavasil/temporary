@@ -6,6 +6,7 @@
 #include <QMap>
 #include "QPluginLoaderExt.h"
 #include <QTableWidgetItem>
+#include "plugin_descriptor.h"
 #include "interfaces.h"
 namespace Ui {
 class PluginList;
@@ -40,8 +41,7 @@ protected slots:
 
 
 protected:
-    QMap< QString,QPluginLoaderExt*  > m_PluginList;
-
+    QMap< QString, plugin_descriptor*  > m_PluginList;
 private:
     Ui::PluginList *ui;
 
