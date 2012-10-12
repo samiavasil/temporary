@@ -15,12 +15,13 @@ typedef enum{
 
 class plugin_interface{
 public:
-    virtual     InterfaceType_t    type()           = 0;
-    virtual const char*            name() const        = 0;
-    virtual const char*            category() const    = 0;
-    virtual const char*            version() const     = 0;
-    virtual const char*            description() const = 0;
-    virtual const QIcon            icon() const   = 0;
+    virtual     InterfaceType_t    type()                 = 0;
+    virtual const char*            name() const           = 0;
+    virtual const char*            category() const       = 0;
+    virtual const char*            version() const        = 0;
+    virtual const char*            description() const    = 0;
+    virtual const QIcon            icon() const           = 0;
+    virtual       QObject*         createObject( QObject *parent ) = 0;
 };
 
 class FRAME_WORKSHARED_EXPORT AnyTypeInterface:public plugin_interface{
@@ -33,7 +34,7 @@ public:
 class FRAME_WORKSHARED_EXPORT FrameWorkInterface:public plugin_interface{
 public:
     virtual ~FrameWorkInterface() {}
-    virtual  QFrameWork* getFrameWork(QWidget* parent) = 0;
+  //  virtual  QFrameWork* getFrameWork(QWidget* parent) = 0;
 };
 
 class FRAME_WORKSHARED_EXPORT IoInterface:public plugin_interface{

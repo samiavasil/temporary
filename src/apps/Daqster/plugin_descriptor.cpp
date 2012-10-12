@@ -1,7 +1,9 @@
 #include  <iostream>
 #include "plugin_descriptor.h"
-
+#include"qt/QFrameWork.h"
 using namespace std;
+
+
 
 void operator<<(  QDebug Ostr, const plugin_descriptor* in){
     Ostr <<"===plugin_descriptor:=================================================================\n"
@@ -16,11 +18,12 @@ void operator<<(  QDebug Ostr, const plugin_descriptor* in){
 }
 
 plugin_descriptor::plugin_descriptor( const char *name ){
-    m_loader   = NULL;
+    m_loader   = 0;
     m_Type     = UNDEFINED;
     m_Location = name;
     read_plugin_description();
 }
+
 
 plugin_descriptor::~plugin_descriptor(){
     if( m_loader ){
@@ -73,36 +76,4 @@ void plugin_descriptor::read_plugin_description( ){
     else{
         qDebug()<<"Can't create object loader from file " << m_Location.toUtf8().constData();
     }
-}
-
-InterfaceType_t   plugin_descriptor::type() const{
-    return   m_Type;
-}
-const QString&        plugin_descriptor::name() const{
-    return   m_Name;
-}
-const QString&        plugin_descriptor::category() const{
-   return   m_Category;
-}
-const QString&        plugin_descriptor::version() const{
-    return   m_Version;
-}
-const QString&        plugin_descriptor::description() const{
-    return   m_Description;
-}
-const QIcon       plugin_descriptor::icon() const{
-    return   m_Icon;
-}
-
-const QString&  plugin_descriptor::location() const{
-    return m_Location;
-}
-
-const bool  plugin_descriptor::is_enabled() const{
-    return m_enabled;
-}
-
-void   plugin_descriptor::enable( bool enbl){
-    m_enabled = enbl;
-    qDebug() <<  this;
 }

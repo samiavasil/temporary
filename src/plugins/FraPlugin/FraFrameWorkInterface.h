@@ -18,7 +18,8 @@ class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public FrameWorkI
 public:
     FraFrameWorkInterface(QObject* parent=0);
     ~FraFrameWorkInterface(  );
-    virtual  QFrameWork* getFrameWork( QWidget *parent  );
+    //virtual  QFrameWork* getFrameWork( QWidget *parent  );
+    virtual  QObject*         createObject( QObject* );
     virtual const char* name() const     {return "FRA NAME";}
     virtual  InterfaceType_t type()      {
        return FRAME_WORK;
