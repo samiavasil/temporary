@@ -22,13 +22,24 @@ QPluginLoaderExt::~QPluginLoaderExt(){
     ctr--;
 }
 
-QObject * QPluginLoaderExt::instance(){
-    QObject *instance = QPluginLoader::instance();
-    m_instance = instance;
-    for( int i=0;i<m_Ploaders.count();i++){
-        connect( m_instance,SIGNAL(destroyed(QObject *)),m_Ploaders[i],SLOT(instanceDestroyed(QObject *)),Qt::QueuedConnection  );
+QPluginObjectsInterface *QPluginLoaderExt::instance(){
+    QObject *instance = (dynamic_cast<QPluginLoader*>(this))->instance();
+    /*if( (m_instance)&&(m_instance != instance) ){
+        qDebug()<<"!!!Hm - Someting wrong with instance";
+    }*/
+    m_instance = qobject_cast< QPluginObjectsInterface* >(instance);
+    if( m_instance ){
+        for( int i=0;i < m_Ploaders.count();i++){
+            connect( instance,SIGNAL(destroyed(QObject *)),m_Ploaders[i],SLOT(instanceDestroyed(QObject *)),Qt::QueuedConnection  );
+        }
     }
     return m_instance;
+}
+
+void QPluginLoaderExt::closeSafety(){
+    for( int i=0;i < m_Ploaders.count();i++){
+       (m_Ploaders[i])->m_instance->destroy();
+    }
 }
 
 void QPluginLoaderExt::instanceDestroyed(QObject * obj ){
@@ -43,12 +54,8 @@ void QPluginLoaderExt::instanceDestroyed(QObject * obj ){
         }
         else{
             qDebug()<<"Suxessfuly unloaded plugin  "<< fileName() << " instance " << m_ctr;
+            //deleteLater();
         }
-        /*
-        else{
-            qDebug()<<"Unload plugin suxess  "<< fileName() << " instance " << m_ctr ;
-            deleteLater();
-        }
-        */
+
     }
 }

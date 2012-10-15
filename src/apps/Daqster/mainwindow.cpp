@@ -130,7 +130,7 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionFullScreen_triggered(bool checked)
 {
-    static QMdiSubWindow* old;
+    //static QMdiSubWindow* old;
     if( checked ){
         showFullScreen();
     }

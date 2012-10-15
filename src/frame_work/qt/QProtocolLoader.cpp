@@ -35,8 +35,8 @@ const pack_desc_t packs[]={
     #include"ProtoGen.h"
 };
 
-#define PKT_NUM  (sizeof(packs)/sizeof(pack_desc_t))
-#define MSGS_NUM (sizeof(msgs)/sizeof(msg_desc_t))
+#define PKT_NUM  ((int)(sizeof(packs)/sizeof(pack_desc_t)))
+#define MSGS_NUM ((int)(sizeof(msgs)/sizeof(msg_desc_t)))
 
 int QProtocolLoader::readProtocolData() {
   return NO_ERR;
@@ -53,7 +53,8 @@ int QProtocolLoader::getMsgId(int number) {
   }                             
   else{                         
       return MSG_ID_INVALID;    
-  }                             
+  }
+  return 0;
 }
 
 int QProtocolLoader::getMaxPacketSize() {
@@ -70,7 +71,7 @@ pack_id_t QProtocolLoader::getPackId(int number) {
   }                                 
   else{                             
       return PKT_ID_INVALID;        
-  }                                 
+  }
 }
 
 int QProtocolLoader::getMsgsCountForPack(const pack_id_t packID) {

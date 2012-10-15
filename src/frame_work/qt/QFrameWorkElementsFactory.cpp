@@ -131,10 +131,10 @@ void QFrameWorkElementsFactory::deleteColector(CPacketCollector * collector) {
 }
 
 void QFrameWorkElementsFactory::deleteControlView(CControlView * ctrlView) {
-  DEBUG("TODO: Not implemented");
+  DEBUG("TODO: Not implemented %x",(unsigned int)ctrlView );
 }
 
 void QFrameWorkElementsFactory::deleteDataPlot(CDataPlot * dataPlot) {
-  DEBUG("TODO: Not implemented");
+  DEBUG("TODO: Not implemented %x",(unsigned int)dataPlot );
 }
 

@@ -4,7 +4,8 @@
 #include "base/CPacket.h"
 
 CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
-  m_hDrLenBits       = 0;    
+  pLoader = pLoader;
+  m_hDrLenBits       = 0;
   m_postFixLenBits   = 0;    
   m_maxPacketSize    = 0;    
 }

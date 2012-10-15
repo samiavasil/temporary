@@ -21,8 +21,7 @@ FraFrameWorkInterface::~FraFrameWorkInterface(  )
 // send destroy signal to assoxiates QPluginLoaderExt object and it
 // can unload plugin wthout crashes*/
 //QFrameWork* FraFrameWorkInterface::getFrameWork( QWidget* parent )
-QObject*  FraFrameWorkInterface::createObject( QObject* parent ){
-
+QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
     QWidget* parent_widget = 0;
     if( parent && parent->isWidgetType() ){
         parent_widget = dynamic_cast<QWidget *> (parent);
@@ -30,9 +29,14 @@ QObject*  FraFrameWorkInterface::createObject( QObject* parent ){
     QObject *new_fw = dynamic_cast<QObject *> ( new QFraFrameWork( new QFrameWorkElementsFactory(), parent_widget ) );
     if( 0 != new_fw ){
         connect( new_fw,SIGNAL(destroyed(QObject*)), this, SLOT(frameWorkDestroyed(QObject*)),Qt::QueuedConnection);
-        m_fw_objects.append( new_fw );
     }
     return new_fw;
+}
+
+void FraFrameWorkInterface::destroy(){
+    for( int i=0; i < m_fw_objects.count(); i++ ){
+        m_fw_objects[i]->deleteLater();
+    }
 }
 
 void FraFrameWorkInterface::frameWorkDestroyed( QObject* fw ){

@@ -1,18 +1,20 @@
 #ifndef PLUGIN_DESCRIPTOR_H
 #define PLUGIN_DESCRIPTOR_H
 #include "QPluginLoaderExt.h"
-#include "interfaces.h"
+//#include "interfaces.h"
+#include"qt/QpluginObjectsInterface.h"
 #include<QString>
 #include<QIcon>
 #include <QDebug>
+#include<QMutex>
 
 class plugin_descriptor{
 public:
     explicit plugin_descriptor( const char *name );
     ~plugin_descriptor();
-    inline  QPluginLoaderExt* loader(){
-        return m_loader;
-    }
+
+    QObject* cretate_plugin_object( InterfaceType_t type, QObject *parent = 0 );
+
     InterfaceType_t    type() const{
         return   m_Type;
     }
@@ -34,32 +36,28 @@ public:
     const QIcon        icon() const{
         return   m_Icon;
     }
-    const bool         is_enabled() const{
+    bool         is_enabled() const{
         return m_enabled;
     }
-    void               enable( bool enbl){
+    void  enable( bool enbl){
         m_enabled = enbl;
+        if( !m_enabled ){
+            if( m_loader ){
+              m_loader->closeSafety();
+            }
+        }
+        else{
+            cretate_plugin_object( type() , NULL );//DELL ME
+        }
         qDebug() <<  this;
     }
 
 protected:
     void    read_plugin_description();
-    plugin_interface* cast_to_plugin_intrface( QObject* object );
-    inline QObject* get_plugin_object( InterfaceType_t type ){
-        QObject* object = 0;
-        if( !m_Location.isEmpty() ){
-            qDebug() << "plugin_descriptor: empty file location";
-            return object;
-        }
-        if(  0 == m_loader  ){
-            m_loader = new QPluginLoaderExt( m_Location );
-        }
-        if( 0 == m_loader ){
-            qDebug() << "Can't Load plugin file: " << m_Location;
-        }
-        return object;
-    }
+    QPluginObjectsInterface *cast_to_plugin_interface( QObject* object );
+
 protected:
+    QMutex            m_Lock;
     QPluginLoaderExt* m_loader;
     InterfaceType_t   m_Type;
     QString           m_Name;

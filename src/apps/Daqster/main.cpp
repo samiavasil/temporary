@@ -85,16 +85,10 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    MainWindow w;//,w1;
+    MainWindow w;
     w.show();
-  //  w1.show();
 #ifdef TEST_ENBL_BIT_TEST
     testBits();
 #endif
-  //  QFrameWork frameWork( new QFrameWorkElementsFactory() ,&w );
-  //  QCommandExecutor exec;
-  //  QCommand* comm = new QCommand(NULL);
-  //  exec.appendCommand(comm);
-  //  exec.startExecution(true);
     return a.exec();
 }

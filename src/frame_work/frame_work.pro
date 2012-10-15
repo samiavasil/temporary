@@ -27,7 +27,8 @@ SOURCES += \
     qt/QFrameWorkElementsFactory.cpp \
     base/CPortIO.cpp \
     qt/QSerialPortIO.cpp \
-    qt/QPortIOSimulator.cpp
+    qt/QPortIOSimulator.cpp \
+    qt/QpluginObjectsInterface.cpp
 
 HEADERS +=\
         frame_work_global.h \
@@ -51,7 +52,8 @@ HEADERS +=\
     qt/QFrameWorkElementsFactory.h \
     base/CPortIO.h \
     qt/QSerialPortIO.h \
-    qt/QPortIOSimulator.h
+    qt/QPortIOSimulator.h \
+    qt/QpluginObjectsInterface.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

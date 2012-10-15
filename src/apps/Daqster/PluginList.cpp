@@ -5,22 +5,6 @@
 #include<QDebug>
 #include "qt/QFrameWork.h"
 
-
-//class QMyTableWidgetItem:public QTableWidgetItem{
-//public:
-//    QMyTableWidgetItem( const QString &fileName,QObject *parent = 0):QTableWidgetItem ( fileName  ){
-//        qDebug("CREATE QMyTableWidgetItem");
-//    }
-//    ~QMyTableWidgetItem( ){
-//        qDebug("DELETE QMyTableWidgetItem");
-//    }
-//};
-//#define QTableWidgetItem QMyTableWidgetItem
-
-
-
-
-
 QPluginList::QPluginList(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginList)
@@ -38,35 +22,28 @@ QPluginList::QPluginList(QWidget *parent) :
 
 QPluginList::~QPluginList()
 {
-    //ui->pluginList->clear();
-    delete ui;
+    QMapIterator<QString,plugin_descriptor* > plugin_list(m_PluginList);
+    while ( plugin_list.hasNext() ) {
+        plugin_list.next();
+        if( plugin_list.value() ){
+            delete plugin_list.value();
+        }
+    }
+     delete ui;
 }
 
 
 void QPluginList::readPluginsDir( ){
     QDir pluginsDir(qApp->applicationDirPath());
     pluginsDir.cd("plugins");
-    /*
-    if( m_PluginList.count() ){
-        QMapIterator<QString,QPluginLoaderExt* > loader(m_PluginList);
-        while( loader.hasNext() ){
-            loader.next();
-            if( loader.value() && loader.value()->instance() ){
-                if( loader.value()->unload() ){
-                    qDebug()<<"Suxesfully unload before delete"<<loader.value()->fileName();
-                }
-            }
-            delete (loader.value());
-        }
-        m_PluginList.clear();
-    }
-*/
+
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
             plugin_descriptor* desc = new plugin_descriptor(fileName.toUtf8().data());
             if( 0 != desc ){
                 m_PluginList.insert( fileName, desc );
+
             }
         }
     }
@@ -119,45 +96,6 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
            m_PluginList[item_location->text()]->enable( false );
        }
     }
-
-#if 0
-    if( 0 <= row ) {
-        QMap<QString,plugin_descriptor* >::iterator plugin_list = m_PluginList.begin();
-        qDebug()<<"Curent Row"<<row;
-
-        if(  Qt::Checked == ui->availablePlugins->item(row,2)->checkState() ){
-            if( NULL != (plugin_list+row).value() ){
-                qDebug()<<"Hm..Someting Wrogng!!! Unloaded plugin but not NULL pointer";
-            }
-            QPluginLoaderExt* plLoader = new QPluginLoaderExt((loader+row).key());
-            if( plLoader ){
-                if( plLoader->instance() ){
-                    qDebug()<<"Suxesfully load "<<plLoader->fileName();
-                    (loader+row).value()=plLoader;
-                }
-                else{
-                    qDebug()<<"Can't create instance - reload list ' "<<plLoader->fileName();
-                    emit reload();
-                }
-            }
-        }
-        else{
-
-            if( NULL != (loader+row).value() ){
-                delete (loader+row).value()->instance();
-                if( (loader+row).value()->unload() ){
-                    qDebug()<<"Suxesfully unload "<<(loader+row).value()->fileName();
-                }
-                else{
-                    qDebug()<<"Can't create instance - reload list ' "<< (loader+row).value()->fileName();
-                    emit reload();
-                }
-                delete (loader+row).value();
-                (loader+row).value()=NULL;
-            }
-        }
-    }
-#endif
 }
 
 void QPluginList::reloadPlugins( ){
@@ -183,5 +121,5 @@ void QPluginList::on_cancelButton_clicked()
 QList<QPluginLoaderExt*>  QPluginList::getAllActivePlugins( InterfaceType_t type ){
     reloadPlugins();
     type = type;
-
+    return QList<QPluginLoaderExt*>();
 }

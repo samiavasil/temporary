@@ -17,6 +17,7 @@ QPacketCollector::~QPacketCollector() {
 
 int QPacketCollector::getRecPacket() {
   DEBUG("TODO:Not implemented");
+  return 0;
 }
 
 int QPacketCollector::transmitPacket(CPacket * packet) {
@@ -33,6 +34,7 @@ int QPacketCollector::transmitPacket(CPacket * packet) {
 
 int QPacketCollector::getRecPacketNum() {
   DEBUG("TODO:Not implemented");
+  return 0;
 }
 
 void QPacketCollector::receivedBytesSlot() {

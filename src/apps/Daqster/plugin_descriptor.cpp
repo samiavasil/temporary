@@ -7,17 +7,18 @@ using namespace std;
 
 void operator<<(  QDebug Ostr, const plugin_descriptor* in){
     Ostr <<"===plugin_descriptor:=================================================================\n"
-         <<"File Name:   "<<  in->location()   << "\n"
-         <<"Category:    "<< in->category()    << "\n"
-         <<"Name:        "<< in->name()        << "\n"
-         <<"Type:        "<< in->type()        << "\n"
-         <<"Description: "<< in->description() << "\n"
-         <<"Version:     "<< in->version()     << "\n"
-         <<"Enabled:     "<< in->is_enabled()  << "\n"
-         <<"===end plugin_descriptor:=============================================================\n";
+        <<"File Name:   "<<  in->location()   << "\n"
+       <<"Category:    "<< in->category()    << "\n"
+      <<"Name:        "<< in->name()        << "\n"
+     <<"Type:        "<< in->type()        << "\n"
+    <<"Description: "<< in->description() << "\n"
+    <<"Version:     "<< in->version()     << "\n"
+    <<"Enabled:     "<< in->is_enabled()  << "\n"
+    <<"===end plugin_descriptor:=============================================================\n";
 }
 
 plugin_descriptor::plugin_descriptor( const char *name ){
+    m_enabled  = true;
     m_loader   = 0;
     m_Type     = UNDEFINED;
     m_Location = name;
@@ -33,47 +34,94 @@ plugin_descriptor::~plugin_descriptor(){
 }
 
 
-plugin_interface* plugin_descriptor::cast_to_plugin_intrface( QObject* object ){
-    plugin_interface* plugin = NULL;
+QPluginObjectsInterface* plugin_descriptor::cast_to_plugin_interface( QObject* object ){
+    QPluginObjectsInterface* plugin = NULL;
     if( object ){
-        plugin = dynamic_cast<plugin_interface *>(qobject_cast<FrameWorkInterface*>(object));
-        if( NULL == plugin ){
-            plugin = dynamic_cast<plugin_interface *>(qobject_cast<IoInterface*>(object));
-            if( NULL == plugin ){
-                plugin = dynamic_cast<plugin_interface *>(qobject_cast<AnyTypeInterface*>(object));
-            }
-        }
+        plugin =  qobject_cast< QPluginObjectsInterface* >(object);
     }
     return plugin;
 }
 
 void plugin_descriptor::read_plugin_description( ){
-    QObject* object;
-    plugin_interface* plugin;
 
+    QPluginObjectsInterface* plugin;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_Location );
     if( 0 != loader ){
         loader->load();
-        object =  loader->instance();
-        if( 0 != object ){
-            plugin = cast_to_plugin_intrface( object );
-            if( plugin ){
-                m_Type        = plugin->type();
-                m_Name        = plugin->name();
-                m_Category    = plugin->category();
-                m_Version     = plugin->version();
-                m_Description = plugin->description();
-                m_Icon        = plugin->icon();
-            }
-            object->deleteLater();
+        plugin =  loader->instance();
+        if( plugin ){
+            m_Type        = plugin->type();
+            m_Name        = plugin->name();
+            m_Category    = plugin->category();
+            m_Version     = plugin->version();
+            m_Description = plugin->description();
+            m_Icon        = plugin->icon();
+            delete plugin;
         }
         else{
             qDebug()<<"Can't load object from file " << loader->fileName().toUtf8().constData();
         }
         loader->unload();
-        loader->deleteLater();
+        delete loader;
     }
     else{
         qDebug()<<"Can't create object loader from file " << m_Location.toUtf8().constData();
     }
+}
+
+
+QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject* parent  ){
+    QObject* object ;
+
+    if( !m_enabled ){
+        qDebug() << "plugin_disabled: can't create object";
+        return object;
+    }
+    if( m_Location.isEmpty() ){
+        qDebug() << "plugin_descriptor: empty file location";
+        return object;
+    }
+    if( type == m_Type ){
+        QPluginLoaderExt* loader;
+
+        if( m_loader ){
+            loader = m_loader;
+        }
+        else{
+            loader = new QPluginLoaderExt( m_Location );
+        }
+        if( loader ){
+            loader->load();
+            QPluginObjectsInterface* fW =  loader->instance();
+            object =  fW->createObject( parent );
+            dynamic_cast<QWidget*>(object)->show();//DELL ME
+            /*if( fW ){
+                switch( type ){
+                case FRAME_WORK:{
+                    object =  fW->createObject( parent );
+                    dynamic_cast<QWidget*>(object)->show();
+                    break;
+                }
+                case PORT_IO:{
+                    //   IoInterface* fW = qobject_cast<IoInterface*>( interface_object );
+                    //    object =  fW->createObject( parent );
+                    break;
+                }
+                default:{
+                    break;
+                }
+                }
+            }*/
+            if( 0 != object ){
+                m_loader = loader;
+            }
+            else{
+                loader->deleteLater();
+            }
+        }
+    }
+    if( 0 == object ){
+        qDebug() << "\nCan't create obect from plugin file: " << m_Location;
+    }
+    return object;
 }

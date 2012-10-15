@@ -15,15 +15,16 @@ typedef enum{
 
 class plugin_interface{
 public:
-    virtual     InterfaceType_t    type()                 = 0;
+    virtual InterfaceType_t        type()                 = 0;
     virtual const char*            name() const           = 0;
     virtual const char*            category() const       = 0;
     virtual const char*            version() const        = 0;
     virtual const char*            description() const    = 0;
     virtual const QIcon            icon() const           = 0;
     virtual       QObject*         createObject( QObject *parent ) = 0;
-};
 
+};
+/*
 class FRAME_WORKSHARED_EXPORT AnyTypeInterface:public plugin_interface{
 public:
     virtual ~AnyTypeInterface() {}
@@ -31,12 +32,13 @@ public:
 
 };
 
-class FRAME_WORKSHARED_EXPORT FrameWorkInterface:public plugin_interface{
+class FRAME_WORKSHARED_EXPORT PluginsInterface:public plugin_interface{
 public:
-    virtual ~FrameWorkInterface() {}
+    virtual ~ PluginsInterface() {}
   //  virtual  QFrameWork* getFrameWork(QWidget* parent) = 0;
-};
+};*/
 
+/*
 class FRAME_WORKSHARED_EXPORT IoInterface:public plugin_interface{
 public:
     virtual ~IoInterface () {}
@@ -45,9 +47,9 @@ public:
 
 Q_DECLARE_INTERFACE(AnyTypeInterface,
                     "vvv.moita.frame_work.AnyTypeInterface/1.0")
-Q_DECLARE_INTERFACE(FrameWorkInterface,
-                    "vvv.moita.frame_work.FrameWorkInterface/1.0")
-Q_DECLARE_INTERFACE(IoInterface,
+Q_DECLARE_INTERFACE(PluginsInterface,
+                    "vvv.moita.frame_work.FrameWorkInterface/1.0")*/
+/*Q_DECLARE_INTERFACE(IoInterface,
                     "vvv.moita.frame_work.IoInterface/1.0")
-
+*/
 #endif // INTERFACES_H

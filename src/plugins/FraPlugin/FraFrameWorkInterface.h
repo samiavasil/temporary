@@ -4,25 +4,24 @@
 #include <QObject>
 #include <QList>
 #include "fra_plugin_global.h"
-#include "interfaces.h"
+//#include "interfaces.h"
 #include "QFraFrameWork.h"
+#include "qt/QpluginObjectsInterface.h"
 class QFrameWork;
 
 #define FRA_VERSION    "V0.0"
 #include<QDebug>
 
-class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public FrameWorkInterface
+class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public QPluginObjectsInterface
 {
     Q_OBJECT
-    Q_INTERFACES(FrameWorkInterface)
+    Q_INTERFACES(QPluginObjectsInterface)
 public:
-    FraFrameWorkInterface(QObject* parent=0);
+    FraFrameWorkInterface( QObject* parent = 0);
     ~FraFrameWorkInterface(  );
-    //virtual  QFrameWork* getFrameWork( QWidget *parent  );
-    virtual  QObject*         createObject( QObject* );
-    virtual const char* name() const     {return "FRA NAME";}
-    virtual  InterfaceType_t type()      {
-       return FRAME_WORK;
+
+    virtual const char* name() const{
+        return "FRA NAME";
     }
     virtual const char* category() const{
         return "FrameWork";
@@ -36,13 +35,21 @@ public:
     virtual QIcon    const   icon() const {
         return m_Icon;
     }
-
-
+    virtual  InterfaceType_t type(){
+       return FRAME_WORK;
+    }
+    int unloadAllObjects(){
+        return -1;
+    }
+virtual void destroy(  );
 public slots:
-    void frameWorkDestroyed( QObject* fw );
+    virtual void frameWorkDestroyed( QObject* fw );
 protected:
-    QIcon m_Icon;
-    QList<QObject*> m_fw_objects;
+
+    virtual  QObject*   allocateObject( QObject* );
+    //virtual void destroyObjects(  );
+    //void frameWorkDestroyed( QObject* fw );
+
 };
 
 #endif // FRAMEWORKINTERFACE_H
