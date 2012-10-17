@@ -8,9 +8,10 @@
 #include <QDebug>
 #include<QMutex>
 
-class plugin_descriptor{
+class plugin_descriptor:public QObject{
+       Q_OBJECT
 public:
-    explicit plugin_descriptor( const char *name );
+    explicit plugin_descriptor( const char *name, QObject* parent = 0 );
     ~plugin_descriptor();
 
     QObject* cretate_plugin_object( InterfaceType_t type, QObject *parent = 0 );
@@ -51,6 +52,8 @@ public:
         }
         qDebug() <<  this;
     }
+public slots:
+    void loaderDestroyed(QObject* obj);
 
 protected:
     void    read_plugin_description();

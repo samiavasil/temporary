@@ -43,7 +43,6 @@ void QPluginList::readPluginsDir( ){
             plugin_descriptor* desc = new plugin_descriptor(fileName.toUtf8().data());
             if( 0 != desc ){
                 m_PluginList.insert( fileName, desc );
-
             }
         }
     }

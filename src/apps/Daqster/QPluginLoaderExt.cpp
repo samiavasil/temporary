@@ -17,7 +17,7 @@ QPluginLoaderExt::QPluginLoaderExt(const QString &fileName,QObject *parent) :
 }
 
 QPluginLoaderExt::~QPluginLoaderExt(){
-    qDebug("Destroy QPluginLoaderExt %d",m_ctr);
+    qDebug("!!!!!!!!!!!!!!!!!!Destroy QPluginLoaderExt %d",m_ctr);
     m_Ploaders.takeAt(m_Ploaders.indexOf(this));
     ctr--;
 }
@@ -54,7 +54,7 @@ void QPluginLoaderExt::instanceDestroyed(QObject * obj ){
         }
         else{
             qDebug()<<"Suxessfuly unloaded plugin  "<< fileName() << " instance " << m_ctr;
-            //deleteLater();
+            deleteLater();
         }
 
     }

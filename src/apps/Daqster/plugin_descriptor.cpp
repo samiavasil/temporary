@@ -17,7 +17,7 @@ void operator<<(  QDebug Ostr, const plugin_descriptor* in){
     <<"===end plugin_descriptor:=============================================================\n";
 }
 
-plugin_descriptor::plugin_descriptor( const char *name ){
+plugin_descriptor::plugin_descriptor( const char *name, QObject *parent ):QObject( parent ){
     m_enabled  = true;
     m_loader   = 0;
     m_Type     = UNDEFINED;
@@ -114,6 +114,7 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
             }*/
             if( 0 != object ){
                 m_loader = loader;
+                connect( m_loader, SIGNAL( destroyed( QObject* ) ), this, SLOT( loaderDestroyed( QObject* ) ) );
             }
             else{
                 loader->deleteLater();
@@ -124,4 +125,10 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
         qDebug() << "\nCan't create obect from plugin file: " << m_Location;
     }
     return object;
+}
+
+void plugin_descriptor::loaderDestroyed( QObject* obj ){
+    if( obj == dynamic_cast<QObject*>( m_loader ) ){
+        m_loader = NULL;
+    }
 }
