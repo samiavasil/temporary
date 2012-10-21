@@ -162,3 +162,18 @@ void MainWindow::on_actionHideMainMenu_triggered(bool checked)
         menuBar()->show();
     }
 }
+
+void MainWindow::on_actionSave_triggered()
+{
+    QList<plugin_descriptor*> list = m_PluginList.getAllActivePlugins( UNDEFINED );
+    for( int i = 0; i < list.count(); i++ ){
+        QObject* obj;
+        if( list[i] ){
+            obj = list[i]->cretate_plugin_object( list[i]->type() , NULL );//DELL ME
+        }
+        if( obj ){
+            dynamic_cast<QWidget*>(obj)->show();//DELL ME
+        }
+    }
+
+}

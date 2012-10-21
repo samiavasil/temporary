@@ -1,14 +1,14 @@
 #include "QPluginLoaderExt.h"
 #include<QDebug>
-QList<QPluginLoaderExt*>  QPluginLoaderExt::m_Ploaders;
+QMultiMap<QString, QPluginLoaderExt*>  QPluginLoaderExt::m_Ploaders;
 int QPluginLoaderExt::ctr;
 
 QPluginLoaderExt::QPluginLoaderExt(const QString &fileName,QObject *parent) :
     QPluginLoader(fileName,parent)
 {
     m_ctr = ctr;
-    qDebug("Create QPluginLoaderExt %d",m_ctr);
-    m_Ploaders.append(this);
+    qDebug() << "Create QPluginLoaderExt " << m_ctr << "  " << fileName;
+    m_Ploaders.insert( fileName, this );
     m_instance = 0;
     if( isLoaded() ){
         // m_instance = instance();
@@ -17,28 +17,33 @@ QPluginLoaderExt::QPluginLoaderExt(const QString &fileName,QObject *parent) :
 }
 
 QPluginLoaderExt::~QPluginLoaderExt(){
-    qDebug("!!!!!!!!!!!!!!!!!!Destroy QPluginLoaderExt %d",m_ctr);
-    m_Ploaders.takeAt(m_Ploaders.indexOf(this));
-    ctr--;
+    qDebug( ) << "!!!!!!!!!!!!!!!!!!Destroy QPluginLoaderExt " << m_ctr << fileName();
+    m_Ploaders.remove( fileName(), this );
+    // ctr--;
 }
 
 QPluginObjectsInterface *QPluginLoaderExt::instance(){
     QObject *instance = (dynamic_cast<QPluginLoader*>(this))->instance();
-    /*if( (m_instance)&&(m_instance != instance) ){
-        qDebug()<<"!!!Hm - Someting wrong with instance";
-    }*/
     m_instance = qobject_cast< QPluginObjectsInterface* >(instance);
     if( m_instance ){
-        for( int i=0;i < m_Ploaders.count();i++){
-            connect( instance,SIGNAL(destroyed(QObject *)),m_Ploaders[i],SLOT(instanceDestroyed(QObject *)),Qt::QueuedConnection  );
+        QMap<QString, QPluginLoaderExt*>::iterator i = m_Ploaders.find ( fileName() );
+        while( ( i != m_Ploaders.end() ) && (i.key() == fileName() ) ) {
+            qDebug()<<i.key();
+            connect( instance, SIGNAL(destroyed(QObject *)), i.value(), SLOT(instanceDestroyed(QObject *)), Qt::QueuedConnection );
+            ++i;
         }
     }
     return m_instance;
 }
 
 void QPluginLoaderExt::closeSafety(){
-    for( int i=0;i < m_Ploaders.count();i++){
-       (m_Ploaders[i])->m_instance->destroy();
+    QMap<QString, QPluginLoaderExt*>::iterator i = m_Ploaders.find ( fileName()  );
+    while( ( i != m_Ploaders.end()) && (i.key() == fileName() ) ) {
+        qDebug()<<i.key();
+        if( i.value() && i.value()->m_instance ){
+            i.value()->m_instance->destroy();
+        }
+        ++i;
     }
 }
 
@@ -47,15 +52,17 @@ void QPluginLoaderExt::instanceDestroyed(QObject * obj ){
         qDebug()<<"!!!Hm - Null object";
     }
     else{
-        qDebug()<<"Try to unload plugin "<< fileName() << " instance " << m_ctr ;
-        unload();
         if( isLoaded() ){
-            qDebug()<<"Can't unload plugin  "<< fileName() << " instance " << m_ctr << "Maybe have other instance of QPluginLoader" ;
+            qDebug()<<"Try to unload plugin "<< fileName() << " instance " << m_ctr ;
+            unload();
+            if( isLoaded() ){
+                qDebug()<<"Can't unload plugin  "<< fileName() << " instance " << m_ctr << "Maybe have other instance of QPluginLoader" ;
+            }
+            else{
+                qDebug()<<"Suxessfuly unloaded plugin  "<< fileName() << " instance " << m_ctr;
+                emit allObjectsDestroyed( this );
+            }
         }
-        else{
-            qDebug()<<"Suxessfuly unloaded plugin  "<< fileName() << " instance " << m_ctr;
-            deleteLater();
-        }
-
     }
 }
+

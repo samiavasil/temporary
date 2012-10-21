@@ -1,7 +1,7 @@
 #include  <iostream>
 #include "plugin_descriptor.h"
 #include"qt/QFrameWork.h"
-using namespace std;
+
 
 
 
@@ -18,6 +18,7 @@ void operator<<(  QDebug Ostr, const plugin_descriptor* in){
 }
 
 plugin_descriptor::plugin_descriptor( const char *name, QObject *parent ):QObject( parent ){
+    state      = 0;
     m_enabled  = true;
     m_loader   = 0;
     m_Type     = UNDEFINED;
@@ -25,14 +26,13 @@ plugin_descriptor::plugin_descriptor( const char *name, QObject *parent ):QObjec
     read_plugin_description();
 }
 
-
 plugin_descriptor::~plugin_descriptor(){
+    m_enabled = false;
     if( m_loader ){
         m_loader->deleteLater();
     }
     qDebug() << "Destroy plugin_descriptor:\n" << this;
 }
-
 
 QPluginObjectsInterface* plugin_descriptor::cast_to_plugin_interface( QObject* object ){
     QPluginObjectsInterface* plugin = NULL;
@@ -69,9 +69,8 @@ void plugin_descriptor::read_plugin_description( ){
     }
 }
 
-
 QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject* parent  ){
-    QObject* object ;
+    QObject* object = 0;
 
     if( !m_enabled ){
         qDebug() << "plugin_disabled: can't create object";
@@ -83,7 +82,6 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
     }
     if( type == m_Type ){
         QPluginLoaderExt* loader;
-
         if( m_loader ){
             loader = m_loader;
         }
@@ -93,28 +91,15 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
         if( loader ){
             loader->load();
             QPluginObjectsInterface* fW =  loader->instance();
-            object =  fW->createObject( parent );
-            dynamic_cast<QWidget*>(object)->show();//DELL ME
-            /*if( fW ){
-                switch( type ){
-                case FRAME_WORK:{
-                    object =  fW->createObject( parent );
-                    dynamic_cast<QWidget*>(object)->show();
-                    break;
+            if( fW ){
+                object =  fW->createObject( parent );
+                if( 0 != object ){
+                    m_loader = loader;
+                    connect( m_loader, SIGNAL( allObjectsDestroyed( QObject* ) ), this, SLOT( loaderDestroyed( QObject* ) ),Qt::DirectConnection );
                 }
-                case PORT_IO:{
-                    //   IoInterface* fW = qobject_cast<IoInterface*>( interface_object );
-                    //    object =  fW->createObject( parent );
-                    break;
+                else{
+                    loader->deleteLater();
                 }
-                default:{
-                    break;
-                }
-                }
-            }*/
-            if( 0 != object ){
-                m_loader = loader;
-                connect( m_loader, SIGNAL( destroyed( QObject* ) ), this, SLOT( loaderDestroyed( QObject* ) ) );
             }
             else{
                 loader->deleteLater();
@@ -128,7 +113,9 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
 }
 
 void plugin_descriptor::loaderDestroyed( QObject* obj ){
-    if( obj == dynamic_cast<QObject*>( m_loader ) ){
-        m_loader = NULL;
+    if( m_loader == dynamic_cast<QPluginLoaderExt*>(obj)   ){
+        m_loader->deleteLater();
+        m_loader  = NULL;
+        state = 0;
     }
 }

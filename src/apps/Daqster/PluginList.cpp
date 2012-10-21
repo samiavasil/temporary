@@ -29,7 +29,7 @@ QPluginList::~QPluginList()
             delete plugin_list.value();
         }
     }
-     delete ui;
+    delete ui;
 }
 
 
@@ -88,12 +88,16 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
     int row = ui->availablePlugins->row(item);
     QTableWidgetItem* item_location = ui->availablePlugins->item( row, LOCATION_COLUMN );
     if( item_location && m_PluginList.contains( item_location->text() ) ){
-       if(  Qt::Checked == item_location->checkState() ){
-           m_PluginList[item_location->text()]->enable( true );
-       }
-       else{
-           m_PluginList[item_location->text()]->enable( false );
-       }
+        if(  Qt::Checked == item_location->checkState() ){
+            if( !m_PluginList[item_location->text()]->is_enabled() ){
+                m_PluginList[item_location->text()]->enable( true );
+            }
+        }
+        else{
+            if( m_PluginList[item_location->text()]->is_enabled() ){
+                m_PluginList[item_location->text()]->enable( false );
+            }
+        }
     }
 }
 
@@ -117,8 +121,8 @@ void QPluginList::on_cancelButton_clicked()
     setResult( Rejected );
 }
 
-QList<QPluginLoaderExt*>  QPluginList::getAllActivePlugins( InterfaceType_t type ){
+QList<plugin_descriptor *> QPluginList::getAllActivePlugins( InterfaceType_t type ){
     reloadPlugins();
     type = type;
-    return QList<QPluginLoaderExt*>();
+    return  m_PluginList.values();
 }

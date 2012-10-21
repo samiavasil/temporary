@@ -2,7 +2,7 @@
 #define QPLUGINLOADEREXT_H
 #include <QPluginLoader>
 #include <QObject>
-#include <QList>
+#include <QMultiMap>
 #include "qt/QpluginObjectsInterface.h"
 
 class QPluginLoaderExt : public QPluginLoader
@@ -14,12 +14,13 @@ public:
     QPluginObjectsInterface *instance();
     void closeSafety();
 signals:
-    
+    void allObjectsDestroyed( QObject * );
 public slots:
     void instanceDestroyed(QObject *);
 protected:
     QPluginObjectsInterface* m_instance;
-    static  QList<QPluginLoaderExt*> m_Ploaders;
+
+    static  QMultiMap<QString, QPluginLoaderExt*> m_Ploaders;
     static int ctr;
     int m_ctr;
 

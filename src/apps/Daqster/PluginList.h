@@ -21,7 +21,7 @@ class QPluginList : public QDialog
 public:
     explicit QPluginList(QWidget *parent = 0);
     ~QPluginList();
-    QList<QPluginLoaderExt*> getAllActivePlugins( InterfaceType_t type );
+    QList<plugin_descriptor*> getAllActivePlugins( InterfaceType_t type );
     
 private slots:
     void on_okButton_clicked();

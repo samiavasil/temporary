@@ -7,9 +7,10 @@
 #include<QIcon>
 #include <QDebug>
 #include<QMutex>
+#include<QMessageBox>
 
 class plugin_descriptor:public QObject{
-       Q_OBJECT
+    Q_OBJECT
 public:
     explicit plugin_descriptor( const char *name, QObject* parent = 0 );
     ~plugin_descriptor();
@@ -42,13 +43,19 @@ public:
     }
     void  enable( bool enbl){
         m_enabled = enbl;
+        while( state == 3 ){
+            QMessageBox msgBox;
+            msgBox.setText("Wait For Someting");
+            msgBox.exec();
+        }
         if( !m_enabled ){
             if( m_loader ){
-              m_loader->closeSafety();
+                m_loader->closeSafety();
+                state     = 3;
             }
         }
         else{
-            cretate_plugin_object( type() , NULL );//DELL ME
+            qDebug() << "!!!!!CREATE OBJECT \n";
         }
         qDebug() <<  this;
     }
@@ -70,6 +77,7 @@ protected:
     QString           m_Description;
     QIcon             m_Icon;
     bool              m_enabled;
+    int               state;
 };
 
 

@@ -35,7 +35,9 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
 
 void FraFrameWorkInterface::destroy(){
     for( int i=0; i < m_fw_objects.count(); i++ ){
-        m_fw_objects[i]->deleteLater();
+        if( m_fw_objects[i] ){
+            m_fw_objects[i]->deleteLater();
+        }
     }
 }
 
