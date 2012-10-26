@@ -1,4 +1,4 @@
-#include "PluginList.h"
+#include "qt/QPluginList.h"
 #include "ui_pluginlist.h"
 #include "interfaces.h"
 #include <QDir>
@@ -22,7 +22,7 @@ QPluginList::QPluginList(QWidget *parent) :
 
 QPluginList::~QPluginList()
 {
-    QMapIterator<QString,plugin_descriptor* > plugin_list(m_PluginList);
+    QMapIterator<QString,QPluginDescriptor* > plugin_list(m_PluginList);
     while ( plugin_list.hasNext() ) {
         plugin_list.next();
         if( plugin_list.value() ){
@@ -40,7 +40,7 @@ void QPluginList::readPluginsDir( ){
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
-            plugin_descriptor* desc = new plugin_descriptor(fileName.toUtf8().data());
+            QPluginDescriptor* desc = new QPluginDescriptor(fileName.toUtf8().data());
             if( 0 != desc ){
                 m_PluginList.insert( fileName, desc );
             }
@@ -55,10 +55,10 @@ void QPluginList::populatePluginList(){
     ui->availablePlugins->clear();
     ui->availablePlugins->setRowCount(0);
     ui->availablePlugins->setColumnCount(3);
-    QMapIterator<QString,plugin_descriptor* > plugin_list(m_PluginList);
+    QMapIterator<QString,QPluginDescriptor* > plugin_list(m_PluginList);
     while ( plugin_list.hasNext() ) {
         plugin_list.next();
-        plugin_descriptor* desc = plugin_list.value();
+        QPluginDescriptor* desc = plugin_list.value();
         if( desc ){
             qDebug() <<  desc;
             ui->availablePlugins->insertRow( i );
@@ -121,7 +121,7 @@ void QPluginList::on_cancelButton_clicked()
     setResult( Rejected );
 }
 
-QList<plugin_descriptor *> QPluginList::getAllActivePlugins( InterfaceType_t type ){
+QList<QPluginDescriptor *> QPluginList::getAllActivePlugins( InterfaceType_t type ){
     reloadPlugins();
     type = type;
     return  m_PluginList.values();

@@ -9,18 +9,11 @@ TEMPLATE = app
 DESTDIR = ../../../bin
 INCLUDEPATH += ../../frame_work
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    PluginList.cpp \
-    QPluginLoaderExt.cpp \
-    plugin_descriptor.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    PluginList.h \
-    QPluginLoaderExt.h \
-    plugin_descriptor.h
+HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui \
-    pluginlist.ui
+FORMS    += mainwindow.ui
 
 LIBS += -L../../../bin/libs  -lframe_work
 

@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 #include "base/global.h"
 #include <QMainWindow>
-#include"PluginList.h"
+#include"qt/QPluginList.h"
 
 namespace Ui {
 class MainWindow;

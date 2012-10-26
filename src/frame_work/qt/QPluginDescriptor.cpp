@@ -1,11 +1,11 @@
 #include  <iostream>
-#include "plugin_descriptor.h"
+#include "qt/QPluginDescriptor.h"
 #include"qt/QFrameWork.h"
 
 
 
 
-void operator<<(  QDebug Ostr, const plugin_descriptor* in){
+void operator<<(  QDebug Ostr, const QPluginDescriptor* in){
     Ostr <<"===plugin_descriptor:=================================================================\n"
         <<"File Name:   "<<  in->location()   << "\n"
        <<"Category:    "<< in->category()    << "\n"
@@ -17,7 +17,7 @@ void operator<<(  QDebug Ostr, const plugin_descriptor* in){
     <<"===end plugin_descriptor:=============================================================\n";
 }
 
-plugin_descriptor::plugin_descriptor( const char *name, QObject *parent ):QObject( parent ){
+QPluginDescriptor::QPluginDescriptor( const char *name, QObject *parent ):QObject( parent ){
     state      = 0;
     m_enabled  = true;
     m_loader   = 0;
@@ -26,7 +26,7 @@ plugin_descriptor::plugin_descriptor( const char *name, QObject *parent ):QObjec
     read_plugin_description();
 }
 
-plugin_descriptor::~plugin_descriptor(){
+QPluginDescriptor::~QPluginDescriptor(){
     m_enabled = false;
     if( m_loader ){
         m_loader->deleteLater();
@@ -34,7 +34,7 @@ plugin_descriptor::~plugin_descriptor(){
     qDebug() << "Destroy plugin_descriptor:\n" << this;
 }
 
-QPluginObjectsInterface* plugin_descriptor::cast_to_plugin_interface( QObject* object ){
+QPluginObjectsInterface* QPluginDescriptor::cast_to_plugin_interface( QObject* object ){
     QPluginObjectsInterface* plugin = NULL;
     if( object ){
         plugin =  qobject_cast< QPluginObjectsInterface* >(object);
@@ -42,7 +42,7 @@ QPluginObjectsInterface* plugin_descriptor::cast_to_plugin_interface( QObject* o
     return plugin;
 }
 
-void plugin_descriptor::read_plugin_description( ){
+void QPluginDescriptor::read_plugin_description( ){
 
     QPluginObjectsInterface* plugin;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_Location );
@@ -69,7 +69,7 @@ void plugin_descriptor::read_plugin_description( ){
     }
 }
 
-QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject* parent  ){
+QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t type, QObject* parent  ){
     QObject* object = 0;
 
     if( !m_enabled ){
@@ -112,7 +112,7 @@ QObject* plugin_descriptor::cretate_plugin_object( InterfaceType_t type, QObject
     return object;
 }
 
-void plugin_descriptor::loaderDestroyed( QObject* obj ){
+void QPluginDescriptor::loaderDestroyed( QObject* obj ){
     if( m_loader == dynamic_cast<QPluginLoaderExt*>(obj)   ){
         m_loader->deleteLater();
         m_loader  = NULL;

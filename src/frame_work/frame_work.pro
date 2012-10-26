@@ -28,7 +28,10 @@ SOURCES += \
     base/CPortIO.cpp \
     qt/QSerialPortIO.cpp \
     qt/QPortIOSimulator.cpp \
-    qt/QpluginObjectsInterface.cpp
+    qt/QpluginObjectsInterface.cpp \
+    qt/QPluginLoaderExt.cpp \
+    qt/QPluginDescriptor.cpp \
+    qt/QPluginList.cpp
 
 HEADERS +=\
         frame_work_global.h \
@@ -53,7 +56,10 @@ HEADERS +=\
     base/CPortIO.h \
     qt/QSerialPortIO.h \
     qt/QPortIOSimulator.h \
-    qt/QpluginObjectsInterface.h
+    qt/QpluginObjectsInterface.h \
+    qt/QPluginLoaderExt.h \
+    qt/QPluginDescriptor.h \
+    qt/QPluginList.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -73,3 +79,6 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+FORMS += \
+    qt/pluginlist.ui

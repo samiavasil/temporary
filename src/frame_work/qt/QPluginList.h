@@ -6,7 +6,7 @@
 #include <QMap>
 #include "QPluginLoaderExt.h"
 #include <QTableWidgetItem>
-#include "plugin_descriptor.h"
+#include "qt/QPluginDescriptor.h"
 #include "interfaces.h"
 namespace Ui {
 class PluginList;
@@ -21,7 +21,7 @@ class QPluginList : public QDialog
 public:
     explicit QPluginList(QWidget *parent = 0);
     ~QPluginList();
-    QList<plugin_descriptor*> getAllActivePlugins( InterfaceType_t type );
+    QList<QPluginDescriptor*> getAllActivePlugins( InterfaceType_t type );
     
 private slots:
     void on_okButton_clicked();
@@ -41,7 +41,7 @@ protected slots:
 
 
 protected:
-    QMap< QString, plugin_descriptor*  > m_PluginList;
+    QMap< QString, QPluginDescriptor*  > m_PluginList;
 private:
     Ui::PluginList *ui;
 

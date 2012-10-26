@@ -9,11 +9,11 @@
 #include<QMutex>
 #include<QMessageBox>
 
-class plugin_descriptor:public QObject{
+class QPluginDescriptor:public QObject{
     Q_OBJECT
 public:
-    explicit plugin_descriptor( const char *name, QObject* parent = 0 );
-    ~plugin_descriptor();
+    explicit QPluginDescriptor( const char *name, QObject* parent = 0 );
+    ~QPluginDescriptor();
 
     QObject* cretate_plugin_object( InterfaceType_t type, QObject *parent = 0 );
 
@@ -81,6 +81,6 @@ protected:
 };
 
 
-void operator<<(  QDebug  Ostr, const plugin_descriptor* in);
+void operator<<(  QDebug  Ostr, const QPluginDescriptor* in);
 
 #endif // PLUGIN_DESCRIPTOR_H

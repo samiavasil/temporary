@@ -165,7 +165,7 @@ void MainWindow::on_actionHideMainMenu_triggered(bool checked)
 
 void MainWindow::on_actionSave_triggered()
 {
-    QList<plugin_descriptor*> list = m_PluginList.getAllActivePlugins( UNDEFINED );
+    QList<QPluginDescriptor*> list = m_PluginList.getAllActivePlugins( UNDEFINED );
     for( int i = 0; i < list.count(); i++ ){
         QObject* obj;
         if( list[i] ){
