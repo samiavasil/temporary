@@ -6,7 +6,7 @@
 #include "fra_plugin_global.h"
 //#include "interfaces.h"
 #include "QFraFrameWork.h"
-#include "qt/QpluginObjectsInterface.h"
+#include "qt/QPluginObjectsInterface.h"
 class QFrameWork;
 
 #define FRA_VERSION    "V0.0"
@@ -38,9 +38,7 @@ public:
     virtual  InterfaceType_t type(){
        return FRAME_WORK;
     }
-    int unloadAllObjects(){
-        return -1;
-    }
+
 virtual void destroy(  );
 public slots:
     virtual void frameWorkDestroyed( QObject* fw );

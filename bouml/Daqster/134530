@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 71
+  revision 74
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -2155,6 +2155,300 @@ ${inlines}
 	  b parent class_ref 162178 // QTimer
       end
     end
+
+    class 227586 "QPluginLoaderExt"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 290050 // <generalisation>
+	relation 290050 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 290050 // <generalisation>
+	  b parent class_ref 227714 // QPluginLoader
+      end
+
+      classrelation 290178 // <dependency>
+	relation 290178 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 290178 // <dependency>
+	  b parent class_ref 227842 // QMultiMap
+      end
+
+      extra_member 206978 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      attribute 234498 "m_Ploaders"
+	class_attribute protected explicit_type "QMultiMap<QString, QPluginLoaderExt*>"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 234626 "ctr"
+	class_attribute protected explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	comment "DELL ME"
+      end
+
+      operation 441218 "QPluginLoaderExt"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "fileName" explicit_type "QString"
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}const ${t0} & ${p0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}const ${t0} & ${p0}, ${t1} * ${p1}${)}${throw}:
+    QPluginLoader(${p0},${p1} ) {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 441346 "~QPluginLoaderExt"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 441730 "closeSafety"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 441474 "instance"
+	public explicit_return_type "QPluginObjectsInterface*"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 206850 "signals:"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 441858 "allObjectsDestroyed"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 441986 "close_all_objects"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      attribute 234370 "m_instance"
+	protected explicit_type "QPluginObjectsInterface*"
+	init_value "0"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 234754 "m_ctr"
+	protected explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      extra_member 206722 "public slots:"
+	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 441602 "instanceDestroyed"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 228098 "QPluginObjectsInterface"
+      abstract visibility package 
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} : public plugin_interface{
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      extra_member 213506 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 442114 "~QPluginObjectsInterface"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 442242 "createObject"
+	public explicit_return_type "QObject*"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 442370 "destroy"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 449282 "allocateObject"
+	abstract cpp_virtual protected explicit_return_type "QObject*"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      attribute 234882 "m_fw_objects"
+	protected explicit_type "QList<QObject*>"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 241410 "m_Icon"
+	protected explicit_type "QIcon"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
   end
 
   deploymentview 134530 "QTFrameWorkClassView"
@@ -2506,6 +2800,110 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 221058 // QPortIOSimulator
+      end
+    end
+
+    artifact 194818 "QPluginLoaderExt"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 227586 // QPluginLoaderExt
+      end
+    end
+
+    artifact 194946 "interfaces"
+      stereotype "source"
+      cpp_h "#ifndef INTERFACES_H
+#define INTERFACES_H
+
+#include <QtPlugin>
+#include <QList>
+#include <QIcon>
+#include \"frame_work_global.h\"
+
+class QFrameWork;
+typedef enum{
+  FRAME_WORK,
+  PORT_IO,
+  UNDEFINED
+}InterfaceType_t;
+
+class plugin_interface{
+public:
+    virtual InterfaceType_t        type()                 = 0;
+    virtual const char*            name() const           = 0;
+    virtual const char*            category() const       = 0;
+    virtual const char*            version() const        = 0;
+    virtual const char*            description() const    = 0;
+    virtual const QIcon            icon() const           = 0;
+    virtual       QObject*         createObject( QObject *parent ) = 0;
+
+};
+
+#endif"
+      associated_classes
+      end
+    end
+
+    artifact 195074 "frame_work_global"
+      stereotype "source"
+      cpp_h "#ifndef FRAME_WORK_GLOBAL_H
+#define FRAME_WORK_GLOBAL_H
+#include \"base/global.h\"
+#include <QtCore/qglobal.h>
+
+#if defined(FRAME_WORK_LIBRARY)
+#  define FRAME_WORKSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define FRAME_WORKSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // FRAME_WORK_GLOBAL_H
+"
+      associated_classes
+      end
+    end
+
+    artifact 195202 "QPluginObjectsInterface"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+#include \"interfaces.h\"
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+
+Q_DECLARE_INTERFACE(QPluginObjectsInterface,
+                    \"vvv.moita.frame_work.QPluginObjectsInterface/1.0\")
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}
+"
+      associated_classes
+	class_ref 228098 // QPluginObjectsInterface
       end
     end
   end

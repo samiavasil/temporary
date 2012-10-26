@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "interfaces.h"
+#include "qt/interfaces.h"
 #include"qt/QFrameWork.h"
 #include<QMdiSubWindow>
 #include<QMouseEvent>

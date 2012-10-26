@@ -1,6 +1,6 @@
 format 76
 "External" // External
-  revision 7
+  revision 9
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -134,6 +134,45 @@ format 76
     end
 
     class 208002 "QByteArray"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 227714 "QPluginLoader"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 227842 "QMultiMap"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 234626 "QIcon"
       visibility package 
       cpp_external cpp_decl "${name}
 #include <${name}>

@@ -1,31 +1,50 @@
-#ifndef QPLUGINLOADEREXT_H
-#define QPLUGINLOADEREXT_H
-#include <QPluginLoader>
-#include <QObject>
-#include <QMultiMap>
-#include "qt/QpluginObjectsInterface.h"
+#ifndef _QPLUGINLOADEREXT_H
+#define _QPLUGINLOADEREXT_H
 
-class QPluginLoaderExt : public QPluginLoader
-{
-    Q_OBJECT
-public:
-    explicit QPluginLoaderExt(const QString &fileName,QObject *parent = 0);
-    ~QPluginLoaderExt();
-    QPluginObjectsInterface *instance();
+
+#include <QPluginLoader>
+
+#include <QMultiMap>
+
+
+class QPluginObjectsInterface;
+
+class QPluginLoaderExt : public QPluginLoader {
+Q_OBJECT
+
+  protected:
+    static QMultiMap<QString, QPluginLoaderExt*> m_Ploaders;
+
+    /**
+     * DELL ME
+     */
+    static int ctr;
+
+
+  public:
+    explicit QPluginLoaderExt(const QString & fileName, QObject * parent = 0);
+
+    virtual ~QPluginLoaderExt();
+
     void closeSafety();
+
+    QPluginObjectsInterface* instance();
+
 signals:
-    void allObjectsDestroyed( QObject * );
-public slots:
-    void instanceDestroyed(QObject *);
-protected:
+    void allObjectsDestroyed(QObject * );
+
+    void close_all_objects();
+
+
+  protected:
     QPluginObjectsInterface* m_instance;
 
-    static  QMultiMap<QString, QPluginLoaderExt*> m_Ploaders;
-    static int ctr;
     int m_ctr;
 
-signals:
-    void close_all_objects();
-};
+public slots:
 
-#endif // QPLUGINLOADEREXT_H
+  public:
+    void instanceDestroyed(QObject * obj);
+
+};
+#endif

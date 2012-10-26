@@ -1,0 +1,7 @@
+class QPluginObjectsInterface
+!!!442242.cpp!!!	createObject(in obj : QObject) : QObject*
+QObject* ret_obj = allocateObject( obj );
+if( 0 != ret_obj ){
+    m_fw_objects.append( ret_obj );
+}
+return ret_obj;

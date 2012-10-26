@@ -2,7 +2,7 @@
 #define PLUGIN_DESCRIPTOR_H
 #include "QPluginLoaderExt.h"
 //#include "interfaces.h"
-#include"qt/QpluginObjectsInterface.h"
+#include"qt/QPluginObjectsInterface.h"
 #include<QString>
 #include<QIcon>
 #include <QDebug>

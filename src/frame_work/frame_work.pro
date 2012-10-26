@@ -28,14 +28,12 @@ SOURCES += \
     base/CPortIO.cpp \
     qt/QSerialPortIO.cpp \
     qt/QPortIOSimulator.cpp \
-    qt/QpluginObjectsInterface.cpp \
     qt/QPluginLoaderExt.cpp \
     qt/QPluginDescriptor.cpp \
-    qt/QPluginList.cpp
+    qt/QPluginList.cpp \
+    qt/QPluginObjectsInterface.cpp
 
 HEADERS +=\
-        frame_work_global.h \
-    interfaces.h \
     base/CCommand.h \
     base/CCommandExecutor.h \
     qt/QPacketCollector.h \
@@ -56,10 +54,12 @@ HEADERS +=\
     base/CPortIO.h \
     qt/QSerialPortIO.h \
     qt/QPortIOSimulator.h \
-    qt/QpluginObjectsInterface.h \
     qt/QPluginLoaderExt.h \
     qt/QPluginDescriptor.h \
-    qt/QPluginList.h
+    qt/QPluginList.h \
+    qt/interfaces.h \
+    qt/frame_work_global.h \
+    qt/QPluginObjectsInterface.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
