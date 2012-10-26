@@ -13,3 +13,5 @@ class QFrameWork
       sleep(1);                            
       m_Executor->pauseExecution(false);   
   }
+!!!434690.cpp!!!	~QFrameWork()
+qDebug("Destroy QFrameWork");

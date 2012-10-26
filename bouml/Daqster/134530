@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 70
+  revision 71
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -818,7 +818,7 @@ ${inlines}
 
     class 168706 "QFrameWork"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class Q_DECL_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -828,12 +828,14 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 182914 // <generalisation>
-	relation 182914 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 182914 // <generalisation>
-	  b parent class_ref 128002 // CFrameWork
+      extra_member 200194 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
       end
 
       classrelation 209538 // <generalisation>
@@ -844,6 +846,14 @@ ${inlines}
 	  b parent class_ref 188418 // QWidget
       end
 
+      classrelation 182914 // <generalisation>
+	relation 182914 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 182914 // <generalisation>
+	  b parent class_ref 128002 // CFrameWork
+      end
+
       operation 314498 "QFrameWork"
 	public explicit_return_type ""
 	nparams 2
@@ -852,7 +862,21 @@ ${inlines}
 	    defaultvalue "0"
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :CFrameWork( ${p0}),QWidget( ${p1}){
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :QWidget( ${p1}),CFrameWork( ${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 434690 "~QFrameWork"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -2332,8 +2356,8 @@ const pack_desc_t packs[]={
     #include\"ProtoGen.h\"
 };
 
-#define PKT_NUM  (sizeof(packs)/sizeof(pack_desc_t))
-#define MSGS_NUM (sizeof(msgs)/sizeof(msg_desc_t))
+#define PKT_NUM  ((int)(sizeof(packs)/sizeof(pack_desc_t)))
+#define MSGS_NUM ((int)(sizeof(msgs)/sizeof(msg_desc_t)))
 
 ${members}
 ${namespace_end}"

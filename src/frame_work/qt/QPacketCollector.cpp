@@ -51,7 +51,7 @@ int QPacketCollector::appendReceivedBytes(const u8 * data, const int64 len) {
   }                                               
   return ret;                                     
 }
-#include<stdio.h>//dell me
+
 int QPacketCollector::collectPacket(CPacket * packet) {
   int ret = NO_ERR;                                                                                          
   static int a;                                                                                              
@@ -65,8 +65,7 @@ int QPacketCollector::collectPacket(CPacket * packet) {
           fprintf(stderr,"\n\n");
       }
       a++;
-      delete packet;
-      //m_PacketsList.append( packet );
+      m_PacketsList.append( packet );
   }                                                                                                          
   else{                                                                                                      
       ret = WRONG_PARAMS;                                                                                    

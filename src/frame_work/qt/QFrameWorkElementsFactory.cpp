@@ -135,6 +135,6 @@ void QFrameWorkElementsFactory::deleteControlView(CControlView * ctrlView) {
 }
 
 void QFrameWorkElementsFactory::deleteDataPlot(CDataPlot * dataPlot) {
-  DEBUG("TODO: Not implemented %x",(unsigned int)dataPlot );
+   DEBUG("TODO: Not implemented %x",(unsigned int)dataPlot );
 }
 

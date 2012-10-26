@@ -3,8 +3,12 @@ class QPacketCollector
 DEBUG("Create QPacketCollector");
 !!!379778.cpp!!!	~QPacketCollector()
 DEBUG("Destroy QPacketCollector");
+while( m_PacketsList.count( ) ){
+    delete m_PacketsList[0];
+}
 !!!364034.cpp!!!	getRecPacket() : int
 DEBUG("TODO:Not implemented");
+return 0;
 !!!414466.cpp!!!	transmitPacket(in packet : CPacket) : int
 int ret = WRONG_PARAMS;                                                     
 CPortIO* port = m_fWork->getPortIO();                                       
@@ -17,6 +21,7 @@ if( port&&protocol ){
 return ret;                                                                 
 !!!364290.cpp!!!	getRecPacketNum() : int
 DEBUG("TODO:Not implemented");
+return 0;
 !!!371714.cpp!!!	receivedBytesSlot() : void
 receiveBytes();
 !!!364546.cpp!!!	appendReceivedBytes(in data : u8, in len : int64) : int

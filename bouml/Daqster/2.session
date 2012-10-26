@@ -6,9 +6,8 @@ diagrams
     984 855 90 18 0 0
 end
 show_stereotypes
-selected class_ref 175234 // QProtocolPackFactory
+selected 
+  package_ref 134530 // QTFrameWorkPackage
 open
-  class_ref 135042 // CPacket
-  classview_ref 134530 // QTFrameWorkClassView
 end
 end

@@ -1,5 +1,5 @@
 class QFrameWorkElementsFactory
-!!!379010.cpp!!!	QFrameWorkElementsFactory(in cFwk : CFrameWork)
+!!!379010.cpp!!!	QFrameWorkElementsFactory()
 DEBUG("Create QFrameWorkElementsFactory");
 !!!379138.cpp!!!	~QFrameWorkElementsFactory()
 DEBUG("Destroy QFrameWorkElementsFactory");
@@ -42,7 +42,7 @@ if( 0 != exec ){
     }                                                    
 }                                                        
 return ( exec );                                         
-!!!335618.cpp!!!	createPacketCollector() : CPacketCollector*
+!!!335618.cpp!!!	createPacketCollector(in cFwk : CFrameWork) : CPacketCollector*
   DEBUG("Create Packet Collector");                
   QPacketCollector* coll = new QPacketCollector(cFwk);//TODO
   if( 0 == coll ){                                 
@@ -92,6 +92,6 @@ if( collector ){
     delete (QPacketCollector*) collector; 
 }                                         
 !!!343682.cpp!!!	deleteControlView(in ctrlView : CControlView) : void
-DEBUG("TODO: Not implemented");
+DEBUG("TODO: Not implemented %x",(unsigned int)ctrlView );
 !!!343810.cpp!!!	deleteDataPlot(in dataPlot : CDataPlot) : void
-DEBUG("TODO: Not implemented");
+ DEBUG("TODO: Not implemented %x",(unsigned int)dataPlot );

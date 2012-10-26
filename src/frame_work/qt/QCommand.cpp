@@ -1,6 +1,7 @@
 
 #include "qt/QCommand.h"
 #include "qt/QFrameWork.h"
+
 #include "base/CPacket.h"
 #include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
@@ -26,40 +27,40 @@ QCommand::~QCommand() {
  * Command handler
  */
 int QCommand::handler() {
-  int ret =  1;
-  static CPacket* packet = NULL;
-  
-  if( a >= 0 ){
-      ret =  0;
-   //  DEBUG("QCommand Finished");
-  }
-  else{
-      if( 1 ){//a == 0 ){
-          //DEBUG("QCommand Execution start");
-          QProtocolPackFactory *factory =  (QProtocolPackFactory*)m_fWork->getProtocol();
-          if(factory){
-              packet = factory->createPacket( pId[a%4] );
-          }
-      }
-      if( m_fWork&&packet ){
-          CPacketCollector* colector = m_fWork->getColector();
-          if( colector ){
-              colector->transmitPacket( packet );
-              DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
-              if( packet ){
-                  const u8*data = packet->data();
-                  for( int i=0;i < packet->packLenBytes();i++ ){
-                      fprintf(stderr," %02x",data[i]);
-                  }
-                  fprintf(stderr,"\n\n");
-              }
-          }
-      }
-      if(packet){
-          //delete packet;
-      }
-  }
-  a++;
-  return ret;
+    int ret =  1;
+    CPacket* packet = NULL;
+    
+    if( a >= 0 ){
+        ret =  0;
+     //  DEBUG("QCommand Finished");
+    }
+    else{
+        if( 1 ){//a == 0 ){
+            //DEBUG("QCommand Execution start");
+            QProtocolPackFactory *factory =  (QProtocolPackFactory*)m_fWork->getProtocol();
+            if(factory){
+                packet = factory->createPacket( pId[a%4] );
+            }
+        }
+        if( m_fWork&&packet ){
+            CPacketCollector* colector = m_fWork->getColector();
+            if( colector ){
+                colector->transmitPacket( packet );
+                DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
+                if( packet ){
+                    const u8*data = packet->data();
+                    for( int i=0;i < packet->packLenBytes();i++ ){
+                        fprintf(stderr," %02x",data[i]);
+                    }
+                    fprintf(stderr,"\n\n");
+                }
+            }
+        }
+        if(packet){
+            delete packet;
+        }
+    }
+    a++;
+    return ret;
 }
 

@@ -6,13 +6,18 @@ m_PortType = SERIALPORT_IO;
 DEBUG("Destroy QPortIO");
 !!!378242.cpp!!!	bytesAvailable() : int64
 DEBUG("TODO: TBI ");
+return 0;
 !!!378370.cpp!!!	read(in data : char, in maxlen : int64) : int64
-DEBUG("TODO: TBI ");
+DEBUG("TODO: TBI %x %lld",(unsigned int)data,maxlen);
+ return 0;
 !!!378498.cpp!!!	write(in data : char, in len : qint64) : int64
-DEBUG("TODO: TBI ");
+DEBUG("TODO: TBI %x %lld",(unsigned int)data,len);
+ return 0;
 !!!378626.cpp!!!	open() : int
 DEBUG("TODO: TBI ");
+return 0;
 !!!378754.cpp!!!	close() : int
 DEBUG("TODO: TBI ");
+ return 0;
 !!!378882.cpp!!!	readyReadSignal() : void
 DEBUG("TODO: TBI ");

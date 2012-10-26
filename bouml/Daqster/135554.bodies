@@ -1,5 +1,6 @@
 class CProtocolPackFactory
 !!!142082.cpp!!!	CProtocolPackFactory(in pLoader : CProtocolLoader)
+pLoader = pLoader;
 m_hDrLenBits       = 0;    
 m_postFixLenBits   = 0;    
 m_maxPacketSize    = 0;    

@@ -5,6 +5,6 @@ CPortIO::CPortIO() {
 }
 
 CPortIO::portIo_type CPortIO::type() {
-    return UNDEFINED_IO;
+  return UNDEFINED_IO;
 }
 

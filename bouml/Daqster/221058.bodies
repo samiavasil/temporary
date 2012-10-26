@@ -39,6 +39,10 @@ if( false == m_TaskRuned ){
 m_WriteCounter += len;            
 m_Mutex.unlock();                 
 return len;                       
+!!!393474.cpp!!!	open() : int
+return 0;
+!!!393602.cpp!!!	close() : int
+return 0;
 !!!393730.cpp!!!	readyReadSignal() : void
 emit readyReadBytesSignal();
 !!!400386.cpp!!!	reloadSimulatorTask() : void

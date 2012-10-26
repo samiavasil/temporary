@@ -23,3 +23,7 @@ QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :Q
     }
 }
 
+QFrameWork::~QFrameWork() {
+  qDebug("Destroy QFrameWork");
+}
+

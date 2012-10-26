@@ -5,7 +5,7 @@
 
 CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
   pLoader = pLoader;
-  m_hDrLenBits       = 0;
+  m_hDrLenBits       = 0;    
   m_postFixLenBits   = 0;    
   m_maxPacketSize    = 0;    
 }

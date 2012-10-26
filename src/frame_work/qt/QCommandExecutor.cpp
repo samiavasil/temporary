@@ -11,7 +11,7 @@ QCommandExecutor::~QCommandExecutor() {
   DEBUG( "Destroy Command Executor" );                           
   ret = startExecution( false );                                 
   if( NO_ERR == ret){                                            
-      if( false == wait( 4000 ) ){
+      if( false == wait( 1000 ) ){                               
           ret = SOME_ERROR;                                      
       }                                                          
   }                                                              
