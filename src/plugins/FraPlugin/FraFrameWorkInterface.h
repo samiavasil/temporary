@@ -10,7 +10,7 @@
 class QFrameWork;
 
 #define FRA_VERSION    "V0.0"
-#include<QDebug>
+
 
 class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public QPluginObjectsInterface
 {

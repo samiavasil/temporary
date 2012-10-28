@@ -20,7 +20,7 @@ QCommand::QCommand(QFrameWork * fWork) {
 }
 
 QCommand::~QCommand() {
-  qDebug("QCommand Deleted");
+  DEBUG("QCommand Deleted");
 }
 
 /**

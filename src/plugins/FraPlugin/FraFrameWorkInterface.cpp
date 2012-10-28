@@ -43,9 +43,9 @@ void FraFrameWorkInterface::destroy(){
 
 void FraFrameWorkInterface::frameWorkDestroyed( QObject* fw ){
     if(  fw && m_fw_objects.contains(  fw ) ){
-        qDebug("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
+        DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
         m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
-        qDebug("On List %d",m_fw_objects.count());
+        DEBUG("On List %d",m_fw_objects.count());
         if( 0 == m_fw_objects.count() ){
            deleteLater();
         }

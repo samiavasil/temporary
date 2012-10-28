@@ -18,6 +18,7 @@ enum{
 };
 
 /*TODO: FIX ME*/
+#include  <QDebug>
 #include  <QtGlobal>
 #define DEBUG    qDebug
 #define CRITICAL qCritical

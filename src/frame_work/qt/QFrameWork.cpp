@@ -15,15 +15,15 @@ QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :Q
     }
   
     if( m_Executor ){
-        QCommand* comm = new QCommand(this); 
+        /*QCommand* comm = new QCommand(this);
         m_Executor->appendCommand(comm);     
-        /*TODO FIX ME*/                      
-        sleep(1);                            
-        m_Executor->pauseExecution(false);   
+        TODO FIX ME
+        sleep(1);
+        m_Executor->pauseExecution(false);   */
     }
 }
 
 QFrameWork::~QFrameWork() {
-  qDebug("Destroy QFrameWork");
+  DEBUG("Destroy QFrameWork");
 }
 

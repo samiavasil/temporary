@@ -3,9 +3,9 @@
 QtestCommand::QtestCommand(QFrameWork * fWork) {
   m_fWork = fWork;
   a=0;
-  qDebug("QtestCommand Created");
+  DEBUG("QtestCommand Created");
 }
 
 QtestCommand::~QtestCommand() {
-  qDebug("QtestCommand Deleted");
+  DEBUG("QtestCommand Deleted");
 }

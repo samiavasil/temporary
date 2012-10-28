@@ -3,7 +3,7 @@
 #include "base/CFrameWorkElementsFactory.h"
 #include "base/CControlView.h"
 #include "base/CDataPlot.h"
-#include "base/CCommandExecutor.h"
+
 #include "base/CProtocolPackFactory.h"
 #include "base/CPortIO.h"
 #include "base/CPacketCollector.h"

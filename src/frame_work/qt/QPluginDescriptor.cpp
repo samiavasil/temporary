@@ -31,7 +31,7 @@ QPluginDescriptor::~QPluginDescriptor(){
     if( m_loader ){
         m_loader->deleteLater();
     }
-    qDebug() << "Destroy plugin_descriptor:\n" << this;
+    DEBUG() << "Destroy plugin_descriptor:\n" << this;
 }
 
 QPluginObjectsInterface* QPluginDescriptor::cast_to_plugin_interface( QObject* object ){
@@ -59,13 +59,13 @@ void QPluginDescriptor::read_plugin_description( ){
             delete plugin;
         }
         else{
-            qDebug()<<"Can't load object from file " << loader->fileName().toUtf8().constData();
+            DEBUG()<<"Can't load object from file " << loader->fileName().toUtf8().constData();
         }
         loader->unload();
         delete loader;
     }
     else{
-        qDebug()<<"Can't create object loader from file " << m_Location.toUtf8().constData();
+        DEBUG()<<"Can't create object loader from file " << m_Location.toUtf8().constData();
     }
 }
 
@@ -73,11 +73,11 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t type, QObject
     QObject* object = 0;
 
     if( !m_enabled ){
-        qDebug() << "plugin_disabled: can't create object";
+        DEBUG() << "plugin_disabled: can't create object";
         return object;
     }
     if( m_Location.isEmpty() ){
-        qDebug() << "plugin_descriptor: empty file location";
+        DEBUG() << "plugin_descriptor: empty file location";
         return object;
     }
     if( type == m_Type ){
@@ -107,7 +107,7 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t type, QObject
         }
     }
     if( 0 == object ){
-        qDebug() << "\nCan't create obect from plugin file: " << m_Location;
+        DEBUG() << "\nCan't create obect from plugin file: " << m_Location;
     }
     return object;
 }

@@ -101,7 +101,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-#include<QDebug>
+
 void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
     if( event ){

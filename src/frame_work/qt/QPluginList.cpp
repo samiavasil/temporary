@@ -2,7 +2,6 @@
 #include "ui_pluginlist.h"
 #include "interfaces.h"
 #include <QDir>
-#include<QDebug>
 #include "qt/QFrameWork.h"
 
 QPluginList::QPluginList(QWidget *parent) :
@@ -60,7 +59,7 @@ void QPluginList::populatePluginList(){
         plugin_list.next();
         QPluginDescriptor* desc = plugin_list.value();
         if( desc ){
-            qDebug() <<  desc;
+            DEBUG() <<  desc;
             ui->availablePlugins->insertRow( i );
             QTableWidgetItem *item = new QTableWidgetItem(desc->name());
             if( !desc->icon().isNull() ){
@@ -102,7 +101,7 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
 }
 
 void QPluginList::reloadPlugins( ){
-    qDebug("Reload List");
+    DEBUG("Reload List");
     ui->availablePlugins->blockSignals(true);
     readPluginsDir();
     ui->availablePlugins->blockSignals(false);

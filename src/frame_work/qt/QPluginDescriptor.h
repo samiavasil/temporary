@@ -1,11 +1,11 @@
 #ifndef PLUGIN_DESCRIPTOR_H
 #define PLUGIN_DESCRIPTOR_H
+#include "base/global.h"
 #include "QPluginLoaderExt.h"
 //#include "interfaces.h"
 #include"qt/QPluginObjectsInterface.h"
 #include<QString>
 #include<QIcon>
-#include <QDebug>
 #include<QMutex>
 #include<QMessageBox>
 
@@ -55,9 +55,9 @@ public:
             }
         }
         else{
-            qDebug() << "!!!!!CREATE OBJECT \n";
+            DEBUG() << "!!!!!CREATE OBJECT \n";
         }
-        qDebug() <<  this;
+        DEBUG() <<  this;
     }
 public slots:
     void loaderDestroyed(QObject* obj);
