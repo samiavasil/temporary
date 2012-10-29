@@ -6,7 +6,7 @@
 class CFrameWorkElementsFactory;
 class CControlView;
 class CDataPlot;
-#include "base/CCommandExecutor.h"
+class CCommandExecutor;
 class CProtocolPackFactory;
 class CPortIO;
 class CPacketCollector;

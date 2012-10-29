@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 75
+  revision 76
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -99,6 +99,20 @@ ${inlines}
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 455810 "~CCommandExecutor"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
@@ -299,6 +313,19 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 456322 "~CControlView"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
     end
 
     class 128130 "CDataPlot"
@@ -313,6 +340,19 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 456450 "~CDataPlot"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
     end
 
     class 128002 "CFrameWork"
@@ -791,6 +831,20 @@ typedef enum{
 	
       end
 
+      operation 456066 "~CPortIO"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 210690 "bytesAvailable"
 	abstract cpp_virtual public explicit_return_type "int64"
 	nparams 0
@@ -938,6 +992,20 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 456194 "~CPacketCollector"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -1973,6 +2041,20 @@ return ret;"
 	php_decl ""
 	python_decl ""
 	idl_decl ""
+      end
+
+      operation 455938 "~CProtocolPackFactory"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
   end

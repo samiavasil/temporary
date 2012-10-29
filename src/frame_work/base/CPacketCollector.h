@@ -16,6 +16,8 @@ class CPacketCollector {
   public:
     CPacketCollector(CFrameWork * fWk);
 
+    virtual ~CPacketCollector();
+
     virtual int getRecPacket() = 0;
 
     virtual int packetReceivedSignal() = 0;

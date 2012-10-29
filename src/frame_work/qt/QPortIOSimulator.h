@@ -14,6 +14,8 @@ class QPortIOSimulator : public QObject, public CPortIO {
 Q_OBJECT
 
   public:
+    virtual ~QPortIOSimulator();
+
     QPortIOSimulator();
 
     virtual int64 bytesAvailable();

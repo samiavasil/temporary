@@ -8,6 +8,8 @@ class CCommandExecutor {
   public:
     CCommandExecutor();
 
+    virtual ~CCommandExecutor();
+
     /**
      * Append new command to queue.
      */

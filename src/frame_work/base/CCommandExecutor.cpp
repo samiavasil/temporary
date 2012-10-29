@@ -6,6 +6,9 @@ CCommandExecutor::CCommandExecutor() {
   m_CommandLoopTime = 10;
 }
 
+CCommandExecutor::~CCommandExecutor() {
+}
+
 /**
  * Set command loop time
  */

@@ -30,6 +30,9 @@ Q_OBJECT
 
     QPluginObjectsInterface* instance();
 
+public slots:
+    void instanceDestroyed(QObject * obj);
+
 signals:
     void allObjectsDestroyed(QObject * );
 
@@ -40,11 +43,6 @@ signals:
     QPluginObjectsInterface* m_instance;
 
     int m_ctr;
-
-public slots:
-
-  public:
-    void instanceDestroyed(QObject * obj);
 
 };
 #endif

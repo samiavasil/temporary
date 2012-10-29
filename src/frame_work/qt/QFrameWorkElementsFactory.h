@@ -22,7 +22,7 @@ class QFrameWorkElementsFactory : public CFrameWorkElementsFactory {
   public:
     QFrameWorkElementsFactory();
 
-    ~QFrameWorkElementsFactory();
+    virtual ~QFrameWorkElementsFactory();
 
     virtual CPortIO* createPortIO(const CPortIO::portIo_type type);
 

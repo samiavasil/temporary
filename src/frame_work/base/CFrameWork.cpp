@@ -3,7 +3,7 @@
 #include "base/CFrameWorkElementsFactory.h"
 #include "base/CControlView.h"
 #include "base/CDataPlot.h"
-
+#include "base/CCommandExecutor.h"
 #include "base/CProtocolPackFactory.h"
 #include "base/CPortIO.h"
 #include "base/CPacketCollector.h"
@@ -84,23 +84,23 @@ int CFrameWork::deattachCurrentElementsFactory() {
   int ret = NO_ERR;                                            
   /*TODO - do some check and return error mayby in some cases*/
   if( 0 != m_ElementsFactory ){                                
-      if( 0 != m_Executor ){                                   
-          m_ElementsFactory->deleteExecutor( m_Executor );     
+      if( 0 != m_Executor ){
+          delete m_Executor;
       }                                                        
-      if( 0 != m_Protocol ){                                   
-          m_ElementsFactory->deleteProtocol(m_Protocol);       
+      if( 0 != m_Protocol ){
+          delete m_Protocol;
       }                                                        
-      if( 0 != m_PortIO ){                                     
-          m_ElementsFactory->deletePortIO(m_PortIO);           
+      if( 0 != m_PortIO ){
+          delete m_PortIO;
       }                                                        
-      if( 0 != m_Colector ){                                   
-          m_ElementsFactory->deleteColector(m_Colector);       
+      if( 0 != m_Colector ){
+          delete m_Colector;
       }                                                        
-      if( 0 != m_ControlView ){                                
-          m_ElementsFactory->deleteControlView(m_ControlView); 
+      if( 0 != m_ControlView ){
+          delete m_ControlView;
       }                                                        
-      if( 0 != m_DataPlot ){                                   
-          m_ElementsFactory->deleteDataPlot(m_DataPlot);       
+      if( 0 != m_DataPlot ){
+          delete m_DataPlot;
       }                                                        
       delete m_ElementsFactory;                                
   }                                                            

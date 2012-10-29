@@ -31,7 +31,8 @@ SOURCES += \
     qt/QPluginLoaderExt.cpp \
     qt/QPluginDescriptor.cpp \
     qt/QPluginList.cpp \
-    qt/QPluginObjectsInterface.cpp
+    qt/QPluginObjectsInterface.cpp \
+    base/CControlView.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -59,7 +60,8 @@ HEADERS +=\
     qt/QPluginList.h \
     qt/interfaces.h \
     qt/frame_work_global.h \
-    qt/QPluginObjectsInterface.h
+    qt/QPluginObjectsInterface.h \
+    base/CControlView.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

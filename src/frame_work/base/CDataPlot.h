@@ -3,5 +3,8 @@
 
 
 class CDataPlot {
+  public:
+    virtual ~CDataPlot();
+
 };
 #endif

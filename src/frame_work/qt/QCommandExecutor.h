@@ -23,7 +23,7 @@ Q_OBJECT
   public:
     QCommandExecutor(QObject * parent = 0);
 
-    ~QCommandExecutor();
+    virtual ~QCommandExecutor();
 
     /**
      * Append new command to queue.

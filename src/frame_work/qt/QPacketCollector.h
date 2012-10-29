@@ -26,7 +26,7 @@ Q_OBJECT
   public:
     QPacketCollector(CFrameWork * cFwk);
 
-    ~QPacketCollector();
+    virtual ~QPacketCollector();
 
     virtual int getRecPacket();
 

@@ -12,6 +12,9 @@ CPacketCollector::CPacketCollector(CFrameWork * fWk) {
   m_TransState =TBD;
 }
 
+CPacketCollector::~CPacketCollector() {
+}
+
 int CPacketCollector::receiveBytes() {
     int ret   = NO_ERR;                                                                                            
     int iteration;                                                                                                 

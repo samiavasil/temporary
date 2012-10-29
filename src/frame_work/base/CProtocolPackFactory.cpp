@@ -149,3 +149,6 @@ int CProtocolPackFactory::getPacketPostFix(CPacket * packet, u8 * retPostFix) {
   return ret;                                                                  
 }
 
+CProtocolPackFactory::~CProtocolPackFactory() {
+}
+
