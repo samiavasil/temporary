@@ -1,7 +1,5 @@
-
 #include "qt/QCommand.h"
 #include "qt/QFrameWork.h"
-
 #include "base/CPacket.h"
 #include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
@@ -14,7 +12,7 @@ pack_id_t pId[4]={
     PACK4_ID,
 };
 
-QCommand::QCommand(QFrameWork * fWork) {
+QCommand::QCommand( QFrameWork * fWork ) {
   m_fWork = fWork;
   a=0;         
 }

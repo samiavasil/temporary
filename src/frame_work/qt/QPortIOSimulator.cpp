@@ -3,6 +3,9 @@
 #include <QTimer>
 
 
+QPortIOSimulator::~QPortIOSimulator() {
+}
+
 QPortIOSimulator::QPortIOSimulator() {
   DEBUG("Create QPortIOSimulator");   
   m_PortType = SIMULATOR_IO;          

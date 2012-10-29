@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 74
+  revision 76
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -130,7 +130,7 @@ ${inlines}
       end
 
       operation 379778 "~QPacketCollector"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -440,7 +440,7 @@ ${inlines}
       end
 
       operation 328706 "~QCommandExecutor"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -1219,7 +1219,7 @@ ${inlines}
       end
 
       operation 379394 "~QProtocolPackFactory"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -1786,7 +1786,7 @@ ${inlines}
       end
 
       operation 379650 "~QSerialPortIO"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -1916,6 +1916,14 @@ ${inlines}
 	  b parent class_ref 128386 // CPortIO
       end
 
+      classrelation 263298 // <dependency>
+	relation 263298 -_->
+	  a package
+	    cpp default "#include in source"
+	    classrelation_ref 263298 // <dependency>
+	  b parent class_ref 162178 // QTimer
+      end
+
       extra_member 180482 "Q_OBJECT"
 	
 	cpp "Q_OBJECT
@@ -1924,6 +1932,20 @@ ${inlines}
 	php ""
 	python ""
 	idl ""
+      end
+
+      operation 456578 "~QPortIOSimulator"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
       end
 
       operation 386562 "QPortIOSimulator"
@@ -2146,14 +2168,6 @@ ${inlines}
 	
 	
       end
-
-      classrelation 263298 // <dependency>
-	relation 263298 -_->
-	  a package
-	    cpp default "#include in source"
-	    classrelation_ref 263298 // <dependency>
-	  b parent class_ref 162178 // QTimer
-      end
     end
 
     class 227586 "QPluginLoaderExt"
@@ -2275,6 +2289,31 @@ ${inlines}
 	
       end
 
+      extra_member 206722 "public slots:"
+	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 441602 "instanceDestroyed"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       extra_member 206850 "signals:"
 	
 	cpp "signals:
@@ -2327,31 +2366,6 @@ ${inlines}
 	php_decl ""
 	python_decl ""
 	idl_decl ""
-      end
-
-      extra_member 206722 "public slots:"
-	
-	cpp "public slots:
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
-      operation 441602 "instanceDestroyed"
-	public explicit_return_type "void"
-	nparams 1
-	  param in name "obj" explicit_type "QObject"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
       end
     end
 

@@ -4,5 +4,8 @@
 
 #include "global.h"
 class CControlView {
+  public:
+    virtual ~CControlView();
+
 };
 #endif

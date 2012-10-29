@@ -102,6 +102,10 @@ class CProtocolPackFactory {
 
     int m_maxPacketSize;
 
+
+  public:
+    virtual ~CProtocolPackFactory();
+
 };
 inline int CProtocolPackFactory::getProtocolHeaderLenBits() const {
   return m_hDrLenBits;

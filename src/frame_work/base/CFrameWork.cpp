@@ -1,12 +1,6 @@
 
 #include "base/CFrameWork.h"
 #include "base/CFrameWorkElementsFactory.h"
-#include "base/CControlView.h"
-#include "base/CDataPlot.h"
-
-#include "base/CProtocolPackFactory.h"
-#include "base/CPortIO.h"
-#include "base/CPacketCollector.h"
 
 CFrameWork::CFrameWork(CFrameWorkElementsFactory * elementsFactory) {
   DEBUG("Create Frame Work Factory");

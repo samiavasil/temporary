@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>788</width>
-    <height>584</height>
+    <width>836</width>
+    <height>679</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,465 +22,199 @@
   <property name="windowTitle">
    <string>Plot</string>
   </property>
-  <layout class="QGridLayout">
-   <property name="margin">
-    <number>9</number>
+  <widget class="QSplitter" name="splitter">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>70</y>
+     <width>481</width>
+     <height>192</height>
+    </rect>
    </property>
-   <property name="spacing">
-    <number>6</number>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
-   <item row="1" column="0">
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <widget class="QwtPlot" name="PlotQwt">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="PlotTable">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="rowCount">
+     <number>2</number>
+    </property>
+    <row>
+     <property name="text">
+      <string>1</string>
      </property>
-     <property name="tabPosition">
-      <enum>QTabWidget::West</enum>
+    </row>
+    <row/>
+    <column>
+     <property name="text">
+      <string>F[Hz]</string>
      </property>
-     <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
+    </column>
+    <column>
+     <property name="text">
+      <string>I</string>
      </property>
-     <property name="currentIndex">
-      <number>0</number>
+    </column>
+    <column>
+     <property name="text">
+      <string>Q</string>
      </property>
-     <property name="elideMode">
-      <enum>Qt::ElideNone</enum>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string>999999999</string>
      </property>
-     <widget class="QWidget" name="PlotTab">
-      <attribute name="title">
-       <string>Plot</string>
-      </attribute>
-      <layout class="QGridLayout">
-       <property name="margin">
-        <number>9</number>
-       </property>
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string/>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_7">
-          <item row="0" column="0">
-           <widget class="QSplitter" name="splitter_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <widget class="QWidget" name="horizontalLayoutWidget_2">
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QTabWidget" name="tabPlots">
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <widget class="QWidget" name="tab">
-                 <attribute name="title">
-                  <string>Impedance</string>
-                 </attribute>
-                 <layout class="QGridLayout">
-                  <property name="margin">
-                   <number>9</number>
-                  </property>
-                  <property name="spacing">
-                   <number>6</number>
-                  </property>
-                  <item row="0" column="1">
-                   <widget class="QwtPlot" name="PlotQwt">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Expanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QTabWidget" name="tabWidget_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <widget class="QWidget" name="PlotSetTab">
-              <attribute name="title">
-               <string>Plot settings</string>
-              </attribute>
-              <layout class="QGridLayout" name="gridLayout_5">
-               <item row="1" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <widget class="QGroupBox" name="groupBox_5">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Settings</string>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_2">
-                    <item row="0" column="0">
-                     <layout class="QGridLayout" name="gridLayout_1">
-                      <item row="0" column="0">
-                       <widget class="QCheckBox" name="CheckBoxMouseTrack">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="text">
-                         <string>Mouse Track</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="1">
-                       <widget class="QCheckBox" name="CheckBoxAutoscale">
-                        <property name="text">
-                         <string>Auto Scale</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="1" column="0">
-                       <widget class="QCheckBox" name="CheckBoxGridX">
-                        <property name="text">
-                         <string>Grid X On</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="1" column="1">
-                       <widget class="QCheckBox" name="CheckMagnifier">
-                        <property name="text">
-                         <string>Magnifier</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="2" column="0">
-                       <widget class="QCheckBox" name="CheckBoxGridY">
-                        <property name="text">
-                         <string>Grid Y On</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="2" column="1">
-                       <widget class="QCheckBox" name="CheckRectangleZoom">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="text">
-                         <string>Rectangle Zoom</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="groupBox_6">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Colors</string>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_3">
-                    <item row="0" column="0">
-                     <layout class="QVBoxLayout" name="verticalLayout">
-                      <item>
-                       <widget class="QToolButton" name="BtnGridColor">
-                        <property name="text">
-                         <string>Grid</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QToolButton" name="BtnBackgroundColor">
-                        <property name="text">
-                         <string>Background</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QToolButton" name="BtnZomRectangle">
-                        <property name="text">
-                         <string>Zoom Rectangle</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="groupBox_7">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Line Selection</string>
-                   </property>
-                   <layout class="QGridLayout" name="gridLayout_4">
-                    <item row="0" column="0">
-                     <layout class="QVBoxLayout" name="verticalLayout_2">
-                      <item>
-                       <widget class="QComboBox" name="ComboLineColor"/>
-                      </item>
-                      <item>
-                       <widget class="QToolButton" name="BtnLineColor">
-                        <property name="text">
-                         <string>Line Color</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="ExportTab">
-              <attribute name="title">
-               <string>Export</string>
-              </attribute>
-              <widget class="QWidget" name="">
-               <property name="geometry">
-                <rect>
-                 <x>140</x>
-                 <y>160</y>
-                 <width>131</width>
-                 <height>56</height>
-                </rect>
-               </property>
-               <layout class="QVBoxLayout">
-                <property name="spacing">
-                 <number>6</number>
-                </property>
-                <property name="margin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QPushButton" name="PrintButton">
-                  <property name="text">
-                   <string>Print</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="ExportPdfButton">
-                  <property name="text">
-                   <string>ExportToPdf</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </widget>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="TableTab">
-      <attribute name="title">
-       <string>Table</string>
-      </attribute>
-      <layout class="QGridLayout">
-       <property name="margin">
-        <number>9</number>
-       </property>
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <item row="0" column="1">
-        <widget class="QSplitter" name="splitter">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTableWidget" name="PlotTable">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="rowCount">
-           <number>2</number>
-          </property>
-          <row>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </row>
-          <row/>
-          <column>
-           <property name="text">
-            <string>F[Hz]</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>I</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Q</string>
-           </property>
-          </column>
-          <item row="0" column="0">
-           <property name="text">
-            <string>999999999</string>
-           </property>
-          </item>
-          <item row="0" column="1">
-           <property name="text">
-            <string>999999999</string>
-           </property>
-          </item>
-          <item row="0" column="2">
-           <property name="text">
-            <string>999999999</string>
-           </property>
-          </item>
-         </widget>
-         <widget class="QGroupBox" name="groupBox_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="0">
-            <layout class="QVBoxLayout" name="verticalLayout_8">
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <item>
-                <widget class="QCheckBox" name="checkLogToFile">
-                 <property name="text">
-                  <string>Log to file</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <item>
-                  <widget class="QLabel" name="label">
-                   <property name="text">
-                    <string>Output Directory</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_2">
-                   <item>
-                    <widget class="QLineEdit" name="OutDirEdit">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QToolButton" name="OutDirButton">
-                     <property name="text">
-                      <string>...</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
-   </item>
-  </layout>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>999999999</string>
+     </property>
+    </item>
+    <item row="0" column="2">
+     <property name="text">
+      <string>999999999</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QComboBox" name="ComboLineColor">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>300</y>
+     <width>72</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <action name="actionMouseTrack">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>MouseTrack</string>
+   </property>
+   <property name="toolTip">
+    <string>Mouse Track</string>
+   </property>
+  </action>
+  <action name="actionMagnifier">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Search.png</normaloff>:/new/prefix1/icons/Search.png</iconset>
+   </property>
+   <property name="text">
+    <string>Magnifier</string>
+   </property>
+  </action>
+  <action name="actionRectangle_Zoom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Search.png</normaloff>:/new/prefix1/icons/Search.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rectangle Zoom</string>
+   </property>
+   <property name="toolTip">
+    <string>Rectangle Zoom</string>
+   </property>
+  </action>
+  <action name="actionGrid_X_on">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>Grid X on</string>
+   </property>
+   <property name="toolTip">
+    <string>Grid X on</string>
+   </property>
+  </action>
+  <action name="actionGrid_Y_on">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>Grid Y on</string>
+   </property>
+   <property name="toolTip">
+    <string>Grid Y on</string>
+   </property>
+  </action>
+  <action name="actionAutoscale">
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>Autoscale</string>
+   </property>
+   <property name="toolTip">
+    <string>Autoscale</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+   <property name="toolTip">
+    <string>Print plot</string>
+   </property>
+  </action>
+  <action name="actionExport_to_Pdf">
+   <property name="text">
+    <string>Export to Pdf</string>
+   </property>
+   <property name="toolTip">
+    <string>Export to Pdf file</string>
+   </property>
+  </action>
+  <action name="actionConfiguration">
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Move Row Down.png</normaloff>:/new/prefix1/icons/Move Row Down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Configuration</string>
+   </property>
+   <property name="toolTip">
+    <string>Plot Coniguration</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -490,6 +224,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="proba.qrc"/>
+ </resources>
  <connections/>
 </ui>

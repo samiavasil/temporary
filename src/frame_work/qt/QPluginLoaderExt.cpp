@@ -1,6 +1,7 @@
 
 #include "qt/QPluginLoaderExt.h"
 #include <QObject>
+
 #include "qt/QPluginObjectsInterface.h"
 
 QMultiMap<QString, QPluginLoaderExt*> QPluginLoaderExt::m_Ploaders;

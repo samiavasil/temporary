@@ -3,13 +3,14 @@
 
 
 #include "global.h"
-class CFrameWorkElementsFactory;
-class CControlView;
-class CDataPlot;
+#include "base/CControlView.h"
+#include "base/CDataPlot.h"
 #include "base/CCommandExecutor.h"
-class CProtocolPackFactory;
-class CPortIO;
-class CPacketCollector;
+#include "base/CProtocolPackFactory.h"
+#include "base/CPortIO.h"
+#include "base/CPacketCollector.h"
+
+class CFrameWorkElementsFactory;
 
 /**
  * Frame Work class. Contain referenses to all framework object primitives.

@@ -15,7 +15,7 @@ class QProtocolPackFactory : public CProtocolPackFactory {
   public:
     QProtocolPackFactory(QProtocolLoader * pLoader);
 
-    ~QProtocolPackFactory();
+    virtual ~QProtocolPackFactory();
 
   protected:
   typedef struct{

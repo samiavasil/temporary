@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 75
+  revision 77
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -99,6 +99,20 @@ ${inlines}
 	public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 455810 "~CCommandExecutor"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
@@ -299,6 +313,19 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 456322 "~CControlView"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
     end
 
     class 128130 "CDataPlot"
@@ -313,6 +340,20 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 456450 "~CDataPlot"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
     end
 
     class 128002 "CFrameWork"
@@ -357,6 +398,14 @@ ${inlines}
 	
       end
 
+      classrelation 297218 // <dependency>
+	relation 296962 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297218 // <dependency>
+	  b parent class_ref 128258 // CControlView
+      end
+
       classrelation 134530 // m_ControlView (<directional aggregation>)
 	relation 134530 o-->
 	  a role_name "m_ControlView" protected
@@ -367,6 +416,14 @@ ${inlines}
 	  b parent class_ref 128258 // CControlView
       end
 
+      classrelation 297090 // <dependency>
+	relation 296834 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297090 // <dependency>
+	  b parent class_ref 128130 // CDataPlot
+      end
+
       classrelation 134658 // m_DataPlot (<directional aggregation>)
 	relation 134658 o-->
 	  a role_name "m_DataPlot" protected
@@ -375,6 +432,14 @@ ${inlines}
 "
 	    classrelation_ref 134658 // m_DataPlot (<directional aggregation>)
 	  b parent class_ref 128130 // CDataPlot
+      end
+
+      classrelation 297730 // <dependency>
+	relation 297474 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297730 // <dependency>
+	  b parent class_ref 135298 // CCommandExecutor
       end
 
       classrelation 134786 // m_Executor (<directional aggregation>)
@@ -390,6 +455,14 @@ If queue is empty timer is stoped and task go to sleep."
 	  b parent class_ref 135298 // CCommandExecutor
       end
 
+      classrelation 297602 // <dependency>
+	relation 297346 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297602 // <dependency>
+	  b parent class_ref 135554 // CProtocolPackFactory
+      end
+
       classrelation 141314 // m_Protocol (<directional aggregation>)
 	relation 141314 o-->
 	  a role_name "m_Protocol" protected
@@ -399,6 +472,14 @@ If queue is empty timer is stoped and task go to sleep."
 	  b parent class_ref 135554 // CProtocolPackFactory
       end
 
+      classrelation 297346 // <dependency>
+	relation 297090 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297346 // <dependency>
+	  b parent class_ref 128386 // CPortIO
+      end
+
       classrelation 141570 // m_PortIO (<directional aggregation>)
 	relation 141570 o-->
 	  a role_name "m_PortIO" protected
@@ -406,6 +487,14 @@ If queue is empty timer is stoped and task go to sleep."
 "
 	    classrelation_ref 141570 // m_PortIO (<directional aggregation>)
 	  b parent class_ref 128386 // CPortIO
+      end
+
+      classrelation 297474 // <dependency>
+	relation 297218 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 297474 // <dependency>
+	  b parent class_ref 134914 // CPacketCollector
       end
 
       classrelation 141698 // m_Colector (<directional aggregation>)
@@ -543,6 +632,7 @@ deallocate current factory and allocate new elements with new factory."
 	
 	
       end
+
     end
 
     class 194946 "CFrameWorkElementsFactory"
@@ -564,6 +654,46 @@ ${inlines}
 	    cpp default "#include in header"
 	    classrelation_ref 249986 // <dependency>
 	  b parent class_ref 128386 // CPortIO
+      end
+
+      classrelation 269954 // <dependency>
+	relation 269954 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 269954 // <dependency>
+	  b parent class_ref 135554 // CProtocolPackFactory
+      end
+
+      classrelation 270082 // <dependency>
+	relation 270082 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270082 // <dependency>
+	  b parent class_ref 135298 // CCommandExecutor
+      end
+
+      classrelation 270210 // <dependency>
+	relation 270210 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270210 // <dependency>
+	  b parent class_ref 134914 // CPacketCollector
+      end
+
+      classrelation 270338 // <dependency>
+	relation 270338 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270338 // <dependency>
+	  b parent class_ref 128258 // CControlView
+      end
+
+      classrelation 270466 // <dependency>
+	relation 270466 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 270466 // <dependency>
+	  b parent class_ref 128130 // CDataPlot
       end
 
       operation 321410 "createPortIO"
@@ -705,46 +835,6 @@ ${inlines}
 	
 	
       end
-
-      classrelation 269954 // <dependency>
-	relation 269954 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 269954 // <dependency>
-	  b parent class_ref 135554 // CProtocolPackFactory
-      end
-
-      classrelation 270082 // <dependency>
-	relation 270082 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 270082 // <dependency>
-	  b parent class_ref 135298 // CCommandExecutor
-      end
-
-      classrelation 270210 // <dependency>
-	relation 270210 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 270210 // <dependency>
-	  b parent class_ref 134914 // CPacketCollector
-      end
-
-      classrelation 270338 // <dependency>
-	relation 270338 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 270338 // <dependency>
-	  b parent class_ref 128258 // CControlView
-      end
-
-      classrelation 270466 // <dependency>
-	relation 270466 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 270466 // <dependency>
-	  b parent class_ref 128130 // CDataPlot
-      end
     end
 
     class 128386 "CPortIO"
@@ -781,6 +871,20 @@ typedef enum{
 	nparams 0
 	constraint "m_PortType = UNDEFINED_IO;"
 	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 456066 "~CPortIO"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
@@ -938,6 +1042,20 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 456194 "~CPacketCollector"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -1973,6 +2091,20 @@ return ret;"
 	php_decl ""
 	python_decl ""
 	idl_decl ""
+      end
+
+      operation 455938 "~CProtocolPackFactory"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
   end
