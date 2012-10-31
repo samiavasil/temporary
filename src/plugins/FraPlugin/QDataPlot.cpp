@@ -2,9 +2,13 @@
 #include "ui_qdataplot.h"
 #include<QBoxLayout>
 #include<QToolBar>
+#include<QMenuBar>
 #include<qwt/qwt_plot_curve.h>
 #include<qwt/qwt_plot_canvas.h>
-#include<QMenuBar>
+#include<qwt/qwt_plot_grid.h>
+
+
+
 QDataPlot::QDataPlot(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QDataPlot)
@@ -27,6 +31,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     l->setMenuBar(ptr1);
     QToolBar* ptr = new QToolBar("OPAA");
 
+    ptr->addAction(ui->actionShowTable);
     ptr->addAction(ui->actionAutoscale);
     ptr->addAction(ui->actionGrid_X_on);
     ptr->addAction(ui->actionGrid_Y_on);
@@ -52,6 +57,17 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     //ui->PlotQwt->insertLegend ( new QwtLegend(), QwtPlot::BottomLegend );
     ui->PlotQwt->setCanvasBackground ( QColor ( Qt::black ) );
+    ui->PlotTable->setVisible( false );
+    m_Grid = new QwtPlotGrid;
+    m_Grid->enableXMin ( true );
+    m_Grid->setMajPen ( QPen ( Qt::green, 0, Qt::DotLine ) );
+    m_Grid->setMinPen ( QPen ( Qt::gray , 0, Qt::DotLine ) );
+    m_Grid->enableX ( false );
+    m_Grid->enableY ( false );
+    m_Grid->attach ( ui->PlotQwt );
+    m_Grid->setPen ( QPen ( Qt::white ) );
+
+
 
     //DELL ME
     // copy the data into the curves
@@ -64,7 +80,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     curve2->setSamples( x,z,100 );
 
     curve1->setPen(QPen(Qt::green));
-    curve2->setPen(QPen(Qt::darkRed));
+    curve2->setPen(QPen(Qt::red));
     curve1->attach(ui->PlotQwt);
     curve2->attach(ui->PlotQwt);
 
@@ -78,4 +94,32 @@ QDataPlot::QDataPlot(QWidget *parent) :
 QDataPlot::~QDataPlot()
 {
     delete ui;
+}
+
+
+void QDataPlot::on_actionMouseTrack_triggered()
+{
+
+}
+
+void QDataPlot::on_actionGrid_X_on_triggered(bool checked)
+{
+    if( m_Grid ){
+        m_Grid->enableX( checked );
+        ui->PlotQwt->replot();
+    }
+}
+
+void QDataPlot::on_actionGrid_Y_on_triggered(bool checked)
+{
+    if( m_Grid ){
+        m_Grid->enableY( checked );
+        ui->PlotQwt->replot();
+    }
+
+}
+
+void QDataPlot::on_actionShowTable_triggered( bool checked )
+{
+    ui->PlotTable->setVisible( checked );
 }

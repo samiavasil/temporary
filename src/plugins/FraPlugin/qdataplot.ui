@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>836</width>
-    <height>679</height>
+    <width>499</width>
+    <height>223</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,8 +25,8 @@
   <widget class="QSplitter" name="splitter">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>70</y>
+     <x>10</x>
+     <y>10</y>
      <width>481</width>
      <height>192</height>
     </rect>
@@ -96,8 +96,8 @@
   <widget class="QComboBox" name="ComboLineColor">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>300</y>
+     <x>320</x>
+     <y>200</y>
      <width>72</width>
      <height>20</height>
     </rect>
@@ -147,7 +147,7 @@
    </property>
    <property name="icon">
     <iconset resource="proba.qrc">
-     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+     <normaloff>:/new/prefix1/icons/grid_h.png</normaloff>:/new/prefix1/icons/grid_h.png</iconset>
    </property>
    <property name="text">
     <string>Grid X on</string>
@@ -162,7 +162,7 @@
    </property>
    <property name="icon">
     <iconset resource="proba.qrc">
-     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+     <normaloff>:/new/prefix1/icons/grid_v.png</normaloff>:/new/prefix1/icons/grid_v.png</iconset>
    </property>
    <property name="text">
     <string>Grid Y on</string>
@@ -213,6 +213,21 @@
    </property>
    <property name="toolTip">
     <string>Plot Coniguration</string>
+   </property>
+  </action>
+  <action name="actionShowTable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Move Row Down.png</normaloff>:/new/prefix1/icons/Move Row Down.png</iconset>
+   </property>
+   <property name="text">
+    <string>showTable</string>
+   </property>
+   <property name="toolTip">
+    <string>Show table view</string>
    </property>
   </action>
  </widget>
