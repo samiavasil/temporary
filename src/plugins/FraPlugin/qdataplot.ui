@@ -147,7 +147,7 @@
    </property>
    <property name="icon">
     <iconset resource="proba.qrc">
-     <normaloff>:/new/prefix1/icons/grid_h.png</normaloff>:/new/prefix1/icons/grid_h.png</iconset>
+     <normaloff>:/new/prefix1/icons/grid_v.png</normaloff>:/new/prefix1/icons/grid_v.png</iconset>
    </property>
    <property name="text">
     <string>Grid X on</string>
@@ -162,7 +162,7 @@
    </property>
    <property name="icon">
     <iconset resource="proba.qrc">
-     <normaloff>:/new/prefix1/icons/grid_v.png</normaloff>:/new/prefix1/icons/grid_v.png</iconset>
+     <normaloff>:/new/prefix1/icons/grid_h.png</normaloff>:/new/prefix1/icons/grid_h.png</iconset>
    </property>
    <property name="text">
     <string>Grid Y on</string>

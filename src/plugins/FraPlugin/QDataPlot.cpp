@@ -6,6 +6,7 @@
 #include<qwt/qwt_plot_curve.h>
 #include<qwt/qwt_plot_canvas.h>
 #include<qwt/qwt_plot_grid.h>
+#include<qwt/qwt_plot_zoomer.h>
 
 
 
@@ -20,7 +21,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     ui->setupUi(this);
 
-   /* */
+    /* */
     QMenuBar* ptr1 = new QMenuBar();
     ptr1->addMenu("ALABALA")->addMenu("BEB");
     ptr1->addMenu("ALABALA")->addMenu("BEB");
@@ -54,6 +55,29 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     // Assign a title to plot
     ui->PlotQwt->setTitle ( "Impedance" );
+
+    m_Zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft,ui->PlotQwt->canvas());
+ //  m_Zoomer->initMousePattern(2);
+
+   // m_Zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yRight,ui->PlotQwt->canvas());
+
+   /* m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect1,
+                      Qt::LeftButton );
+    m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect2,
+                      Qt::NoButton );
+    m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect3,
+                      Qt::NoButton );
+    m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect4,
+                      Qt::NoButton );
+    m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect6,
+                      Qt::NoButton );  */
+
+    m_Zoomer->setTrackerMode(QwtPicker::AlwaysOn);
+    m_Zoomer->setTrackerPen(QPen ( Qt::green, 0, Qt::DotLine ));
+    m_Zoomer->setRubberBand(QwtPicker::RectRubberBand);
+    m_Zoomer->setRubberBandPen(QPen ( Qt::red , 0, Qt::DotLine ));
+
+
 
     //ui->PlotQwt->insertLegend ( new QwtLegend(), QwtPlot::BottomLegend );
     ui->PlotQwt->setCanvasBackground ( QColor ( Qt::black ) );
@@ -94,6 +118,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
 QDataPlot::~QDataPlot()
 {
     delete ui;
+    if( m_Grid ){
+        delete m_Grid;
+    }
 }
 
 
@@ -122,4 +149,10 @@ void QDataPlot::on_actionGrid_Y_on_triggered(bool checked)
 void QDataPlot::on_actionShowTable_triggered( bool checked )
 {
     ui->PlotTable->setVisible( checked );
+}
+
+void QDataPlot::on_actionAutoscale_triggered()
+{
+    ui->PlotQwt->setAxisAutoScale(0);
+    ui->PlotQwt->replot();
 }
