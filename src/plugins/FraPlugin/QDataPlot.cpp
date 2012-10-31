@@ -6,6 +6,7 @@
 #include<qwt/qwt_plot_curve.h>
 #include<qwt/qwt_plot_canvas.h>
 #include<qwt/qwt_plot_grid.h>
+#include<qwt/qwt_plot_zoomer.h>
 
 
 
@@ -20,7 +21,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     ui->setupUi(this);
 
-   /* */
+    /* */
     QMenuBar* ptr1 = new QMenuBar();
     ptr1->addMenu("ALABALA")->addMenu("BEB");
     ptr1->addMenu("ALABALA")->addMenu("BEB");
@@ -54,6 +55,18 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     // Assign a title to plot
     ui->PlotQwt->setTitle ( "Impedance" );
+
+    QwtPlotZoomer *zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft,ui->PlotQwt->canvas());
+ //  zoomer->initMousePattern(2);
+
+   // zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yRight,ui->PlotQwt->canvas());
+
+    zoomer->setTrackerMode(QwtPicker::AlwaysOn);
+    zoomer->setTrackerPen(QPen ( Qt::green, 0, Qt::DotLine ));
+    zoomer->setRubberBand(QwtPicker::RectRubberBand);
+    zoomer->setRubberBandPen(QPen ( Qt::red , 0, Qt::DotLine ));
+
+
 
     //ui->PlotQwt->insertLegend ( new QwtLegend(), QwtPlot::BottomLegend );
     ui->PlotQwt->setCanvasBackground ( QColor ( Qt::black ) );
@@ -94,6 +107,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
 QDataPlot::~QDataPlot()
 {
     delete ui;
+    if( m_Grid ){
+        delete m_Grid;
+    }
 }
 
 
