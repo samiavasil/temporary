@@ -6,6 +6,7 @@
 
 
 class QwtPlotGrid;
+class QwtPlotZoomer;
 class QDataPlot : public QWidget
 {
     Q_OBJECT
@@ -22,8 +23,11 @@ private slots:
 
     void on_actionShowTable_triggered(bool checked);
 
+    void on_actionAutoscale_triggered();
+
 protected:
-    QwtPlotGrid* m_Grid;
+    QwtPlotGrid*   m_Grid;
+    QwtPlotZoomer* m_Zoomer;
 private:
     Ui::QDataPlot *ui;
 };

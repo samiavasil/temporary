@@ -7,8 +7,8 @@
 #include<qwt/qwt_plot_canvas.h>
 #include<qwt/qwt_plot_grid.h>
 #include<qwt/qwt_plot_zoomer.h>
-
-
+#include <qwt/qwt_painter.h>
+#include <qwt/qwt_plot_layout.h>
 
 QDataPlot::QDataPlot(QWidget *parent) :
     QWidget(parent),
@@ -20,6 +20,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
     double x[100],y[100],z[100];
 
     ui->setupUi(this);
+
+
+
 
     /* */
     QMenuBar* ptr1 = new QMenuBar();
@@ -47,7 +50,25 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     ptr->addWidget(ui->ComboLineColor);
 
+
+
+
+
+
+
+    ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
+    ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
+    ui->PlotQwt->canvas()->setLineWidth ( 1 );
+
+    //ui->PlotQwt->setMargin ( 5 );
     ui->PlotQwt->enableAxis ( QwtPlot::yRight, true );
+    ui->PlotQwt->setAutoReplot ( false );
+    ui->PlotQwt->plotLayout()->setAlignCanvasToScales( true );
+
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::yLeft);
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::yRight);
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::xBottom);
+
     // We don't need the cache here
     //ui->PlotQwt->canvas()->setPaintAttribute ( QwtPlotCanvas::PaintCached, false );
     //ui->PlotQwt->canvas()->setPaintAttribute ( QwtPlotCanvas::PaintPacked, true );
@@ -55,22 +76,15 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     // Assign a title to plot
     ui->PlotQwt->setTitle ( "Impedance" );
-
-    QwtPlotZoomer *zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft,ui->PlotQwt->canvas());
- //  zoomer->initMousePattern(2);
-
-   // zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yRight,ui->PlotQwt->canvas());
-
-    zoomer->setTrackerMode(QwtPicker::AlwaysOn);
-    zoomer->setTrackerPen(QPen ( Qt::green, 0, Qt::DotLine ));
-    zoomer->setRubberBand(QwtPicker::RectRubberBand);
-    zoomer->setRubberBandPen(QPen ( Qt::red , 0, Qt::DotLine ));
-
-
-
     //ui->PlotQwt->insertLegend ( new QwtLegend(), QwtPlot::BottomLegend );
     ui->PlotQwt->setCanvasBackground ( QColor ( Qt::black ) );
     ui->PlotTable->setVisible( false );
+
+
+
+
+
+
     m_Grid = new QwtPlotGrid;
     m_Grid->enableXMin ( true );
     m_Grid->setMajPen ( QPen ( Qt::green, 0, Qt::DotLine ) );
@@ -82,6 +96,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
 
 
+
     //DELL ME
     // copy the data into the curves
     for( int i=0; i<100; i++){
@@ -89,18 +104,45 @@ QDataPlot::QDataPlot(QWidget *parent) :
         y[i] = i;
         z[i] = 100*sin((6.28*i)/100);
     }
+    curve1->attach(ui->PlotQwt);
+    curve2->attach(ui->PlotQwt);
+
     curve1->setSamples( x,y,100 );
     curve2->setSamples( x,z,100 );
 
     curve1->setPen(QPen(Qt::green));
     curve2->setPen(QPen(Qt::red));
-    curve1->attach(ui->PlotQwt);
-    curve2->attach(ui->PlotQwt);
+    //;
+    //curve1->data()->boundingRect().height();
+  //  on_actionAutoscale_triggered();
 
     // finally, refresh the plot
-    ui->PlotQwt->replot();
+//    ui->PlotQwt->replot();
+
+   m_Zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yLeft,ui->PlotQwt->canvas());
+   m_Zoomer->setTrackerMode(QwtPicker::AlwaysOff);
+   //m_Zoomer->setRubberBand(QwtPicker::NoRubberBand);
+   m_Zoomer->setRubberBand(QwtPicker::RectRubberBand);
+   m_Zoomer->setRubberBandPen(QColor ( Qt::green ) );
+   m_Zoomer->setTrackerMode(QwtPicker::ActiveOnly);
+   m_Zoomer->setTrackerPen( QColor ( Qt::green ) );
+
+   m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier );
+   m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect3, Qt::RightButton );
 
 
+
+   //  m_Zoomer->initMousePattern(2);
+
+  // m_Zoomer = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yRight,ui->PlotQwt->canvas());
+
+  /* m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect1,
+                     Qt::LeftButton );
+
+   m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect4,
+                     Qt::NoButton );
+   m_Zoomer->setMousePattern ( QwtEventPattern::MouseSelect6,
+                     Qt::NoButton );  */
 
 }
 
@@ -138,4 +180,12 @@ void QDataPlot::on_actionGrid_Y_on_triggered(bool checked)
 void QDataPlot::on_actionShowTable_triggered( bool checked )
 {
     ui->PlotTable->setVisible( checked );
+}
+
+void QDataPlot::on_actionAutoscale_triggered()
+{
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::yLeft);
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::yRight);
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::xBottom);
+    ui->PlotQwt->replot();
 }
