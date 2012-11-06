@@ -107,6 +107,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/pointer.png</normaloff>:/new/prefix1/icons/pointer.png</iconset>
+   </property>
    <property name="text">
     <string>MouseTrack</string>
    </property>
