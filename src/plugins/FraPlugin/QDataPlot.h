@@ -7,19 +7,41 @@
 #include<qwt/qwt_plot_curve.h>
 #include <qwt/qwt_picker_machine.h>
 #include <qwt/qwt_plot_picker.h>
+#include <qwt/qwt_symbol.h>
+
 class QwtPlotGrid;
 class QwtPlotZoomer;
 
-
+#define INVAL_LINE_ID ( (QDataPlot::lineId_t)(-1) )
 
 class QDataPlot : public QWidget
 {
     Q_OBJECT
     
 public:
+    enum Axes
+    {
+        BottomLeftAxes,
+        TopRightAxes
+    };
+    typedef int lineId_t;
+
+public:
     explicit QDataPlot(QWidget *parent = 0);
     ~QDataPlot();
-    
+
+    QDataPlot::lineId_t addLine( QDataPlot::Axes axes = QDataPlot::BottomLeftAxes,
+                                 const QString& name =  QString(),
+                                 QwtPlotCurve::CurveStyle curveStyle = QwtPlotCurve::Lines,
+                                 Qt::PenStyle pen_style     = Qt::SolidLine,
+                                 QColor pen_color = QColor(m_NextColor),
+                                 QwtSymbol::Style symbol = QwtSymbol::NoSymbol
+                                );
+
+    int setLineData  ( lineId_t id, const QVector<QPointF> &  );
+    QVector<QPointF>* getLineData( lineId_t id );
+protected:
+    void updateNextColor();
 private slots:
 
     void on_actionGrid_X_on_triggered(bool checked);
@@ -56,6 +78,14 @@ protected:
     QList<QwtPlotCurve*>  m_Curves;
     QwtPlotPicker*        m_picker;
     int m_CurCurve;
+
+    QMap< QDataPlot::lineId_t, QwtPlotCurve*> m_CurveMap;
+
+    QDataPlot::lineId_t m_NextId;
+
+    static QColor m_NextColor;
+protected slots:
+    void legendClicked(QwtPlotItem* item);
 private:
     Ui::QDataPlot *ui;
 };
