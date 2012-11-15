@@ -42,6 +42,9 @@ public:
     QVector<QPointF>* getLineData( lineId_t id );
 protected:
     void updateNextColor();
+
+public slots:
+    void showPlotContextMenuEvent(QContextMenuEvent *event);
 private slots:
 
     void on_actionGrid_X_on_triggered(bool checked);
@@ -69,7 +72,8 @@ protected:
     protected:
         QDataPlot* m_Plot;
     };
-
+    QwtPlotCurve* findPlotcurve();
+protected:
     QwtPlotGrid*         m_Grid;
     QwtPlotZoomer*       m_Zoomer[2];
 

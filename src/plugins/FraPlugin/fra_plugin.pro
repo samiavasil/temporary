@@ -20,14 +20,16 @@ SOURCES += \
     QFraFrameWork.cpp \
     qtestcommand.cpp \
     QDataPlot.cpp \
-    FraFrameWorkInterface.cpp
+    FraFrameWorkInterface.cpp \
+    QwtPlotExt.cpp
 
 HEADERS += \
     QFraFrameWork.h \
     fra_plugin_global.h \
     qtestcommand.h \
     QDataPlot.h \
-    FraFrameWorkInterface.h
+    FraFrameWorkInterface.h \
+    QwtPlotExt.h
 
 CONFIG      += plugin
 

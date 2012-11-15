@@ -34,7 +34,7 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
-   <widget class="QwtPlot" name="PlotQwt">
+   <widget class="QwtPlotExt" name="PlotQwt">
     <property name="sizePolicy">
      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
       <horstretch>0</horstretch>
@@ -237,9 +237,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
+   <class>QwtPlotExt</class>
    <extends>QFrame</extends>
-   <header>qwt/qwt_plot.h</header>
+   <header>QwtPlotExt.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

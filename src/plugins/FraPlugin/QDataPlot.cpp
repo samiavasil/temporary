@@ -10,29 +10,11 @@
 #include <qwt/qwt_plot_layout.h>
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_legend_item.h>
-
-
-
+#include<QMenu>
+#include<QAction>
 #include <QMouseEvent>
 
 #define FIRST_LINE_COLOR 255,0,125
-
-/*
-class  QwtMyPicker:public QwtPlotPicker{
-public:
-    explicit QwtMyPicker( QwtPlotCanvas * );
-    virtual ~QwtMyPicker();
-
-protected:
-    QwtText QwtPlotPicker::trackerText( const QPoint &pos ) const
-    {
-        QwtScaleMap xMap = plot()->canvasMap( d_xAxis );
-        QwtScaleMap yMap = plot()->canvasMap( d_yAxis );
-
-        return trackerTextF( invTransform( pos ) );
-    }
-};*/
-
 
 bool QDataPlot::MouseEvEater::eventFilter(QObject *obj, QEvent *event)
 {
@@ -41,6 +23,30 @@ bool QDataPlot::MouseEvEater::eventFilter(QObject *obj, QEvent *event)
     qDebug("Ate key press %d",i);
     // return QObject::eventFilter(obj, event);
 
+    if ( event->type() == QEvent::MouseButtonRelease ) {
+        QMenu menu;
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        QwtPlotCurve* curCurve = m_Plot->m_Curves.value(m_Plot->m_CurCurve,NULL);
+
+        QAction* sep = new QAction("Plot Lines",&menu);
+        QFont font  = sep->font();
+        font.setBold(true);
+        font.setStyle(QFont::StyleItalic);
+        sep->setFont(font);
+        //sep->setSeparator(true);
+        sep->setEnabled(false);
+        menu.addAction(sep);
+      //  menu.setTitle("Plot Lines");
+      //  menu.show
+        menu.addAction(new QAction(QString("cutAct %1 %2").
+                                   arg(curCurve->plot()->canvasMap( curCurve->xAxis()).invTransform(mouseEvent->x())).
+                                   arg(curCurve->plot()->canvasMap( curCurve->yAxis()).invTransform(mouseEvent->y()))
+                                   ,&menu));
+
+        menu.addAction(new QAction("copyAct",&menu));
+        menu.addAction(new QAction("pasteAct",&menu));
+        menu.exec(mouseEvent->globalPos());
+    }
     if ( event->type() == QEvent::MouseMove ) {
         i++;
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
@@ -248,7 +254,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     legend->setItemMode( QwtLegend::ClickableItem );
     ui->PlotQwt->insertLegend( legend );
     connect( ui->PlotQwt, SIGNAL(legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*)) );
-
+    connect(ui->PlotQwt, SIGNAL(showContextMenuEvent(QContextMenuEvent *event)),this, SLOT(showPlotContextMenuEvent(QContextMenuEvent *event)));
 
     /*     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
@@ -290,7 +296,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     curve2->setSymbol(sym);
 */
 
-    m_CurCurve = 5;
+    m_CurCurve = 0;
     m_Zoomer[0]->setZoomBase( false );
 
     // m_Zoomer[1]->setZoomBase( true );
@@ -338,7 +344,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
     QwtPlotCurve *curve;
 
     if( name.isEmpty() ){
-        curve = new QwtPlotCurve(QString("Curve %1").arg(m_NextId));
+        curve = new QwtPlotCurve(QString("Curve 1").arg(m_NextId));
     }
     else{
         curve = new QwtPlotCurve( name );
@@ -473,24 +479,26 @@ void QDataPlot::on_actionRectangle_Zoom_toggled(bool arg1)
 
 }
 #include<QDebug>
-void QDataPlot::legendClicked(QwtPlotItem* item){
-
-    qDebug()<< "ItemClicked " << item->title().text() << " " << item->legendItem()->windowType();
-    const QwtPlotItemList &list = item->plot()->itemList();
-    for (QwtPlotItemIterator it = list.begin();it!=list.end();++it)
-    {
-        QwtPlotItem *item2 = *it;
-        if (item2->rtti() == QwtPlotItem::Rtti_PlotCurve){
-            QwtPlotCurve* curve = (QwtPlotCurve*)item2;
-            if( item->title().text() == curve->title().text() ){
-              item2->setVisible(!item2->isVisible());
-            }
-        }
+void QDataPlot::legendClicked( QwtPlotItem* item ){
+    QwtPlotCurve* curve = dynamic_cast<QwtPlotCurve*>(item);
+    if( curve ){
+        curve->setVisible(!curve->isVisible());
     }
     item->plot()->replot();
 }
 
+QwtPlotCurve* QDataPlot::findPlotcurve(  ){
 
+}
+
+void QDataPlot::showPlotContextMenuEvent(QContextMenuEvent *event){
+
+    QMenu menu(this);
+    menu.addAction(new QAction("cutAct",&menu));
+    menu.addAction(new QAction("copyAct",&menu));
+    menu.addAction(new QAction("pasteAct",&menu));
+    menu.exec(event->globalPos());
+}
 
 
 
