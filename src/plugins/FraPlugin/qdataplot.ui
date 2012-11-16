@@ -234,6 +234,21 @@
     <string>Show table view</string>
    </property>
   </action>
+  <action name="actionActionEnablePicker">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>actionEnablePicker</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable plot picker</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

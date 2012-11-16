@@ -1,3 +1,4 @@
+#include<QDebug>
 #include "QDataPlot.h"
 #include "ui_qdataplot.h"
 #include<QBoxLayout>
@@ -16,104 +17,100 @@
 
 #define FIRST_LINE_COLOR 255,0,125
 
-bool QDataPlot::MouseEvEater::eventFilter(QObject *obj, QEvent *event)
+bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     static int i;
-
+    QwtPlotCurve* curve = m_Plot->m_CurCurve;
+    QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
     qDebug("Ate key press %d",i);
     // return QObject::eventFilter(obj, event);
-
     if ( event->type() == QEvent::MouseButtonRelease ) {
-        QMenu menu;
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        QwtPlotCurve* curCurve = m_Plot->m_Curves.value(m_Plot->m_CurCurve,NULL);
+        if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
+            QMenu menu;
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            if( Qt::RightButton == mouseEvent->button() ){
+                QAction* sep = new QAction("Select current line",&menu);
+                QFont font  = sep->font();
+                font.setBold(true);
+                font.setStyle(QFont::StyleItalic);
+                sep->setFont(font);
+                sep->setEnabled(false);
+                menu.addAction(sep);
 
-        QAction* sep = new QAction("Plot Lines",&menu);
-        QFont font  = sep->font();
-        font.setBold(true);
-        font.setStyle(QFont::StyleItalic);
-        sep->setFont(font);
-        //sep->setSeparator(true);
-        sep->setEnabled(false);
-        menu.addAction(sep);
-      //  menu.setTitle("Plot Lines");
-      //  menu.show
-        menu.addAction(new QAction(QString("cutAct %1 %2").
-                                   arg(curCurve->plot()->canvasMap( curCurve->xAxis()).invTransform(mouseEvent->x())).
-                                   arg(curCurve->plot()->canvasMap( curCurve->yAxis()).invTransform(mouseEvent->y()))
-                                   ,&menu));
-
-        menu.addAction(new QAction("copyAct",&menu));
-        menu.addAction(new QAction("pasteAct",&menu));
-        menu.exec(mouseEvent->globalPos());
+                menu.addAction( new QAction(QString("Not selected line"), &menu ) );
+                menu.addAction( new QAction(QString("cutAct"), &menu ) );
+                menu.addAction( new QAction("copyAct",&menu)  );
+                menu.addAction( new QAction("pasteAct",&menu) );
+                menu.exec(mouseEvent->globalPos());
+            }
+        }
     }
-    if ( event->type() == QEvent::MouseMove ) {
-        i++;
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-        qDebug("Ate key press %d", mouseEvent->y());
 
-        if( m_Plot ){
-            if( ( 0 <= m_Plot->m_CurCurve )&&( m_Plot->m_CurCurve < m_Plot->m_Curves.count() ) ){
-                QwtPlotCurve* curCurve = m_Plot->m_Curves.value(m_Plot->m_CurCurve,NULL);
-                if( curCurve ){
-                    //int idx = curCurve->closestPoint( mouseEvent->pos() );
-                    int size = curCurve->dataSize();
-                    QPointF data,data1;// = curCurve->sample(idx);
-                    const QwtScaleMap yMap = curCurve->plot()->canvasMap( curCurve->yAxis() );
-                    const QwtScaleMap xMap = curCurve->plot()->canvasMap( curCurve->xAxis() );
-                    QPointF point =  mouseEvent->pos();//m_Plot->m_picker->trackerPosition();
-                    qDebug("Tracker postion %f %f ", point.x(), point.y());
-                    double x = xMap.invTransform( point.x() );
-                    double y = yMap.invTransform( point.y() );
-                    QwtInterval interval = curCurve->plot()->axisInterval(QwtPlot::xBottom);
-                    double xx = interval.minValue();
-                    double ww = xx + interval.width();
-                    qDebug("Coordinate X = %f Y = %f ", x , y);
-                    qDebug("Coordinate XX = %f WW = %f ", xx , ww);
-                    y = yMap.transform( curCurve->sample(size-1).y() );
-                    for( int i=0; i < size; i++ ){
-                        data = curCurve->sample(i);
-                        //  qDebug("Data X = %f Y = %f ", data.x() , data.y());
-                        if( ( xx <= data.x() )&&( ww >= data.x() ) ){
-                            if( data.x() >= x ){
-                                if( i > 0 ){
-                                    data  = curCurve->sample(i-1);
-                                    data1 = curCurve->sample(i);
-                                    double dY = data1.y() - data.y();
-                                    double dX = (  x - data.x()  )/(data1.x()-data.x());
-                                    qDebug("dX = %f dY = %f ", dX, dY);
+    if( m_Plot->m_picker && m_Plot->m_picker->isEnabled() ){
+        if ( event->type() == QEvent::MouseMove ) {
 
-                                    y = yMap.transform( data.y()+(dY*dX) );
-                                }
-                                else{
-                                    data = curCurve->sample(i);
-                                    y = yMap.transform( data.y() );
-                                }
-                                break;
+            i++;
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+            qDebug("Ate key press %d", mouseEvent->y());
+
+            if( curve  && m_Plot->isEnabledSnapPickerToCurve() ){
+
+                int size = curve->dataSize();
+                QPointF data,data1;// = curve->sample(idx);
+                const QwtScaleMap yMap = plotQwt->canvasMap( curve->yAxis() );
+                const QwtScaleMap xMap = plotQwt->canvasMap( curve->xAxis() );
+                QPointF point =  mouseEvent->pos();//plotQwt->m_picker->trackerPosition();
+                qDebug("Tracker postion %f %f ", point.x(), point.y());
+                double x = xMap.invTransform( point.x() );
+                double y = yMap.invTransform( point.y() );
+                QwtInterval interval = plotQwt->axisInterval(QwtPlot::xBottom);
+                double xx = interval.minValue();
+                double ww = xx + interval.width();
+                qDebug("Coordinate X = %f Y = %f ", x , y);
+                qDebug("Coordinate XX = %f WW = %f ", xx , ww);
+                y = yMap.transform( curve->sample(size-1).y() );
+                for( int i=0; i < size; i++ ){
+                    data = curve->sample(i);
+                    //  qDebug("Data X = %f Y = %f ", data.x() , data.y());
+                    if( ( xx <= data.x() )&&( ww >= data.x() ) ){
+                        if( data.x() >= x ){
+                            if( i > 0 ){
+                                data  = curve->sample(i-1);
+                                data1 = curve->sample(i);
+                                double dY = data1.y() - data.y();
+                                double dX = (  x - data.x()  )/(data1.x()-data.x());
+                                qDebug("dX = %f dY = %f ", dX, dY);
+
+                                y = yMap.transform( data.y()+(dY*dX) );
                             }
+                            else{
+                                data = curve->sample(i);
+                                y = yMap.transform( data.y() );
+                            }
+                            break;
                         }
                     }
-                    ((QPoint*)(&(mouseEvent->pos())))->setY(y);
-                    if( x < curCurve->sample( 0 ).x() ){
-                        x = xMap.transform( curCurve->sample( 0 ).x() );
-                    }
-                    else  if(  x > curCurve->sample(size-1).x() ){
-                        x = xMap.transform( curCurve->sample(size-1).x() );
-                    }
-                    else{
-                        x = xMap.transform( x );
-                    }
-
-                    ((QPoint*)(&(mouseEvent->pos())))->setX(x);
-
-
-
                 }
+                ((QPoint*)(&(mouseEvent->pos())))->setY(y);
+                if( x < curve->sample( 0 ).x() ){
+                    x = xMap.transform( curve->sample( 0 ).x() );
+                }
+                else  if(  x > curve->sample(size-1).x() ){
+                    x = xMap.transform( curve->sample(size-1).x() );
+                }
+                else{
+                    x = xMap.transform( x );
+                }
+
+                ((QPoint*)(&(mouseEvent->pos())))->setX(x);
             }
-            //
+            // standard event processing
+            return QObject::eventFilter(obj, mouseEvent);
         }
-        // standard event processing
-        return QObject::eventFilter(obj, mouseEvent);
+        else{
+            // standard event processing
+            return QObject::eventFilter(obj, event);
+        }
     }
     else{
         // standard event processing
@@ -127,15 +124,13 @@ QDataPlot::QDataPlot(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QDataPlot)
 {
-    m_CurCurve = -1;
-    m_NextId   =  0;
+    m_CurCurve    =  0;
+    m_NextId      =  0;
+    m_CanvasEventFilter = NULL;
 
     //m_NextColor.setRgb( FIRST_LINE_COLOR );
     updateNextColor();
     //curve2->setStyle( QwtPlotCurve::NoCurve );
-
-
-    double x[100],y[100],z[100];
 
     ui->setupUi(this);
 
@@ -172,6 +167,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     ptr->addAction(ui->actionMagnifier);
     ptr->addAction(ui->actionMouseTrack);
     ptr->addAction(ui->actionRectangle_Zoom);
+    ptr->addAction(ui->actionActionEnablePicker);
     //l->setMenuBar(ptr);
     l->addWidget(ptr);
     ptr->show();
@@ -224,17 +220,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
     m_picker->setRubberBandPen ( QColor ( Qt::green ) );
     m_picker->setTrackerPen ( QColor ( Qt::red ) );
     m_picker->setResizeMode(  QwtPicker::KeepSize );
-    //m_picker->setEnabled(false);
-    MouseEvEater* e = new MouseEvEater( this, m_picker  );
-
-    QWidget *w = m_picker->parentWidget();
-    if ( w )
-    {
-        w->installEventFilter( e );
-    }
-    //ui->PlotQwt->canvas()->installEventFilter(e);
-
-    //m_picker->trackerWidget();
+    m_CanvasEventFilter  = new CanvasEventFilter( this  );
+    ui->PlotQwt->canvas()->installEventFilter( m_CanvasEventFilter );
+    on_actionActionEnablePicker_triggered( false );
 
 
     addLine( QDataPlot::BottomLeftAxes );
@@ -256,73 +244,20 @@ QDataPlot::QDataPlot(QWidget *parent) :
     connect( ui->PlotQwt, SIGNAL(legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*)) );
     connect(ui->PlotQwt, SIGNAL(showContextMenuEvent(QContextMenuEvent *event)),this, SLOT(showPlotContextMenuEvent(QContextMenuEvent *event)));
 
-    /*     addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-*/
-    /*
-    //DELL ME
-    // copy the data into the curves
-    // add curves
-    QwtPlotCurve *curve1 = new QwtPlotCurve("Curve 1");
-    QwtPlotCurve *curve2 = new QwtPlotCurve("Curve 2");
-
-    m_Curves.append(curve1);
-    m_Curves.append(curve2);
-    for( int i=0; i<100; i++){
-        x[i] = i;
-        z[i] = -50+i;
-        y[i] = 400*sin((6.28*i)/100);
-        qDebug("sin(%d)=%f",i,z[i]);
-    }
-    curve1->setYAxis( QwtPlot::yLeft );
-    curve2->setYAxis( QwtPlot::yRight );
-    curve1->attach(ui->PlotQwt);
-    curve2->attach(ui->PlotQwt);
-
-    curve1->setStyle( QwtPlotCurve::Sticks );
-
-    curve1->setSamples( x,y,100 );
-    curve2->setSamples( x,z,100);
-
-    curve1->setPen(QPen(Qt::green));
-    curve2->setPen(QPen(Qt::red));
-    QwtSymbol* sym = new QwtSymbol(QwtSymbol::Rect,QBrush(Qt::blue),QPen( QBrush(Qt::blue),1 ),QSize(6,6) );
-    curve2->setSymbol(sym);
-*/
-
     m_CurCurve = 0;
     m_Zoomer[0]->setZoomBase( false );
 
-    // m_Zoomer[1]->setZoomBase( true );
-    // ui->PlotQwt->setAxisScale(QwtPlot::yLeft, 0, 100 );
-    // ui->PlotQwt->setAxisScale(QwtPlot::yRight, -400, 400,1/4  );
 
-
-
-
-
-    //  m_Zoomer[0]->initMousePattern(2);
-
-    // m_Zoomer[0] = new QwtPlotZoomer(QwtPlot::xBottom, QwtPlot::yRight,ui->PlotQwt->canvas());
-
-    /* m_Zoomer[0]->setMousePattern ( QwtEventPattern::MouseSelect1,
-                     Qt::LeftButton );
-
-   m_Zoomer[0]->setMousePattern ( QwtEventPattern::MouseSelect4,
-                     Qt::NoButton );
-   m_Zoomer[0]->setMousePattern ( QwtEventPattern::MouseSelect6,
-                     Qt::NoButton );  */
 
 }
 
 QDataPlot::~QDataPlot()
 {
+    if( m_CanvasEventFilter ){
+        ui->PlotQwt->canvas()->installEventFilter( NULL );
+        delete m_CanvasEventFilter;
+        m_CanvasEventFilter = NULL;
+    }
     delete ui;
     if( m_Grid ){
         delete m_Grid;
@@ -385,38 +320,44 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         curve->setSamples( x,y,100 );
         ////////////DELL ME
 
-        m_Curves.append(curve);
+        m_CurveMap.insert( m_NextId, curve );
         id = m_NextId;
         m_NextId++;
-
         updateNextColor();
     }
     return id;
+}
+
+int QDataPlot::removeLine( QDataPlot::lineId_t id )
+{
+    QwtPlotCurve* curve = m_CurveMap.value( id, NULL );
+    if( curve ){
+        curve->detach();
+        delete curve;
+    }
+    return 0;
+}
+
+int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> &  ){
+    return 0;
+}
+
+QVector<QPointF>* QDataPlot::getLineData( lineId_t id ){
+
 }
 
 /*TODO - generate next line color */
 void QDataPlot::updateNextColor(){
     static int i;
     int r,g,b,a;
-    m_NextColor.getRgb(&r,&g,&b,&a);
-    // r = ( (((i/4)+1)*256)-1 )%256;
-    // g = (  i*(r/63)*63   )%256;
-    // b = (  i*126   )%256;
 
+    m_NextColor.getRgb(&r,&g,&b,&a);
     r = ( ( (((i/4)+1)*244 )) )%256;
     g = ( ((i/3)*110) )%256;
     b = ( (i*110))%256;
 
     m_NextColor.setRgb(r,g,b,a);
     i++;
-}
-
-int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> &  ){
-
-}
-
-QVector<QPointF>* QDataPlot::getLineData( lineId_t id ){
-
 }
 
 void QDataPlot::on_actionGrid_X_on_triggered(bool checked)
@@ -433,7 +374,6 @@ void QDataPlot::on_actionGrid_Y_on_triggered(bool checked)
         m_Grid->enableY( checked );
         ui->PlotQwt->replot();
     }
-
 }
 
 void QDataPlot::on_actionShowTable_triggered( bool checked )
@@ -451,7 +391,6 @@ void QDataPlot::on_actionAutoscale_triggered()
 
 void QDataPlot::on_actionMouseTrack_toggled(bool arg1)
 {
-
     if( arg1  ){
         m_Zoomer[0]->setTrackerMode(QwtPicker::AlwaysOn);
     }
@@ -475,20 +414,14 @@ void QDataPlot::on_actionRectangle_Zoom_toggled(bool arg1)
     else{
         m_Zoomer[0]->setEnabled( false );
     }
-
-
 }
-#include<QDebug>
+
 void QDataPlot::legendClicked( QwtPlotItem* item ){
     QwtPlotCurve* curve = dynamic_cast<QwtPlotCurve*>(item);
     if( curve ){
         curve->setVisible(!curve->isVisible());
     }
     item->plot()->replot();
-}
-
-QwtPlotCurve* QDataPlot::findPlotcurve(  ){
-
 }
 
 void QDataPlot::showPlotContextMenuEvent(QContextMenuEvent *event){
@@ -501,6 +434,35 @@ void QDataPlot::showPlotContextMenuEvent(QContextMenuEvent *event){
 }
 
 
+void QDataPlot::on_actionActionEnablePicker_triggered( bool checked )
+{
+    if( m_picker ){
+        m_picker->setEnabled(checked);
+    }
+}
 
+void QDataPlot::enableSnapPickerToCurve( bool enble ){
+    m_EnblPickerSnap = enble;
+}
 
+bool QDataPlot::isEnabledSnapPickerToCurve( ){
+    return m_EnblPickerSnap;
+}
 
+int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
+    int ret = 1;
+    const QwtPlotItemList &list = ui->PlotQwt->itemList();
+    m_CurCurve = NULL;/* If curve not founded current curve set to NULL (not selected current curve)*/
+    for (QwtPlotItemIterator it = list.begin();it!=list.end();++it)
+    {
+        if ( ( *it == curve ) && ( (*it)->rtti() == QwtPlotItem::Rtti_PlotCurve ) ){
+            m_CurCurve = curve;
+            ret = 0;
+        }
+    }
+    return ret;
+}
+
+QwtPlotCurve* QDataPlot::currentCurve( ){
+    return m_CurCurve;
+}

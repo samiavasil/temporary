@@ -37,7 +37,7 @@ public:
                                  QColor pen_color = QColor(m_NextColor),
                                  QwtSymbol::Style symbol = QwtSymbol::NoSymbol
                                 );
-
+    int removeLine( QDataPlot::lineId_t id );
     int setLineData  ( lineId_t id, const QVector<QPointF> &  );
     QVector<QPointF>* getLineData( lineId_t id );
 protected:
@@ -58,36 +58,43 @@ private slots:
     void on_actionMouseTrack_toggled(bool arg1);
 
     void on_actionRectangle_Zoom_toggled(bool arg1);
+    void on_actionActionEnablePicker_triggered(bool checked);
 
 protected:
-    class MouseEvEater : public QObject
+    class CanvasEventFilter : public QObject
     {
     public:
-        MouseEvEater( QDataPlot* plot , QObject* parent = NULL ):QObject(parent){
-            m_Plot = plot;
+        CanvasEventFilter(  QDataPlot* parent ):QObject(parent){
+            m_Plot = parent;
         }
+        ~CanvasEventFilter(){
 
+        }
     protected:
         bool eventFilter(QObject *obj, QEvent *event);
     protected:
         QDataPlot* m_Plot;
     };
-    QwtPlotCurve* findPlotcurve();
+    int setCurrentCurve( QwtPlotCurve *curve );
+    QwtPlotCurve* currentCurve();
+    void enableSnapPickerToCurve( bool enble );
+    bool isEnabledSnapPickerToCurve( );
+
 protected:
-    QwtPlotGrid*         m_Grid;
-    QwtPlotZoomer*       m_Zoomer[2];
+    QwtPlotGrid*          m_Grid;
+    QwtPlotZoomer*        m_Zoomer[2];
+    QMap<QwtPlot::Axis,   QwtPlotZoomer*> m_ZoomerMap;
 
-
-    QMap<QwtPlot::Axis, QwtPlotZoomer*> m_ZoomerMap;
-    QList<QwtPlotCurve*>  m_Curves;
     QwtPlotPicker*        m_picker;
-    int m_CurCurve;
+    bool                  m_EnblPickerSnap;
+    CanvasEventFilter*    m_CanvasEventFilter;
 
     QMap< QDataPlot::lineId_t, QwtPlotCurve*> m_CurveMap;
+    QwtPlotCurve*         m_CurCurve;
 
-    QDataPlot::lineId_t m_NextId;
+    QDataPlot::lineId_t   m_NextId;
+    static QColor         m_NextColor;
 
-    static QColor m_NextColor;
 protected slots:
     void legendClicked(QwtPlotItem* item);
 private:
