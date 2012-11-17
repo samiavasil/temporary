@@ -14,34 +14,43 @@
 #include<QMenu>
 #include<QAction>
 #include <QMouseEvent>
-
+#include <QPainter>
+#include<QPointF>
 #define FIRST_LINE_COLOR 255,0,125
+
+class MenuLines:public QMenu{
+public:
+    explicit MenuLines(QWidget *parent = 0):QMenu(parent){
+
+    }
+protected:
+    virtual void paintEvent ( QPaintEvent * event ){
+        QMenu::paintEvent( event );
+        QPainter painter(this);
+        QList<QAction *> act = actions();
+        QRect rect;
+        for (int i = 0; i < act.size(); ++i) {
+            QwtPlotCurve* curve =  (QwtPlotCurve*)( act.at(i)->data().toULongLong() );
+            if( curve ){
+               rect = actionGeometry( act.at(i) );
+               curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
+               qDebug() <<  curve->title().text();
+            }
+        }
+    }
+};
 
 bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     static int i;
     QwtPlotCurve* curve = m_Plot->m_CurCurve;
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
-    qDebug("Ate key press %d",i);
-    // return QObject::eventFilter(obj, event);
+
     if ( event->type() == QEvent::MouseButtonRelease ) {
         if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
-            QMenu menu;
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if( Qt::RightButton == mouseEvent->button() ){
-                QAction* sep = new QAction("Select current line",&menu);
-                QFont font  = sep->font();
-                font.setBold(true);
-                font.setStyle(QFont::StyleItalic);
-                sep->setFont(font);
-                sep->setEnabled(false);
-                menu.addAction(sep);
-
-                menu.addAction( new QAction(QString("Not selected line"), &menu ) );
-                menu.addAction( new QAction(QString("cutAct"), &menu ) );
-                menu.addAction( new QAction("copyAct",&menu)  );
-                menu.addAction( new QAction("pasteAct",&menu) );
-                menu.exec(mouseEvent->globalPos());
+                m_Plot->selectCurrentCurveMenu(mouseEvent->globalPos());
             }
         }
     }
@@ -51,8 +60,6 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 
             i++;
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-            qDebug("Ate key press %d", mouseEvent->y());
-
             if( curve  && m_Plot->isEnabledSnapPickerToCurve() ){
 
                 int size = curve->dataSize();
@@ -63,15 +70,13 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                 qDebug("Tracker postion %f %f ", point.x(), point.y());
                 double x = xMap.invTransform( point.x() );
                 double y = yMap.invTransform( point.y() );
-                QwtInterval interval = plotQwt->axisInterval(QwtPlot::xBottom);
+                QwtInterval interval = plotQwt->axisInterval( curve->xAxis() );
                 double xx = interval.minValue();
                 double ww = xx + interval.width();
-                qDebug("Coordinate X = %f Y = %f ", x , y);
-                qDebug("Coordinate XX = %f WW = %f ", xx , ww);
+                qDebug()<<"("<<point.x()<<","<<point.y()<<") " << "X="<<x<<" Y="<<y;
                 y = yMap.transform( curve->sample(size-1).y() );
                 for( int i=0; i < size; i++ ){
                     data = curve->sample(i);
-                    //  qDebug("Data X = %f Y = %f ", data.x() , data.y());
                     if( ( xx <= data.x() )&&( ww >= data.x() ) ){
                         if( data.x() >= x ){
                             if( i > 0 ){
@@ -79,8 +84,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                                 data1 = curve->sample(i);
                                 double dY = data1.y() - data.y();
                                 double dX = (  x - data.x()  )/(data1.x()-data.x());
-                                qDebug("dX = %f dY = %f ", dX, dY);
-
+                                qDebug("dX = %f dY = %f Y=%f", dX, dY,data.y()+(dY*dX));
                                 y = yMap.transform( data.y()+(dY*dX) );
                             }
                             else{
@@ -91,7 +95,9 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                         }
                     }
                 }
+                qDebug()<<curve->title().text() << "pointY="<<point.y()<<"  Y="<<y;
                 ((QPoint*)(&(mouseEvent->pos())))->setY(y);
+                qDebug()<<curve->title().text() << "mapedY="<<mouseEvent->pos().y();
                 if( x < curve->sample( 0 ).x() ){
                     x = xMap.transform( curve->sample( 0 ).x() );
                 }
@@ -107,19 +113,14 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
             // standard event processing
             return QObject::eventFilter(obj, mouseEvent);
         }
-        else{
-            // standard event processing
-            return QObject::eventFilter(obj, event);
-        }
+
     }
-    else{
-        // standard event processing
-        return QObject::eventFilter(obj, event);
-    }
+    return QObject::eventFilter(obj, event);
+
 }
 
 QColor QDataPlot::m_NextColor;
-
+#include <QGraphicsOpacityEffect>
 QDataPlot::QDataPlot(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QDataPlot)
@@ -133,13 +134,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     //curve2->setStyle( QwtPlotCurve::NoCurve );
 
     ui->setupUi(this);
-
-    // ui->PlotQwt->setAxisScale( );
-
-    //ui->PlotQwt->setAxisAutoScale(QwtPlot::yLeft);
-    //ui->PlotQwt->setAxisAutoScale(QwtPlot::yRight);
-    //ui->PlotQwt->setAxisAutoScale(QwtPlot::xBottom);
-
+ui->PlotQwt->legend();
 
     ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
     ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
@@ -221,34 +216,33 @@ QDataPlot::QDataPlot(QWidget *parent) :
     m_picker->setTrackerPen ( QColor ( Qt::red ) );
     m_picker->setResizeMode(  QwtPicker::KeepSize );
     m_CanvasEventFilter  = new CanvasEventFilter( this  );
-    ui->PlotQwt->canvas()->installEventFilter( m_CanvasEventFilter );
+
     on_actionActionEnablePicker_triggered( false );
-
-
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
+    enableSnapPickerToCurve( true );
 
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
 
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
+    /*
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
+    addLine( QDataPlot::BottomLeftAxes );
+    addLine( QDataPlot::TopRightAxes   );
+   */
 
+    addLine( QDataPlot::TopRightAxes   );
+    addLine( QDataPlot::BottomLeftAxes );
+    addLine( QDataPlot::TopRightAxes   );
     QwtLegend *legend =  new QwtLegend();
     legend->setItemMode( QwtLegend::ClickableItem );
     ui->PlotQwt->insertLegend( legend );
     connect( ui->PlotQwt, SIGNAL(legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*)) );
     connect(ui->PlotQwt, SIGNAL(showContextMenuEvent(QContextMenuEvent *event)),this, SLOT(showPlotContextMenuEvent(QContextMenuEvent *event)));
-
-    m_CurCurve = 0;
     m_Zoomer[0]->setZoomBase( false );
-
-
-
 }
 
 QDataPlot::~QDataPlot()
@@ -279,7 +273,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
     QwtPlotCurve *curve;
 
     if( name.isEmpty() ){
-        curve = new QwtPlotCurve(QString("Curve 1").arg(m_NextId));
+        curve = new QwtPlotCurve(QString("Curve %1").arg(m_NextId));
     }
     else{
         curve = new QwtPlotCurve( name );
@@ -303,12 +297,18 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         c_pen.setColor( pen_color );
         curve->setPen( c_pen );
         curve->setStyle( curveStyle );
+
         if( QwtSymbol::NoSymbol != symbol ){
             QwtSymbol* c_symbol = new QwtSymbol(symbol);
             curve->setSymbol( c_symbol );
         }
         curve->attach(ui->PlotQwt);
 
+        curve->setStyle( QwtPlotCurve::Steps );
+        curve->setLegendAttribute( QwtPlotCurve::LegendShowLine );
+        curve->setLegendAttribute( QwtPlotCurve::LegendShowSymbol);
+        curve->setLegendAttribute( QwtPlotCurve::LegendShowBrush );
+        curve->setSymbol(new QwtSymbol( QwtSymbol::Diamond,curve->brush(),curve->pen(),QSize(5,5)));
         ////////////DELL ME
         double x[100],y[100];
         double phase = ((double)qrand());
@@ -325,6 +325,9 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         m_NextId++;
         updateNextColor();
     }
+    if( 0 == m_CurCurve ){
+        setCurrentCurve( curve );
+    }
     return id;
 }
 
@@ -333,6 +336,10 @@ int QDataPlot::removeLine( QDataPlot::lineId_t id )
     QwtPlotCurve* curve = m_CurveMap.value( id, NULL );
     if( curve ){
         curve->detach();
+        m_CurveMap.remove(id);
+        if( curve == m_CurCurve ){
+            setCurrentCurve(findFirstVisibleCurve());
+        }
         delete curve;
     }
     return 0;
@@ -386,6 +393,7 @@ void QDataPlot::on_actionAutoscale_triggered()
     ui->PlotQwt->setAxisAutoScale(QwtPlot::yLeft);
     ui->PlotQwt->setAxisAutoScale(QwtPlot::yRight);
     ui->PlotQwt->setAxisAutoScale(QwtPlot::xBottom);
+    ui->PlotQwt->setAxisAutoScale(QwtPlot::xTop);
     ui->PlotQwt->replot();
 }
 
@@ -420,25 +428,19 @@ void QDataPlot::legendClicked( QwtPlotItem* item ){
     QwtPlotCurve* curve = dynamic_cast<QwtPlotCurve*>(item);
     if( curve ){
         curve->setVisible(!curve->isVisible());
+        if( curve == m_CurCurve ){
+            setCurrentCurve(findFirstVisibleCurve());
+        }
     }
     item->plot()->replot();
 }
-
-void QDataPlot::showPlotContextMenuEvent(QContextMenuEvent *event){
-
-    QMenu menu(this);
-    menu.addAction(new QAction("cutAct",&menu));
-    menu.addAction(new QAction("copyAct",&menu));
-    menu.addAction(new QAction("pasteAct",&menu));
-    menu.exec(event->globalPos());
-}
-
 
 void QDataPlot::on_actionActionEnablePicker_triggered( bool checked )
 {
     if( m_picker ){
         m_picker->setEnabled(checked);
     }
+    ui->PlotQwt->canvas()->installEventFilter( m_CanvasEventFilter );
 }
 
 void QDataPlot::enableSnapPickerToCurve( bool enble ){
@@ -457,6 +459,8 @@ int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
     {
         if ( ( *it == curve ) && ( (*it)->rtti() == QwtPlotItem::Rtti_PlotCurve ) ){
             m_CurCurve = curve;
+            m_picker->setRubberBandPen ( curve->pen().color() );
+            m_picker->setTrackerPen ( curve->pen().color() );
             ret = 0;
         }
     }
@@ -465,4 +469,71 @@ int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
 
 QwtPlotCurve* QDataPlot::currentCurve( ){
     return m_CurCurve;
+}
+#include<QWidgetAction>
+QwtPlotCurve* QDataPlot::selectCurrentCurveMenu( const QPoint &pos ){
+    MenuLines menu;
+    QAction* action = new QAction("Select current line",&menu);
+    QFont font  = action->font();
+    font.setBold(true);
+    font.setStyle(QFont::StyleItalic);
+    action->setFont(font);
+    action->setEnabled(false);
+    menu.addAction(action);
+    action = new QAction("No current line selection",&menu);
+    action->setData((qlonglong)NULL);
+    connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+    if( NULL == m_CurCurve ){
+        action->setCheckable(true);
+        action->setChecked(true);
+    }
+    menu.addAction( action  );
+    QwtPlotCurve* curve;
+    QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
+    while( it.hasNext() )
+    {
+        it.next();
+        curve = it.value();
+        if( curve&&curve->isVisible() ){
+            action = new QAction( curve->title().text(), &menu );
+            if( curve == m_CurCurve ){
+                action->setCheckable(true);
+                action->setChecked(true);
+            }
+            action->setData((qlonglong)curve);
+            connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+            menu.addAction( action  );
+        }
+        else{
+            qDebug("Misterious NULL Pointer");
+        }
+    }
+    menu.exec(pos);
+}
+
+void QDataPlot::selectCurveActionSlot( bool sel ){
+    QAction* action = dynamic_cast<QAction*>(sender());
+    if( action ){
+        QwtPlotCurve* curve =  (QwtPlotCurve*)( action->data().toULongLong() );
+        setCurrentCurve( curve );
+    }
+}
+
+QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
+    QwtPlotCurve* curve;
+    QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
+    while( it.hasNext() )
+    {
+        it.next();
+        curve = it.value();
+        if( curve ){
+            if( curve->isVisible() ){
+                return curve;
+            }
+        }
+        else{
+            qDebug("Misterious NULL Pointer");
+        }
+    }
+    return NULL;
 }

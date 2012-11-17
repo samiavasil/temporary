@@ -44,7 +44,7 @@ protected:
     void updateNextColor();
 
 public slots:
-    void showPlotContextMenuEvent(QContextMenuEvent *event);
+
 private slots:
 
     void on_actionGrid_X_on_triggered(bool checked);
@@ -75,11 +75,15 @@ protected:
     protected:
         QDataPlot* m_Plot;
     };
-    int setCurrentCurve( QwtPlotCurve *curve );
+
     QwtPlotCurve* currentCurve();
     void enableSnapPickerToCurve( bool enble );
     bool isEnabledSnapPickerToCurve( );
-
+    QwtPlotCurve* selectCurrentCurveMenu(const QPoint &pos );
+    QwtPlotCurve* findFirstVisibleCurve(  );
+    int setCurrentCurve( QwtPlotCurve *curve );
+protected slots:
+    void selectCurveActionSlot(  bool sel );
 protected:
     QwtPlotGrid*          m_Grid;
     QwtPlotZoomer*        m_Zoomer[2];
