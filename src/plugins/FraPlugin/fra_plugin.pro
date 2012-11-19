@@ -21,7 +21,9 @@ SOURCES += \
     qtestcommand.cpp \
     QDataPlot.cpp \
     FraFrameWorkInterface.cpp \
-    QwtPlotExt.cpp
+    QwtPlotExt.cpp \
+    QwtPlotConfigurator.cpp \
+    CurveConfigurator.cpp
 
 HEADERS += \
     QFraFrameWork.h \
@@ -29,7 +31,9 @@ HEADERS += \
     qtestcommand.h \
     QDataPlot.h \
     FraFrameWorkInterface.h \
-    QwtPlotExt.h
+    QwtPlotExt.h \
+    QwtPlotConfigurator.h \
+    CurveConfigurator.h
 
 CONFIG      += plugin
 
@@ -41,7 +45,9 @@ CONFIG      += plugin
 
 FORMS += \
     qdataplot.ui \
-    qfra_frame_work_view.ui
+    qfra_frame_work_view.ui \
+    QwtPlotConfigurator.ui \
+    CurveConfigurator.ui
 
 RESOURCES += \
     proba.qrc

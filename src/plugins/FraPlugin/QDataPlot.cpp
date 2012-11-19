@@ -134,7 +134,10 @@ QDataPlot::QDataPlot(QWidget *parent) :
     //curve2->setStyle( QwtPlotCurve::NoCurve );
 
     ui->setupUi(this);
-ui->PlotQwt->legend();
+
+    QPalette pa = ui->pushButton->palette();
+    pa.setColor( QPalette::Button,QColor(111,2,0) );
+    ui->pushButton->setPalette(pa);
 
     ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
     ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
@@ -239,9 +242,9 @@ ui->PlotQwt->legend();
     addLine( QDataPlot::TopRightAxes   );
     QwtLegend *legend =  new QwtLegend();
     legend->setItemMode( QwtLegend::ClickableItem );
+    legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
     ui->PlotQwt->insertLegend( legend );
     connect( ui->PlotQwt, SIGNAL(legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*)) );
-    connect(ui->PlotQwt, SIGNAL(showContextMenuEvent(QContextMenuEvent *event)),this, SLOT(showPlotContextMenuEvent(QContextMenuEvent *event)));
     m_Zoomer[0]->setZoomBase( false );
 }
 
@@ -304,12 +307,14 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         }
         curve->attach(ui->PlotQwt);
 
+
+        ////////////DELL ME
         curve->setStyle( QwtPlotCurve::Steps );
         curve->setLegendAttribute( QwtPlotCurve::LegendShowLine );
         curve->setLegendAttribute( QwtPlotCurve::LegendShowSymbol);
         curve->setLegendAttribute( QwtPlotCurve::LegendShowBrush );
         curve->setSymbol(new QwtSymbol( QwtSymbol::Diamond,curve->brush(),curve->pen(),QSize(5,5)));
-        ////////////DELL ME
+
         double x[100],y[100];
         double phase = ((double)qrand());
         for( int i=0; i < 100; i++ ){
