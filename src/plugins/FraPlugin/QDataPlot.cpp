@@ -16,6 +16,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include<QPointF>
+#include<CurveConfigurator.h>
+#include<QDialog>
+
 #define FIRST_LINE_COLOR 255,0,125
 
 class MenuLines:public QMenu{
@@ -39,12 +42,24 @@ protected:
         }
     }
 };
-
+#include<QGridLayout>
 bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     static int i;
     QwtPlotCurve* curve = m_Plot->m_CurCurve;
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
+
+    if ( event->type() == QEvent::MouseButtonDblClick ) {
+        QDialog config;
+        QGridLayout* gridLayout = new QGridLayout(&config);
+
+        gridLayout->addWidget(new CurveConfigurator(&config));
+        //gridLayout->setSizeConstraint(QLayout::SetMaximumSize);
+        config.setModal( true );
+        config.adjustSize();
+        config.exec();
+        config.deleteLater();
+    }
 
     if ( event->type() == QEvent::MouseButtonRelease ) {
         if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
