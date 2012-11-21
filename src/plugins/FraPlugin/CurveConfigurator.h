@@ -20,8 +20,18 @@ public:
 
 protected:
     void updateConfigurator();
+
+protected slots:
+    void cellPressed(int r,int c );
 protected:
     QList<QwtPlotCurve*> m_Curves;
+private slots:
+    void on_buttonOk_clicked();
+
+    void on_buttonApply_clicked();
+
+    void on_buttonCancel_clicked();
+
 private:
     Ui::CurveConfigurator *ui;
 };

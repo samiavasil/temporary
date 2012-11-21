@@ -84,6 +84,7 @@ protected:
     int setCurrentCurve( QwtPlotCurve *curve );
 protected slots:
     void selectCurveActionSlot(  bool sel );
+    void showLinesConfigurationDialog( );
 protected:
     QwtPlotGrid*          m_Grid;
     QwtPlotZoomer*        m_Zoomer[2];

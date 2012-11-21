@@ -18,6 +18,7 @@
 #include<QPointF>
 #include<CurveConfigurator.h>
 #include<QDialog>
+#include<QGridLayout>
 
 #define FIRST_LINE_COLOR 255,0,125
 
@@ -35,14 +36,16 @@ protected:
         for (int i = 0; i < act.size(); ++i) {
             QwtPlotCurve* curve =  (QwtPlotCurve*)( act.at(i)->data().toULongLong() );
             if( curve ){
-               rect = actionGeometry( act.at(i) );
-               curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
-               qDebug() <<  curve->title().text();
+                rect = actionGeometry( act.at(i) );
+                curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
+                qDebug() <<  curve->title().text();
             }
         }
     }
 };
-#include<QGridLayout>
+
+
+
 bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     static int i;
@@ -50,15 +53,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
 
     if ( event->type() == QEvent::MouseButtonDblClick ) {
-        QDialog config;
-        QGridLayout* gridLayout = new QGridLayout(&config);
-
-        gridLayout->addWidget(new CurveConfigurator(&config));
-        //gridLayout->setSizeConstraint(QLayout::SetMaximumSize);
-        config.setModal( true );
-        config.adjustSize();
-        config.exec();
-        config.deleteLater();
+        m_Plot->showLinesConfigurationDialog( );
     }
 
     if ( event->type() == QEvent::MouseButtonRelease ) {
@@ -135,7 +130,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 }
 
 QColor QDataPlot::m_NextColor;
-#include <QGraphicsOpacityEffect>
+
 QDataPlot::QDataPlot(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QDataPlot)
@@ -556,4 +551,26 @@ QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
         }
     }
     return NULL;
+}
+
+void QDataPlot::showLinesConfigurationDialog( )
+{
+    QDialog config;
+    config.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    QGridLayout* gridLayout = new QGridLayout(&config);
+    gridLayout->setSizeConstraint( QLayout::SetMaximumSize);
+    CurveConfigurator* c_conf = new CurveConfigurator(&config);
+
+    QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
+    while( it.hasNext() )
+    {
+        it.next();
+        c_conf->addCurve( it.value() );
+    }
+    c_conf->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding  );
+    gridLayout->addWidget(c_conf);
+    config.resize(QSize( 500,500 ));
+    config.setModal( true );
+    //config.adjustSize();
+    config.exec();
 }
