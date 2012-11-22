@@ -17,7 +17,11 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableWidget" name="curvesTable"/>
+      <widget class="QTableWidget" name="curvesTable">
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">

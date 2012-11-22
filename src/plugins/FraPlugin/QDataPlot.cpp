@@ -53,7 +53,10 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
 
     if ( event->type() == QEvent::MouseButtonDblClick ) {
-        m_Plot->showLinesConfigurationDialog( );
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if( Qt::LeftButton == mouseEvent->button() ){
+            m_Plot->showLinesConfigurationDialog( );
+        }
     }
 
     if ( event->type() == QEvent::MouseButtonRelease ) {
@@ -145,9 +148,6 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     ui->setupUi(this);
 
-    QPalette pa = ui->pushButton->palette();
-    pa.setColor( QPalette::Button,QColor(111,2,0) );
-    ui->pushButton->setPalette(pa);
 
     ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
     ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
@@ -168,6 +168,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     QToolBar* ptr = new QToolBar("OPAA");
 
     ptr->addAction(ui->actionShowTable);
+    ptr->addAction(ui->actionShowLegend);
     ptr->addAction(ui->actionAutoscale);
     ptr->addAction(ui->actionGrid_X_on);
     ptr->addAction(ui->actionGrid_Y_on);
@@ -180,11 +181,6 @@ QDataPlot::QDataPlot(QWidget *parent) :
     l->addWidget(ptr);
     ptr->show();
     l->addWidget(ui->splitter);
-
-    ptr->addWidget(ui->ComboLineColor);
-
-    //ui->PlotQwt->setAxisAutoScale(QwtPlot::yRight);
-
 
     // Assign a title to plot
     ui->PlotQwt->setTitle ( "Impedance" );
@@ -238,23 +234,11 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
-    /*
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-    addLine( QDataPlot::BottomLeftAxes );
-    addLine( QDataPlot::TopRightAxes   );
-   */
 
     addLine( QDataPlot::TopRightAxes   );
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
-    QwtLegend *legend =  new QwtLegend();
-    legend->setItemMode( QwtLegend::ClickableItem );
-    legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
-    ui->PlotQwt->insertLegend( legend );
-    connect( ui->PlotQwt, SIGNAL(legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*)) );
+    connect( ui->PlotQwt, SIGNAL( legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*) ) );
     m_Zoomer[0]->setZoomBase( false );
 }
 
@@ -323,7 +307,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         curve->setLegendAttribute( QwtPlotCurve::LegendShowLine );
         curve->setLegendAttribute( QwtPlotCurve::LegendShowSymbol);
         curve->setLegendAttribute( QwtPlotCurve::LegendShowBrush );
-        curve->setSymbol(new QwtSymbol( QwtSymbol::Diamond,curve->brush(),curve->pen(),QSize(5,5)));
+        curve->setSymbol(new QwtSymbol( QwtSymbol::Ellipse,curve->brush(),curve->pen(),QSize(5,5)));
 
         double x[100],y[100];
         double phase = ((double)qrand());
@@ -558,19 +542,36 @@ void QDataPlot::showLinesConfigurationDialog( )
     QDialog config;
     config.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     QGridLayout* gridLayout = new QGridLayout(&config);
-    gridLayout->setSizeConstraint( QLayout::SetMaximumSize);
+    config.layout()->setSizeConstraint( QLayout::SetMinimumSize);
     CurveConfigurator* c_conf = new CurveConfigurator(&config);
 
+    // c_conf->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding  );
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
     while( it.hasNext() )
     {
         it.next();
         c_conf->addCurve( it.value() );
     }
-    c_conf->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding  );
+
     gridLayout->addWidget(c_conf);
-    config.resize(QSize( 500,500 ));
+    config.resize(QSize( 600,500 ));
     config.setModal( true );
-    //config.adjustSize();
+    //    config.adjustSize();
     config.exec();
+}
+
+
+void QDataPlot::on_actionShowLegend_toggled(bool arg1)
+{
+
+    if( arg1 ){
+        QwtLegend* legend = new QwtLegend();
+        legend->setItemMode( QwtLegend::ClickableItem );
+        legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
+        ui->PlotQwt->insertLegend( legend );
+    }
+    else{
+        ui->PlotQwt->insertLegend( NULL );
+    }
+
 }

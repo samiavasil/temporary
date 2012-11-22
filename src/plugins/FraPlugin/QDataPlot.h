@@ -60,6 +60,8 @@ private slots:
     void on_actionRectangle_Zoom_toggled(bool arg1);
     void on_actionActionEnablePicker_triggered(bool checked);
 
+    void on_actionShowLegend_toggled(bool arg1);
+
 protected:
     class CanvasEventFilter : public QObject
     {
@@ -74,6 +76,7 @@ protected:
         bool eventFilter(QObject *obj, QEvent *event);
     protected:
         QDataPlot* m_Plot;
+
     };
 
     QwtPlotCurve* currentCurve();
@@ -99,7 +102,6 @@ protected:
 
     QDataPlot::lineId_t   m_NextId;
     static QColor         m_NextColor;
-
 protected slots:
     void legendClicked(QwtPlotItem* item);
 private:
