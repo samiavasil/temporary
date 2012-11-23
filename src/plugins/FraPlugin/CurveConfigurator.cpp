@@ -53,11 +53,11 @@ static curve_symbol_styles_t curve_symbol_styles[]={
 };
 
 
-CurveConfigurator::CurveConfigurator(QWidget *parent) :
+CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     QWidget(parent),
     ui(new Ui::CurveConfigurator)
 {
-
+    m_AutoUpdate = auto_update;
     ui->setupUi(this);
     ui->curvesTable->clear();
     ui->curvesTable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
@@ -74,6 +74,8 @@ CurveConfigurator::CurveConfigurator(QWidget *parent) :
     palete.setColor( QPalette::Background,QColor(255,0,0) );
     ui->curvesTable->setBackgroundRole ( QPalette::NoRole );
     connect(ui->curvesTable,SIGNAL(cellPressed(int,int)),this,SLOT(cellPressed(int,int)));
+    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed);
+
 }
 
 
@@ -109,7 +111,12 @@ void CurveConfigurator::updateConfigurator()
 
 
                 newItem = new QTableWidgetItem( tr("%1").arg(curve->title().text()) );
+
                 ui->curvesTable->setItem( new_row,LINE_NAME_COL ,newItem );
+
+                if( m_AutoUpdate ){
+                    connect(ui->curvesTable, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(applyChanges()));
+                }
 
                 newItem = new QTableWidgetItem();
                 newItem->setBackgroundColor( curve->pen().color() );
@@ -123,6 +130,9 @@ void CurveConfigurator::updateConfigurator()
                         combo->setCurrentIndex(j);
                     }
                 }
+                if( m_AutoUpdate ){
+                    connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
+                }
                 ui->curvesTable->setCellWidget( new_row,LINE_STYLE_COL,combo);
 
                 combo = new  QComboBox( ui->curvesTable );
@@ -131,6 +141,9 @@ void CurveConfigurator::updateConfigurator()
                     if( curve->symbol()&&( curve_symbol_styles[j].style == curve->symbol()->style() ) ){
                         combo->setCurrentIndex(j);
                     }
+                }
+                if( m_AutoUpdate ){
+                    connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
                 }
                 ui->curvesTable->setCellWidget( new_row,SYMBOL_STYLE_COL,combo);
 
@@ -145,7 +158,8 @@ void CurveConfigurator::updateConfigurator()
     connect(this,SIGNAL(reload()) ,this, SLOT(reloadPlugins()));
     connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
     */
-
+    //resize(QSize(1000,1000));//ui->curvesTable->size());
+    qDebug()<<""<<ui->curvesTable->size();
 }
 
 
@@ -154,10 +168,23 @@ void CurveConfigurator::cellPressed( int r, int c ){
     if( curve ){
         if( LINE_COLOR_COL == c ){
             QColorDialog color( curve->pen().color(), this );
+            color.setModal(true);
             if( QDialog::Accepted == color.exec() ){
                 ui->curvesTable->item(r,c)->setBackgroundColor( color.selectedColor() );
+                if( m_AutoUpdate ){
+                    applyChanges();
+                }
             }
         }
+//        if( LINE_NAME_COL == c ){
+//            QColorDialog color( curve->pen().color(), this );
+//            if( QDialog::Accepted == color.exec() ){
+//                ui->curvesTable->item(r,c)->setBackgroundColor( color.selectedColor() );
+//                if( m_AutoUpdate ){
+//                    applyChanges();
+//                }
+//            }
+//        }
     }
 }
 
@@ -166,7 +193,7 @@ void CurveConfigurator::on_buttonOk_clicked()
 
 }
 
-void CurveConfigurator::on_buttonApply_clicked()
+void CurveConfigurator::applyChanges()
 {
     QwtPlotCurve* curve;
     QwtPlot* plot = NULL;

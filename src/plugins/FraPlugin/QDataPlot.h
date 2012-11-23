@@ -82,7 +82,7 @@ protected:
     QwtPlotCurve* currentCurve();
     void enableSnapPickerToCurve( bool enble );
     bool isEnabledSnapPickerToCurve( );
-    QwtPlotCurve* selectCurrentCurveMenu(const QPoint &pos );
+    QwtPlotCurve* showPopupMenu(const QPoint &pos );
     QwtPlotCurve* findFirstVisibleCurve(  );
     int setCurrentCurve( QwtPlotCurve *curve );
 protected slots:

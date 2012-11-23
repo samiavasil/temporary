@@ -63,7 +63,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
         if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if( Qt::RightButton == mouseEvent->button() ){
-                m_Plot->selectCurrentCurveMenu(mouseEvent->globalPos());
+                m_Plot->showPopupMenu(mouseEvent->globalPos());
             }
         }
     }
@@ -470,7 +470,7 @@ QwtPlotCurve* QDataPlot::currentCurve( ){
     return m_CurCurve;
 }
 #include<QWidgetAction>
-QwtPlotCurve* QDataPlot::selectCurrentCurveMenu( const QPoint &pos ){
+QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
     MenuLines menu;
     QAction* action = new QAction("Select current line",&menu);
     QFont font  = action->font();
@@ -481,7 +481,18 @@ QwtPlotCurve* QDataPlot::selectCurrentCurveMenu( const QPoint &pos ){
     menu.addAction(action);
     action = new QAction("No current line selection",&menu);
     action->setData((qlonglong)NULL);
-    connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+    QMenu* men   = new QMenu(&menu);
+    QWidgetAction* act = new QWidgetAction( &menu );
+    //act->setData((qlonglong)m_CurveMap.value(0));
+    CurveConfigurator* c_c = new CurveConfigurator(&menu,true );
+    c_c->addCurve(m_CurveMap.value(0));
+    act->setDefaultWidget(c_c);
+    act->setCheckable(true);
+    act->setChecked(true);
+    men->addAction(act);
+    action->setMenu( men );
+
+    //connect( act, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
     if( NULL == m_CurCurve ){
         action->setCheckable(true);
         action->setChecked(true);
@@ -536,14 +547,14 @@ QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
     }
     return NULL;
 }
-
+#include<QDialogButtonBox>
 void QDataPlot::showLinesConfigurationDialog( )
 {
     QDialog config;
     config.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     QGridLayout* gridLayout = new QGridLayout(&config);
     config.layout()->setSizeConstraint( QLayout::SetMinimumSize);
-    CurveConfigurator* c_conf = new CurveConfigurator(&config);
+    CurveConfigurator* c_conf = new CurveConfigurator( &config );
 
     // c_conf->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding  );
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
@@ -553,7 +564,16 @@ void QDataPlot::showLinesConfigurationDialog( )
         c_conf->addCurve( it.value() );
     }
 
+    QDialogButtonBox*box = new QDialogButtonBox( QDialogButtonBox::Ok|
+                                                 QDialogButtonBox::Apply|
+                                                 QDialogButtonBox::Cancel,
+                                                 Qt::Horizontal,
+                                                 &config);
+
+    //box->buttonRole();
+
     gridLayout->addWidget(c_conf);
+    gridLayout->addWidget(box);
     config.resize(QSize( 600,500 ));
     config.setModal( true );
     //    config.adjustSize();
