@@ -26,18 +26,16 @@ public:
 
 protected:
     void updateConfigurator();
-
+virtual  QSize sizeHint() const;
 protected slots:
     void cellPressed(int r,int c );
 protected:
     QList<QwtPlotCurve*> m_Curves;
     bool m_AutoUpdate;
 public slots:
-    void on_buttonOk_clicked();
 
     void applyChanges();
 
-    void on_buttonCancel_clicked();
 
 private:
     Ui::CurveConfigurator *ui;

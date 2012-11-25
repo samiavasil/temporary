@@ -38,7 +38,7 @@ protected:
             if( curve ){
                 rect = actionGeometry( act.at(i) );
                 curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
-                qDebug() <<  curve->title().text();
+
             }
         }
     }
@@ -80,13 +80,13 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                 const QwtScaleMap yMap = plotQwt->canvasMap( curve->yAxis() );
                 const QwtScaleMap xMap = plotQwt->canvasMap( curve->xAxis() );
                 QPointF point =  mouseEvent->pos();//plotQwt->m_picker->trackerPosition();
-                qDebug("Tracker postion %f %f ", point.x(), point.y());
+
                 double x = xMap.invTransform( point.x() );
                 double y = yMap.invTransform( point.y() );
                 QwtInterval interval = plotQwt->axisInterval( curve->xAxis() );
                 double xx = interval.minValue();
                 double ww = xx + interval.width();
-                qDebug()<<"("<<point.x()<<","<<point.y()<<") " << "X="<<x<<" Y="<<y;
+
                 y = yMap.transform( curve->sample(size-1).y() );
                 for( int i=0; i < size; i++ ){
                     data = curve->sample(i);
@@ -97,7 +97,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                                 data1 = curve->sample(i);
                                 double dY = data1.y() - data.y();
                                 double dX = (  x - data.x()  )/(data1.x()-data.x());
-                                qDebug("dX = %f dY = %f Y=%f", dX, dY,data.y()+(dY*dX));
+
                                 y = yMap.transform( data.y()+(dY*dX) );
                             }
                             else{
@@ -108,9 +108,9 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                         }
                     }
                 }
-                qDebug()<<curve->title().text() << "pointY="<<point.y()<<"  Y="<<y;
+
                 ((QPoint*)(&(mouseEvent->pos())))->setY(y);
-                qDebug()<<curve->title().text() << "mapedY="<<mouseEvent->pos().y();
+
                 if( x < curve->sample( 0 ).x() ){
                     x = xMap.transform( curve->sample( 0 ).x() );
                 }
@@ -327,6 +327,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
     if( 0 == m_CurCurve ){
         setCurrentCurve( curve );
     }
+    layout()->update();
     return id;
 }
 
@@ -486,6 +487,8 @@ QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
     //act->setData((qlonglong)m_CurveMap.value(0));
     CurveConfigurator* c_c = new CurveConfigurator(&menu,true );
     c_c->addCurve(m_CurveMap.value(0));
+    //c_c->layout()->setSizeConstraint(QLayout::SetFixedSize );
+    //c_c->resize(QSize(400,200));
     act->setDefaultWidget(c_c);
     act->setCheckable(true);
     act->setChecked(true);
@@ -498,6 +501,7 @@ QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
         action->setChecked(true);
     }
     menu.addAction( action  );
+
     QwtPlotCurve* curve;
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
     while( it.hasNext() )
@@ -548,15 +552,14 @@ QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
     return NULL;
 }
 #include<QDialogButtonBox>
+#include<QPushButton>
 void QDataPlot::showLinesConfigurationDialog( )
 {
     QDialog config;
     config.setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     QGridLayout* gridLayout = new QGridLayout(&config);
-    config.layout()->setSizeConstraint( QLayout::SetMinimumSize);
-    CurveConfigurator* c_conf = new CurveConfigurator( &config );
 
-    // c_conf->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding  );
+    CurveConfigurator* c_conf = new CurveConfigurator( &config );
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
     while( it.hasNext() )
     {
@@ -569,16 +572,15 @@ void QDataPlot::showLinesConfigurationDialog( )
                                                  QDialogButtonBox::Cancel,
                                                  Qt::Horizontal,
                                                  &config);
-
-    //box->buttonRole();
-
     gridLayout->addWidget(c_conf);
     gridLayout->addWidget(box);
-    config.resize(QSize( 600,500 ));
+    QPushButton * btn = box->button(QDialogButtonBox::Apply);
+    QObject::connect(btn,SIGNAL(pressed ()),c_conf, SLOT(applyChanges()));
     config.setModal( true );
-    //    config.adjustSize();
     config.exec();
 }
+
+
 
 
 void QDataPlot::on_actionShowLegend_toggled(bool arg1)

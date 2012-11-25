@@ -51,7 +51,7 @@ static curve_symbol_styles_t curve_symbol_styles[]={
     { "Hexagon"           ,QwtSymbol::Hexagon   },
 
 };
-
+#include<QScrollBar>
 
 CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     QWidget(parent),
@@ -59,13 +59,15 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
 {
     m_AutoUpdate = auto_update;
     ui->setupUi(this);
-    ui->curvesTable->clear();
-    ui->curvesTable->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-    ui->curvesTable->horizontalHeader()->setStretchLastSection( true );
 
-    ui->curvesTable->setColumnCount(5);
+ //   ui->curvesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->curvesTable->clear();
+
+   // ui->curvesTable->horizontalHeader()->setStretchLastSection( true );
+
+    ui->curvesTable->setColumnCount(4);
     QStringList header_list;
-    header_list << "Line Name" << "Line Color"<<"Line Style"<<"Line Symbol Style"<<"Dran Dran Dran";
+    header_list << "Line Name" << "Line Color"<<"Line Style"<<"Line Symbol Style";
     ui->curvesTable->setHorizontalHeaderLabels(header_list);
     ui->curvesTable->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->curvesTable->setSelectionMode( QAbstractItemView::NoSelection);
@@ -74,7 +76,8 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     palete.setColor( QPalette::Background,QColor(255,0,0) );
     ui->curvesTable->setBackgroundRole ( QPalette::NoRole );
     connect(ui->curvesTable,SIGNAL(cellPressed(int,int)),this,SLOT(cellPressed(int,int)));
-    setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //resize(QSize(300,500));//ui->curvesTable->size());
 
 }
 
@@ -83,6 +86,20 @@ CurveConfigurator::~CurveConfigurator()
 {
     delete ui;
 }
+
+  QSize CurveConfigurator::sizeHint() const{
+      //return  ui->curvesTable->sizeHintForRow(0);
+      QTableWidget *t =  ui->curvesTable;
+      int leftM, topM, rightM, bottomM;
+      layout()->getContentsMargins(&leftM,&topM,&rightM,&bottomM);
+      int w = t->verticalHeader()->width() + 2*(leftM + rightM); // +4 seems to be needed
+      for (int i = 0; i < t->columnCount(); i++)
+         w += t->columnWidth(i); // seems to include gridline (on my machine)
+      int h = t->horizontalHeader()->height() + 2*(topM + bottomM);
+      for (int i = 0; i < t->rowCount(); i++)
+         h += t->rowHeight(i);
+      return QSize(w, h);
+  }
 
 int CurveConfigurator::addCurve( QwtPlotCurve* curve ){
     int ret = -1;
@@ -96,6 +113,7 @@ int CurveConfigurator::addCurve( QwtPlotCurve* curve ){
     return ret;
 }
 #include<QComboBox>
+
 void CurveConfigurator::updateConfigurator()
 {
     QwtPlotCurve* curve;
@@ -151,6 +169,12 @@ void CurveConfigurator::updateConfigurator()
         }
     }
     ui->curvesTable->resizeColumnsToContents();
+//layout()->update();
+  //  updateGeometry();
+    //ui->curvesTable->adjustSize();
+
+    //resize( QSize(400,400));
+    //adjustSize();
     /*
     ui->availablePlugins->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -159,7 +183,8 @@ void CurveConfigurator::updateConfigurator()
     connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
     */
     //resize(QSize(1000,1000));//ui->curvesTable->size());
-    qDebug()<<""<<ui->curvesTable->size();
+    qDebug()<<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
+              ui->curvesTable->sizeHint();
 }
 
 
@@ -176,6 +201,7 @@ void CurveConfigurator::cellPressed( int r, int c ){
                 }
             }
         }
+
 //        if( LINE_NAME_COL == c ){
 //            QColorDialog color( curve->pen().color(), this );
 //            if( QDialog::Accepted == color.exec() ){
@@ -188,10 +214,6 @@ void CurveConfigurator::cellPressed( int r, int c ){
     }
 }
 
-void CurveConfigurator::on_buttonOk_clicked()
-{
-
-}
 
 void CurveConfigurator::applyChanges()
 {
@@ -264,7 +286,4 @@ void CurveConfigurator::applyChanges()
 
 }
 
-void CurveConfigurator::on_buttonCancel_clicked()
-{
 
-}
