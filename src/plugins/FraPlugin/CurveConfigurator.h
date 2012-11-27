@@ -23,7 +23,7 @@ public:
     void setAutoUpdate( bool auto_update ){
         m_AutoUpdate = auto_update;
     }
-
+    void removeCurves( );
 protected:
     void updateConfigurator();
 virtual  QSize sizeHint() const;

@@ -23,7 +23,8 @@ SOURCES += \
     FraFrameWorkInterface.cpp \
     QwtPlotExt.cpp \
     QwtPlotConfigurator.cpp \
-    CurveConfigurator.cpp
+    CurveConfigurator.cpp \
+    CurveConfigurationMenu.cpp
 
 HEADERS += \
     QFraFrameWork.h \
@@ -33,7 +34,8 @@ HEADERS += \
     FraFrameWorkInterface.h \
     QwtPlotExt.h \
     QwtPlotConfigurator.h \
-    CurveConfigurator.h
+    CurveConfigurator.h \
+    CurveConfigurationMenu.h
 
 CONFIG      += plugin
 

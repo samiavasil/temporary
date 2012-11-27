@@ -13,11 +13,13 @@ class QwtPlotGrid;
 class QwtPlotZoomer;
 
 #define INVAL_LINE_ID ( (QDataPlot::lineId_t)(-1) )
+class CanvasEventFilter;
+
 
 class QDataPlot : public QWidget
 {
     Q_OBJECT
-    
+    friend class CanvasEventFilter;
 public:
     enum Axes
     {
@@ -63,31 +65,15 @@ private slots:
     void on_actionShowLegend_toggled(bool arg1);
 
 protected:
-    class CanvasEventFilter : public QObject
-    {
-    public:
-        CanvasEventFilter(  QDataPlot* parent ):QObject(parent){
-            m_Plot = parent;
-        }
-        ~CanvasEventFilter(){
 
-        }
-    protected:
-        bool eventFilter(QObject *obj, QEvent *event);
-    protected:
-        QDataPlot* m_Plot;
-
-    };
 
     QwtPlotCurve* currentCurve();
     void enableSnapPickerToCurve( bool enble );
     bool isEnabledSnapPickerToCurve( );
-    QwtPlotCurve* showPopupMenu(const QPoint &pos );
     QwtPlotCurve* findFirstVisibleCurve(  );
     int setCurrentCurve( QwtPlotCurve *curve );
-protected slots:
-    void selectCurveActionSlot(  bool sel );
-    void showLinesConfigurationDialog( );
+public slots:
+    void  showPopupMenu(const QPoint &pos );
 protected:
     QwtPlotGrid*          m_Grid;
     QwtPlotZoomer*        m_Zoomer[2];
@@ -103,9 +89,34 @@ protected:
     QDataPlot::lineId_t   m_NextId;
     static QColor         m_NextColor;
 protected slots:
+    void selectCurveActionSlot(  bool sel );
+    void showLinesConfigurationDialog( );
     void legendClicked(QwtPlotItem* item);
 private:
     Ui::QDataPlot *ui;
 };
+
+class CanvasEventFilter : public QObject
+{
+Q_OBJECT
+public:
+    CanvasEventFilter(  QDataPlot* parent ):QObject(parent){
+        m_Plot = parent;
+        connect(this,SIGNAL(showPopupMenu(const QPoint&)),
+                parent,SLOT(showPopupMenu(const QPoint&)),
+                Qt::QueuedConnection );
+    }
+    ~CanvasEventFilter(){
+
+    }
+signals:
+    void showPopupMenu(const QPoint &pos);
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+protected:
+    QDataPlot* m_Plot;
+
+};
+
 
 #endif // QDATAPLOT_H

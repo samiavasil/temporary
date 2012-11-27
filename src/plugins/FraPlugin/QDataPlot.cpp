@@ -19,6 +19,7 @@
 #include<CurveConfigurator.h>
 #include<QDialog>
 #include<QGridLayout>
+#include "CurveConfigurationMenu.h"
 
 #define FIRST_LINE_COLOR 255,0,125
 
@@ -30,23 +31,27 @@ public:
 protected:
     virtual void paintEvent ( QPaintEvent * event ){
         QMenu::paintEvent( event );
-        QPainter painter(this);
+        /*QPainter painter(this);
+
         QList<QAction *> act = actions();
         QRect rect;
         for (int i = 0; i < act.size(); ++i) {
-            QwtPlotCurve* curve =  (QwtPlotCurve*)( act.at(i)->data().toULongLong() );
-            if( curve ){
-                rect = actionGeometry( act.at(i) );
-                curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
+            if( act.value(i,NULL)&&act.value(i)->data().isValid()&&(!act.value(i)->data().isNull()) ){
+                QwtPlotCurve* curve =  (QwtPlotCurve*)( act.value(i)->data().toULongLong() );
+                if( curve ){
+                    rect = actionGeometry( act.at(i) );
+                    curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
 
+                }
             }
-        }
+        }*/
     }
 };
 
 
 
-bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
+
+bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     static int i;
     QwtPlotCurve* curve = m_Plot->m_CurCurve;
@@ -56,6 +61,7 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if( Qt::LeftButton == mouseEvent->button() ){
             m_Plot->showLinesConfigurationDialog( );
+            return true;
         }
     }
 
@@ -63,7 +69,8 @@ bool QDataPlot::CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
         if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if( Qt::RightButton == mouseEvent->button() ){
-                m_Plot->showPopupMenu(mouseEvent->globalPos());
+                emit showPopupMenu( mouseEvent->globalPos() );
+                return true;
             }
         }
     }
@@ -470,8 +477,8 @@ int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
 QwtPlotCurve* QDataPlot::currentCurve( ){
     return m_CurCurve;
 }
-#include<QWidgetAction>
-QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
+
+void QDataPlot::showPopupMenu( const QPoint &pos ){
     MenuLines menu;
     QAction* action = new QAction("Select current line",&menu);
     QFont font  = action->font();
@@ -482,26 +489,13 @@ QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
     menu.addAction(action);
     action = new QAction("No current line selection",&menu);
     action->setData((qlonglong)NULL);
-    QMenu* men   = new QMenu(&menu);
-    QWidgetAction* act = new QWidgetAction( &menu );
-    //act->setData((qlonglong)m_CurveMap.value(0));
-    CurveConfigurator* c_c = new CurveConfigurator(&menu,true );
-    c_c->addCurve(m_CurveMap.value(0));
-    //c_c->layout()->setSizeConstraint(QLayout::SetFixedSize );
-    //c_c->resize(QSize(400,200));
-    act->setDefaultWidget(c_c);
-    act->setCheckable(true);
-    act->setChecked(true);
-    men->addAction(act);
-    action->setMenu( men );
-
-    //connect( act, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+    connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
     if( NULL == m_CurCurve ){
         action->setCheckable(true);
         action->setChecked(true);
     }
     menu.addAction( action  );
-
+    CurveConfigurationMenu* men   = new CurveConfigurationMenu(&menu);
     QwtPlotCurve* curve;
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
     while( it.hasNext() )
@@ -515,13 +509,16 @@ QwtPlotCurve* QDataPlot::showPopupMenu( const QPoint &pos ){
                 action->setChecked(true);
             }
             action->setData((qlonglong)curve);
-            connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+            connect( action, SIGNAL(hovered()), men, SLOT( setCurentCurve()) ,Qt::QueuedConnection );
+            action->setMenu( men );
             menu.addAction( action  );
+
         }
         else{
             qDebug("Misterious NULL Pointer");
         }
     }
+    //connect( men, SIGNAL( aboutToShow() ), men, SLOT( setCurentCurve() ),Qt::QueuedConnection );
     menu.exec(pos);
 }
 

@@ -3,6 +3,8 @@
 #include "qwt/qwt_symbol.h"
 #include "qwt/qwt_plot.h"
 #include <QColorDialog>
+#include<QScrollBar>
+#include<QComboBox>
 
 enum{
     LINE_NAME_COL ,
@@ -51,7 +53,6 @@ static curve_symbol_styles_t curve_symbol_styles[]={
     { "Hexagon"           ,QwtSymbol::Hexagon   },
 
 };
-#include<QScrollBar>
 
 CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     QWidget(parent),
@@ -60,10 +61,10 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     m_AutoUpdate = auto_update;
     ui->setupUi(this);
 
- //   ui->curvesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //   ui->curvesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->curvesTable->clear();
 
-   // ui->curvesTable->horizontalHeader()->setStretchLastSection( true );
+    // ui->curvesTable->horizontalHeader()->setStretchLastSection( true );
 
     ui->curvesTable->setColumnCount(4);
     QStringList header_list;
@@ -87,54 +88,72 @@ CurveConfigurator::~CurveConfigurator()
     delete ui;
 }
 
-  QSize CurveConfigurator::sizeHint() const{
-      //return  ui->curvesTable->sizeHintForRow(0);
-      QTableWidget *t =  ui->curvesTable;
-      int leftM, topM, rightM, bottomM;
-      layout()->getContentsMargins(&leftM,&topM,&rightM,&bottomM);
-      int w = t->verticalHeader()->width() + 2*(leftM + rightM); // +4 seems to be needed
-      for (int i = 0; i < t->columnCount(); i++)
-         w += t->columnWidth(i); // seems to include gridline (on my machine)
-      int h = t->horizontalHeader()->height() + 2*(topM + bottomM);
-      for (int i = 0; i < t->rowCount(); i++)
-         h += t->rowHeight(i);
-      return QSize(w, h);
-  }
+QSize CurveConfigurator::sizeHint() const{
+    //return  ui->curvesTable->sizeHintForRow(0);
+    QTableWidget *t =  ui->curvesTable;
+    int leftM, topM, rightM, bottomM;
+    layout()->getContentsMargins(&leftM,&topM,&rightM,&bottomM);
+    int w = t->verticalHeader()->width() + 2*(leftM + rightM); // +4 seems to be needed
+    for (int i = 0; i < t->columnCount(); i++)
+        w += t->columnWidth(i); // seems to include gridline (on my machine)
+    int h = t->horizontalHeader()->height() + 2*(topM + bottomM);
+    for (int i = 0; i < t->rowCount(); i++)
+        h += t->rowHeight(i);
+    return QSize(w, h);
+}
 
 int CurveConfigurator::addCurve( QwtPlotCurve* curve ){
     int ret = -1;
     if( curve ){
         if( !m_Curves.contains( curve ) ){
             m_Curves.append( curve );
+            updateConfigurator();
         }
         ret = 0;
     }
-    updateConfigurator();
     return ret;
 }
-#include<QComboBox>
+void CurveConfigurator::removeCurves( ){
+
+   QwtPlotCurve* cur;
+   ui->curvesTable->disconnect();
+   while( m_Curves.count() ){
+        cur = m_Curves.takeAt(0);
+        if( cur ){
+            delete cur;
+        }
+    }
+   while( ui->curvesTable->rowCount() ){
+        for(int i=0;i<4;i++ ){
+           QWidget* widg = ui->curvesTable->cellWidget(0,i);
+           if( widg ){
+               delete widg;
+           }
+           QTableWidgetItem*w= ui->curvesTable->takeItem(0,i);
+           if( w ){
+               delete w;
+           }
+        }
+        ui->curvesTable->removeRow(0);
+    }
+
+}
 
 void CurveConfigurator::updateConfigurator()
 {
     QwtPlotCurve* curve;
+
     for( int i = 0; i < m_Curves.count(); i++ )
     {
         if( i == ui->curvesTable->rowCount() )
         {
-            QTableWidgetItem *newItem;
+            QTableWidgetItem *newItem=0;
             curve = m_Curves.value( i, NULL );
             if( curve ){
                 int new_row = ui->curvesTable->rowCount();
                 ui->curvesTable->insertRow(new_row);
-
-
                 newItem = new QTableWidgetItem( tr("%1").arg(curve->title().text()) );
-
                 ui->curvesTable->setItem( new_row,LINE_NAME_COL ,newItem );
-
-                if( m_AutoUpdate ){
-                    connect(ui->curvesTable, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(applyChanges()));
-                }
 
                 newItem = new QTableWidgetItem();
                 newItem->setBackgroundColor( curve->pen().color() );
@@ -168,9 +187,12 @@ void CurveConfigurator::updateConfigurator()
             }
         }
     }
+    if( m_AutoUpdate ){
+        connect(ui->curvesTable, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(applyChanges()));
+    }
     ui->curvesTable->resizeColumnsToContents();
-//layout()->update();
-  //  updateGeometry();
+    //layout()->update();
+    //  updateGeometry();
     //ui->curvesTable->adjustSize();
 
     //resize( QSize(400,400));
@@ -202,15 +224,15 @@ void CurveConfigurator::cellPressed( int r, int c ){
             }
         }
 
-//        if( LINE_NAME_COL == c ){
-//            QColorDialog color( curve->pen().color(), this );
-//            if( QDialog::Accepted == color.exec() ){
-//                ui->curvesTable->item(r,c)->setBackgroundColor( color.selectedColor() );
-//                if( m_AutoUpdate ){
-//                    applyChanges();
-//                }
-//            }
-//        }
+        //        if( LINE_NAME_COL == c ){
+        //            QColorDialog color( curve->pen().color(), this );
+        //            if( QDialog::Accepted == color.exec() ){
+        //                ui->curvesTable->item(r,c)->setBackgroundColor( color.selectedColor() );
+        //                if( m_AutoUpdate ){
+        //                    applyChanges();
+        //                }
+        //            }
+        //        }
     }
 }
 
@@ -263,7 +285,7 @@ void CurveConfigurator::applyChanges()
                 QComboBox* combo = static_cast<QComboBox*>(ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL));
                 QSize symbol_size(5,5);
                 if( curve->symbol() ){
-                   symbol_size   = curve->symbol()->size();
+                    symbol_size   = curve->symbol()->size();
                 }
                 QwtSymbol* sym = new QwtSymbol( curve_symbol_styles[combo->currentIndex()].style,
                                                 curve->brush(),curve->pen(),
