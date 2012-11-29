@@ -113,83 +113,115 @@ int CurveConfigurator::addCurve( QwtPlotCurve* curve ){
     }
     return ret;
 }
+
 void CurveConfigurator::removeCurves( ){
 
-   QwtPlotCurve* cur;
-   ui->curvesTable->disconnect();
-   while( m_Curves.count() ){
+    QwtPlotCurve* cur;
+    ui->curvesTable->disconnect();
+    while( m_Curves.count() ){
         cur = m_Curves.takeAt(0);
-        if( cur ){
-            delete cur;
-        }
     }
-   while( ui->curvesTable->rowCount() ){
+    while( ui->curvesTable->rowCount() ){
         for(int i=0;i<4;i++ ){
-           QWidget* widg = ui->curvesTable->cellWidget(0,i);
-           if( widg ){
-               delete widg;
-           }
-           QTableWidgetItem*w= ui->curvesTable->takeItem(0,i);
-           if( w ){
-               delete w;
-           }
+            QWidget* widg = ui->curvesTable->cellWidget(0,i);
+            if( widg ){
+                delete widg;
+            }
+            QTableWidgetItem*w= ui->curvesTable->takeItem(0,i);
+            if( w ){
+                delete w;
+            }
         }
         ui->curvesTable->removeRow(0);
     }
-
+   connect(ui->curvesTable,SIGNAL(cellPressed(int,int)),this,SLOT(cellPressed(int,int)),Qt::UniqueConnection);
 }
 
 void CurveConfigurator::updateConfigurator()
 {
     QwtPlotCurve* curve;
-
+    QTableWidgetItem *item = 0;
+    QComboBox* comboLineStyle = 0;
+    QComboBox* comboSymbolStyle = 0;
     for( int i = 0; i < m_Curves.count(); i++ )
     {
+        curve = m_Curves.value( i, NULL );
         if( i == ui->curvesTable->rowCount() )
         {
-            QTableWidgetItem *newItem=0;
-            curve = m_Curves.value( i, NULL );
+            item = 0;
+
             if( curve ){
-                int new_row = ui->curvesTable->rowCount();
-                ui->curvesTable->insertRow(new_row);
-                newItem = new QTableWidgetItem( tr("%1").arg(curve->title().text()) );
-                ui->curvesTable->setItem( new_row,LINE_NAME_COL ,newItem );
+                ui->curvesTable->insertRow(i);
+                item = new QTableWidgetItem(  curve->title().text() );
+                ui->curvesTable->setItem( i,LINE_NAME_COL ,item );
 
-                newItem = new QTableWidgetItem();
-                newItem->setBackgroundColor( curve->pen().color() );
-                ui->curvesTable->setItem( new_row,LINE_COLOR_COL,newItem );
+                item = new QTableWidgetItem();
+                item->setBackgroundColor( curve->pen().color() );
+                ui->curvesTable->setItem( i,LINE_COLOR_COL,item );
 
-                // newItem = new QTableWidgetItem();
-                QComboBox* combo = new  QComboBox(ui->curvesTable);
+                // item = new QTableWidgetItem();
+                comboLineStyle = new  QComboBox(ui->curvesTable);
                 for( int j=0; j < ( sizeof(curve_styles_names)/sizeof(curve_styles_names[0]) ); j++ ){
-                    combo->addItem( curve_styles_names[j].name );
-                    if( curve_styles_names[j].style == curve->style() ){
-                        combo->setCurrentIndex(j);
-                    }
+                    comboLineStyle->addItem( curve_styles_names[j].name );
                 }
-                if( m_AutoUpdate ){
-                    connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
-                }
-                ui->curvesTable->setCellWidget( new_row,LINE_STYLE_COL,combo);
+                ui->curvesTable->setCellWidget( i,LINE_STYLE_COL,comboLineStyle);
 
-                combo = new  QComboBox( ui->curvesTable );
+                comboSymbolStyle = new  QComboBox( ui->curvesTable );
                 for( int j=0; j < ( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0]) ); j++ ){
-                    combo->addItem( curve_symbol_styles[j].name );
-                    if( curve->symbol()&&( curve_symbol_styles[j].style == curve->symbol()->style() ) ){
-                        combo->setCurrentIndex(j);
-                    }
+                    comboSymbolStyle->addItem( curve_symbol_styles[j].name );
                 }
-                if( m_AutoUpdate ){
-                    connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
-                }
-                ui->curvesTable->setCellWidget( new_row,SYMBOL_STYLE_COL,combo);
+                ui->curvesTable->setCellWidget( i,SYMBOL_STYLE_COL,comboSymbolStyle);
 
+                if( m_AutoUpdate ){
+                    connect(comboLineStyle, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
+                    connect(comboSymbolStyle, SIGNAL(currentIndexChanged(int)),this, SLOT(applyChanges()));
+                }
+
+            }
+            else{
+                qDebug("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                return;
+            }
+
+        }
+        else{
+            comboLineStyle   = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,LINE_STYLE_COL ))  ;
+            comboSymbolStyle = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL ));
+            if( (!comboLineStyle)||(!comboSymbolStyle) ){
+                qDebug("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                return;
+            }
+        }
+        item = ui->curvesTable->item( i, LINE_NAME_COL );
+        if( curve && item ){
+            item->setText( curve->title().text() );
+
+            item = ui->curvesTable->item( i, LINE_COLOR_COL );
+            if( item ){
+                item->setBackgroundColor( curve->pen().color() );
+            }
+
+            for( int j=0; j < ( sizeof(curve_styles_names)/sizeof(curve_styles_names[0]) ); j++ ){
+                if( curve_styles_names[j].style == curve->style() ){
+                    comboLineStyle->blockSignals(true);
+                    comboLineStyle->setCurrentIndex(j);
+                    comboLineStyle->blockSignals(false);
+                }
+            }
+
+            for( int j=0; j < ( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0]) ); j++ ){
+                if( curve->symbol()&&( curve_symbol_styles[j].style == curve->symbol()->style() ) ){
+                    comboSymbolStyle->blockSignals(true);
+                    comboSymbolStyle->setCurrentIndex(j);
+                    comboSymbolStyle->blockSignals(false);
+                }
             }
         }
     }
     if( m_AutoUpdate ){
-        connect(ui->curvesTable, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(applyChanges()));
+       connect(ui->curvesTable, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(applyChanges()),Qt::UniqueConnection );
     }
+
     ui->curvesTable->resizeColumnsToContents();
     //layout()->update();
     //  updateGeometry();

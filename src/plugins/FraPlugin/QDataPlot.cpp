@@ -60,7 +60,7 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
     if ( event->type() == QEvent::MouseButtonDblClick ) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if( Qt::LeftButton == mouseEvent->button() ){
-            m_Plot->showLinesConfigurationDialog( );
+            emit  showLinesConfigurationDialog( );
             return true;
         }
     }

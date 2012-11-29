@@ -72,8 +72,7 @@ protected:
     bool isEnabledSnapPickerToCurve( );
     QwtPlotCurve* findFirstVisibleCurve(  );
     int setCurrentCurve( QwtPlotCurve *curve );
-public slots:
-    void  showPopupMenu(const QPoint &pos );
+
 protected:
     QwtPlotGrid*          m_Grid;
     QwtPlotZoomer*        m_Zoomer[2];
@@ -89,8 +88,9 @@ protected:
     QDataPlot::lineId_t   m_NextId;
     static QColor         m_NextColor;
 protected slots:
+    void  showPopupMenu(const QPoint &pos );
+    void  showLinesConfigurationDialog( );
     void selectCurveActionSlot(  bool sel );
-    void showLinesConfigurationDialog( );
     void legendClicked(QwtPlotItem* item);
 private:
     Ui::QDataPlot *ui;
@@ -105,12 +105,16 @@ public:
         connect(this,SIGNAL(showPopupMenu(const QPoint&)),
                 parent,SLOT(showPopupMenu(const QPoint&)),
                 Qt::QueuedConnection );
+        connect(this,SIGNAL(showLinesConfigurationDialog( )),
+                parent,SLOT(showLinesConfigurationDialog( )),
+                Qt::QueuedConnection );
     }
     ~CanvasEventFilter(){
 
     }
 signals:
     void showPopupMenu(const QPoint &pos);
+    void showLinesConfigurationDialog( );
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
 protected:

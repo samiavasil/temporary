@@ -22,7 +22,7 @@ void CurveConfigurationMenu::setCurentCurve(){
             CurCurve =  dynamic_cast<QwtPlotCurve*>( (QwtPlotCurve*)action->data().toULongLong() );
             if( CurCurve && m_curve_conf ){
                    qDebug("1 %x",(qlonglong)CurCurve);
-                 //   m_curve_conf->removeCurves( );
+                   m_curve_conf->removeCurves( );
                    m_curve_conf->addCurve( CurCurve );
                   // m_WidedAct->setData((qlonglong)CurCurve);
                     qDebug("2 %x",(qlonglong)CurCurve);
