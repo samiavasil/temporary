@@ -4,18 +4,27 @@
 CurveConfigurationMenu::CurveConfigurationMenu(QWidget *parent) :
     QMenu(parent)
 {
-
-    QAction* act = new QAction( "TP1", this );
-    addAction( act );
-    act = new QAction( "TP2", this );
-    addAction( act );
+    m_actSetCurrent = new QAction( "Current Line", this );
+    m_actSetCurrent->setCheckable(true);
+    m_actSetCurrent->setChecked(true);
+    addAction( m_actSetCurrent );
+    m_actVisible = new QAction( "Visible", this );
+    m_actVisible->setCheckable(true);
+    m_actVisible->setChecked(true);
+    addAction( m_actVisible );
     m_WidedAct = new QWidgetAction( this );
     m_curve_conf = new CurveConfigurator( this, true );
     m_WidedAct->setDefaultWidget(m_curve_conf);
-
-    //  m_WidedAct->setCheckable(true);
-  //  m_WidedAct->setChecked(true);
     addAction(m_WidedAct);
+    connect( m_actSetCurrent, SIGNAL( triggered() ) , this, SLOT( setCurent() ) );
+    connect( m_actVisible   , SIGNAL( toggled(bool)), this, SLOT(setVisible( bool )) );
+}
+
+void CurveConfigurationMenu::setVisible( bool visible ){
+
+}
+
+void CurveConfigurationMenu::setCurent(){
 
 }
 

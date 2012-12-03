@@ -60,12 +60,7 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
 {
     m_AutoUpdate = auto_update;
     ui->setupUi(this);
-
-    //   ui->curvesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->curvesTable->clear();
-
-    // ui->curvesTable->horizontalHeader()->setStretchLastSection( true );
-
     ui->curvesTable->setColumnCount(4);
     QStringList header_list;
     header_list << "Line Name" << "Line Color"<<"Line Style"<<"Line Symbol Style";
@@ -76,11 +71,6 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     QPalette palete = ui->curvesTable->palette();
     palete.setColor( QPalette::Background,QColor(255,0,0) );
     ui->curvesTable->setBackgroundRole ( QPalette::NoRole );
-
-    //connect(ui->curvesTable,SIGNAL(cellPressed(int,int)),this,SLOT(cellPressed(int,int)));
-    //setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //resize(QSize(300,500));//ui->curvesTable->size());
-
 }
 
 
@@ -226,20 +216,6 @@ void CurveConfigurator::updateConfigurator()
     }
 
     ui->curvesTable->resizeColumnsToContents();
-    //layout()->update();
-    //  updateGeometry();
-    //ui->curvesTable->adjustSize();
-
-    //resize( QSize(400,400));
-    //adjustSize();
-    /*
-    ui->availablePlugins->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->availablePlugins,SIGNAL(itemChanged(QTableWidgetItem*) ),this, SLOT(listSelectionChanged(QTableWidgetItem*)));
-    connect(this,SIGNAL(reload()) ,this, SLOT(reloadPlugins()));
-    connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
-    */
-    //resize(QSize(1000,1000));//ui->curvesTable->size());
     qDebug()<<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
               ui->curvesTable->sizeHint();
 }
@@ -263,16 +239,6 @@ void CurveConfigurator::cellPressed( int r, int c ){
                 }
             }
         }
-
-        //        if( LINE_NAME_COL == c ){
-        //            QColorDialog color( curve->pen().color(), this );
-        //            if( QDialog::Accepted == color.exec() ){
-        //                ui->curvesTable->item(r,c)->setBackgroundColor( color.selectedColor() );
-        //                if( m_AutoUpdate ){
-        //                    applyChanges();
-        //                }
-        //            }
-        //        }
     }
 }
 

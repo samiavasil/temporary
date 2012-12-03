@@ -15,9 +15,14 @@ signals:
 public slots:
     void setCurentCurve();
 
+protected slots:
+    void setCurent();
+    void setVisible(bool visible);
 protected:
     CurveConfigurator* m_curve_conf;
     QWidgetAction* m_WidedAct;
+     QAction* m_actSetCurrent;
+     QAction* m_actVisible;
 };
 
 #endif // CURVECONFIGURATIONMENU_H
