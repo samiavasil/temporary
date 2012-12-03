@@ -5,6 +5,7 @@
 #include <QList>
 #include "qwt/qwt_plot_curve.h"
 
+class QTableWidgetItem;
 namespace Ui {
 class CurveConfigurator;
 }
@@ -29,6 +30,7 @@ protected:
 virtual  QSize sizeHint() const;
 protected slots:
     void cellPressed(int r,int c );
+    void cellPressed(QTableWidgetItem* );
 protected:
     QList<QwtPlotCurve*> m_Curves;
     bool m_AutoUpdate;

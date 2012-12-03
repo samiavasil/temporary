@@ -56,7 +56,8 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
     static int i;
     QwtPlotCurve* curve = m_Plot->m_CurCurve;
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
-
+ if(  obj == m_Plot->ui->PlotQwt->canvas() )
+ {
     if ( event->type() == QEvent::MouseButtonDblClick ) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if( Qt::LeftButton == mouseEvent->button() ){
@@ -70,6 +71,7 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
             if( Qt::RightButton == mouseEvent->button() ){
                 emit showPopupMenu( mouseEvent->globalPos() );
+                i++;
                 return true;
             }
         }
@@ -131,11 +133,12 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                 ((QPoint*)(&(mouseEvent->pos())))->setX(x);
             }
             // standard event processing
-            return QObject::eventFilter(obj, mouseEvent);
+            return obj->eventFilter(obj, mouseEvent);
         }
 
     }
-    return QObject::eventFilter(obj, event);
+}
+    return obj->eventFilter(obj, event);
 
 }
 
