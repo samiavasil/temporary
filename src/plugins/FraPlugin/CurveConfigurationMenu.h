@@ -11,18 +11,21 @@ public:
     explicit CurveConfigurationMenu(QWidget *parent = 0);
     
 signals:
-    
+    void setAsCurrent( QwtPlotCurve*  );
 public slots:
-    void setCurentCurve();
+    void setMenuCurve();
 
 protected slots:
     void setCurent();
-    void setVisible(bool visible);
+    void setVisibleLine(bool visible);
+protected:
+    virtual void mousePressEvent ( QMouseEvent * event );
 protected:
     CurveConfigurator* m_curve_conf;
     QWidgetAction* m_WidedAct;
-     QAction* m_actSetCurrent;
-     QAction* m_actVisible;
+    QAction* m_actSetCurrent;
+    QAction* m_actVisible;
+    QwtPlotCurve* m_curCurve;
 };
 
 #endif // CURVECONFIGURATIONMENU_H

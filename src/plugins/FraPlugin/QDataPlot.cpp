@@ -472,6 +472,7 @@ int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
             m_picker->setRubberBandPen ( curve->pen().color() );
             m_picker->setTrackerPen ( curve->pen().color() );
             ret = 0;
+            break;
         }
     }
     return ret;
@@ -499,20 +500,21 @@ void QDataPlot::showPopupMenu( const QPoint &pos ){
     }
     menu.addAction( action  );
     CurveConfigurationMenu* men   = new CurveConfigurationMenu(&menu);
+    connect(men, SIGNAL(setAsCurrent(QwtPlotCurve*)),this,SLOT(setCurrentCurve(QwtPlotCurve*)) );
     QwtPlotCurve* curve;
     QMapIterator<QDataPlot::lineId_t, QwtPlotCurve*> it( m_CurveMap );
     while( it.hasNext() )
     {
         it.next();
         curve = it.value();
-        if( curve&&curve->isVisible() ){
+        if( curve ){
             action = new QAction( curve->title().text(), &menu );
             if( curve == m_CurCurve ){
                 action->setCheckable(true);
                 action->setChecked(true);
             }
             action->setData((qlonglong)curve);
-            connect( action, SIGNAL(hovered()), men, SLOT( setCurentCurve()) ,Qt::QueuedConnection );
+            connect( action, SIGNAL(hovered()), men, SLOT( setMenuCurve()) ,Qt::QueuedConnection );
             action->setMenu( men );
             menu.addAction( action  );
 
@@ -521,7 +523,7 @@ void QDataPlot::showPopupMenu( const QPoint &pos ){
             qDebug("Misterious NULL Pointer");
         }
     }
-    //connect( men, SIGNAL( aboutToShow() ), men, SLOT( setCurentCurve() ),Qt::QueuedConnection );
+    //connect( men, SIGNAL( aboutToShow() ), men, SLOT( setMenuCurve() ),Qt::QueuedConnection );
     menu.exec(pos);
 }
 

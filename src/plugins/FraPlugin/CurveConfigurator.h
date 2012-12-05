@@ -25,9 +25,12 @@ public:
         m_AutoUpdate = auto_update;
     }
     void removeCurves( );
+    QList<QwtPlotCurve*> getCurvesList( ){
+       return m_Curves;
+    }
 protected:
     void updateConfigurator();
-virtual  QSize sizeHint() const;
+    virtual  QSize sizeHint() const;
 protected slots:
     void cellPressed(int r,int c );
     void cellPressed(QTableWidgetItem* );

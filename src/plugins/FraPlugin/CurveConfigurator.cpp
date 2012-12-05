@@ -71,6 +71,7 @@ CurveConfigurator::CurveConfigurator(QWidget *parent, bool auto_update) :
     QPalette palete = ui->curvesTable->palette();
     palete.setColor( QPalette::Background,QColor(255,0,0) );
     ui->curvesTable->setBackgroundRole ( QPalette::NoRole );
+
 }
 
 
@@ -102,7 +103,7 @@ int CurveConfigurator::addCurve( QwtPlotCurve* curve ){
         }
         ret = 0;
     }
-    connect(ui->curvesTable,SIGNAL(itemPressed(QTableWidgetItem*)),this, SLOT(cellPressed(QTableWidgetItem*)),Qt::UniqueConnection);
+    connect(ui->curvesTable,SIGNAL(itemPressed(QTableWidgetItem*)),this, SLOT(cellPressed(QTableWidgetItem*)),Qt::DirectConnection/*+Qt::UniqueConnection*/);
     return ret;
 }
 
@@ -126,7 +127,6 @@ void CurveConfigurator::removeCurves( ){
         }
         ui->curvesTable->removeRow(0);
     }
-    //connect(ui->curvesTable,SIGNAL(cellActivated(int,int)),SLOT(cellPressed(int,int)),Qt::UniqueConnection);
 }
 
 void CurveConfigurator::updateConfigurator()
@@ -221,9 +221,7 @@ void CurveConfigurator::updateConfigurator()
 }
 
 void CurveConfigurator::cellPressed(QTableWidgetItem* item){
-
     cellPressed( ui->curvesTable->row(item) , ui->curvesTable->column(item) );
-
 }
 
 void CurveConfigurator::cellPressed( int r, int c ){
