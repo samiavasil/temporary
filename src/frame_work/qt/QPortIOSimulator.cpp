@@ -54,12 +54,16 @@ int64 QPortIOSimulator::write(const char * data, const qint64 len) {
   return len;                       
 }
 
+int64 QPortIOSimulator::write( const char * data ){
+    return write( data, strlen(data) );
+}
+
 int QPortIOSimulator::open() {
   return 0;
 }
 
-int QPortIOSimulator::close() {
-  return 0;
+void QPortIOSimulator::close() {
+
 }
 
 void QPortIOSimulator::readyReadSignal() {

@@ -1,41 +1,95 @@
-
 #include "qt/QSerialPortIO.h"
+#include "ui_serial_port.h"
+#include <QDialog>
+#include "qextserialenumerator.h"
 
-QSerialPortIO::QSerialPortIO() {
-  DEBUG("Create QSerialPortIO");
-  m_PortType = SERIALPORT_IO;
+
+QSerialPortIO::QSerialPortIO(QextSerialPort::QueryMode mode):m_Serial( mode ),ui(new Ui::SerialPortConfig) {
+    DEBUG("Create QSerialPortIO");
+    m_PortType = SERIALPORT_IO;
+    connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );
 }
 
 QSerialPortIO::~QSerialPortIO() {
-  DEBUG("Destroy QPortIO");
+    DEBUG("Destroy QPortIO");
+
 }
 
-int64 QSerialPortIO::bytesAvailable() {
-  DEBUG("TODO: TBI ");
-  return 0;
+void QSerialPortIO::dataReady(){
+    emit readyReadSignal();
+}
+//#define stringify( name ) # name
+void QSerialPortIO::initUi(){
+    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    foreach (QextPortInfo info, ports) {
+        qDebug() << "port name:"       << info.portName;
+        qDebug() << "friendly name:"   << info.friendName;
+        qDebug() << "physical name:"   << info.physName;
+        qDebug() << "enumerator name:" << info.enumName;
+        qDebug() << "vendor ID:"       << info.vendorID;
+        qDebug() << "product ID:"      << info.productID;
+        ui->portCombo->addItem( info.physName );
+        //ui->queryModeCombo->setItemData();
+    }
+    connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )) );
+    connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) )    );
+    connect( ui->baudRateCombo,    SIGNAL(activated(QString)), this, SLOT( setBaudRate(BaudRateType))   );
+    connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(ParityType) )      );
+    connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(StopBitsType) )  );
+    connect( ui->flowControlCombo, SIGNAL(activated(QString)), this, SLOT( setFlowControl(FlowType))    );
+    connect( ui->timeoutSpin,      SIGNAL(activated(int)),     this, SLOT( setTimeout(long) )           );
+
 }
 
-int64 QSerialPortIO::read(char * data, const int64 maxlen) {
-  DEBUG("TODO: TBI %x %lld",(unsigned int)data,maxlen);
-   return 0;
+
+/*
+void QSerialPortIO::setPortName( const QString portName ){
+
+}
+*/
+void QSerialPortIO::setQueryMode( int act ){
+    setQueryMode( (QueryMode)ui->queryModeCombo->itemData( act ).toInt() );
 }
 
-int64 QSerialPortIO::write(const char * data, const qint64 len) {
-  DEBUG("TODO: TBI %x %lld",(unsigned int)data,len);
-   return 0;
+void QSerialPortIO::setBaudRate( int rate ){
+    setBaudRate((BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
 }
 
-int QSerialPortIO::open() {
-  DEBUG("TODO: TBI ");
-  return 0;
+void QSerialPortIO::setParity(ParityType){
+
 }
 
-int QSerialPortIO::close() {
-  DEBUG("TODO: TBI ");
-   return 0;
+void QSerialPortIO::setStopBits(StopBitsType){
+
 }
 
-void QSerialPortIO::readyReadSignal() {
-  DEBUG("TODO: TBI ");
+void QSerialPortIO::setFlowControl(FlowType){
+
 }
+
+void QSerialPortIO::setTimeout(long){
+
+}
+
+
+
+
+
+
+
+
+
+void QSerialPortIO::showPortConfiguration( QWidget* parent ){
+    if( parent ){
+       ui->setupUi( parent );
+       initUi();
+    }
+    else{
+        QDialog dlg;
+        ui->setupUi(&dlg);
+        initUi();
+        dlg.exec();
+    }
+}
+
 

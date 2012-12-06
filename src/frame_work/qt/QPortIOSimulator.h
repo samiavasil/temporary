@@ -23,10 +23,10 @@ Q_OBJECT
     virtual int64 read(char * data, const int64 maxlen);
 
     virtual int64 write(const char * data, const qint64 len);
-
+    virtual int64 write( const char * data );
     virtual int open();
 
-    virtual int close();
+    virtual void close();
 
     virtual void readyReadSignal();
 

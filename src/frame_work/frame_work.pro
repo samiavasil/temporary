@@ -22,7 +22,7 @@ include(../extlibs/qextserialport/src/qextserialport.pri)
 QEXTSERIALPORT_STATIC = yes
 
 # comment following line if you always want to enable "udev" under linux
-# QEXTSERIALPORT_WITH_UDEV = yes
+#QEXTSERIALPORT_WITH_UDEV = yes
 
 SOURCES += \
     base/CCommand.cpp \
@@ -98,4 +98,5 @@ unix:!symbian {
 }
 
 FORMS += \
-    qt/pluginlist.ui
+    qt/pluginlist.ui \
+    qt/serial_port.ui
