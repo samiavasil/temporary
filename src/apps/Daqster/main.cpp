@@ -110,6 +110,10 @@ void testBits(){
 #include"qt/QSerialPortIO.h"
 
 #include<QLayout>
+
+
+
+
 int main(int argc, char *argv[])
 {
     msg m;
@@ -118,14 +122,15 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     QSerialPortIO port;
-     //! [1]
-
+   //test::p;
     port.showPortConfiguration(NULL);
     if( port.open() ){
         const char* p = "Hello World";
         port.write(p);
         port.close();
     }
+
+
 
 #ifdef TEST_ENBL_BIT_TEST
     testBits();

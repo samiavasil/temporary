@@ -33,6 +33,6 @@ HEADERS  += mainwindow.h
 FORMS    += mainwindow.ui
 
 LIBS += -L../../../bin/libs  -lframe_work
-
+CCFLAG += -E
 RESOURCES += \
     icons.qrc
