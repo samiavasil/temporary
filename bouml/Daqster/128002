@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 77
+  revision 78
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -353,7 +353,6 @@ ${inlines}
 	
 	
       end
-
     end
 
     class 128002 "CFrameWork"
@@ -632,7 +631,6 @@ deallocate current factory and allocate new elements with new factory."
 	
 	
       end
-
     end
 
     class 194946 "CFrameWorkElementsFactory"

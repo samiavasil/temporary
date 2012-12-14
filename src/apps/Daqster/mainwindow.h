@@ -26,7 +26,7 @@ private slots:
     void on_actionHideMainMenu_triggered(bool checked);
 
     void on_actionSave_triggered();
-
+    void on_ready();
 protected:
     virtual void mouseMoveEvent ( QMouseEvent * event );
 protected:

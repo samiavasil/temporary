@@ -50,14 +50,15 @@ signals:
     void readyReadSignal();
 protected slots:
     void dataReady();
+    void setPortName( const QString portName );
     void setQueryMode( int act );
     void setBaudRate( int rate );
-    void setParity(ParityType);
-    void setStopBits(StopBitsType);
-    void setFlowControl(FlowType);
-    void setTimeout(long);
+    void setParity( int par );
+    void setStopBits(int );
+    void setFlowControl(int);
+    void setTimeout(int);
 protected:
-    QextSerialPort m_Serial;
+    QextSerialPort m_Serial; !!! Triabwa da stane taka!!! Parwo updeitni bouml-a
 private:
     Ui::SerialPortConfig *ui;
 };

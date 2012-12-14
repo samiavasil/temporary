@@ -6,8 +6,8 @@
 #define GET_NAME(x) #x
 
 typedef struct {
-     const char*  name;
-     BaudRateType value;
+    const char*  name;
+    BaudRateType value;
 } baud_rates_t;
 
 typedef struct {
@@ -38,17 +38,17 @@ typedef struct {
 
 const baud_rates_t supportedBaudRateType[]=
 {
-#if defined(Q_OS_UNIX) || defined(qdoc)
+    #if defined(Q_OS_UNIX) || defined(qdoc)
     {GET_NAME(BAUD50),   BAUD50},
     {GET_NAME(BAUD75),   BAUD75},
     {GET_NAME(BAUD134),  BAUD134},
     {GET_NAME(BAUD150),  BAUD150},
     {GET_NAME(BAUD200),  BAUD200},
     {GET_NAME(BAUD1800), BAUD1800},
-#  if defined(B76800) || defined(qdoc)
+    #  if defined(B76800) || defined(qdoc)
     {GET_NAME(BAUD76800), BAUD76800},
-#  endif
-#  if (defined(B230400) && defined(B4000000)) || defined(qdoc)
+    #  endif
+    #  if (defined(B230400) && defined(B4000000)) || defined(qdoc)
     {GET_NAME(BAUD230400), BAUD230400},
     {GET_NAME(BAUD460800), BAUD460800},
     {GET_NAME(BAUD500000), BAUD500000},
@@ -62,14 +62,14 @@ const baud_rates_t supportedBaudRateType[]=
     {GET_NAME(BAUD3000000),BAUD3000000},
     {GET_NAME(BAUD3500000),BAUD3500000},
     {GET_NAME(BAUD4000000),BAUD4000000},
-#  endif
-#endif //Q_OS_UNIX
-#if defined(Q_OS_WIN) || defined(qdoc)
+    #  endif
+    #endif //Q_OS_UNIX
+    #if defined(Q_OS_WIN) || defined(qdoc)
     {GET_NAME(BAUD14400) , BAUD14400 },
     {GET_NAME(BAUD56000) , BAUD56000 },
     {GET_NAME(BAUD128000), BAUD128000},
     {GET_NAME(BAUD256000), BAUD256000},
-#endif  //Q_OS_WIN
+    #endif  //Q_OS_WIN
     {GET_NAME(BAUD110)    , BAUD110 },
     {GET_NAME(BAUD300)    , BAUD300 },
     {GET_NAME(BAUD600)    , BAUD600 },
@@ -92,9 +92,9 @@ dataBits_t dataBitsArrea[] = {
 
 stopBits_t stopBitsArrea[] = {
     {GET_NAME(STOP_1)    , STOP_1 },
-#if defined(Q_OS_WIN) || defined(qdoc)
+    #if defined(Q_OS_WIN) || defined(qdoc)
     {GET_NAME(STOP_1_5)  , STOP_1_5 },
-#endif
+    #endif
     {GET_NAME(STOP_2)    , STOP_2 },
 };
 
@@ -109,9 +109,9 @@ parity_t parityArrea[]=
     {GET_NAME(PAR_NONE)     , PAR_NONE },
     {GET_NAME(PAR_ODD)      , PAR_ODD  },
     {GET_NAME(PAR_EVEN)     , PAR_EVEN },
-#if defined(Q_OS_WIN) || defined(qdoc)
+    #if defined(Q_OS_WIN) || defined(qdoc)
     {GET_NAME(PAR_MARK)     , PAR_MARK },
-#endif
+    #endif
     {GET_NAME(PAR_SPACE)     , PAR_SPACE },
 };
 
@@ -120,7 +120,6 @@ queryMode_t queryModeArrea[]=
     { "Polling"     , QextSerialPort::Polling     },
     { "EventDriven" , QextSerialPort::EventDriven },
 };
-
 
 QSerialPortIO::QSerialPortIO(QextSerialPort::QueryMode mode):m_Serial( mode ),ui(new Ui::SerialPortConfig) {
     DEBUG("Create QSerialPortIO");
@@ -136,7 +135,7 @@ QSerialPortIO::~QSerialPortIO() {
 void QSerialPortIO::dataReady(){
     emit readyReadSignal();
 }
-//#define stringify( name ) # name
+
 void QSerialPortIO::initUi(){
     int i;
     QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
@@ -180,23 +179,20 @@ void QSerialPortIO::initUi(){
         ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
     }
 
-    connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )) );
-    connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) )    );
+    connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )));
+    connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) ) );
+    connect( ui->baudRateCombo,    SIGNAL(activated(int)),     this, SLOT( setBaudRate(int))   );
+    connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(int) )    );
+    connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(int) )  );
+    connect( ui->flowControlCombo, SIGNAL(activated(int)), this, SLOT( setFlowControl(int))    );
+    connect( ui->timeoutSpin,      SIGNAL(valueChanged(int)),     this, SLOT( setTimeout(int) ));
 
-    connect( ui->baudRateCombo,    SIGNAL(activated(int)), this, SLOT( setBaudRate(int))   );
-    connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(ParityType) )      );
-    connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(StopBitsType) )  );
-    connect( ui->flowControlCombo, SIGNAL(activated(QString)), this, SLOT( setFlowControl(FlowType))    );
-    connect( ui->timeoutSpin,      SIGNAL(activated(int)),     this, SLOT( setTimeout(long) )           );
-  /**/
 }
 
-
-/*
 void QSerialPortIO::setPortName( const QString portName ){
-
+    QextSerialPort::setPortName( portName );
 }
-*/
+
 void QSerialPortIO::setQueryMode( int act ){
     QueryMode mode = (QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
     qDebug()<<mode;
@@ -204,37 +200,29 @@ void QSerialPortIO::setQueryMode( int act ){
 }
 
 void QSerialPortIO::setBaudRate( int rate ){
-    QextSerialPort::setBaudRate((BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
+    QextSerialPort::setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
 }
 
-void QSerialPortIO::setParity(ParityType){
-
+void QSerialPortIO::setParity( int par ){
+    QextSerialPort::setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
 }
 
-void QSerialPortIO::setStopBits(StopBitsType){
-
+void QSerialPortIO::setStopBits( int stop ){
+    QextSerialPort::setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
 }
 
-void QSerialPortIO::setFlowControl(FlowType){
-
+void QSerialPortIO::setFlowControl( int flow ){
+    QextSerialPort::setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
 }
 
-void QSerialPortIO::setTimeout(long){
-
+void QSerialPortIO::setTimeout( int timeout_Ms ){
+    QextSerialPort::setTimeout( timeout_Ms*1000 );
 }
-
-
-
-
-
-
-
-
 
 void QSerialPortIO::showPortConfiguration( QWidget* parent ){
     if( parent ){
-       ui->setupUi( parent );
-       initUi();
+        ui->setupUi( parent );
+        initUi();
     }
     else{
         QDialog dlg;

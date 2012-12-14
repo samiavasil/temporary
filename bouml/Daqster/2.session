@@ -8,9 +8,8 @@ end
 show_stereotypes
 selected class_ref 128002 // CFrameWork
 open
-  class_ref 128002 // CFrameWork
-  class_ref 142082 // QPacketCollector
-  deploymentview_ref 134530 // QTFrameWorkClassView
+  classview_ref 128002 // BaseFrameWorkClassView
+  classview_ref 134530 // QTFrameWorkClassView
   classview_ref 141058 // ExternalClassView
 end
 end

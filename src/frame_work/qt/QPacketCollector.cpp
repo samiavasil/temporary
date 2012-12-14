@@ -11,7 +11,7 @@ QPacketCollector::QPacketCollector(CFrameWork * cFwk):CPacketCollector( cFwk){
 QPacketCollector::~QPacketCollector() {
   DEBUG("Destroy QPacketCollector");
   while( m_PacketsList.count( ) ){
-      delete m_PacketsList[0];
+      delete m_PacketsList.takeFirst();
   }
 }
 

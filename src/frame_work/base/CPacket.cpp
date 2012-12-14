@@ -5,7 +5,8 @@
 CPacket::CPacket(const pack_id_t packType, int packLenBit) {
   DEBUG( "Create Packet[%d] - Bit size =%d",packType, packLenBit );                          
   m_packType        = packType;                                                              
-  m_packLenBits     = packLenBit;                                                            
+  m_packLenBits     = packLenBit;
+
   if( 0 < m_packLenBits ){                                                                   
     m_data = new u8[BITS_TO_BYTES_CEIL(m_packLenBits)];    
     memset( m_data,0,BITS_TO_BYTES_CEIL(m_packLenBits) );  

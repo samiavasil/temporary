@@ -162,9 +162,24 @@ void MainWindow::on_actionHideMainMenu_triggered(bool checked)
         menuBar()->show();
     }
 }
-
+#include"qt/QSerialPortIO.h"
+QSerialPortIO port;
 void MainWindow::on_actionSave_triggered()
 {
+#if 0
+
+
+   //test::p;
+    port.close();
+    if( port.open() ){
+        const char* p = "Hello World";
+        port.showPortConfiguration(NULL);
+        connect(&port,SIGNAL(readyRead()),this,SLOT(on_ready()));
+        //port.write(p);
+        //port.close();
+    }
+
+#else
     QList<QPluginDescriptor*> list = m_PluginList.getAllActivePlugins( UNDEFINED );
     for( int i = 0; i < list.count(); i++ ){
         QObject* obj;
@@ -175,5 +190,9 @@ void MainWindow::on_actionSave_triggered()
             dynamic_cast<QWidget*>(obj)->show();//DELL ME
         }
     }
-
+#endif
+}
+void MainWindow::on_ready(){
+    //port.bytesAvailable();
+    qDebug()<<port.readAll();
 }

@@ -47,7 +47,8 @@ SOURCES += \
     qt/QPluginDescriptor.cpp \
     qt/QPluginList.cpp \
     qt/QPluginObjectsInterface.cpp \
-    base/CControlView.cpp
+    base/CControlView.cpp \
+    qt/QPortIO.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -76,7 +77,8 @@ HEADERS +=\
     qt/interfaces.h \
     qt/frame_work_global.h \
     qt/QPluginObjectsInterface.h \
-    base/CControlView.h
+    base/CControlView.h \
+    qt/QPortIO.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

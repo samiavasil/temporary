@@ -14,7 +14,7 @@ pack_id_t pId[4]={
 
 QCommand::QCommand( QFrameWork * fWork ) {
   m_fWork = fWork;
-  a=0;         
+  a=0;
 }
 
 QCommand::~QCommand() {
@@ -28,7 +28,7 @@ int QCommand::handler() {
     int ret =  1;
     CPacket* packet = NULL;
     
-    if( a >= 0 ){
+    if( a >= 10000 ){
         ret =  0;
      //  DEBUG("QCommand Finished");
     }
@@ -54,9 +54,7 @@ int QCommand::handler() {
                 }
             }
         }
-        if(packet){
-            delete packet;
-        }
+
     }
     a++;
     return ret;
