@@ -65,7 +65,7 @@ int CFrameWork::attachElementsFactory(CFrameWorkElementsFactory * elementsFactor
       m_DataPlot    = m_ElementsFactory->createDataPlot();           
       m_Executor    = m_ElementsFactory->createCommandExecutor();    
       m_Protocol    = m_ElementsFactory->createProtocol();            
-      m_PortIO      = m_ElementsFactory->createPortIO(CPortIO::SERIALPORT_IO);//TODO FIX ME
+      m_PortIO      = m_ElementsFactory->createPortIO(CPortIO::SIMULATOR_IO);// SERIALPORT_IO TODO FIX ME
       m_Colector    = m_ElementsFactory->createPacketCollector(this);                                                               
   }                                                                  
   else{                                                              

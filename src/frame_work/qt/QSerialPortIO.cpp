@@ -190,33 +190,33 @@ void QSerialPortIO::initUi(){
 }
 
 void QSerialPortIO::setPortName( const QString portName ){
-    QextSerialPort::setPortName( portName );
+    m_Serial.setPortName( portName );
 }
 
 void QSerialPortIO::setQueryMode( int act ){
-    QueryMode mode = (QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
+    QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
     qDebug()<<mode;
-    QextSerialPort::setQueryMode( mode );
+    m_Serial.setQueryMode( mode );
 }
 
 void QSerialPortIO::setBaudRate( int rate ){
-    QextSerialPort::setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
+    m_Serial.setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
 }
 
 void QSerialPortIO::setParity( int par ){
-    QextSerialPort::setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
+    m_Serial.setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
 }
 
 void QSerialPortIO::setStopBits( int stop ){
-    QextSerialPort::setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
+    m_Serial.setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
 }
 
 void QSerialPortIO::setFlowControl( int flow ){
-    QextSerialPort::setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
+    m_Serial.setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
 }
 
 void QSerialPortIO::setTimeout( int timeout_Ms ){
-    QextSerialPort::setTimeout( timeout_Ms*1000 );
+    m_Serial.setTimeout( timeout_Ms*1000 );
 }
 
 void QSerialPortIO::showPortConfiguration( QWidget* parent ){

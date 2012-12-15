@@ -8,15 +8,16 @@
 #include <QByteArray>
 
 #include <QMutex>
+#include"qt/QPortIO.h"
 
 
-class QPortIOSimulator : public QObject, public CPortIO {
+class QPortIOSimulator : public QPortIO, public CPortIO {
 Q_OBJECT
 
   public:
     virtual ~QPortIOSimulator();
 
-    QPortIOSimulator();
+    QPortIOSimulator(QObject *parent = 0);
 
     virtual int64 bytesAvailable();
 
@@ -28,9 +29,9 @@ Q_OBJECT
 
     virtual void close();
 
-    virtual void readyReadSignal();
-
-
+    //virtual void readyReadSignal();
+signals:
+  void readyReadSignal();
   protected:
     void reloadSimulatorTask();
 
@@ -45,9 +46,6 @@ Q_OBJECT
     int m_WriteCounter;
 
     bool m_TaskRuned;
-
-signals:
-    void readyReadBytesSignal();
 
 protected slots:
     void simulatorTask();

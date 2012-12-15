@@ -10,7 +10,7 @@ public:
     explicit QPortIO(QObject *parent = 0);
     
 signals:
-    
+    void readyReadBytesSignal();
 public slots:
     
 };

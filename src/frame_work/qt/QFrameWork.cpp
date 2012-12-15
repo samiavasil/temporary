@@ -5,26 +5,35 @@
 #include "qt/QCommand.h"
 #include "qt/QCommandExecutor.h"
 #include "qt/QPortIOSimulator.h"
+#include "qt/QSerialPortIO.h"
 #include "qt/QPacketCollector.h"
 
 QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :QWidget( parent),CFrameWork( factory){
+
+    QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
+    QPortIO* port = dynamic_cast<QPortIO*> (m_PortIO);
+    if( port&&colect ){
+        connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
+    }
     if( m_PortIO && m_Colector ){
-        QPortIOSimulator* port = 0;
+
         switch( m_PortIO->type() ){
-        case SIMULATOR_IO:{
-            port = dynamic_cast<QPortIOSimulator*> (m_PortIO);
+        case CPortIO::SIMULATOR_IO:{
             break;
 
         }
-        case SERIALPORT_IO:{
-            port = dynamic_cast<QPortIOSimulator*> (m_PortIO);
+        case CPortIO::SERIALPORT_IO:{
+            if( port&&colect ){
+               /*DELL ME*/
+               ((QSerialPortIO*) port)->open();
+               ((QSerialPortIO*) port)->showPortConfiguration( NULL );
+            }
+
             break;
+
         }
         }
-        if( port ){
-            connect( port, SIGNAL(readyReadBytesSignal()),colect,SLOT(receivedBytesSlot()) );
-        }
-        QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
+
 
     }
 

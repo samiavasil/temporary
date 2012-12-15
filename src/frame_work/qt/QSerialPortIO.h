@@ -6,13 +6,15 @@
 
 #include "base/CPortIO.h"
 #include<qextserialport.h>
+#include"qt/QPortIO.h"
 
 namespace Ui {
   class SerialPortConfig;
 }
 
+class QextSerialPort;
 
-class QSerialPortIO : public QextSerialPort, public CPortIO {
+class QSerialPortIO : public QPortIO, public CPortIO {
 Q_OBJECT
 
   public:
@@ -20,34 +22,34 @@ Q_OBJECT
 
     ~QSerialPortIO();
     inline int64 bytesAvailable() {
-      return QextSerialPort::bytesAvailable();
+      return m_Serial.bytesAvailable();
     }
 
     inline int64 read(char * data, const int64 maxlen) {
-      return QextSerialPort::read( data, maxlen );
+      return m_Serial.read( data, maxlen );
     }
 
     inline int64 write(const char * data, const qint64 len) {
-      return QextSerialPort::write( data, len );
+      return m_Serial.write( data, len );
     }
 
     inline int64 write( const char * data ) {
-      return QextSerialPort::write( data );
+      return m_Serial.write( data );
     }
 
     inline int open() {
-      return QextSerialPort::open( QIODevice::ReadWrite );
+      return m_Serial.open( QIODevice::ReadWrite );
     }
 
     inline void close() {
-       QextSerialPort::close();
+       m_Serial.close();
     }/**/
     void showPortConfiguration( QWidget* parent );
-
-protected:
-    void initUi();
 signals:
     void readyReadSignal();
+protected:
+    void initUi();
+
 protected slots:
     void dataReady();
     void setPortName( const QString portName );
@@ -58,7 +60,7 @@ protected slots:
     void setFlowControl(int);
     void setTimeout(int);
 protected:
-    QextSerialPort m_Serial; !!! Triabwa da stane taka!!! Parwo updeitni bouml-a
+    QextSerialPort m_Serial;
 private:
     Ui::SerialPortConfig *ui;
 };

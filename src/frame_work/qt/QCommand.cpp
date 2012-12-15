@@ -13,12 +13,12 @@ pack_id_t pId[4]={
 };
 
 QCommand::QCommand( QFrameWork * fWork ) {
-  m_fWork = fWork;
-  a=0;
+    m_fWork = fWork;
+    a=0;
 }
 
 QCommand::~QCommand() {
-  DEBUG("QCommand Deleted");
+    DEBUG("QCommand Deleted");
 }
 
 /**
@@ -28,9 +28,9 @@ int QCommand::handler() {
     int ret =  1;
     CPacket* packet = NULL;
     
-    if( a >= 10000 ){
+    if( a >= 10 ){
         ret =  0;
-     //  DEBUG("QCommand Finished");
+        //  DEBUG("QCommand Finished");
     }
     else{
         if( 1 ){//a == 0 ){
@@ -43,16 +43,21 @@ int QCommand::handler() {
         if( m_fWork&&packet ){
             CPacketCollector* colector = m_fWork->getColector();
             if( colector ){
-                colector->transmitPacket( packet );
-                DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
-                if( packet ){
-                    const u8*data = packet->data();
-                    for( int i=0;i < packet->packLenBytes();i++ ){
-                        fprintf(stderr," %02x",data[i]);
+                if( 0 < colector->transmitPacket( packet ) ){
+                    DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
+                    if( packet ){
+                        const u8*data = packet->data();
+                        for( int i=0;i < packet->packLenBytes();i++ ){
+                            fprintf(stderr," %02x",data[i]);
+                        }
+                        fprintf(stderr,"\n\n");
                     }
-                    fprintf(stderr,"\n\n");
+                }
+                else{
+                    DEBUG("!!!TRANSMIT ERRORR: PACKET[%d] num[%d]",packet->packType(),a);
                 }
             }
+
         }
 
     }

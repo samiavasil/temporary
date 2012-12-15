@@ -6,7 +6,7 @@
 QPortIOSimulator::~QPortIOSimulator() {
 }
 
-QPortIOSimulator::QPortIOSimulator() {
+QPortIOSimulator::QPortIOSimulator(QObject *parent):QPortIO(parent) {
   DEBUG("Create QPortIOSimulator");   
   m_PortType = SIMULATOR_IO;          
   qsrand ( qrand() );                 
@@ -66,9 +66,10 @@ void QPortIOSimulator::close() {
 
 }
 
+/*
 void QPortIOSimulator::readyReadSignal() {
   emit readyReadBytesSignal();
-}
+}*/
 
 void QPortIOSimulator::reloadSimulatorTask() {
   int randTime = (qrand()%5);
@@ -95,6 +96,6 @@ void QPortIOSimulator::simulatorTask() {
        m_TaskRuned = false;	 
   }                                                                             
   m_Mutex.unlock();                                                             
-  readyReadSignal();        
+  emit readyReadSignal();
 }
 
