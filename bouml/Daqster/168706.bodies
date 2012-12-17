@@ -1,17 +1,38 @@
 class QFrameWork
 !!!314498.cpp!!!	QFrameWork(in factory : QFrameWorkElementsFactory, in parent : QWidget = 0)
-  if( m_PortIO && m_Colector ){
-      QPortIOSimulator* port            = dynamic_cast<QPortIOSimulator*> (m_PortIO);
-      QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
-      connect( port, SIGNAL(readyReadBytesSignal()),colect,SLOT(receivedBytesSlot()) );
-  }
+QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
+QPortIO* port = dynamic_cast<QPortIO*> (m_PortIO);
+if( port&&colect ){
+    connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
+}
+if( m_PortIO && m_Colector ){ 
+   /*TODO: DELL ME FIX ME - remove dependancy from port type*/
+    switch( m_PortIO->type() ){
+    case CPortIO::SIMULATOR_IO:{
+        break;
 
-  if( m_Executor ){
-      QCommand* comm = new QCommand(this); 
-      m_Executor->appendCommand(comm);     
-      /*TODO FIX ME*/                      
-      sleep(1);                            
-      m_Executor->pauseExecution(false);   
-  }
+    }
+    case CPortIO::SERIALPORT_IO:{
+        if( port&&colect ){
+           /*DELL ME*/
+           ((QSerialPortIO*) port)->open();
+           ((QSerialPortIO*) port)->showPortConfiguration( NULL );
+        }
+
+        break;
+
+    }
+    }
+
+
+}
+
+if( m_Executor ){
+    /*QCommand* comm = new QCommand(this);
+    m_Executor->appendCommand(comm);
+    TODO FIX ME
+    sleep(1);
+    m_Executor->pauseExecution(false);   */
+}
 !!!434690.cpp!!!	~QFrameWork()
-qDebug("Destroy QFrameWork");
+DEBUG("Destroy QFrameWork");

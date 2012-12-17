@@ -1,6 +1,6 @@
 format 76
 "External" // External
-  revision 9
+  revision 10
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -120,6 +120,19 @@ format 76
       
     end
 
+    class 241410 "QDialog"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
     class 188418 "QWidget"
       visibility package 
       cpp_external cpp_decl "${name}
@@ -176,6 +189,32 @@ format 76
       visibility package 
       cpp_external cpp_decl "${name}
 #include <${name}>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 241282 "qextserialport"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}.h>
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 241538 "qextserialenumerator"
+      visibility package 
+      cpp_external cpp_decl "${name}
+#include <${name}.h>
 "
       java_decl ""
       php_decl ""

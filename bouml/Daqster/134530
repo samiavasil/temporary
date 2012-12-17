@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 76
+  revision 78
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -969,7 +969,7 @@ ${inlines}
       end
 
       operation 379138 "~QFrameWorkElementsFactory"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -1745,6 +1745,38 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      classrelation 304514 // <generalisation>
+	relation 304258 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 304514 // <generalisation>
+	  b parent class_ref 241154 // QPortIO
+      end
+
+      classrelation 304898 // <dependency>
+	relation 304642 -_->
+	  a package
+	    cpp default "#include in header"
+	    classrelation_ref 304898 // <dependency>
+	  b parent class_ref 241282 // qextserialport
+      end
+
+      classrelation 305026 // <dependency>
+	relation 304770 -_->
+	  a package
+	    cpp default "#include in source"
+	    classrelation_ref 305026 // <dependency>
+	  b parent class_ref 241410 // QDialog
+      end
+
+      classrelation 305154 // <dependency>
+	relation 304898 -_->
+	  a package
+	    cpp default "#include in source"
+	    classrelation_ref 305154 // <dependency>
+	  b parent class_ref 241538 // qextserialenumerator
+      end
+
       extra_member 167426 "Q_OBJECT"
 	
 	cpp "Q_OBJECT
@@ -1755,28 +1787,14 @@ ${inlines}
 	idl ""
       end
 
-      classrelation 236674 // <generalisation>
-	relation 236674 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 236674 // <generalisation>
-	  b parent class_ref 142210 // QObject
-      end
-
-      classrelation 236802 // <generalisation>
-	relation 236802 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 236802 // <generalisation>
-	  b parent class_ref 128386 // CPortIO
-      end
-
       operation 379522 "QSerialPortIO"
 	public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} :QPortIO(${p0}){
   ${body}}
 "
 	
@@ -1799,8 +1817,23 @@ ${inlines}
 	
       end
 
+      operation 470914 "showPortConfiguration"
+	public explicit_return_type "void"
+	nparams 1
+	  param in name "parent" explicit_type "QWidget"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 378242 "bytesAvailable"
-	cpp_virtual public explicit_return_type "int64"
+	cpp_inline public explicit_return_type "int64"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1814,7 +1847,7 @@ ${inlines}
       end
 
       operation 378370 "read"
-	cpp_virtual public explicit_return_type "int64"
+	cpp_inline public explicit_return_type "int64"
 	nparams 2
 	  param in name "data" explicit_type "char"
 	  param in name "maxlen" explicit_type "int64"
@@ -1830,7 +1863,7 @@ ${inlines}
       end
 
       operation 378498 "write"
-	cpp_virtual public explicit_return_type "int64"
+	cpp_inline public explicit_return_type "int64"
 	nparams 2
 	  param in name "data" explicit_type "char"
 	  param in name "len" explicit_type "qint64"
@@ -1845,8 +1878,23 @@ ${inlines}
 	
       end
 
+      operation 469634 "write"
+	cpp_inline public explicit_return_type "int64"
+	nparams 1
+	  param in name "data" explicit_type "char"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 378626 "open"
-	cpp_virtual public explicit_return_type "int"
+	cpp_inline public explicit_return_type "int"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1860,7 +1908,7 @@ ${inlines}
       end
 
       operation 378754 "close"
-	public explicit_return_type "int"
+	cpp_inline public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1873,8 +1921,29 @@ ${inlines}
 	
       end
 
+      extra_member 213506 "signals:"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
       operation 378882 "readyReadSignal"
 	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 469762 "initUi"
+	protected explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -1885,6 +1954,155 @@ ${inlines}
 	
 	
 	
+      end
+
+      extra_member 213634 "protected slots:"
+	
+	cpp "protected slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 469890 "dataReady"
+	protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470018 "setPortName"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "portName" explicit_type "QString"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} & ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} & ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470146 "setQueryMode"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "act" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470274 "setBaudRate"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "rate" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470402 "setParity"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "par" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470530 "setStopBits"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "stop" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470658 "setFlowControl"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "flow" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 470786 "setTimeout"
+	protected explicit_return_type "void"
+	nparams 1
+	  param in name "timeout_Ms" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      attribute 248066 "ui"
+	private explicit_type "Ui::SerialPortConfig *"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 247938 "m_Serial"
+	protected explicit_type "QextSerialPort"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
       end
     end
 
@@ -1900,22 +2118,6 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      classrelation 256642 // <generalisation>
-	relation 256642 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 256642 // <generalisation>
-	  b parent class_ref 142210 // QObject
-      end
-
-      classrelation 256770 // <generalisation>
-	relation 256770 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 256770 // <generalisation>
-	  b parent class_ref 128386 // CPortIO
-      end
-
       classrelation 263298 // <dependency>
 	relation 263298 -_->
 	  a package
@@ -1934,12 +2136,14 @@ ${inlines}
 	idl ""
       end
 
-      operation 456578 "~QPortIOSimulator"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+      operation 386562 "QPortIOSimulator"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw}:QPortIO( ${p0} ) {
   ${body}}
 "
 	
@@ -1948,10 +2152,10 @@ ${inlines}
 	
       end
 
-      operation 386562 "QPortIOSimulator"
-	public explicit_return_type ""
+      operation 456578 "~QPortIOSimulator"
+	cpp_virtual public explicit_return_type ""
 	nparams 0
-	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
@@ -2008,6 +2212,21 @@ ${inlines}
 	
       end
 
+      operation 471042 "write"
+	cpp_virtual public explicit_return_type "int64"
+	nparams 1
+	  param in name "data" explicit_type "char"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}const ${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 393474 "open"
 	cpp_virtual public explicit_return_type "int"
 	nparams 0
@@ -2023,7 +2242,7 @@ ${inlines}
       end
 
       operation 393602 "close"
-	cpp_virtual public explicit_return_type "int"
+	cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -2036,13 +2255,20 @@ ${inlines}
 	
       end
 
-      operation 393730 "readyReadSignal"
-	cpp_virtual public explicit_return_type "void"
+      extra_member 187010 "signals"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 400770 "readyReadSignal"
+	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
 "
 	
 	
@@ -2124,27 +2350,6 @@ ${inlines}
 	idl_decl ""
       end
 
-      extra_member 187010 "signals"
-	
-	cpp "signals:
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
-      operation 400770 "readyReadBytesSignal"
-	protected explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-	
-	
-      end
-
       extra_member 187138 "protected slots"
 	
 	cpp "protected slots:
@@ -2167,6 +2372,14 @@ ${inlines}
 	
 	
 	
+      end
+
+      classrelation 304642 // <generalisation>
+	relation 304386 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 304642 // <generalisation>
+	  b parent class_ref 241154 // QPortIO
       end
     end
 
@@ -2381,16 +2594,6 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      extra_member 213506 "Q_OBJECT"
-	
-	cpp "Q_OBJECT
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
       operation 442114 "~QPluginObjectsInterface"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -2462,6 +2665,82 @@ ${inlines}
 	python_decl ""
 	idl_decl ""
       end
+    end
+
+    class 241154 "QPortIO"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 304258 // <generalisation>
+	relation 304002 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 304258 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
+
+      classrelation 304386 // <generalisation>
+	relation 304130 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 304386 // <generalisation>
+	  b parent class_ref 128386 // CPortIO
+      end
+
+      extra_member 213890 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 471170 "QPortIO"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} :QObject(parent){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 213762 "signals:"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 471298 "readyReadBytesSignal"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
     end
   end
 
@@ -2779,14 +3058,138 @@ ${namespace_end}"
 ${comment}
 ${includes}
 ${declarations}
+
 ${namespace_start}
+namespace Ui {
+  class SerialPortConfig;
+}
+
 ${definition}
 ${namespace_end}
 #endif
 "
       cpp_src "${comment}
 ${includes}
+#include \"ui_serial_port.h\"
 ${namespace_start}
+#define GET_NAME(x) #x
+
+typedef struct {
+    const char*  name;
+    BaudRateType value;
+} baud_rates_t;
+
+typedef struct {
+    const char*  name;
+    DataBitsType value;
+} dataBits_t;
+
+typedef struct {
+    const char* name;
+    ParityType  value;
+} parity_t;
+
+typedef struct {
+    const char*  name;
+    StopBitsType value;
+} stopBits_t;
+
+typedef struct {
+    const char*  name;
+    FlowType     value;
+} flowType_t;
+
+typedef struct {
+    const char*  name;
+    QextSerialPort::QueryMode value;
+} queryMode_t;
+
+
+const baud_rates_t supportedBaudRateType[]=
+{
+    #if defined(Q_OS_UNIX) || defined(qdoc)
+    {GET_NAME(BAUD50),   BAUD50},
+    {GET_NAME(BAUD75),   BAUD75},
+    {GET_NAME(BAUD134),  BAUD134},
+    {GET_NAME(BAUD150),  BAUD150},
+    {GET_NAME(BAUD200),  BAUD200},
+    {GET_NAME(BAUD1800), BAUD1800},
+    #  if defined(B76800) || defined(qdoc)
+    {GET_NAME(BAUD76800), BAUD76800},
+    #  endif
+    #  if (defined(B230400) && defined(B4000000)) || defined(qdoc)
+    {GET_NAME(BAUD230400), BAUD230400},
+    {GET_NAME(BAUD460800), BAUD460800},
+    {GET_NAME(BAUD500000), BAUD500000},
+    {GET_NAME(BAUD576000), BAUD576000},
+    {GET_NAME(BAUD921600), BAUD921600},
+    {GET_NAME(BAUD1000000),BAUD1000000},
+    {GET_NAME(BAUD1152000),BAUD1152000},
+    {GET_NAME(BAUD1500000),BAUD1500000},
+    {GET_NAME(BAUD2000000),BAUD2000000},
+    {GET_NAME(BAUD2500000),BAUD2500000},
+    {GET_NAME(BAUD3000000),BAUD3000000},
+    {GET_NAME(BAUD3500000),BAUD3500000},
+    {GET_NAME(BAUD4000000),BAUD4000000},
+    #  endif
+    #endif //Q_OS_UNIX
+    #if defined(Q_OS_WIN) || defined(qdoc)
+    {GET_NAME(BAUD14400) , BAUD14400 },
+    {GET_NAME(BAUD56000) , BAUD56000 },
+    {GET_NAME(BAUD128000), BAUD128000},
+    {GET_NAME(BAUD256000), BAUD256000},
+    #endif  //Q_OS_WIN
+    {GET_NAME(BAUD110)    , BAUD110 },
+    {GET_NAME(BAUD300)    , BAUD300 },
+    {GET_NAME(BAUD600)    , BAUD600 },
+    {GET_NAME(BAUD1200)   , BAUD1200 },
+    {GET_NAME(BAUD2400)   , BAUD2400 },
+    {GET_NAME(BAUD4800)   , BAUD4800 },
+    {GET_NAME(BAUD9600)   , BAUD9600 },
+    {GET_NAME(BAUD19200)  , BAUD19200 },
+    {GET_NAME(BAUD38400)  , BAUD38400 },
+    {GET_NAME(BAUD57600)  , BAUD57600 },
+    {GET_NAME(BAUD115200) , BAUD115200 },
+};
+
+dataBits_t dataBitsArrea[] = {
+    {GET_NAME(DATA_5)    , DATA_5 },
+    {GET_NAME(DATA_6)    , DATA_6 },
+    {GET_NAME(DATA_7)    , DATA_7 },
+    {GET_NAME(DATA_8)    , DATA_8 },
+};
+
+stopBits_t stopBitsArrea[] = {
+    {GET_NAME(STOP_1)    , STOP_1 },
+    #if defined(Q_OS_WIN) || defined(qdoc)
+    {GET_NAME(STOP_1_5)  , STOP_1_5 },
+    #endif
+    {GET_NAME(STOP_2)    , STOP_2 },
+};
+
+flowType_t flowTypeArrea[] = {
+    {GET_NAME(FLOW_OFF)     , FLOW_OFF },
+    {GET_NAME(FLOW_HARDWARE), FLOW_HARDWARE },
+    {GET_NAME(FLOW_XONXOFF) , FLOW_XONXOFF },
+};
+
+parity_t parityArrea[]=
+{
+    {GET_NAME(PAR_NONE)     , PAR_NONE },
+    {GET_NAME(PAR_ODD)      , PAR_ODD  },
+    {GET_NAME(PAR_EVEN)     , PAR_EVEN },
+    #if defined(Q_OS_WIN) || defined(qdoc)
+    {GET_NAME(PAR_MARK)     , PAR_MARK },
+    #endif
+    {GET_NAME(PAR_SPACE)     , PAR_SPACE },
+};
+
+queryMode_t queryModeArrea[]=
+{
+    { \"Polling\"     , QextSerialPort::Polling     },
+    { \"EventDriven\" , QextSerialPort::EventDriven },
+};
+
 ${members}
 ${namespace_end}"
       associated_classes
@@ -2918,6 +3321,29 @@ ${namespace_end}
 "
       associated_classes
 	class_ref 228098 // QPluginObjectsInterface
+      end
+    end
+
+    artifact 201730 "QPortIO"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 241154 // QPortIO
       end
     end
   end

@@ -2,7 +2,7 @@
 #include "base/CPortIO.h"
 
 CPortIO::CPortIO() {
-    m_PortType = UNDEFINED_IO;
+  m_PortType = UNDEFINED_IO;
 }
 
 CPortIO::~CPortIO() {

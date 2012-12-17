@@ -9,7 +9,6 @@
 
 #include "interfaces.h"
 class FRAME_WORKSHARED_EXPORT QPluginObjectsInterface : public plugin_interface{
-
   public:
     virtual ~QPluginObjectsInterface();
 

@@ -1,5 +1,5 @@
 class QPortIOSimulator
-!!!386562.cpp!!!	QPortIOSimulator()
+!!!386562.cpp!!!	QPortIOSimulator(in parent : QObject = 0)
 DEBUG("Create QPortIOSimulator");   
 m_PortType = SIMULATOR_IO;          
 qsrand ( qrand() );                 
@@ -39,12 +39,12 @@ if( false == m_TaskRuned ){
 m_WriteCounter += len;            
 m_Mutex.unlock();                 
 return len;                       
+!!!471042.cpp!!!	write(in data : char) : int64
+return write( data, strlen(data) );
 !!!393474.cpp!!!	open() : int
 return 0;
-!!!393602.cpp!!!	close() : int
-return 0;
-!!!393730.cpp!!!	readyReadSignal() : void
-emit readyReadBytesSignal();
+!!!393602.cpp!!!	close() : void
+
 !!!400386.cpp!!!	reloadSimulatorTask() : void
 int randTime = (qrand()%5);
 QTimer::singleShot( randTime, this, SLOT(simulatorTask()));
@@ -68,4 +68,4 @@ else{
      m_TaskRuned = false;	 
 }                                                                             
 m_Mutex.unlock();                                                             
-readyReadSignal();        
+emit readyReadSignal();

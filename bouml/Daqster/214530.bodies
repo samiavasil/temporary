@@ -2,22 +2,97 @@ class QSerialPortIO
 !!!379522.cpp!!!	QSerialPortIO()
 DEBUG("Create QSerialPortIO");
 m_PortType = SERIALPORT_IO;
+connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );
 !!!379650.cpp!!!	~QSerialPortIO()
 DEBUG("Destroy QPortIO");
+!!!470914.cpp!!!	showPortConfiguration(in parent : QWidget)
+if( parent ){
+    ui->setupUi( parent );
+    initUi();
+}
+else{
+    QDialog dlg;
+    ui->setupUi(&dlg);
+    initUi();
+    dlg.exec();
+}
 !!!378242.cpp!!!	bytesAvailable() : int64
-DEBUG("TODO: TBI ");
-return 0;
+return m_Serial.bytesAvailable();
 !!!378370.cpp!!!	read(in data : char, in maxlen : int64) : int64
-DEBUG("TODO: TBI %x %lld",(unsigned int)data,maxlen);
- return 0;
+return m_Serial.read( data, maxlen );
 !!!378498.cpp!!!	write(in data : char, in len : qint64) : int64
-DEBUG("TODO: TBI %x %lld",(unsigned int)data,len);
- return 0;
+return m_Serial.write( data, len );
+!!!469634.cpp!!!	write(in data : char) : int64
+return m_Serial.write( data );
 !!!378626.cpp!!!	open() : int
-DEBUG("TODO: TBI ");
-return 0;
-!!!378754.cpp!!!	close() : int
-DEBUG("TODO: TBI ");
- return 0;
-!!!378882.cpp!!!	readyReadSignal() : void
-DEBUG("TODO: TBI ");
+return m_Serial.open( QIODevice::ReadWrite );
+!!!378754.cpp!!!	close() : void
+m_Serial.close();
+!!!469762.cpp!!!	initUi()
+int i;
+QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+foreach (QextPortInfo info, ports) {
+    qDebug() << "port name:"       << info.portName;
+    qDebug() << "friendly name:"   << info.friendName;
+    qDebug() << "physical name:"   << info.physName;
+    qDebug() << "enumerator name:" << info.enumName;
+    qDebug() << "vendor ID:"       << info.vendorID;
+    qDebug() << "product ID:"      << info.productID;
+    ui->portCombo->addItem( info.physName );
+    //ui->queryModeCombo->setItemData();
+}
+for( i = 0; i < (int)(sizeof(supportedBaudRateType)/sizeof(supportedBaudRateType[0])) ;i++ ){
+    ui->baudRateCombo->addItem( supportedBaudRateType[i].name );
+    ui->baudRateCombo->setItemData( i,  supportedBaudRateType[i].value );
+}
+
+for( i = 0; i < (int)(sizeof(dataBitsArrea)/sizeof(dataBitsArrea[0])) ;i++ ){
+    ui->dataBitsCombo->addItem( dataBitsArrea[i].name );
+    ui->dataBitsCombo->setItemData( i,  dataBitsArrea[i].value );
+}
+
+for( i=0; i < (int)(sizeof(stopBitsArrea)/sizeof(stopBitsArrea[0])) ;i++ ){
+    ui->stopBitsCombo->addItem( stopBitsArrea[i].name );
+    ui->stopBitsCombo->setItemData(  i, stopBitsArrea[i].value );
+}
+
+for( i=0; i < (int)(sizeof(flowTypeArrea)/sizeof(flowTypeArrea[0])) ;i++ ){
+    ui->flowControlCombo->addItem( flowTypeArrea[i].name );
+    ui->flowControlCombo->setItemData(  i, flowTypeArrea[i].value );
+}
+
+for( i=0; i < (int)(sizeof(parityArrea)/sizeof(parityArrea[0])) ;i++ ){
+    ui->parityCombo->addItem( parityArrea[i].name );
+    ui->parityCombo->setItemData( i, parityArrea[i].value );
+}
+
+for( i=0; i < (int)(sizeof(queryModeArrea)/sizeof(queryModeArrea[0])) ;i++ ){
+    ui->queryModeCombo->addItem( queryModeArrea[i].name );
+    ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
+}
+
+connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )));
+connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) ) );
+connect( ui->baudRateCombo,    SIGNAL(activated(int)),     this, SLOT( setBaudRate(int))   );
+connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(int) )    );
+connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(int) )  );
+connect( ui->flowControlCombo, SIGNAL(activated(int)), this, SLOT( setFlowControl(int))    );
+connect( ui->timeoutSpin,      SIGNAL(valueChanged(int)),     this, SLOT( setTimeout(int) ));
+!!!469890.cpp!!!	dataReady() : void
+emit readyReadSignal();
+!!!470018.cpp!!!	setPortName(in portName : QString) : void
+m_Serial.setPortName( portName );
+!!!470146.cpp!!!	setQueryMode(in act : int) : void
+QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
+qDebug()<<mode;
+m_Serial.setQueryMode( mode );
+!!!470274.cpp!!!	setBaudRate(in rate : int) : void
+m_Serial.setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
+!!!470402.cpp!!!	setParity(in par : int) : void
+m_Serial.setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
+!!!470530.cpp!!!	setStopBits(in stop : int) : void
+m_Serial.setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
+!!!470658.cpp!!!	setFlowControl(in flow : int) : void
+m_Serial.setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
+!!!470786.cpp!!!	setTimeout(in timeout_Ms : int) : void
+m_Serial.setTimeout( timeout_Ms*1000 );

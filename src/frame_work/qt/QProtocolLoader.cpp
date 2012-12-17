@@ -35,8 +35,8 @@ const pack_desc_t packs[]={
     #include"ProtoGen.h"
 };
 
-#define PKT_NUM  (sizeof(packs)/sizeof(pack_desc_t))
-#define MSGS_NUM (sizeof(msgs)/sizeof(msg_desc_t))
+#define PKT_NUM  ((int)(sizeof(packs)/sizeof(pack_desc_t)))
+#define MSGS_NUM ((int)(sizeof(msgs)/sizeof(msg_desc_t)))
 
 int QProtocolLoader::readProtocolData() {
   return NO_ERR;

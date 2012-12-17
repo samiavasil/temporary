@@ -1,18 +1,19 @@
-#ifndef QPORTIO_H
-#define QPORTIO_H
+#ifndef _QPORTIO_H
+#define _QPORTIO_H
+
 
 #include <QObject>
 
-class QPortIO : public QObject
-{
-    Q_OBJECT
-public:
-    explicit QPortIO(QObject *parent = 0);
-    
+#include "base/CPortIO.h"
+
+class QPortIO : public QObject, public CPortIO {
+Q_OBJECT
+
+  public:
+    explicit QPortIO(QObject * parent);
+
 signals:
     void readyReadBytesSignal();
-public slots:
-    
-};
 
-#endif // QPORTIO_H
+};
+#endif

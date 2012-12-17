@@ -2,17 +2,19 @@
 #include "qt/QPortIOSimulator.h"
 #include <QTimer>
 
+#include <QObject>
 
-QPortIOSimulator::~QPortIOSimulator() {
-}
 
-QPortIOSimulator::QPortIOSimulator(QObject *parent):QPortIO(parent) {
+QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
   DEBUG("Create QPortIOSimulator");   
   m_PortType = SIMULATOR_IO;          
   qsrand ( qrand() );                 
   m_ReadCounter  = 0;                 
   m_WriteCounter = 0;                 
   m_TaskRuned = false;                
+}
+
+QPortIOSimulator::~QPortIOSimulator() {
 }
 
 int64 QPortIOSimulator::bytesAvailable() {
@@ -54,8 +56,8 @@ int64 QPortIOSimulator::write(const char * data, const qint64 len) {
   return len;                       
 }
 
-int64 QPortIOSimulator::write( const char * data ){
-    return write( data, strlen(data) );
+int64 QPortIOSimulator::write(const char * data) {
+  return write( data, strlen(data) );
 }
 
 int QPortIOSimulator::open() {
@@ -63,13 +65,8 @@ int QPortIOSimulator::open() {
 }
 
 void QPortIOSimulator::close() {
-
+  
 }
-
-/*
-void QPortIOSimulator::readyReadSignal() {
-  emit readyReadBytesSignal();
-}*/
 
 void QPortIOSimulator::reloadSimulatorTask() {
   int randTime = (qrand()%5);

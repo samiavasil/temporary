@@ -1,3 +1,5 @@
 class CPortIO
+!!!386306.cpp!!!	CPortIO()
+m_PortType = UNDEFINED_IO;
 !!!386434.cpp!!!	type() : CPortIO::portIo_type
-return UNDEFINED_IO;
+return m_PortType;

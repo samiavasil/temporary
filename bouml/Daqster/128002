@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 78
+  revision 80
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -930,6 +930,18 @@ typedef enum{
 	
       end
 
+      operation 463106 "write"
+	abstract cpp_virtual public explicit_return_type "int64"
+	nparams 1
+	  param in name "data" explicit_type "char"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
       operation 142466 "open"
 	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
@@ -942,7 +954,7 @@ typedef enum{
       end
 
       operation 142594 "close"
-	abstract cpp_virtual public explicit_return_type "int"
+	abstract cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -2404,6 +2416,7 @@ enum{
 };
 
 /*TODO: FIX ME*/
+#include  <QDebug>
 #include  <QtGlobal>
 #define DEBUG    qDebug
 #define CRITICAL qCritical

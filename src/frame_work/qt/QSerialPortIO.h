@@ -2,66 +2,92 @@
 #define _QSERIALPORTIO_H
 
 
-#include <QObject>
+#include "qt/QPortIO.h"
+#include <qextserialport.h>
 
-#include "base/CPortIO.h"
-#include<qextserialport.h>
-#include"qt/QPortIO.h"
+
 
 namespace Ui {
   class SerialPortConfig;
 }
 
-class QextSerialPort;
-
-class QSerialPortIO : public QPortIO, public CPortIO {
+class QSerialPortIO : public QPortIO {
 Q_OBJECT
 
   public:
-    QSerialPortIO( QextSerialPort::QueryMode = QextSerialPort::Polling );
+    QSerialPortIO(QObject * parent = 0);
 
-    ~QSerialPortIO();
-    inline int64 bytesAvailable() {
-      return m_Serial.bytesAvailable();
-    }
+    virtual ~QSerialPortIO();
 
-    inline int64 read(char * data, const int64 maxlen) {
-      return m_Serial.read( data, maxlen );
-    }
+    void showPortConfiguration(QWidget * parent);
 
-    inline int64 write(const char * data, const qint64 len) {
-      return m_Serial.write( data, len );
-    }
+    inline int64 bytesAvailable();
 
-    inline int64 write( const char * data ) {
-      return m_Serial.write( data );
-    }
+    inline int64 read(char * data, const int64 maxlen);
 
-    inline int open() {
-      return m_Serial.open( QIODevice::ReadWrite );
-    }
+    inline int64 write(const char * data, const qint64 len);
 
-    inline void close() {
-       m_Serial.close();
-    }/**/
-    void showPortConfiguration( QWidget* parent );
+    inline int64 write(const char * data);
+
+    inline int open();
+
+    inline void close();
+
 signals:
     void readyReadSignal();
-protected:
+
+
+  protected:
     void initUi();
 
 protected slots:
     void dataReady();
-    void setPortName( const QString portName );
-    void setQueryMode( int act );
-    void setBaudRate( int rate );
-    void setParity( int par );
-    void setStopBits(int );
-    void setFlowControl(int);
-    void setTimeout(int);
-protected:
+
+    void setPortName(const QString & portName);
+
+    void setQueryMode(int act);
+
+    void setBaudRate(int rate);
+
+    void setParity(int par);
+
+    void setStopBits(int stop);
+
+    void setFlowControl(int flow);
+
+    void setTimeout(int timeout_Ms);
+
+
+  private:
+    Ui::SerialPortConfig * ui;
+
+
+  protected:
     QextSerialPort m_Serial;
-private:
-    Ui::SerialPortConfig *ui;
+
 };
+inline int64 QSerialPortIO::bytesAvailable() {
+  return m_Serial.bytesAvailable();
+}
+
+inline int64 QSerialPortIO::read(char * data, const int64 maxlen) {
+  return m_Serial.read( data, maxlen );
+}
+
+inline int64 QSerialPortIO::write(const char * data, const qint64 len) {
+  return m_Serial.write( data, len );
+}
+
+inline int64 QSerialPortIO::write(const char * data) {
+  return m_Serial.write( data );
+}
+
+inline int QSerialPortIO::open() {
+  return m_Serial.open( QIODevice::ReadWrite );
+}
+
+inline void QSerialPortIO::close() {
+  m_Serial.close();
+}
+
 #endif

@@ -4,7 +4,7 @@ DEBUG("Create QPacketCollector");
 !!!379778.cpp!!!	~QPacketCollector()
 DEBUG("Destroy QPacketCollector");
 while( m_PacketsList.count( ) ){
-    delete m_PacketsList[0];
+    delete m_PacketsList.takeFirst();
 }
 !!!364034.cpp!!!	getRecPacket() : int
 DEBUG("TODO:Not implemented");
