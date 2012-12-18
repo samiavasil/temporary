@@ -12,35 +12,6 @@ QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :Q
   QPortIO* port = dynamic_cast<QPortIO*> (m_PortIO);
   if( port&&colect ){
       connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
-  }/*
-  if( m_PortIO && m_Colector ){ 
-     TODO: DELL ME FIX ME - remove dependancy from port type
-      switch( m_PortIO->type() ){
-      case CPortIO::SIMULATOR_IO:{
-          break;
-  
-      }
-      case CPortIO::SERIALPORT_IO:{
-          if( port&&colect ){
-
-             ((QSerialPortIO*) port)->open();
-             ((QSerialPortIO*) port)->showPortConfiguration( NULL );
-          }
-  
-          break;
-  
-      }
-      }
-  
-  
-  }
-  */
-  if( m_Executor ){
-      /*QCommand* comm = new QCommand(this);
-      m_Executor->appendCommand(comm);
-      TODO FIX ME
-      sleep(1);
-      m_Executor->pauseExecution(false);   */
   }
 }
 

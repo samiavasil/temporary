@@ -1,15 +1,18 @@
-window_sizes 1268 956 344 918 855 35
+window_sizes 1280 969 196 1078 855 35
 diagrams
   classdiagram_ref 128002 // FrameWorkClassDiagram
     954 847 90 4 0 0
-  active  classdiagram_ref 134530 // QTFrameWorkClassDiagram
+  classdiagram_ref 134530 // QTFrameWorkClassDiagram
     918 847 90 18 0 0
+  active  classdiagram_ref 141058 // QTFrameWorkDependancyClassDiagram
+    1078 860 100 4 0 0
 end
 show_stereotypes
 selected 
   package_ref 129 // Daqster
 open
-  class_ref 214530 // QSerialPortIO
+  classview_ref 128002 // BaseFrameWorkClassView
+  class_ref 168706 // QFrameWork
   deploymentview_ref 134530 // QTFrameWorkClassView
 end
 end
