@@ -11,6 +11,7 @@
 #include <qwt/qwt_plot_layout.h>
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_legend_item.h>
+#include <qwt/qwt_plot_magnifier.h>
 #include<QMenu>
 #include<QAction>
 #include <QMouseEvent>
@@ -250,6 +251,12 @@ QDataPlot::QDataPlot(QWidget *parent) :
     addLine( QDataPlot::TopRightAxes   );
     connect( ui->PlotQwt, SIGNAL( legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*) ) );
     m_Zoomer[0]->setZoomBase( false );
+
+    QwtPlotMagnifier* Magnif = new QwtPlotMagnifier ( ui->PlotQwt->canvas() );
+    Magnif->setMouseButton 	( 	Qt::LeftButton  ) ;
+    Magnif->setZoomOutKey( Qt::Key_Minus	, Qt::NoModifier );
+    Magnif->setZoomInKey( 	Qt::Key_Plus, Qt::NoModifier );
+    Magnif->setEnabled ( 1 );
 }
 
 QDataPlot::~QDataPlot()
@@ -431,6 +438,7 @@ void QDataPlot::on_actionRectangle_Zoom_toggled(bool arg1)
     }
     else{
         m_Zoomer[0]->setEnabled( false );
+        m_Zoomer[1]->setEnabled( false );
     }
 }
 
