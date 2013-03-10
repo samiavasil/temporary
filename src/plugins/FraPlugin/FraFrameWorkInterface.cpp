@@ -33,7 +33,7 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
     return new_fw;
 }
 
-void FraFrameWorkInterface::destroy(){ premesti go w QPluginObjectsInterface
+void FraFrameWorkInterface::destroy(){ //TODO premesti go w QPluginObjectsInterface
     for( int i=0; i < m_fw_objects.count(); i++ ){
         if( m_fw_objects[i] ){
             m_fw_objects[i]->deleteLater();
@@ -42,7 +42,7 @@ void FraFrameWorkInterface::destroy(){ premesti go w QPluginObjectsInterface
 }
 
 void FraFrameWorkInterface::frameWorkDestroyed( QObject* fw ){
-    if(  fw && m_fw_objects.contains(  fw ) ){  premesti go w QPluginObjectsInterface
+    if(  fw && m_fw_objects.contains(  fw ) ){ //TODO  premesti go w QPluginObjectsInterface
         DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
         m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
         DEBUG("On List %d",m_fw_objects.count());
