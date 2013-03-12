@@ -1,5 +1,7 @@
 #include "QFraFrameWork.h"
 #include "qtestcommand.h"
+
+#include "qt/QSerialPortIO.h"
 QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent):
     QFrameWork( factory, parent ),ui(new Ui::QFraFrameWorkView)
 {
@@ -11,6 +13,11 @@ QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent
    sleep(1);
    m_Executor->pauseExecution(false);
    //setCentralWidget(ui->mdiArea);
+   if( m_PortIO )//DELL ME
+   {
+        ((QSerialPortIO*) m_PortIO)->showPortConfiguration( ui->Seriala );
+       ((QSerialPortIO*) m_PortIO)->showPortConfiguration( NULL );
+   }
 }
 
 

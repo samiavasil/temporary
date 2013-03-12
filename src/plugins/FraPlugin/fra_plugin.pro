@@ -10,7 +10,7 @@ TARGET = DeviceFabriquePlugin
 TEMPLATE = lib
 
 INCLUDEPATH += ../../frame_work
-INCLUDEPATH += ../../extlibs/include
+INCLUDEPATH += ../../include/extlibs
 #INCLUDEPATH += ../../new_src
 LIBS += -L../../../bin/extlibs -L../../../bin/libs  -lframe_work -lqwt
 

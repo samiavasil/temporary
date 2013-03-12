@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <qextserialenumerator.h>
+#include <qtserial/qextserialenumerator.h>
 
 #include <QObject>
 

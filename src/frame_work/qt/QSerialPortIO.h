@@ -3,7 +3,7 @@
 
 
 #include "qt/QPortIO.h"
-#include <qextserialport.h>
+#include <qtserial/qextserialport.h>
 
 
 
