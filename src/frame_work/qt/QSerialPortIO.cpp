@@ -1,6 +1,5 @@
 
 #include "qt/QSerialPortIO.h"
-
 #include <QDialog>
 
 #include <qtserial/qextserialenumerator.h>
@@ -13,6 +12,7 @@
 #include "ui_serial_port.h"
 #define GET_NAME(x) #x
 #define EXPAND_TO_NAME_AND_ENUM(x) { GET_NAME(x),x }
+
 typedef struct {
     const char*  name;
     BaudRateType value;
@@ -129,7 +129,7 @@ queryMode_t queryModeArrea[]=
     { "EventDriven" , QextSerialPort::EventDriven },
 };
 
-QSerialPortIO::QSerialPortIO(QObject * parent, QextSerialPort::QueryMode mode) :QPortIO(parent),m_Serial( mode ),ui(new Ui::SerialPortConfig){
+QSerialPortIO::QSerialPortIO(QObject * parent, const QextSerialPort::QueryMode & mode) :QPortIO(parent),m_Serial( mode ),ui(new Ui::SerialPortConfig){
   DEBUG("Create QSerialPortIO");
   m_PortType = SERIALPORT_IO;
   connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );

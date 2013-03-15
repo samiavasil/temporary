@@ -5,10 +5,12 @@
 #include "global.h"
 class CCommand {
   public:
+  virtual ~CCommand()=0;
     /**
      * Command handler
      */
     virtual int handler() = 0;
 
 };
+
 #endif

@@ -15,7 +15,7 @@ class QSerialPortIO : public QPortIO {
 Q_OBJECT
 
   public:
-    QSerialPortIO(QObject * parent = 0, QextSerialPort::QueryMode mode = QextSerialPort::Polling );
+    QSerialPortIO(QObject * parent = 0, const QextSerialPort::QueryMode & mode = QextSerialPort::Polling);
 
     virtual ~QSerialPortIO();
 

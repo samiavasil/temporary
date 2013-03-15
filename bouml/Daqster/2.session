@@ -1,16 +1,18 @@
-window_sizes 1274 962 361 913 855 35
+window_sizes 1280 969 308 966 855 35
 diagrams
   classdiagram_ref 128002 // FrameWorkClassDiagram
     954 847 90 4 0 0
   classdiagram_ref 134530 // QTFrameWorkClassDiagram
     918 847 90 18 0 0
   active  classdiagram_ref 141058 // QTFrameWorkDependancyClassDiagram
-    913 860 100 4 0 0
+    966 860 100 4 0 0
 end
 show_stereotypes
-selected 
-package_ref 129 // Daqster
+selected deploymentview_ref 134530 // QTFrameWorkClassView
 open
-  class_ref 135426 // CCommand
+  classview_ref 128002 // BaseFrameWorkClassView
+  classview_ref 134530 // QTFrameWorkClassView
+  
+  package_ref 141058 // External
 end
 end

@@ -1,6 +1,6 @@
 format 76
 "External" // External
-  revision 10
+  revision 11
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -201,7 +201,7 @@ format 76
     class 241282 "qextserialport"
       visibility package 
       cpp_external cpp_decl "${name}
-#include <${name}.h>
+#include <qtserial/${name}.h>
 "
       java_decl ""
       php_decl ""
@@ -214,7 +214,7 @@ format 76
     class 241538 "qextserialenumerator"
       visibility package 
       cpp_external cpp_decl "${name}
-#include <${name}.h>
+#include <qtserial/${name}.h>
 "
       java_decl ""
       php_decl ""
