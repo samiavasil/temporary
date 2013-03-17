@@ -30,7 +30,7 @@ private slots:
 protected:
     virtual void mouseMoveEvent ( QMouseEvent * event );
 protected:
-    QPluginList m_PluginList;
+
 private:
     Ui::MainWindow *ui;
 

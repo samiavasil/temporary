@@ -4,6 +4,20 @@
 #include <QDir>
 #include "qt/QFrameWork.h"
 
+QPluginList* QPluginList::m_This = NULL;
+QMap< QString, QPluginDescriptor*  > QPluginList::m_PluginList;
+QPluginList* QPluginList::Instance()
+{
+    qDebug() << "INPUT" << m_This;
+        if( NULL == m_This )
+        {
+            m_This = new QPluginList();
+        }
+
+    qDebug() << "OUTPUT" << m_This;
+    return m_This;
+}
+
 QPluginList::QPluginList(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PluginList)
@@ -28,7 +42,9 @@ QPluginList::~QPluginList()
             delete plugin_list.value();
         }
     }
+    m_PluginList.clear();
     delete ui;
+    m_This = NULL;
 }
 
 

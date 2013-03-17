@@ -82,7 +82,7 @@ void PluginList::populatePluginList(){
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),ui(new Ui::MainWindow),m_PluginList( this )
+    QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setCentralWidget(ui->mdiArea);
@@ -122,7 +122,9 @@ void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
 void MainWindow::on_actionNew_triggered()
 {
-    if( QDialog::Accepted == m_PluginList.exec() )
+    QPluginList* m = QPluginList::Instance();
+    delete m;
+    if( QDialog::Accepted == QPluginList::Instance()->exec() )
     {
         //DEBUG("%d", pList.exec());
     }
@@ -166,7 +168,7 @@ void MainWindow::on_actionHideMainMenu_triggered(bool checked)
 void MainWindow::on_actionSave_triggered()
 {
 
-    QList<QPluginDescriptor*> list = m_PluginList.getAllActivePlugins( UNDEFINED );
+    QList<QPluginDescriptor*> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
     for( int i = 0; i < list.count(); i++ ){
         QObject* obj;
         if( list[i] ){
