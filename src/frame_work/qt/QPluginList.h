@@ -14,13 +14,16 @@ class PluginList;
 
 
 
-class QPluginList : public QDialog
+class QPluginList : public QDialog /* singleton */
 {
     Q_OBJECT
     
-public:
+protected:
     explicit QPluginList(QWidget *parent = 0);
+public:
     ~QPluginList();
+    static QPluginList* Instance();
+
     QList<QPluginDescriptor*> getAllActivePlugins( InterfaceType_t type );
     
 private slots:
@@ -41,7 +44,8 @@ protected slots:
 
 
 protected:
-    QMap< QString, QPluginDescriptor*  > m_PluginList;
+    static QPluginList* m_This;
+    static QMap< QString, QPluginDescriptor*  > m_PluginList;
 private:
     Ui::PluginList *ui;
 

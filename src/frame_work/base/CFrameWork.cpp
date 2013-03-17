@@ -70,7 +70,7 @@ int CFrameWork::attachElementsFactory(CFrameWorkElementsFactory * elementsFactor
   }                                                                  
   else{                                                              
       DEBUG("Attach NULL to  ElementsFactory");                      
-  }                                                                  
+  }
   return ret;                                                                                                            
 }
 

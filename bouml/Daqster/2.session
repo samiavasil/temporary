@@ -1,18 +1,11 @@
-window_sizes 1280 969 308 966 855 35
-diagrams
-  classdiagram_ref 128002 // FrameWorkClassDiagram
-    954 847 90 4 0 0
-  classdiagram_ref 134530 // QTFrameWorkClassDiagram
-    918 847 90 18 0 0
-  active  classdiagram_ref 141058 // QTFrameWorkDependancyClassDiagram
-    966 860 100 4 0 0
-end
+window_sizes 1400 997 328 981 718 120
 show_stereotypes
-selected deploymentview_ref 134530 // QTFrameWorkClassView
+selected 
+package_ref 128002 // BaseFrameWorkPackage
 open
-  classview_ref 128002 // BaseFrameWorkClassView
-  classview_ref 134530 // QTFrameWorkClassView
   
-  package_ref 141058 // External
+package_ref 128002 // BaseFrameWorkPackage
+  classview_ref 134530 // QTFrameWorkClassView
+  classview_ref 141058 // ExternalClassView
 end
 end
