@@ -122,8 +122,6 @@ void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
 void MainWindow::on_actionNew_triggered()
 {
-    QPluginList* m = QPluginList::Instance();
-    delete m;
     if( QDialog::Accepted == QPluginList::Instance()->exec() )
     {
         //DEBUG("%d", pList.exec());
