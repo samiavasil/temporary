@@ -1,7 +1,7 @@
 #include "FraFrameWorkInterface.h"
 #include "qt/QFrameWork.h"
 #include "qt/QFrameWorkElementsFactory.h"
-FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QObject(parent)
+FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
     DEBUG("FraFrameWorkInterface object create");
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
@@ -26,30 +26,6 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
     if( parent && parent->isWidgetType() ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
-    QObject *new_fw = dynamic_cast<QObject *> ( new QFraFrameWork( new QFrameWorkElementsFactory(), parent_widget ) );
-    if( 0 != new_fw ){
-        connect( new_fw,SIGNAL(destroyed(QObject*)), this, SLOT(frameWorkDestroyed(QObject*)),Qt::QueuedConnection);
-    }
-    return new_fw;
+    return dynamic_cast<QObject *> ( new QFraFrameWork( new QFrameWorkElementsFactory(), parent_widget ) );
 }
-
-void FraFrameWorkInterface::destroy(){ //TODO premesti go w QPluginObjectsInterface
-    for( int i=0; i < m_fw_objects.count(); i++ ){
-        if( m_fw_objects[i] ){
-            m_fw_objects[i]->deleteLater();
-        }
-    }
-}
-
-void FraFrameWorkInterface::frameWorkDestroyed( QObject* fw ){
-    if(  fw && m_fw_objects.contains(  fw ) ){ //TODO  premesti go w QPluginObjectsInterface
-        DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
-        m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
-        DEBUG("On List %d",m_fw_objects.count());
-        if( 0 == m_fw_objects.count() ){
-           deleteLater();
-        }
-    }
-}
-
 Q_EXPORT_PLUGIN2(pnp_graplugin, FraFrameWorkInterface)

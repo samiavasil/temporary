@@ -34,7 +34,7 @@ void QPluginLoaderExt::closeSafety() {
   while( ( i != m_Ploaders.end()) && (i.key() == fileName() ) ) {
       DEBUG()<<i.key();
       if( i.value() && i.value()->m_instance ){
-          i.value()->m_instance->destroy();
+          i.value()->m_instance->destroyPI();
       }
       ++i;
   }
@@ -42,7 +42,7 @@ void QPluginLoaderExt::closeSafety() {
 
 QPluginObjectsInterface* QPluginLoaderExt::instance() {
   QObject *instance = (dynamic_cast<QPluginLoader*>(this))->instance();
-  m_instance = qobject_cast< QPluginObjectsInterface* >(instance);
+  m_instance = dynamic_cast< QPluginObjectsInterface* >(instance);
   if( m_instance ){
       QMap<QString, QPluginLoaderExt*>::iterator i = m_Ploaders.find ( fileName() );
       while( ( i != m_Ploaders.end() ) && (i.key() == fileName() ) ) {

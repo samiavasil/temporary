@@ -11,10 +11,9 @@ class QFrameWork;
 
 #define FRA_VERSION    "V0.0"
 
-
-class FRA_PLUGIN_EXPORT FraFrameWorkInterface: public QObject, public QPluginObjectsInterface
+class FRA_PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface
 {
-    Q_OBJECT
+
     Q_INTERFACES(QPluginObjectsInterface)
 public:
     FraFrameWorkInterface( QObject* parent = 0);
@@ -39,14 +38,11 @@ public:
        return FRAME_WORK;
     }
 
-virtual void destroy(  );
-public slots:
-    virtual void frameWorkDestroyed( QObject* fw );
+
 protected:
 
     virtual  QObject*   allocateObject( QObject* );
-    //virtual void destroyObjects(  );
-    //void frameWorkDestroyed( QObject* fw );
+
 
 };
 
