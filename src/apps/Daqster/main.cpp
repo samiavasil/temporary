@@ -74,7 +74,7 @@ void testBits(){
             if( data[i] != data1[i] ){
                 fprintf(stderr,"Error: BufSizeBits[%d], OffsetBits[%d] - Expected data[%x] Out data[%x]\n",
                         num_bits,j,data[i],data1[i]);
-                exit(1);
+                 exit(1);
                 break;
             }
         }
