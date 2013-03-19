@@ -1,5 +1,5 @@
 #include "FraFrameWorkInterface.h"
-#include "qt/QFrameWork.h"
+#include "QFraFrameWork.h"
 #include "qt/QFrameWorkElementsFactory.h"
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {

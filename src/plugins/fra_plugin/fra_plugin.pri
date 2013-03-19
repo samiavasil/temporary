@@ -11,10 +11,8 @@ MOC_DIR      = $$PWD/Build
 RCC_DIR      = $$PWD/Build
 UI_DIR       = $$PWD/Build
 
-TARGET = DeviceFabriquePlugin
+TARGET = FraPlugin
 LIBS += -lframe_work -lqwt
-
-DEFINES += DEVICE_FACTORY_PLUGIN_LIBRARY
 
 SOURCES += \
     QFraFrameWork.cpp \
@@ -37,12 +35,6 @@ HEADERS += \
     CurveConfigurator.h \
     CurveConfigurationMenu.h
 
-
-
-
-
-
-#LIBS += -L../../  -lfra
 
 FORMS += \
     qdataplot.ui \

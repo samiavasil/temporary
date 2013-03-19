@@ -1,45 +1,41 @@
-#ifndef FRAMEWORKINTERFACE_H
-#define FRAMEWORKINTERFACE_H
+#ifndef DATAPLOTINTERFACE_H
+#define DATAPLOTINTERFACE_H
 
 #include <QObject>
 #include "plugin_global.h"
 #include "qt/QPluginObjectsInterface.h"
 
-#define FRA_VERSION    "V0.0"
+#define PLOT_VERSION    "V0.0"
 
-class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface
+class PLUGIN_EXPORT QwtPlotWorkInterface:  public QPluginObjectsInterface
 {
 
     Q_INTERFACES(QPluginObjectsInterface)
 public:
-    FraFrameWorkInterface( QObject* parent = 0);
-    ~FraFrameWorkInterface(  );
+    QwtPlotWorkInterface( QObject* parent = 0);
+    ~QwtPlotWorkInterface(  );
 
     virtual const char* name() const{
-        return "FRA NAME";
+        return "QWT Plot NAME";
     }
     virtual const char* category() const{
-        return "FrameWork";
+        return "QWT Plot";
     }
     virtual const char* version() const{
-        return FRA_VERSION;
+        return PLOT_VERSION;
     }
     virtual const char* description() const{
-        return "Frequency Response Analyzer\n This softwer is a nekaw software.\rProba ";
+        return "QWT Plot  ";
     }
     virtual QIcon    const   icon() const {
         return m_Icon;
     }
     virtual  InterfaceType_t type(){
-       return FRAME_WORK;
+       return DATA_PLOT;
     }
 
-
 protected:
-
     virtual  QObject*   allocateObject( QObject* );
-
-
 };
 
-#endif // FRAMEWORKINTERFACE_H
+#endif // DATAPLOTINTERFACE_H

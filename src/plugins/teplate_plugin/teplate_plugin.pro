@@ -7,14 +7,12 @@
 DESTDIR = ../../../bin/plugins
 QT       += core gui
 TEMPLATE = lib
+DEFINES     += BUILD_AVAILABLE_PLUGIN
 INCLUDEPATH += ../
 INCLUDEPATH += ../../frame_work
 INCLUDEPATH += ../../include/extlibs
 CONFIG      += plugin
 LIBS += -L../../../bin/extlibs -L../../../bin/libs
-
-DEFINES += BUILD_AVAILABLE_PLUGIN
-
-include(./fra_plugin.pri)
+include(./template_plugin.pri)
 
 
