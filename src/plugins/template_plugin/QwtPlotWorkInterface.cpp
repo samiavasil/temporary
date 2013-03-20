@@ -26,8 +26,9 @@ QObject*  QwtPlotWorkInterface::allocateObject( QObject* parent ){
     if( parent && parent->isWidgetType() ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
-    QWidget * obj = new QWidget(parent_widget);//TODOOOOOOOOOOOOOOOOOOOOOOOOOO
-    new QwtPlot( obj );
+    QWidget * obj = new QwtPlot(parent_widget);
+    obj->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
+                                                    widget-a pri closeEvent*/
     return obj;
 }
 Q_EXPORT_PLUGIN2(pnp_qwtplotplugin, QwtPlotWorkInterface)

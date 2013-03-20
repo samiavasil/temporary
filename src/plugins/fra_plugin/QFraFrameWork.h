@@ -12,8 +12,6 @@ Q_OBJECT
 public:
    QFraFrameWork(QFrameWorkElementsFactory * factory,QWidget * parent = 0 );
    virtual ~QFraFrameWork();
-protected:
-    virtual void closeEvent ( QCloseEvent * event );
 
 protected:
    Ui::QFraFrameWorkView * ui;

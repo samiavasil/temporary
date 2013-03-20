@@ -9,6 +9,10 @@ TEMPLATE = lib
 INCLUDEPATH += ../include/extlibs
 DEFINES += FRAME_WORK_LIBRARY
 
+OBJECTS_DIR  = $$PWD/Build
+MOC_DIR      = $$PWD/Build
+RCC_DIR      = $$PWD/Build
+UI_DIR       = $$PWD/Build
 # This is an example for building and using qextserialport.
 #
 # When using the qextserialport, all you need is to add following line
