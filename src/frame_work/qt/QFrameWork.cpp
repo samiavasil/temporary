@@ -15,6 +15,16 @@ QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :Q
   }
 }
 
+QFrameWork::QFrameWork( QCreator* creator , QWidget * parent ):QWidget( parent),CFrameWork( creator )
+{
+    if( creator )
+    {
+        creator->Create( this );//TODO
+    }
+}
+
+
+
 QFrameWork::~QFrameWork() {
   DEBUG("Destroy QFrameWork");
 }

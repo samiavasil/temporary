@@ -11,6 +11,7 @@ class PLUGIN_EXPORT QFraFrameWork:public QFrameWork
 Q_OBJECT
 public:
    QFraFrameWork(QFrameWorkElementsFactory * factory,QWidget * parent = 0 );
+   QFraFrameWork( QCreator* creator = NULL , QWidget * parent = 0 );
    virtual ~QFraFrameWork();
 
 protected:

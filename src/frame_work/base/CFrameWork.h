@@ -10,6 +10,9 @@
 #include "base/CPortIO.h"
 #include "base/CPacketCollector.h"
 
+
+class CCreator;
+
 class CFrameWorkElementsFactory;
 
 /**
@@ -18,9 +21,11 @@ class CFrameWorkElementsFactory;
 class CFrameWork {
   public:
     CFrameWork(CFrameWorkElementsFactory * elementsFactory);
+    CFrameWork( CCreator* creator = NULL  );
+    virtual ~CFrameWork();
 
-    ~CFrameWork();
-
+    void Create();
+    virtual void setCreator( CCreator* creator );
 
   protected:
     /**
@@ -76,6 +81,9 @@ class CFrameWork {
 
   protected:
     int deattachCurrentElementsFactory();
+
+  protected:
+     CCreator* m_creator;
 
 };
 #endif

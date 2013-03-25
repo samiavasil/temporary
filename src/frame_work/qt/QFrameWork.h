@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include "base/CFrameWork.h"
+#include "qt/QCreator.h"
 
 class QFrameWorkElementsFactory;
 
@@ -13,6 +14,7 @@ Q_OBJECT
 
   public:
     QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent = 0);
+    explicit QFrameWork( QCreator* creator = NULL , QWidget * parent = 0 );
 
     virtual ~QFrameWork();
 

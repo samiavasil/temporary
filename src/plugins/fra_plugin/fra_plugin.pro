@@ -36,7 +36,8 @@ SOURCES  += \
     QwtPlotExt.cpp \
     QwtPlotConfigurator.cpp \
     CurveConfigurator.cpp \
-    CurveConfigurationMenu.cpp
+    CurveConfigurationMenu.cpp \
+    QFraCreator.cpp
 
 HEADERS += \
     QFraFrameWork.h \
@@ -47,7 +48,8 @@ HEADERS += \
     QwtPlotExt.h \
     QwtPlotConfigurator.h \
     CurveConfigurator.h \
-    CurveConfigurationMenu.h
+    CurveConfigurationMenu.h \
+    QFraCreator.h
 
 
 FORMS += \

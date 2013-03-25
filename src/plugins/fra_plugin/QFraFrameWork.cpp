@@ -21,6 +21,11 @@ QFraFrameWork::QFraFrameWork(QFrameWorkElementsFactory *factory, QWidget *parent
    setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
+QFraFrameWork::QFraFrameWork( QCreator* creator , QWidget * parent ):QFrameWork( creator, parent ),ui(new Ui::QFraFrameWorkView)
+{
+    ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose, true);
+}
 
 QFraFrameWork::~QFraFrameWork(){
     DEBUG("Destroy QFraFrameWork");

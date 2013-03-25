@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 83
+  revision 84
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -2741,6 +2741,51 @@ ${inlines}
 	
       end
     end
+
+    class 248194 "QCreator"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 478082 "QCreator"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "NULL"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw}:${t0}(${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      classrelation 311682 // <generalisation>
+	relation 311426 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 311682 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
+
+      classrelation 311810 // <generalisation>
+	relation 311554 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 311810 // <generalisation>
+	  b parent class_ref 248066 // CCreator
+      end
+    end
   end
 
   deploymentview 134530 "QTFrameWorkClassView"
@@ -3344,6 +3389,29 @@ ${members}
 ${namespace_end}"
       associated_classes
 	class_ref 241154 // QPortIO
+      end
+    end
+
+    artifact 208386 "QCreator"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 248194 // QCreator
       end
     end
   end

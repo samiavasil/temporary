@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 81
+  revision 82
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -2117,6 +2117,42 @@ return ret;"
 	
       end
     end
+
+    class 248066 "CCreator"
+      abstract visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 477826 "Create"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 1
+	  param in name "fW" explicit_type "CFrameWork"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 477954 "Free"
+	abstract cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+    end
   end
 
   deploymentview 128002 "BaseFrameWorkClassView"
@@ -2440,6 +2476,29 @@ enum{
 #endif
 "
       associated_classes
+      end
+    end
+
+    artifact 208258 "CCreator"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 248066 // CCreator
       end
     end
   end

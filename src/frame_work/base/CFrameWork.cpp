@@ -1,6 +1,6 @@
-
 #include "base/CFrameWork.h"
 #include "base/CFrameWorkElementsFactory.h"
+#include "base/CCreator.h"
 
 CFrameWork::CFrameWork(CFrameWorkElementsFactory * elementsFactory) {
   DEBUG("Create Frame Work Factory");
@@ -15,6 +15,36 @@ CFrameWork::CFrameWork(CFrameWorkElementsFactory * elementsFactory) {
       /*TODO: throw exception maybe*/                    
       CRITICAL("Can't attach ElementsFactory");          
   }                                                      
+}
+
+CFrameWork::CFrameWork( CCreator* creator  )
+{
+    m_ElementsFactory = 0;
+    m_ControlView = 0;
+    m_DataPlot    = 0;
+    m_Executor    = 0;
+    m_Protocol    = 0;
+    m_PortIO      = 0;
+    m_Colector    = 0;  //DELL ME WHEN ALL MIGRATE To creator
+
+   m_creator = creator;
+   Create();
+}
+
+void CFrameWork::Create()
+{
+    if( m_creator )
+        m_creator->Create( this );
+}
+
+void CFrameWork::setCreator( CCreator* creator )
+{
+    if( m_creator )
+    {
+        m_creator->Free();
+    }
+    m_creator = creator;
+    Create();
 }
 
 CFrameWork::~CFrameWork() {

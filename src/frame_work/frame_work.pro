@@ -52,7 +52,9 @@ SOURCES += \
     qt/QPluginList.cpp \
     qt/QPluginObjectsInterface.cpp \
     base/CControlView.cpp \
-    qt/QPortIO.cpp
+    qt/QPortIO.cpp \
+    base/CCreator.cpp \
+    qt/QCreator.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -82,7 +84,9 @@ HEADERS +=\
     qt/frame_work_global.h \
     qt/QPluginObjectsInterface.h \
     base/CControlView.h \
-    qt/QPortIO.h
+    qt/QPortIO.h \
+    base/CCreator.h \
+    qt/QCreator.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
