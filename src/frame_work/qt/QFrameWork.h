@@ -17,6 +17,6 @@ Q_OBJECT
     explicit QFrameWork( QCreator* creator = NULL , QWidget * parent = 0 );
 
     virtual ~QFrameWork();
-
+    QList<QObject*>  CreateObjectFromType( );
 };
 #endif

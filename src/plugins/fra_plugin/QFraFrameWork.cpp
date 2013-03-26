@@ -25,6 +25,7 @@ QFraFrameWork::QFraFrameWork( QCreator* creator , QWidget * parent ):QFrameWork(
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose, true);
+    Create();
 }
 
 QFraFrameWork::~QFraFrameWork(){

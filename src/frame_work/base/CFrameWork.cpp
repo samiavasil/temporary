@@ -28,7 +28,7 @@ CFrameWork::CFrameWork( CCreator* creator  )
     m_Colector    = 0;  //DELL ME WHEN ALL MIGRATE To creator
 
    m_creator = creator;
-   Create();
+
 }
 
 void CFrameWork::Create()
