@@ -2,21 +2,6 @@
 #include "base/CFrameWorkElementsFactory.h"
 #include "base/CCreator.h"
 
-CFrameWork::CFrameWork(CFrameWorkElementsFactory * elementsFactory) {
-  DEBUG("Create Frame Work Factory");
-  m_ElementsFactory = 0;                   
-  m_ControlView = 0;                                     
-  m_DataPlot    = 0;                                     
-  m_Executor    = 0;                                     
-  m_Protocol    = 0;                                     
-  m_PortIO      = 0;                                     
-  m_Colector    = 0;                                     
-  if( NO_ERR != attachElementsFactory(elementsFactory) ){
-      /*TODO: throw exception maybe*/                    
-      CRITICAL("Can't attach ElementsFactory");          
-  }                                                      
-}
-
 CFrameWork::CFrameWork( CCreator* creator  )
 {
     m_ElementsFactory = 0;
@@ -31,10 +16,13 @@ CFrameWork::CFrameWork( CCreator* creator  )
 
 }
 
-void CFrameWork::Create()
+bool CFrameWork::Create()
 {
+    bool bRet  = false;
     if( m_creator )
-        m_creator->Create( this );
+        bRet = m_creator->Create( this );
+
+    return bRet;
 }
 
 void CFrameWork::setCreator( CCreator* creator )

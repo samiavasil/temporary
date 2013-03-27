@@ -17,7 +17,7 @@
 
 class CCommand;
 
-class QCommandExecutor : protected QThread, public CCommandExecutor {
+class QCommandExecutor : public QThread, public CCommandExecutor {
 Q_OBJECT
 
   public:
@@ -87,6 +87,8 @@ protected slots:
      * Timer based Commands handling loop
      */
     void timerHandlerExecuteCommands();
+public slots:
+  virtual void finish();
 
 signals:
     void runTimer(int time);

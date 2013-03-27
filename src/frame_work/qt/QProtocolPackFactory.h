@@ -11,9 +11,9 @@
 class QProtocolLoader;
 class CPacket;
 
-class QProtocolPackFactory : public CProtocolPackFactory {
+class QProtocolPackFactory :public QObject, public CProtocolPackFactory {
   public:
-    QProtocolPackFactory(QProtocolLoader * pLoader);
+    QProtocolPackFactory(QProtocolLoader * pLoader, QObject* parent = 0 );
 
     virtual ~QProtocolPackFactory();
 

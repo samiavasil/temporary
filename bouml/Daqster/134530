@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 84
+  revision 86
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -869,6 +869,24 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :QWidget( ${p1}),CFrameWork( ${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 484866 "QFrameWork"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "creator" explicit_type "QCreator"
+	    defaultvalue "0"
+	  param in name "parent" explicit_type "QWidget"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} {
   ${body}}
 "
 	
@@ -2594,6 +2612,39 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      classrelation 318338 // <generalisation>
+	relation 318082 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 318338 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
+
+      extra_member 220418 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 484610 "QPluginObjectsInterface"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} :public ${t0}(${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 442114 "~QPluginObjectsInterface"
 	cpp_virtual public explicit_return_type ""
 	nparams 0
@@ -2623,10 +2674,38 @@ ${inlines}
 	
       end
 
-      operation 442370 "destroy"
-	abstract cpp_virtual public explicit_return_type "void"
+      operation 442370 "destroyPI"
+	cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 220546 "public slots:"
+	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 484738 "objectDestroyed"
+	cpp_virtual public explicit_return_type "void"
+	nparams 1
+	  param in name "fW" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
 "
 	
 	
@@ -2754,22 +2833,6 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
-      operation 478082 "QCreator"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "parent" explicit_type "QObject"
-	    defaultvalue "NULL"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw}:${t0}(${p0}){
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
       classrelation 311682 // <generalisation>
 	relation 311426 ---|>
 	  a public
@@ -2784,6 +2847,22 @@ ${inlines}
 	    cpp default "${type}"
 	    classrelation_ref 311810 // <generalisation>
 	  b parent class_ref 248066 // CCreator
+      end
+
+      operation 478082 "QCreator"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "NULL"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw}:${t0}(${p0}){
+  ${body}}
+"
+	
+	
+	
+	
       end
     end
   end
@@ -3302,6 +3381,7 @@ class QFrameWork;
 typedef enum{
   FRAME_WORK,
   PORT_IO,
+  DATA_PLOT, 
   UNDEFINED
 }InterfaceType_t;
 

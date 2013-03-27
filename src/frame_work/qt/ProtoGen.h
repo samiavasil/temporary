@@ -1,3 +1,8 @@
+/*TODO:
+  This file should be moved from frame_work to target app.
+  According this there should be updated and QProtocolLoader.
+  This is only particlar example for MSG and PACKETS MAPING
+*/
 #ifdef GEN_MSG_ENUMS
 #define ADD_MESSAGE(a,b,c,d)   a = b,
 #define PACKET_DESC(a,b)

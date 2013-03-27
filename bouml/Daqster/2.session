@@ -1,15 +1,17 @@
-window_sizes 1280 969 331 943 718 120
+window_sizes 1274 962 331 943 718 120
 diagrams
   classdiagram_ref 141058 // QTFrameWorkDependancyClassDiagram
     750 620 100 4 0 0
   active  classdiagram_ref 134530 // QTFrameWorkClassDiagram
-    943 775 120 18 28 265
+    937 768 120 18 28 271
 end
 show_stereotypes
-selected class_ref 248194 // QCreator
+selected class_ref 148994 // QCommand
 open
-  class_ref 248066 // CCreator
-  class_ref 248194 // QCreator
-  classview_ref 141058 // ExternalClassView
+  
+  package_ref 128002 // BaseFrameWorkPackage
+  classview_ref 134530 // QTFrameWorkClassView
+  
+  package_ref 141058 // External
 end
 end

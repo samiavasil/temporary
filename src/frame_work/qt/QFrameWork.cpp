@@ -8,26 +8,25 @@
 #include "qt/QPacketCollector.h"
 #include "qt/QPluginList.h"
 
-QFrameWork::QFrameWork(QFrameWorkElementsFactory * factory, QWidget * parent) :QWidget( parent),CFrameWork( factory)
-{
-  QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
-  QPortIO* port = dynamic_cast<QPortIO*> (m_PortIO);
-  if( port&&colect ){
-      connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
-  }
-}
-
 QFrameWork::QFrameWork( QCreator* creator , QWidget * parent ):QWidget( parent),CFrameWork( creator )
 {
-
+    DEBUG( "Create QFrameWork\n" );
+    setAttribute(Qt::WA_DeleteOnClose, true);
+    if( !Create() )
+        deleteLater();
 }
 
 QFrameWork::~QFrameWork()
 {
-  DEBUG("Destroy QFrameWork");
+  DEBUG( "Destroy QFrameWork\n" );
+  if( m_creator )
+  {
+      delete m_creator;
+      m_creator = 0;
+  }
 }
 
-QList<QObject*>  QFrameWork::CreateObjectFromType( )
+QList<QObject*>  QFrameWork::CreateObjectFromType(QObject* parent )
 {
     QList<QObject*> ret_List;
     QList<QPluginDescriptor *> list;
@@ -35,8 +34,8 @@ QList<QObject*>  QFrameWork::CreateObjectFromType( )
     list = QPluginList::Instance()->getAllActivePlugins( DATA_PLOT );
 
     for( int i = 0; i < list.count(); i++ ){
-        if( list[i] &&  ( list[i]->type() == DATA_PLOT ) ){
-            ret_List.append( list[i]->cretate_plugin_object( list[i]->type() , NULL ) );//DELL ME
+        if( list[i] &&  ( list[i]->type() != FRAME_WORK ) ){
+            ret_List.append( list[i]->cretate_plugin_object( list[i]->type() , parent ) );//DELL ME
         }
 
     }

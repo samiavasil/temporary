@@ -95,7 +95,7 @@ relationcanvas 128642 relation_ref 304770 // <dependency>
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 128770 relation_ref 304898 // <dependency>
-  decenter_begin 913
+  decenter_begin 912
   decenter_end 481
   from ref 128386 z 2030 to ref 128258
   no_role_a no_role_b
@@ -187,7 +187,7 @@ relationcanvas 132738 relation_ref 250114 // <dependency>
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 133762 relation_ref 223234 // <dependency>
-  decenter_begin 219
+  decenter_begin 218
   decenter_end 600
   from ref 131970 z 2042 to ref 133634
   no_role_a no_role_b

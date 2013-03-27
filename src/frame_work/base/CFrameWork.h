@@ -20,11 +20,10 @@ class CFrameWorkElementsFactory;
  */
 class CFrameWork {
   public:
-    CFrameWork(CFrameWorkElementsFactory * elementsFactory);
     CFrameWork( CCreator* creator = NULL  );
     virtual ~CFrameWork();
 
-    void Create();
+    bool Create();
     virtual void setCreator( CCreator* creator );
 
   protected:

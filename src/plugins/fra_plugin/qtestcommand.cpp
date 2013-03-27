@@ -6,7 +6,7 @@
 #include "qt/QProtocolLoader.h"
 
 #include<stdio.h>
-
+#include"qt/QPacketCollector.h"
 
 pack_id_t pId[4]={
     PACK1_ID,
@@ -15,10 +15,11 @@ pack_id_t pId[4]={
     PACK4_ID,
 };
 
-QtestCommand::QtestCommand(QFrameWork *fw, QObject *parent):QCommand(parent) {
-  m_fWork = fw;
-  a=0;
-  DEBUG("QtestCommand Created");
+QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *factory, QObject *parent ):QCommand(parent) {
+    m_Col     = colector;
+    m_Factory = factory;
+    a=0;
+    DEBUG("QtestCommand Created");
 }
 
 QtestCommand::~QtestCommand() {
@@ -32,22 +33,22 @@ int QtestCommand::handler() {
   int ret =  1;
   CPacket* packet = NULL;
 
-  if( a >= 10 ){
+  if( a >= 100000 ){
       ret =  0;
       //  DEBUG("QCommand Finished");
   }
   else{
       if( 1 ){//a == 0 ){
           //DEBUG("QCommand Execution start");
-          QProtocolPackFactory *factory =  (QProtocolPackFactory*)m_fWork->getProtocol();
-          if(factory){
-              packet = factory->createPacket( pId[a%4] );
+
+          if( m_Factory ){
+              packet = m_Factory->createPacket( pId[a%4] );
           }
       }
-      if( m_fWork&&packet ){
-          CPacketCollector* colector = m_fWork->getColector();
-          if( colector ){
-              if( 0 < colector->transmitPacket( packet ) ){
+      if( packet ){
+
+          if( m_Col ){
+              if( 0 < m_Col->transmitPacket( packet ) ){
                   DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
                   if( packet ){
                       const u8*data = packet->data();

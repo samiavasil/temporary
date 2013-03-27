@@ -164,3 +164,7 @@ void QCommandExecutor::timerHandlerExecuteCommands() {
   timerHandlerExecuteAllCommands();
 }
 
+void  QCommandExecutor::finish()
+{
+    startExecution( false );
+}

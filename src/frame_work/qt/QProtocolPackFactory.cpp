@@ -3,13 +3,13 @@
 #include "qt/QProtocolLoader.h"
 #include "base/CPacket.h"
 
-QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader) :CProtocolPackFactory(pLoader){
+QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject* parent ) :QObject(parent),CProtocolPackFactory(pLoader){
       DEBUG("Create QProtocolPackFactory");
       if(  attachProtocolLoader(pLoader) ) {
           DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");
       }
       //4231 4 7 11 6
-      u8 data[2];
+      /*u8 data[2];
       data[0]=0xff;
       data[1]=0xff;
       setMessage(MSG4_ID,data);
@@ -21,7 +21,7 @@ QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader) :CProtocol
       setMessage(MSG3_ID,data);
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG1_ID,data);
+      setMessage(MSG1_ID,data);*/
   
 #ifdef DUMP_PROTOCOL_LOAD
       DEBUG("DUMP protocol loaded packet types");

@@ -12,9 +12,8 @@
 #include <QByteArray>
 
 
-class CPortIO;
-class CPacket;
-class CFrameWork;
+class QPortIO;
+class QProtocolPackFactory;
 
 class QPacketCollector : public QObject, public CPacketCollector {
 Q_OBJECT
@@ -24,7 +23,7 @@ Q_OBJECT
 
 
   public:
-    QPacketCollector(CFrameWork * cFwk);
+    explicit QPacketCollector( QPortIO* port, QProtocolPackFactory* protocol, QObject* parent = 0 );
 
     virtual ~QPacketCollector();
 

@@ -9,12 +9,9 @@ class CPortIO;
 class CFrameWork;
 
 class CPacketCollector {
-  protected:
-    CFrameWork * m_fWork;
-
 
   public:
-    CPacketCollector(CFrameWork * fWk);
+    explicit CPacketCollector( CPortIO* port, CProtocolPackFactory* protocol );
 
     virtual ~CPacketCollector();
 
@@ -26,6 +23,7 @@ class CPacketCollector {
 
     virtual int receiveBytes();
 
+    bool        isChained();
 
   protected:
     virtual int appendReceivedBytes(const u8 * data, const int64 len) = 0;
@@ -58,8 +56,9 @@ typedef enum {
 } trans_states_t;
 
   protected:
+    CPortIO *m_PortIo;
+    CProtocolPackFactory * m_Protocol;
     rec_states_t m_RecState;
-
     trans_states_t m_TransState;
 
 };

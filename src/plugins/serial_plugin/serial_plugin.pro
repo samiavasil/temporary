@@ -23,41 +23,19 @@ CONFIG      += plugin
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 
 LIBS        += -lframe_work -lqwt
-TARGET       = FraPlugin
+TARGET   = QSerialPortPlugin
 
-
-
-
-SOURCES  += \
-    qtestcommand.cpp \
-    QDataPlot.cpp \
-    FraFrameWorkInterface.cpp \
-    QwtPlotExt.cpp \
-    QwtPlotConfigurator.cpp \
-    CurveConfigurator.cpp \
-    CurveConfigurationMenu.cpp \
-    QFraCreator.cpp
+SOURCES += \
+    QSerialPortWorkInterface.cpp
 
 HEADERS += \
-    fra_plugin_global.h \
-    qtestcommand.h \
-    QDataPlot.h \
-    FraFrameWorkInterface.h \
-    QwtPlotExt.h \
-    QwtPlotConfigurator.h \
-    CurveConfigurator.h \
-    CurveConfigurationMenu.h \
-    QFraCreator.h
+    QSerialPortWorkInterface.h
 
 
-FORMS += \
-    qdataplot.ui \
-    qfra_frame_work_view.ui \
-    QwtPlotConfigurator.ui \
-    CurveConfigurator.ui
+#LIBS += -L../../  -lfra
 
-RESOURCES += \
-    proba.qrc
+FORMS +=
 
+RESOURCES +=
 
 

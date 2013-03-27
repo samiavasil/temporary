@@ -7,6 +7,7 @@
 class QCommand : public CCommand, public QObject {
   public:
     explicit QCommand(QObject * parent = NULL);
-  protected:
+  public slots:
+    virtual void finish() {}
 };
 #endif
