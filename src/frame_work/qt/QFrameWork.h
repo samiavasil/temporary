@@ -2,20 +2,29 @@
 #define _QFRAMEWORK_H
 
 
+#include "frame_work_global.h"
 #include <QWidget>
 
 #include "base/CFrameWork.h"
-#include "qt/QCreator.h"
+#include <QList>
 
-class QFrameWorkElementsFactory;
 
-class Q_DECL_EXPORT QFrameWork : public QWidget, public CFrameWork {
+class QCreator;
+
+class FRAME_WORKSHARED_EXPORT QFrameWork : public QWidget, public CFrameWork {
 Q_OBJECT
 
   public:
-    explicit QFrameWork( QCreator* creator = NULL , QWidget * parent = 0 );
+    explicit QFrameWork(QCreator * creator = 0, QWidget * parent = 0);
+
     virtual ~QFrameWork();
-    QList<QObject*>  CreateObjectFromType(QObject *parent );
+
+    bool Create();
+
+    QList<QObject*> CreateObjectFromType(QObject * parent);
+
+signals:
+    void fwDestroy();
 
 };
 #endif

@@ -3,7 +3,7 @@ format 76
 classcanvas 128002 class_ref 134914 // CPacketCollector
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyzwh 612.3 140.1 2010 109 37
+  xyzwh 614.3 140.5 2010 109 37
 end
 classcanvas 128130 class_ref 142082 // QPacketCollector
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -19,17 +19,17 @@ classcanvas 128130 class_ref 142082 // QPacketCollector
     operation_ref 421634 // unlockData
     operation_ref 364930 // getReceivedBytes
     operation_ref 365058 // removeReceivedBytes
-  xyz 511.3 304.1 2000
+  xyz 510.7 303.3 2000
 end
 classcanvas 128386 class_ref 142210 // QObject
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color orange
-  xyzwh 818.8 49.1 2000 90 37
+  xyzwh 819 49.9 2000 90 37
 end
 classcanvas 129026 class_ref 135298 // CCommandExecutor
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 955.9 140.1 2000
+  xyz 956.3 140.5 2000
 end
 classcanvas 129154 class_ref 148738 // QCommandExecutor
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -48,36 +48,32 @@ classcanvas 129154 class_ref 148738 // QCommandExecutor
     operation_ref 181506 // timerHandlerExecuteCommands
     operation_ref 350338 // runTimer
     operation_ref 356866 // stopTimer
-  xyz 816.3 304.1 2000
+  xyz 816.5 302.3 2000
 end
 classcanvas 129282 class_ref 148866 // QThread
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color orange
-  xyz 915 56.4 2000
+  xyz 914.4 57 2000
 end
 classcanvas 129666 class_ref 135426 // CCommand
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 1106 140.1 2000
+  xyz 1105.6 140.7 2000
 end
 classcanvas 129794 class_ref 148994 // QCommand
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  hidden_attributes
-    attribute_ref 208258 // m_fWork
-    attribute_ref 207362 // a
   hidden_operations
     operation_ref 189186 // QCommand
-    operation_ref 182658 // ~QCommand
-  xyzwh 1085.9 307.7 2000 90 45
+  xyzwh 1085.9 306.7 2000 90 45
 end
 classcanvas 131330 class_ref 168706 // QFrameWork
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 36.9 207.4 2000
+  xyz 35.9 209 2000
 end
 classcanvas 131458 class_ref 128002 // CFrameWork
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyzwh 4.2 141.6 2000 85 37
+  xyzwh 7 141 2000 85 37
 end
 classcanvas 131714 class_ref 175234 // QProtocolPackFactory
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -94,12 +90,12 @@ classcanvas 131714 class_ref 175234 // QProtocolPackFactory
     operation_ref 414594 // addPacketHeader
     operation_ref 414722 // addPacketPostFix
     operation_ref 428162 // calCulateCrc8
-  xyz 655.2 302.1 2000
+  xyz 657 301.5 2000
 end
 classcanvas 131842 class_ref 135554 // CProtocolPackFactory
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 794.2 140.1 2005
+  xyz 794.6 140.5 2005
 end
 classcanvas 132098 class_ref 175362 // QProtocolLoader
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -107,39 +103,39 @@ classcanvas 132098 class_ref 175362 // QProtocolLoader
     operation_ref 401026 // getMsgIdLen
     operation_ref 401154 // getHeaderLenBits
     operation_ref 401282 // getPostFixLenBits
-  xyz 312 303.1 2000
+  xyz 314.6 302.1 2000
 end
 classcanvas 132226 class_ref 135170 // CProtocolLoader
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 278.9 140.1 2005
+  xyz 279.5 140.3 2005
 end
 classcanvas 134914 class_ref 188418 // QWidget
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color orange
-  xyzwh 80.1 56.1 2006 61 37
+  xyzwh 80.1 56.7 2006 61 37
 end
 classcanvas 135170 class_ref 201474 // QFrameWorkElementsFactory
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   hidden_operations
     operation_ref 379010 // QFrameWorkElementsFactory
     operation_ref 379138 // ~QFrameWorkElementsFactory
-  xyzwh 463.8 417.7 2000 179 199
+  xyzwh 465.2 418.5 2000 178 199
 end
 classcanvas 135298 class_ref 194946 // CFrameWorkElementsFactory
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 394.7 140.1 2005
+  xyz 395.7 140.3 2005
 end
 classcanvas 142338 class_ref 208002 // QByteArray
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color orange
-  xyz 483.2 50.9 2000
+  xyz 483.2 50.1 2000
 end
 classcanvas 142978 class_ref 135042 // CPacket
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyz 730.5 140.1 2011
+  xyz 730.7 140.3 2011
 end
 classcanvas 143234 class_ref 214530 // QSerialPortIO
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -158,12 +154,12 @@ classcanvas 143234 class_ref 214530 // QSerialPortIO
     operation_ref 470530 // setStopBits
     operation_ref 470658 // setFlowControl
     operation_ref 470786 // setTimeout
-  xyz 26.1 417 2000
+  xyz 28.3 417.8 2000
 end
 classcanvas 143362 class_ref 128386 // CPortIO
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyzwh 165.3 141.6 2011 108 37
+  xyzwh 166.1 141.6 2011 108 37
 end
 classcanvas 145666 class_ref 221058 // QPortIOSimulator
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -179,7 +175,7 @@ classcanvas 145666 class_ref 221058 // QPortIOSimulator
     operation_ref 456578 // ~QPortIOSimulator
     operation_ref 400386 // reloadSimulatorTask
     operation_ref 400258 // simulatorTask
-  xyz 175.9 417.2 2006
+  xyz 175.7 419.6 2006
 end
 classcanvas 147458 class_ref 227586 // QPluginLoaderExt
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -196,33 +192,33 @@ end
 classcanvas 147586 class_ref 227714 // QPluginLoader
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color orange
-  xyzwh 1020 51 2005 123 37
+  xyzwh 1020.4 51.6 2005 123 37
 end
 classcanvas 149378 class_ref 241154 // QPortIO
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   hidden_operations
     operation_ref 471170 // QPortIO
-  xyz 118.9 306.3 2000
+  xyz 118.7 306.1 2000
 end
 classcanvas 158082 class_ref 248194 // QCreator
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 944.8 538.8 2000
+  xyz 948.4 539.8 2000
 end
 classcanvas 158210 class_ref 248066 // CCreator
   draw_all_relations default hide_attributes yes hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
   color darkgreen
-  xyzwh 992.4 460.8 2000 63 37
+  xyzwh 993.6 460.6 2000 63 37
 end
 classcanvas 158594 class_ref 228098 // QPluginObjectsInterface
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 790.2 500.2 2005
+  xyz 790.6 500.6 2005
 end
 relationcanvas 128770 relation_ref 155906 // <generalisation>
   geometry VHV unfixed
   decenter_begin 625
   decenter_end 148
-  from ref 128130 z 2001 to point 588 120.6
-  line 155394 z 2001 to point 829 120.6
+  from ref 128130 z 2001 to point 587 120
+  line 155394 z 2001 to point 829 120
   line 155522 z 2001 to ref 128386
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -230,24 +226,24 @@ end
 relationcanvas 128898 relation_ref 156034 // <generalisation>
   geometry VHV
   decenter_begin 739
-  from ref 128130 z 2011 to point 602 238
-  line 155138 z 2011 to point 670 238
+  from ref 128130 z 2011 to point 601 237
+  line 155138 z 2011 to point 672 237
   line 155266 z 2011 to ref 128002
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 129410 relation_ref 162562 // <generalisation>
   geometry VHV unfixed
-  from ref 129154 z 2001 to point 877.2 201.4
-  line 156930 z 2001 to point 942.2 201.4
+  from ref 129154 z 2001 to point 876 202
+  line 156930 z 2001 to point 941 202
   line 157058 z 2001 to ref 129282
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 129538 relation_ref 162690 // <generalisation>
   geometry VHV unfixed
-  from ref 129154 z 2001 to point 877.2 201.4
-  line 156546 z 2001 to point 1013 201.4
+  from ref 129154 z 2001 to point 876 273
+  line 156546 z 2001 to point 1015 273
   line 156674 z 2001 to ref 129026
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -263,15 +259,15 @@ relationcanvas 130690 relation_ref 169602 // <generalisation>
   geometry VHV unfixed
   decenter_begin 101
   decenter_end 407
-  from ref 129794 z 2001 to point 1092 120.6
-  line 139266 z 2001 to point 852 120.6
+  from ref 129794 z 2001 to point 1092 120
+  line 139266 z 2001 to point 852 120
   line 139394 z 2001 to ref 128386
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 131586 relation_ref 182914 // <generalisation>
   geometry VHV
-  from ref 131330 z 2001 to point 78 190
+  from ref 131330 z 2001 to point 96 190
   line 157314 z 2001 to point 44 190
   line 157442 z 2001 to ref 131458
   no_role_a no_role_b
@@ -279,9 +275,10 @@ relationcanvas 131586 relation_ref 182914 // <generalisation>
 end
 relationcanvas 131970 relation_ref 195970 // <generalisation>
   geometry VHV unfixed
+  decenter_begin 168
   decenter_end 354
-  from ref 131714 z 2006 to point 726 275.6
-  line 156034 z 2006 to point 841 275.6
+  from ref 131714 z 2006 to point 679 276.2
+  line 156034 z 2006 to point 841 276.2
   line 156162 z 2006 to ref 131842
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -294,8 +291,8 @@ relationcanvas 132354 relation_ref 196098 // <generalisation>
 end
 relationcanvas 135042 relation_ref 209538 // <generalisation>
   geometry VHV unfixed
-  from ref 131330 z 2007 to point 78 191.4
-  line 157570 z 2007 to point 107 191.4
+  from ref 131330 z 2007 to point 92 193
+  line 157570 z 2007 to point 108 193
   line 157698 z 2007 to ref 134914
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -309,8 +306,8 @@ relationcanvas 135426 relation_ref 216066 // <generalisation>
 end
 relationcanvas 142466 relation_ref 229762 // <directional composition>
   geometry VHV unfixed
-  from ref 128130 z 2001 to point 571.4 112.2
-  line 157826 z 2001 to point 518 112.2
+  from ref 128130 z 2001 to point 571.8 113
+  line 157826 z 2001 to point 518 113
   line 157954 z 2001 to ref 142338
   role_a_pos 532 91 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -318,16 +315,16 @@ end
 relationcanvas 143106 relation_ref 230018 // <directional aggregation>
   geometry VHV unfixed
   decenter_begin 902
-  from ref 128130 z 2012 to point 623 257.2
-  line 154882 z 2012 stereotype "<<QList>>" xyz 684.5 235 3000 to point 756 257.2
+  from ref 128130 z 2012 to point 622 256.2
+  line 154882 z 2012 stereotype "<<QList>>" xyz 680.5 235 3000 to point 756 256.2
   line 155010 z 2012 to ref 142978
   role_a_pos 768 182 3000 no_role_b
   multiplicity_a_pos 744 182 3000 no_multiplicity_b
 end
 relationcanvas 147714 relation_ref 290050 // <generalisation>
   geometry VHV unfixed
-  from ref 147458 z 2007 to point 1006.4 262.2
-  line 156290 z 2007 to point 1079.8 262.2
+  from ref 147458 z 2007 to point 1006.2 262
+  line 156290 z 2007 to point 1079.4 262
   line 156418 z 2007 to ref 147586
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
@@ -362,6 +359,7 @@ relationcanvas 150018 relation_ref 304386 // <generalisation>
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 158338 relation_ref 311426 // <generalisation>
+  decenter_begin 231
   decenter_end 907
   from ref 158082 z 2001 to ref 128386
   no_role_a no_role_b
@@ -374,6 +372,11 @@ relationcanvas 158466 relation_ref 311554 // <generalisation>
 end
 relationcanvas 158722 relation_ref 318082 // <generalisation>
   from ref 158594 z 2006 to ref 128386
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 158850 relation_ref 324610 // <generalisation>
+  from ref 131714 z 2001 to ref 128386
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

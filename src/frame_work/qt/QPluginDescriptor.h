@@ -1,5 +1,6 @@
 #ifndef PLUGIN_DESCRIPTOR_H
 #define PLUGIN_DESCRIPTOR_H
+#include "frame_work_global.h"
 #include "base/global.h"
 #include "QPluginLoaderExt.h"
 //#include "interfaces.h"
@@ -9,7 +10,7 @@
 #include<QMutex>
 #include<QMessageBox>
 
-class QPluginDescriptor:public QObject{
+class FRAME_WORKSHARED_EXPORT QPluginDescriptor:public QObject{
     Q_OBJECT
 public:
     explicit QPluginDescriptor( const char *name, QObject* parent = 0 );

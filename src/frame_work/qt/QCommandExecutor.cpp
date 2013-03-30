@@ -56,23 +56,6 @@ int QCommandExecutor::removeCommand(int comm) {
   return ret;                               
 }
 
-int QCommandExecutor::executeCommand(int comm_num) {
-  int ret = 0;                                           
-  CCommand * comm = m_commands.value( comm_num, NULL);   
-  if( comm ){                                            
-      ret = comm->handler();                             
-  }                                                      
-  return ret;                                            
-}
-
-void QCommandExecutor::lockObject() {
-  m_mutex.lock();
-}
-
-void QCommandExecutor::unlockObject() {
-  m_mutex.unlock();
-}
-
 /**
  * Flush all commands from Queue
  */
@@ -130,6 +113,37 @@ int QCommandExecutor::startExecution(bool starting) {
   return NO_ERR;
 }
 
+void QCommandExecutor::finish() {
+  
+      startExecution( false );
+      DEBUG("FINISH!!!! QCommandExecutor\n");
+      if( false == wait( 10000 ) ){
+         DEBUG("FINISH!!!! Not Finished QCommandExecutor\n");
+      }
+      else
+      {
+          DEBUG("FINISH!!!! FINISHED QCommandExecutor\n");
+      }
+    //  sleep(1);
+}
+
+int QCommandExecutor::executeCommand(int comm_num) {
+  int ret = 0;                                           
+  CCommand * comm = m_commands.value( comm_num, NULL);   
+  if( comm ){                                            
+      ret = comm->handler();                             
+  }                                                      
+  return ret;                                            
+}
+
+void QCommandExecutor::lockObject() {
+  m_mutex.lock();
+}
+
+void QCommandExecutor::unlockObject() {
+  m_mutex.unlock();
+}
+
 void QCommandExecutor::startTimer() {
   if( 0 == m_timer ){                         
        DEBUG("Timer isn't initialised");
@@ -164,7 +178,3 @@ void QCommandExecutor::timerHandlerExecuteCommands() {
   timerHandlerExecuteAllCommands();
 }
 
-void  QCommandExecutor::finish()
-{
-    startExecution( false );
-}

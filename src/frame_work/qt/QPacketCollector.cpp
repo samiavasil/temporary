@@ -1,11 +1,10 @@
 
 #include "qt/QPacketCollector.h"
-#include "qt/QPortIO.h"
-#include "qt/QProtocolPackFactory.h"
+#include "base/CPortIO.h"
 #include "base/CPacket.h"
+#include "base/CProtocolPackFactory.h"
 
-
-QPacketCollector::QPacketCollector( QPortIO* port, QProtocolPackFactory* protocol, QObject *parent ):QObject(parent),CPacketCollector( port, protocol ){
+QPacketCollector::QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent):QObject(parent),CPacketCollector( port,protocol ) {
   DEBUG("Create QPacketCollector");
 }
 
@@ -22,14 +21,14 @@ int QPacketCollector::getRecPacket() {
 }
 
 int QPacketCollector::transmitPacket(CPacket * packet) {
-  int ret = WRONG_PARAMS;                                                     
-
-  if( packet && isChained() ){
-      m_Protocol->addPacketHeader(packet);
-      m_Protocol->addPacketPostFix(packet);
-      ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
-  }                                                                           
-  return ret;                                                                 
+    int ret = WRONG_PARAMS;                                                     
+  
+    if( packet && isChained() ){
+        m_Protocol->addPacketHeader(packet);
+        m_Protocol->addPacketPostFix(packet);
+        ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
+    }                                                                           
+    return ret;                                                                
 }
 
 int QPacketCollector::getRecPacketNum() {

@@ -2,6 +2,7 @@
 #define _QCOMMANDEXECUTOR_H
 
 
+#include "frame_work_global.h"
 #include <QThread>
 
 #include "base/CCommandExecutor.h"
@@ -17,7 +18,7 @@
 
 class CCommand;
 
-class QCommandExecutor : public QThread, public CCommandExecutor {
+class FRAME_WORKSHARED_EXPORT QCommandExecutor : public QThread, public CCommandExecutor {
 Q_OBJECT
 
   public:
@@ -37,16 +38,6 @@ Q_OBJECT
      */
     virtual int removeCommand(int comm);
 
-
-  protected:
-    virtual int executeCommand(int comm_num);
-
-    virtual void lockObject();
-
-    virtual void unlockObject();
-
-
-  public:
     /**
      * Flush all commands from Queue
      */
@@ -64,8 +55,17 @@ Q_OBJECT
      */
     virtual int startExecution(bool starting);
 
+public slots:
+    void finish();
+
 
   protected:
+    virtual int executeCommand(int comm_num);
+
+    virtual void lockObject();
+
+    virtual void unlockObject();
+
     virtual void startTimer();
 
 
@@ -87,8 +87,6 @@ protected slots:
      * Timer based Commands handling loop
      */
     void timerHandlerExecuteCommands();
-public slots:
-  virtual void finish();
 
 signals:
     void runTimer(int time);

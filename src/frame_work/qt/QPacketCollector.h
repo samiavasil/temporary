@@ -2,6 +2,7 @@
 #define _QPACKETCOLLECTOR_H
 
 
+#include "frame_work_global.h"
 #include <QObject>
 
 #include "base/CPacketCollector.h"
@@ -12,10 +13,11 @@
 #include <QByteArray>
 
 
-class QPortIO;
-class QProtocolPackFactory;
+class CPortIO;
+class CPacket;
+class CProtocolPackFactory;
 
-class QPacketCollector : public QObject, public CPacketCollector {
+class FRAME_WORKSHARED_EXPORT QPacketCollector : public QObject, public CPacketCollector {
 Q_OBJECT
 
   protected:
@@ -23,7 +25,7 @@ Q_OBJECT
 
 
   public:
-    explicit QPacketCollector( QPortIO* port, QProtocolPackFactory* protocol, QObject* parent = 0 );
+    QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent = 0);
 
     virtual ~QPacketCollector();
 

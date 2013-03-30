@@ -2,6 +2,7 @@
 #define _QSERIALPORTIO_H
 
 
+#include "frame_work_global.h"
 #include "qt/QPortIO.h"
 #include <qtserial/qextserialport.h>
 
@@ -11,7 +12,7 @@ namespace Ui {
   class SerialPortConfig;
 }
 
-class QSerialPortIO : public QPortIO {
+class FRAME_WORKSHARED_EXPORT QSerialPortIO : public QPortIO {
 Q_OBJECT
 
   public:

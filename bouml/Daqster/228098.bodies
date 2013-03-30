@@ -12,12 +12,12 @@ for( int i=0; i < m_fw_objects.count(); i++ ){
         m_fw_objects[i]->deleteLater();
     }
 }
-!!!484738.cpp!!!	objectDestroyed(in fW : QObject) : void
-if(  fw && m_fw_objects.contains(  fw ) ){
-    DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
-    m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
-    DEBUG("On List %d",m_fw_objects.count());
-    if( 0 == m_fw_objects.count() ){
-       deleteLater();
-    }
-}
+!!!484738.cpp!!!	objectDestroyed(in obj : QObject) : void
+  if(  obj && m_fw_objects.contains(  obj ) ){
+      DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)obj);
+      m_fw_objects.takeAt(m_fw_objects.indexOf( obj ));
+      DEBUG("On List %d",m_fw_objects.count());
+      if( 0 == m_fw_objects.count() ){
+         deleteLater();
+      }
+  }

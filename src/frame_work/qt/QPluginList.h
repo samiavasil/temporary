@@ -1,6 +1,7 @@
 #ifndef PLUGINLIST_H
 #define PLUGINLIST_H
 
+#include "frame_work_global.h"
 #include <QDialog>
 #include <QString>
 #include <QMap>
@@ -14,7 +15,7 @@ class PluginList;
 
 
 
-class QPluginList : public QDialog /* singleton */
+class FRAME_WORKSHARED_EXPORT QPluginList : public QDialog /* singleton */
 {
     Q_OBJECT
     

@@ -2,6 +2,7 @@
 #define _QPROTOCOLLOADER_H
 
 
+#include "frame_work_global.h"
 #include "base/CProtocolLoader.h"
 
 enum{
@@ -17,7 +18,7 @@ enum{
 
 };
 
-class QProtocolLoader : public CProtocolLoader {
+class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
   public:
     virtual int readProtocolData();
 

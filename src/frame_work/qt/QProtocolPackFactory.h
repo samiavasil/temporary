@@ -2,18 +2,21 @@
 #define _QPROTOCOLPACKFACTORY_H
 
 
+#include "frame_work_global.h"
 #include "base/CProtocolPackFactory.h"
 #include <QList>
 
 #include <QMap>
 
+#include <QObject>
+
 
 class QProtocolLoader;
 class CPacket;
 
-class QProtocolPackFactory :public QObject, public CProtocolPackFactory {
+class FRAME_WORKSHARED_EXPORT QProtocolPackFactory : public CProtocolPackFactory, public QObject {
   public:
-    QProtocolPackFactory(QProtocolLoader * pLoader, QObject* parent = 0 );
+    QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent = 0);
 
     virtual ~QProtocolPackFactory();
 

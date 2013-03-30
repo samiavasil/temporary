@@ -20,53 +20,53 @@ QFraCreator::~QFraCreator( )
 
 }
 
-bool QFraCreator::Create( CFrameWork * fW )
+bool QFraCreator::Create( CFrameWork *fW )
 {
    bool bRet = false;
 
     if( fW )
     {
-       QFrameWork* qfW = dynamic_cast<QFrameWork*>(fW);
+       QFrameWork* qfW =  dynamic_cast<QFrameWork*>(fW);
         if( qfW )
         {
-            QWidget* ptr = dynamic_cast<QWidget*>(fW);//DELL ME
-            if(ptr)
-            {
+            DEBUG("%d\n", qfW->metaObject()->indexOfSignal("destroyed"));
                Ui::QFraFrameWorkView * ui = new Ui::QFraFrameWorkView;
-               ui->setupUi(ptr);
-               ptr->show();
-               QPortIOSimulator* port      = new QPortIOSimulator( ptr );
+               ui->setupUi(qfW);
+               qfW->show();
+               QPortIOSimulator* port      = new QPortIOSimulator( qfW );
                if( port )
                {
-                   //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno ptr) za da moje da se trie lesno
+                   //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno qfW) za da moje da se trie lesno
+
                    QProtocolLoader     * pLoader = new QProtocolLoader();
-                   QProtocolPackFactory* fact    = new QProtocolPackFactory( pLoader, ptr );
-                   QPacketCollector*     colect  = new QPacketCollector( port, fact, ptr );
+                   QProtocolPackFactory* fact    = new QProtocolPackFactory( pLoader, qfW );
+                   QPacketCollector*     colect  = new QPacketCollector( port, fact, qfW );
                    if( port&&colect ){
                        connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
                    }
                    //port->showPortConfiguration( NULL );
                    delete pLoader;
+                   QCommandExecutor* pExecutor = new QCommandExecutor( qfW );
 
-                   QCommandExecutor* pExecutor = new QCommandExecutor( ptr );
                    if( 0 != pExecutor ){
                        if( NO_ERR != pExecutor->startExecution( true ) ){
                            CRITICAL( "Can't start Executor thread" );
                        }
                    }
                    QtestCommand* comm = new QtestCommand( colect, fact, pExecutor);
-                   connect( ptr,SIGNAL(destroyed()),pExecutor,SLOT(finish()) );
+                   QObject::connect( qfW,SIGNAL(fwDestroy()),pExecutor,SLOT(finish()) ,Qt::DirectConnection );
                    pExecutor->appendCommand(comm);
                    /*TODO DELL ME*/
                    sleep(1);
+                  // pExecutor->startExecution(true);
                    pExecutor->pauseExecution(false);
-               }
 
             }
             bRet = true;
 
         }
     }
+
     return bRet;
 }
 

@@ -44,7 +44,7 @@ if( 0 != exec ){
 return ( exec );                                         
 !!!335618.cpp!!!	createPacketCollector(in cFwk : CFrameWork) : CPacketCollector*
   DEBUG("Create Packet Collector");                
-  QPacketCollector* coll = new QPacketCollector(cFwk);//TODO
+  QPacketCollector* coll ;//TODO= new QPacketCollector(cFwk)
   if( 0 == coll ){                                 
       CRITICAL( "Can't create QPacketCollector" ); 
   }                                                

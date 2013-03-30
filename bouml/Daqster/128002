@@ -1,6 +1,6 @@
 format 76
 "BaseFrameWorkPackage" // BaseFrameWorkPackage
-  revision 82
+  revision 86
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -62,6 +62,20 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 491394 "~CCommand"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 134786 "handler"
 	abstract cpp_virtual public explicit_return_type "int"
 	nparams 0
@@ -371,10 +385,11 @@ ${inlines}
       operation 321026 "CFrameWork"
 	public explicit_return_type ""
 	nparams 1
-	  param in name "elementsFactory" type class_ref 194946 // CFrameWorkElementsFactory
+	  param in name "creator" explicit_type "CCreator"
+	    defaultvalue "0"
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -384,7 +399,7 @@ ${inlines}
       end
 
       operation 321154 "~CFrameWork"
-	public explicit_return_type ""
+	cpp_virtual public explicit_return_type ""
 	nparams 0
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
@@ -397,127 +412,8 @@ ${inlines}
 	
       end
 
-      classrelation 297218 // <dependency>
-	relation 296962 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297218 // <dependency>
-	  b parent class_ref 128258 // CControlView
-      end
-
-      classrelation 134530 // m_ControlView (<directional aggregation>)
-	relation 134530 o-->
-	  a role_name "m_ControlView" protected
-	    comment "pointer to Control view widget"
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 134530 // m_ControlView (<directional aggregation>)
-	  b parent class_ref 128258 // CControlView
-      end
-
-      classrelation 297090 // <dependency>
-	relation 296834 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297090 // <dependency>
-	  b parent class_ref 128130 // CDataPlot
-      end
-
-      classrelation 134658 // m_DataPlot (<directional aggregation>)
-	relation 134658 o-->
-	  a role_name "m_DataPlot" protected
-	    comment "Pointer to Data Plot widget"
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 134658 // m_DataPlot (<directional aggregation>)
-	  b parent class_ref 128130 // CDataPlot
-      end
-
-      classrelation 297730 // <dependency>
-	relation 297474 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297730 // <dependency>
-	  b parent class_ref 135298 // CCommandExecutor
-      end
-
-      classrelation 134786 // m_Executor (<directional aggregation>)
-	relation 134786 o-->
-	  a role_name "m_Executor" protected
-	    comment "Frame Work command executor. Thread based class which have a command queue. This class have a thread and  timer.
- If there have some command in queue, it start timer and execute coresponding command handler. If handler return not 0,
-handler is called again after timer period. If handler return different from 0 value, command is unloaded from queue. 
-If queue is empty timer is stoped and task go to sleep."
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 134786 // m_Executor (<directional aggregation>)
-	  b parent class_ref 135298 // CCommandExecutor
-      end
-
-      classrelation 297602 // <dependency>
-	relation 297346 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297602 // <dependency>
-	  b parent class_ref 135554 // CProtocolPackFactory
-      end
-
-      classrelation 141314 // m_Protocol (<directional aggregation>)
-	relation 141314 o-->
-	  a role_name "m_Protocol" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 141314 // m_Protocol (<directional aggregation>)
-	  b parent class_ref 135554 // CProtocolPackFactory
-      end
-
-      classrelation 297346 // <dependency>
-	relation 297090 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297346 // <dependency>
-	  b parent class_ref 128386 // CPortIO
-      end
-
-      classrelation 141570 // m_PortIO (<directional aggregation>)
-	relation 141570 o-->
-	  a role_name "m_PortIO" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 141570 // m_PortIO (<directional aggregation>)
-	  b parent class_ref 128386 // CPortIO
-      end
-
-      classrelation 297474 // <dependency>
-	relation 297218 -_->
-	  a package
-	    cpp default "#include in header"
-	    classrelation_ref 297474 // <dependency>
-	  b parent class_ref 134914 // CPacketCollector
-      end
-
-      classrelation 141698 // m_Colector (<directional aggregation>)
-	relation 141698 o-->
-	  a role_name "m_Colector" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 141698 // m_Colector (<directional aggregation>)
-	  b parent class_ref 134914 // CPacketCollector
-      end
-
-      attribute 187778 "m_ElementsFactory"
-	protected explicit_type "CFrameWorkElementsFactory*"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
-	comment "Factory witch constructs ControlView, DataPlot, Executor, Protocol, PortIO,Colector (elements of CFrameWork)."
-      end
-
-      operation 210818 "getPortIO"
-	cpp_virtual public explicit_return_type "CPortIO *"
+      operation 498050 "Create"
+	public explicit_return_type "bool"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -530,81 +426,11 @@ If queue is empty timer is stoped and task go to sleep."
 	
       end
 
-      operation 210946 "getColector"
-	volatile public explicit_return_type "CPacketCollector  *"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 211074 "getProtocol"
-	public explicit_return_type "CProtocolPackFactory *"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 217858 "geExecutor"
-	public explicit_return_type "CCommandExecutor*"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 217986 "getDataPlot"
-	public explicit_return_type "CDataPlot *"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 218114 "getControlView"
-	public explicit_return_type "CControlView*"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 321282 "attachElementsFactory"
-	public explicit_return_type "int"
+      operation 498178 "setCreator"
+	public explicit_return_type "void"
 	nparams 1
-	  param in name "elementsFactory" explicit_type "CFrameWorkElementsFactory"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	  param in name "creator" explicit_type "CCreator"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${abstract};
 "
 	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
@@ -613,23 +439,17 @@ If queue is empty timer is stoped and task go to sleep."
 	
 	
 	
-	comment "This function attach elements factory for FrameWork. If there allready have a factory,
-this function make deallocation of all ellements, created with current factory, 
-deallocate current factory and allocate new elements with new factory."
+	comment "TODO: TBD"
       end
 
-      operation 322178 "deattachCurrentElementsFactory"
-	protected explicit_return_type "int"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+      attribute 254594 "m_creator"
+	protected explicit_type "CCreator*"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
 "
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
       end
     end
 
@@ -1036,22 +856,14 @@ ${inlines}
 	  b parent class_ref 128386 // CPortIO
       end
 
-      classrelation 142082 // m_fWork (<directional aggregation>)
-	relation 142082 o-->
-	  a role_name "m_fWork" protected
-	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
-"
-	    classrelation_ref 142082 // m_fWork (<directional aggregation>)
-	  b parent class_ref 128002 // CFrameWork
-      end
-
       operation 231170 "CPacketCollector"
 	public explicit_return_type ""
-	nparams 1
-	  param in name "fWk" explicit_type "CFrameWork"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+	nparams 2
+	  param in name "port" explicit_type "CPortIO"
+	  param in name "protocol" explicit_type "CProtocolPackFactory"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${volatile}${throw} {
   ${body}}
 "
 	
@@ -1066,6 +878,20 @@ ${inlines}
 	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 498306 "isChained"
+	public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -1240,6 +1066,26 @@ typedef enum {
 	php ""
 	python ""
 	idl ""
+      end
+
+      attribute 254722 "m_PortIo"
+	protected explicit_type "CPortIO*"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 254850 "m_Protocol"
+	protected explicit_type "CProtocolPackFactory*"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
       end
 
       attribute 141314 "m_RecState"
@@ -2130,11 +1976,25 @@ ${inlines}
       idl_decl ""
       explicit_switch_type ""
       
+      operation 491522 "~CCreator"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
       operation 477826 "Create"
-	abstract cpp_virtual public explicit_return_type "void"
+	abstract cpp_virtual public explicit_return_type "bool"
 	nparams 1
 	  param in name "fW" explicit_type "CFrameWork"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}const ${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	

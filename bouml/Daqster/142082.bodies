@@ -1,5 +1,5 @@
 class QPacketCollector
-!!!365186.cpp!!!	QPacketCollector(in cFwk : CFrameWork)
+!!!365186.cpp!!!	QPacketCollector(in port : CPortIO, in protocol : CProtocolPackFactory, in parent : QObject = 0)
 DEBUG("Create QPacketCollector");
 !!!379778.cpp!!!	~QPacketCollector()
 DEBUG("Destroy QPacketCollector");
@@ -10,15 +10,14 @@ while( m_PacketsList.count( ) ){
 DEBUG("TODO:Not implemented");
 return 0;
 !!!414466.cpp!!!	transmitPacket(in packet : CPacket) : int
-int ret = WRONG_PARAMS;                                                     
-CPortIO* port = m_fWork->getPortIO();                                       
-CProtocolPackFactory*protocol = m_fWork->getProtocol();                     
-if( port&&protocol ){                                                       
-    protocol->addPacketHeader(packet);                                      
-    protocol->addPacketPostFix(packet);                                     
-    ret = port->write((const char *) packet->data(),packet->packLenBytes());
-}                                                                           
-return ret;                                                                 
+  int ret = WRONG_PARAMS;                                                     
+
+  if( packet && isChained() ){
+      m_Protocol->addPacketHeader(packet);
+      m_Protocol->addPacketPostFix(packet);
+      ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
+  }                                                                           
+  return ret;                                                                
 !!!364290.cpp!!!	getRecPacketNum() : int
 DEBUG("TODO:Not implemented");
 return 0;

@@ -4,13 +4,12 @@
 #include <QtPlugin>
 #include <QList>
 #include <QIcon>
-#include "frame_work_global.h"
 
 class QFrameWork;
 typedef enum{
   FRAME_WORK,
   PORT_IO,
-  DATA_PLOT,
+  DATA_PLOT, 
   UNDEFINED
 }InterfaceType_t;
 

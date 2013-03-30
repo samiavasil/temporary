@@ -9,7 +9,7 @@
 
 class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface
 {
-
+    Q_OBJECT
     Q_INTERFACES(QPluginObjectsInterface)
 public:
     FraFrameWorkInterface( QObject* parent = 0);

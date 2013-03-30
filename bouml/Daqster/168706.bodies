@@ -1,9 +1,27 @@
 class QFrameWork
-!!!314498.cpp!!!	QFrameWork(in factory : QFrameWorkElementsFactory, in parent : QWidget = 0)
-QPacketCollector* colect = dynamic_cast<QPacketCollector*> (m_Colector);
-QPortIO* port = dynamic_cast<QPortIO*> (m_PortIO);
-if( port&&colect ){
-    connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
-}
+!!!484866.cpp!!!	QFrameWork(in creator : QCreator = 0, in parent : QWidget = 0)
+DEBUG( "Create QFrameWork\n" );
+setAttribute(Qt::WA_DeleteOnClose, true);
 !!!434690.cpp!!!	~QFrameWork()
-DEBUG("Destroy QFrameWork");
+DEBUG( "Destroy QFrameWork\n" );
+  emit fwDestroy();
+  if( m_creator )
+  {
+     delete m_creator;
+      m_creator = 0;
+  }
+!!!511746.cpp!!!	Create() : bool
+return m_creator->Create( this );
+!!!511874.cpp!!!	CreateObjectFromType(in QObject : parent) : QList<QObject*>
+    QList<QObject*> ret_List;
+    QList<QPluginDescriptor *> list;
+
+    list = QPluginList::Instance()->getAllActivePlugins( DATA_PLOT );
+
+    for( int i = 0; i < list.count(); i++ ){
+        if( list[i] &&  ( list[i]->type() != FRAME_WORK ) ){
+            ret_List.append( list[i]->cretate_plugin_object( list[i]->type() , parent ) );//DELL ME
+        }
+
+    }
+    return ret_List;

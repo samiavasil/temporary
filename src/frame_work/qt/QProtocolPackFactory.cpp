@@ -3,13 +3,13 @@
 #include "qt/QProtocolLoader.h"
 #include "base/CPacket.h"
 
-QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject* parent ) :QObject(parent),CProtocolPackFactory(pLoader){
+QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent):QObject(parent),CProtocolPackFactory(pLoader) {
       DEBUG("Create QProtocolPackFactory");
       if(  attachProtocolLoader(pLoader) ) {
           DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");
       }
       //4231 4 7 11 6
-      /*u8 data[2];
+      u8 data[2];
       data[0]=0xff;
       data[1]=0xff;
       setMessage(MSG4_ID,data);
@@ -21,7 +21,7 @@ QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject* p
       setMessage(MSG3_ID,data);
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG1_ID,data);*/
+      setMessage(MSG1_ID,data);
   
 #ifdef DUMP_PROTOCOL_LOAD
       DEBUG("DUMP protocol loaded packet types");
@@ -274,7 +274,7 @@ int QProtocolPackFactory::packetPayloadBitLen(const pack_id_t packId, int * payl
 
 int QProtocolPackFactory::checkPacketConsistency(CPacket * packet) {
   int ret = WRONG_PARAMS;
-  u8 postfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];
+  u8 postfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];//todo sometig wrong here...not checked
   u8 packPostfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];
   if( packet ){
       postfix[0]=calCulateCrc8( packet->data(), packet->packLenBits() - m_postFixLenBits );

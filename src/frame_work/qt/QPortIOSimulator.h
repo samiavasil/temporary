@@ -2,13 +2,14 @@
 #define _QPORTIOSIMULATOR_H
 
 
+#include "frame_work_global.h"
 #include <QByteArray>
 
 #include <QMutex>
 
 #include "qt/QPortIO.h"
 
-class QPortIOSimulator : public QPortIO {
+class FRAME_WORKSHARED_EXPORT QPortIOSimulator : public QPortIO {
 Q_OBJECT
 
   public:

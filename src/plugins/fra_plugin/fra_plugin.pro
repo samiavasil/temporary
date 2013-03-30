@@ -39,7 +39,6 @@ SOURCES  += \
     QFraCreator.cpp
 
 HEADERS += \
-    fra_plugin_global.h \
     qtestcommand.h \
     QDataPlot.h \
     FraFrameWorkInterface.h \

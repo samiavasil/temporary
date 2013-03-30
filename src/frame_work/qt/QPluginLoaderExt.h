@@ -1,6 +1,6 @@
 #ifndef _QPLUGINLOADEREXT_H
 #define _QPLUGINLOADEREXT_H
-
+#include "frame_work_global.h"
 
 #include <QPluginLoader>
 
@@ -9,7 +9,7 @@
 
 class QPluginObjectsInterface;
 
-class QPluginLoaderExt : public QPluginLoader {
+class FRAME_WORKSHARED_EXPORT QPluginLoaderExt : public QPluginLoader {
 Q_OBJECT
 
   protected:

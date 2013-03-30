@@ -37,17 +37,6 @@ if( cmd ){
     ret = NO_ERR;                         
 }                                         
 return ret;                               
-!!!174466.cpp!!!	executeCommand(in comm_num : int) : int
-int ret = 0;                                           
-CCommand * comm = m_commands.value( comm_num, NULL);   
-if( comm ){                                            
-    ret = comm->handler();                             
-}                                                      
-return ret;                                            
-!!!173570.cpp!!!	lockObject() : void
-m_mutex.lock();
-!!!173698.cpp!!!	unlockObject() : void
-m_mutex.unlock();
 !!!174210.cpp!!!	flushCommands() : void
 QCommand * comm;                 
 while( 0 < m_commands.count() ){ 
@@ -92,6 +81,29 @@ else{
     exit(0);                
 }                                               
 return NO_ERR;
+!!!504962.cpp!!!	finish() : void
+
+    startExecution( false );
+    DEBUG("FINISH!!!! QCommandExecutor\n");
+    if( false == wait( 10000 ) ){
+       DEBUG("FINISH!!!! Not Finished QCommandExecutor\n");
+    }
+    else
+    {
+        DEBUG("FINISH!!!! FINISHED QCommandExecutor\n");
+    }
+  //  sleep(1);
+!!!174466.cpp!!!	executeCommand(in comm_num : int) : int
+int ret = 0;                                           
+CCommand * comm = m_commands.value( comm_num, NULL);   
+if( comm ){                                            
+    ret = comm->handler();                             
+}                                                      
+return ret;                                            
+!!!173570.cpp!!!	lockObject() : void
+m_mutex.lock();
+!!!173698.cpp!!!	unlockObject() : void
+m_mutex.unlock();
 !!!182402.cpp!!!	startTimer() : void
 if( 0 == m_timer ){                         
      DEBUG("Timer isn't initialised");

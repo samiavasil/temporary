@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 86
+  revision 90
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -50,6 +50,152 @@ format 76
       size A4-Landscape
     end
 
+    class 228098 "QPluginObjectsInterface"
+      abstract visibility package 
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit},public plugin_interface{
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 318338 // <generalisation>
+	relation 318082 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 318338 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
+
+      extra_member 220418 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 484610 "QPluginObjectsInterface"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw}:${t0}(${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 442114 "~QPluginObjectsInterface"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 442242 "createObject"
+	public explicit_return_type "QObject*"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 442370 "destroyPI"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 220546 "public slots:"
+	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 484738 "objectDestroyed"
+	cpp_virtual public explicit_return_type "void"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 449282 "allocateObject"
+	abstract cpp_virtual protected explicit_return_type "QObject*"
+	nparams 1
+	  param in name "obj" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      attribute 234882 "m_fw_objects"
+	protected explicit_type "QList<QObject*>"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 241410 "m_Icon"
+	protected explicit_type "QIcon"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
     classdiagram 141058 "QTFrameWorkDependancyClassDiagram"
       draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
       size A4
@@ -57,7 +203,7 @@ format 76
 
     class 142082 "QPacketCollector"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -121,11 +267,14 @@ ${inlines}
 
       operation 365186 "QPacketCollector"
 	public explicit_return_type ""
-	nparams 1
-	  param in name "cFwk" explicit_type "CFrameWork"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+	nparams 3
+	  param in name "port" explicit_type "CPortIO"
+	  param in name "protocol" explicit_type "CProtocolPackFactory"
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}, ${t2} * ${p2}${v2}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw}:CPacketCollector( ${p0}){
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}, ${t2} * ${p2}${)}${volatile}${throw}:${t2}(${p2}),CPacketCollector( ${p0},${p1} ) {
   ${body}}
 "
 	
@@ -360,7 +509,7 @@ ${inlines}
 
     class 148738 "QCommandExecutor"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -382,7 +531,7 @@ ${inlines}
 
       classrelation 162562 // <generalisation>
 	relation 162562 ---|>
-	  a protected
+	  a public
 	    cpp default "${type}"
 	    classrelation_ref 162562 // <generalisation>
 	  b parent class_ref 148866 // QThread
@@ -492,49 +641,6 @@ It is will be good if you don't use it ( only implement it  ), because it is use
 have a object lock ( for more see CCOmandExecutor souce )."
       end
 
-      operation 174466 "executeCommand"
-	cpp_virtual protected explicit_return_type "int"
-	nparams 1
-	  param in name "comm_num" explicit_type "int"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 173570 "lockObject"
-	cpp_virtual protected explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 173698 "unlockObject"
-	cpp_virtual protected explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
       operation 174210 "flushCommands"
 	cpp_virtual public explicit_return_type "void"
 	nparams 0
@@ -594,6 +700,73 @@ have a object lock ( for more see CCOmandExecutor souce )."
 	
 	
 	comment "Start commands execution - run thread  and timer. Comands are exectuted repeatedly with timer."
+      end
+
+      extra_member 227202 "public slots:"
+	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 504962 "finish"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 174466 "executeCommand"
+	cpp_virtual protected explicit_return_type "int"
+	nparams 1
+	  param in name "comm_num" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 173570 "lockObject"
+	cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 173698 "unlockObject"
+	cpp_virtual protected explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
       end
 
       operation 182402 "startTimer"
@@ -729,7 +902,7 @@ have a object lock ( for more see CCOmandExecutor souce )."
 
     class 148994 "QCommand"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT  ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -758,11 +931,11 @@ ${inlines}
       operation 189186 "QCommand"
 	public explicit_return_type ""
 	nparams 1
-	  param in name "fWork" type class_ref 168706 // QFrameWork
-	    defaultvalue "NULL"
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
 	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw}:${t0}(${p0}) {
   ${body}}
 "
 	
@@ -771,22 +944,18 @@ ${inlines}
 	
       end
 
-      operation 182658 "~QCommand"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
+      extra_member 227074 "public slots:"
 	
-	
-	
-	
+	cpp "public slots:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
       end
 
-      operation 182530 "handler"
-	cpp_virtual public explicit_return_type "int"
+      operation 504834 "finish"
+	cpp_virtual public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
@@ -797,33 +966,12 @@ ${inlines}
 	
 	
 	
-	comment "Command handler"
-      end
-
-      attribute 208258 "m_fWork"
-	protected explicit_type "QFrameWork*"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
-      end
-
-      attribute 207362 "a"
-	protected explicit_type "int"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
       end
     end
 
     class 168706 "QFrameWork"
       visibility package 
-      cpp_decl "${comment}${template}class Q_DECL_EXPORT ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -834,16 +982,6 @@ ${inlines}
       explicit_switch_type ""
       
       associated_diagram classdiagram_ref 134530 // QTFrameWorkClassDiagram
-      extra_member 200194 "Q_OBJECT"
-	
-	cpp "Q_OBJECT
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
       classrelation 209538 // <generalisation>
 	relation 209538 ---|>
 	  a public
@@ -860,21 +998,14 @@ ${inlines}
 	  b parent class_ref 128002 // CFrameWork
       end
 
-      operation 314498 "QFrameWork"
-	public explicit_return_type ""
-	nparams 2
-	  param in name "factory" explicit_type "QFrameWorkElementsFactory"
-	  param in name "parent" explicit_type "QWidget"
-	    defaultvalue "0"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} :QWidget( ${p1}),CFrameWork( ${p0}){
-  ${body}}
-"
+      extra_member 200194 "Q_OBJECT"
 	
-	
-	
-	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
       end
 
       operation 484866 "QFrameWork"
@@ -886,7 +1017,7 @@ ${inlines}
 	    defaultvalue "0"
 	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw} {
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw}:CFrameWork(${p0}),${t1}(${p1}){
   ${body}}
 "
 	
@@ -902,6 +1033,56 @@ ${inlines}
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
   ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 511746 "Create"
+	public explicit_return_type "bool"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 511874 "CreateObjectFromType"
+	public explicit_return_type "QList<QObject*>"
+	nparams 1
+	  param in name "parent" explicit_type "QObject"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      extra_member 233858 "signals:"
+	
+	cpp "signals:
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
+      operation 512002 "fwDestroy"
+	public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
 "
 	
 	
@@ -1185,7 +1366,7 @@ ${inlines}
 
     class 175234 "QProtocolPackFactory"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -1221,11 +1402,13 @@ ${inlines}
 
       operation 379266 "QProtocolPackFactory"
 	public explicit_return_type ""
-	nparams 1
+	nparams 2
 	  param in name "pLoader" explicit_type "QProtocolLoader"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+	  param in name "parent" explicit_type "QObject"
+	    defaultvalue "0"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}, ${t1} * ${p1}${v1}${)}${volatile}${throw};
 "
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw} :CProtocolPackFactory(${p0}){
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}, ${t1} * ${p1}${)}${throw}:${t1}(${p1}),CProtocolPackFactory(${p0}) {
   ${body}}
 "
 	
@@ -1565,11 +1748,19 @@ ${inlines}
 	
 	
       end
+
+      classrelation 324866 // <generalisation>
+	relation 324610 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 324866 // <generalisation>
+	  b parent class_ref 142210 // QObject
+      end
     end
 
     class 175362 "QProtocolLoader"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -1751,7 +1942,7 @@ ${inlines}
 
     class 214530 "QSerialPortIO"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2126,7 +2317,7 @@ ${inlines}
 
     class 221058 "QPortIOSimulator"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2403,7 +2594,7 @@ ${inlines}
 
     class 227586 "QPluginLoaderExt"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2600,155 +2791,9 @@ ${inlines}
       end
     end
 
-    class 228098 "QPluginObjectsInterface"
-      abstract visibility package 
-      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} : public plugin_interface{
-${members}};
-${inlines}
-"
-      java_decl ""
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 318338 // <generalisation>
-	relation 318082 ---|>
-	  a public
-	    cpp default "${type}"
-	    classrelation_ref 318338 // <generalisation>
-	  b parent class_ref 142210 // QObject
-      end
-
-      extra_member 220418 "Q_OBJECT"
-	
-	cpp "Q_OBJECT
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
-      operation 484610 "QPluginObjectsInterface"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "parent" explicit_type "QObject"
-	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw} :public ${t0}(${p0}){
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 442114 "~QPluginObjectsInterface"
-	cpp_virtual public explicit_return_type ""
-	nparams 0
-	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
-"
-	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 442242 "createObject"
-	public explicit_return_type "QObject*"
-	nparams 1
-	  param in name "obj" explicit_type "QObject"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 442370 "destroyPI"
-	cpp_virtual public explicit_return_type "void"
-	nparams 0
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      extra_member 220546 "public slots:"
-	
-	cpp "public slots:
-" ""
-	java ""
-	php ""
-	python ""
-	idl ""
-      end
-
-      operation 484738 "objectDestroyed"
-	cpp_virtual public explicit_return_type "void"
-	nparams 1
-	  param in name "fW" explicit_type "QObject"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
-"
-	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-	
-      end
-
-      operation 449282 "allocateObject"
-	abstract cpp_virtual protected explicit_return_type "QObject*"
-	nparams 1
-	  param in name "obj" explicit_type "QObject"
-	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
-"
-	
-	
-	
-	
-      end
-
-      attribute 234882 "m_fw_objects"
-	protected explicit_type "QList<QObject*>"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
-      end
-
-      attribute 241410 "m_Icon"
-	protected explicit_type "QIcon"
-	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
-"
-	java_decl ""
-	php_decl ""
-	python_decl ""
-	idl_decl ""
-      end
-    end
-
     class 241154 "QPortIO"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2823,7 +2868,7 @@ ${inlines}
 
     class 248194 "QCreator"
       visibility package 
-      cpp_decl "${comment}${template}class ${name}${inherit} {
+      cpp_decl "${comment}${template}class FRAME_WORKSHARED_EXPORT ${name}${inherit} {
 ${members}};
 ${inlines}
 "
@@ -2849,14 +2894,52 @@ ${inlines}
 	  b parent class_ref 248066 // CCreator
       end
 
+      extra_member 227330 "Q_OBJECT"
+	
+	cpp "Q_OBJECT
+" ""
+	java ""
+	php ""
+	python ""
+	idl ""
+      end
+
       operation 478082 "QCreator"
 	public explicit_return_type ""
 	nparams 1
 	  param in name "parent" explicit_type "QObject"
 	    defaultvalue "NULL"
-	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+	cpp_decl "    ${comment}${inline}explicit ${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
 "
 	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${volatile}${throw}:${t0}(${p0}){
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 505090 "~QCreator"
+	cpp_virtual public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${virtual}${name}${(}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${)}${volatile}${throw} {
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 505218 "Free"
+	cpp_virtual public explicit_return_type "void"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
   ${body}}
 "
 	
@@ -2877,6 +2960,7 @@ ${inlines}
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -2900,6 +2984,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -2923,6 +3008,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -2932,18 +3018,6 @@ ${namespace_end}
 "
       cpp_src "${comment}
 ${includes}
-#include \"base/CPacket.h\"
-#include \"base/CPacketCollector.h\"
-#include \"qt/QProtocolPackFactory.h\"
-#include \"qt/QProtocolLoader.h\"
-#include<stdio.h>
-pack_id_t pId[4]={
-    PACK1_ID,
-    PACK2_ID,
-    PACK3_ID,
-    PACK4_ID,
-};
-
 ${namespace_start}
 ${members}
 ${namespace_end}"
@@ -2958,6 +3032,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -2967,11 +3042,7 @@ ${namespace_end}
 "
       cpp_src "${comment}
 ${includes}
-#include \"qt/QCommand.h\"
-#include \"qt/QCommandExecutor.h\"
-#include \"qt/QPortIOSimulator.h\"
-#include \"qt/QPacketCollector.h\"
-
+#include \"qt/QPluginList.h\"
 ${namespace_start}
 ${members}
 ${namespace_end}"
@@ -2986,6 +3057,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -3009,6 +3081,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 enum{
@@ -3078,7 +3151,12 @@ ${namespace_end}"
 
     artifact 162178 "ProtoGen"
       stereotype "source"
-      cpp_h "#ifdef GEN_MSG_ENUMS
+      cpp_h "/*TODO:
+  This file should be moved from frame_work to target app.
+  According this there should be updated and QProtocolLoader.
+  This is only particlar example for MSG and PACKETS MAPING
+*/
+#ifdef GEN_MSG_ENUMS
 #define ADD_MESSAGE(a,b,c,d)   a = b,
 #define PACKET_DESC(a,b)
 #define PACKET_DESC_END()
@@ -3179,6 +3257,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 
@@ -3327,6 +3406,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -3348,7 +3428,7 @@ ${namespace_end}"
       stereotype "source"
       cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
 #define ${NAMESPACE}_${NAME}_H
-
+#include \"frame_work_global.h\"
 ${comment}
 ${includes}
 ${declarations}
@@ -3375,7 +3455,6 @@ ${namespace_end}"
 #include <QtPlugin>
 #include <QList>
 #include <QIcon>
-#include \"frame_work_global.h\"
 
 class QFrameWork;
 typedef enum{
@@ -3427,6 +3506,7 @@ public:
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 #include \"interfaces.h\"
 ${declarations}
@@ -3455,6 +3535,7 @@ ${namespace_end}
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}
@@ -3478,6 +3559,7 @@ ${namespace_end}"
 #define ${NAMESPACE}_${NAME}_H
 
 ${comment}
+#include \"frame_work_global.h\"
 ${includes}
 ${declarations}
 ${namespace_start}

@@ -1,10 +1,7 @@
 
 #include "qt/QPluginObjectsInterface.h"
-#include <QObject>
 
-QPluginObjectsInterface::QPluginObjectsInterface(QObject* parent):QObject(parent)
-{
-
+QPluginObjectsInterface::QPluginObjectsInterface(QObject * parent):QObject(parent){
 }
 
 QPluginObjectsInterface::~QPluginObjectsInterface() {
@@ -19,21 +16,22 @@ QObject* QPluginObjectsInterface::createObject(QObject * obj) {
   return ret_obj;
 }
 
-void QPluginObjectsInterface::destroyPI(){
-    for( int i=0; i < m_fw_objects.count(); i++ ){
-        if( m_fw_objects[i] ){
-            m_fw_objects[i]->deleteLater();
-        }
-    }
+void QPluginObjectsInterface::destroyPI() {
+  for( int i=0; i < m_fw_objects.count(); i++ ){
+      if( m_fw_objects[i] ){
+          m_fw_objects[i]->deleteLater();
+      }
+  }
 }
 
-void QPluginObjectsInterface::objectDestroyed( QObject* fw ){
-    if(  fw && m_fw_objects.contains(  fw ) ){
-        DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)fw);
-        m_fw_objects.takeAt(m_fw_objects.indexOf( fw ));
+void QPluginObjectsInterface::objectDestroyed(QObject * obj) {
+    if(  obj && m_fw_objects.contains(  obj ) ){
+        DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)obj);
+        m_fw_objects.takeAt(m_fw_objects.indexOf( obj ));
         DEBUG("On List %d",m_fw_objects.count());
         if( 0 == m_fw_objects.count() ){
            deleteLater();
         }
     }
 }
+

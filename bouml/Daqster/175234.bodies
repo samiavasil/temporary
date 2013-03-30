@@ -1,5 +1,5 @@
 class QProtocolPackFactory
-!!!379266.cpp!!!	QProtocolPackFactory(in pLoader : QProtocolLoader)
+!!!379266.cpp!!!	QProtocolPackFactory(in pLoader : QProtocolLoader, in parent : QObject = 0)
     DEBUG("Create QProtocolPackFactory");
     if(  attachProtocolLoader(pLoader) ) {
         DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");
@@ -244,7 +244,7 @@ else{
 return ret;
 !!!300162.cpp!!!	checkPacketConsistency(in packet : CPacket) : int
 int ret = WRONG_PARAMS;
-u8 postfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];
+u8 postfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];//todo sometig wrong here...not checked
 u8 packPostfix[BITS_TO_BYTES_CEIL(m_postFixLenBits)];
 if( packet ){
     postfix[0]=calCulateCrc8( packet->data(), packet->packLenBits() - m_postFixLenBits );
@@ -291,7 +291,7 @@ if( packet ){
     ret = packet->setBits( packet->packLenBits() - m_postFixLenBits,m_postFixLenBits,postfix );
 }
 return  ret;
-!!!428162.cpp!!!	calCulateCrc8(in u8 : data, in numBits : int) : int
+!!!428162.cpp!!!	calCulateCrc8(in data : u8, in numBits : int) : int
 int bytesNum = numBits/8;
 int bitsNum  = numBits%8;
 int i;

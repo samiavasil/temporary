@@ -1,5 +1,5 @@
 #include "FraFrameWorkInterface.h"
-#include "QFraFrameWork.h"
+#include "qt/QFrameWork.h"
 #include "qt/QFrameWorkElementsFactory.h"
 #include "QFraCreator.h"
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
@@ -28,6 +28,9 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
     //return dynamic_cast<QObject *> ( new QFraFrameWork( new QFrameWorkElementsFactory(), parent_widget ) );
-    return dynamic_cast<QObject *> ( new QFrameWork( new QFraCreator() ,  parent_widget ) );
+    QFrameWork*fw = new QFrameWork( new QFraCreator() ,  parent_widget );
+    DEBUG("%d\n", fw->metaObject()->indexOfSignal("destroyed"));
+    fw->Create();
+    return fw;
 }
 Q_EXPORT_PLUGIN2(pnp_graplugin, FraFrameWorkInterface)
