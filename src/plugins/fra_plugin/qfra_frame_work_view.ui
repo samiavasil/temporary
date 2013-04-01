@@ -37,13 +37,21 @@
         <number>6</number>
        </property>
        <item row="0" column="0">
-        <widget class="QDataPlot" name="PlotWidget" native="true">
+        <widget class="QWidget" name="PlotWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>144</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout"/>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -332,7 +340,7 @@
                                        <string>Hz</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="proba.qrc">
+                                       <iconset resource="../data_plot_plugin/proba.qrc">
                                         <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                       </property>
                                      </item>
@@ -341,7 +349,7 @@
                                        <string>KHz</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="proba.qrc">
+                                       <iconset resource="../data_plot_plugin/proba.qrc">
                                         <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                       </property>
                                      </item>
@@ -350,7 +358,7 @@
                                        <string>MHz</string>
                                       </property>
                                       <property name="icon">
-                                       <iconset resource="proba.qrc">
+                                       <iconset resource="../data_plot_plugin/proba.qrc">
                                         <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                       </property>
                                      </item>
@@ -448,7 +456,7 @@
                                      <string>mA</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -457,7 +465,7 @@
                                      <string>mA</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -466,7 +474,7 @@
                                      <string>mA</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -554,7 +562,7 @@
                                      <string>Hz</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -563,7 +571,7 @@
                                      <string>KHz</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -572,7 +580,7 @@
                                      <string>MHz</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="proba.qrc">
+                                     <iconset resource="../data_plot_plugin/proba.qrc">
                                       <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
                                     </property>
                                    </item>
@@ -1272,7 +1280,7 @@
                  <string>Start Measurment</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="proba.qrc">
+                 <iconset resource="../data_plot_plugin/proba.qrc">
                   <normaloff>:/new/prefix1/icons/services.png</normaloff>:/new/prefix1/icons/services.png</iconset>
                 </property>
                 <property name="checkable">
@@ -1293,15 +1301,8 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QDataPlot</class>
-   <extends>QWidget</extends>
-   <header>QDataPlot.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
-  <include location="proba.qrc"/>
+  <include location="../data_plot_plugin/proba.qrc"/>
  </resources>
  <connections/>
 </ui>

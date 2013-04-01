@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>icons/radiobutton_on.png</file>
+        <file>icons/services.png</file>
+        <file>icons/Line Graph.png</file>
+        <file>icons/Move Row Down.png</file>
+        <file>icons/Search.png</file>
+        <file>icons/grid_h.png</file>
+        <file>icons/grid_v.png</file>
+        <file>icons/pointer.png</file>
+    </qresource>
+    <qresource prefix="/fra">
+        <file>icons/FrameWork.png</file>
+        <file>icons/Io.png</file>
+    </qresource>
+</RCC>

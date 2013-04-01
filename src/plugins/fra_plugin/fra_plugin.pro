@@ -30,30 +30,17 @@ TARGET       = FraPlugin
 
 SOURCES  += \
     qtestcommand.cpp \
-    QDataPlot.cpp \
     FraFrameWorkInterface.cpp \
-    QwtPlotExt.cpp \
-    QwtPlotConfigurator.cpp \
-    CurveConfigurator.cpp \
-    CurveConfigurationMenu.cpp \
     QFraCreator.cpp
 
 HEADERS += \
     qtestcommand.h \
-    QDataPlot.h \
     FraFrameWorkInterface.h \
-    QwtPlotExt.h \
-    QwtPlotConfigurator.h \
-    CurveConfigurator.h \
-    CurveConfigurationMenu.h \
     QFraCreator.h
 
 
 FORMS += \
-    qdataplot.ui \
-    qfra_frame_work_view.ui \
-    QwtPlotConfigurator.ui \
-    CurveConfigurator.ui
+    qfra_frame_work_view.ui
 
 RESOURCES += \
     proba.qrc
