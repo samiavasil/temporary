@@ -5,13 +5,15 @@
 #include <QList>
 #include <QIcon>
 
-class QFrameWork;
+
 typedef enum{
   FRAME_WORK,
   PORT_IO,
   DATA_PLOT, 
   UNDEFINED
 }InterfaceType_t;
+
+
 
 class plugin_interface{
 public:

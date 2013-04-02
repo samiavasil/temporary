@@ -77,19 +77,19 @@ void QPluginList::populatePluginList(){
         if( desc ){
             DEBUG() <<  desc;
             ui->availablePlugins->insertRow( i );
-            QTableWidgetItem *item = new QTableWidgetItem(desc->name());
-            if( !desc->icon().isNull() ){
-                QIcon icon = desc->icon();
+            QTableWidgetItem *item = new QTableWidgetItem( desc->getDescription().name() );
+            if( !desc->getDescription().icon().isNull() ){
+                QIcon icon = desc->getDescription().icon();
                 item->setIcon( icon );
             }
             item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
             ui->availablePlugins->setItem( i, 0, item );
 
-            item = new QTableWidgetItem(desc->category());
+            item = new QTableWidgetItem(desc->getDescription().category());
             item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
             ui->availablePlugins->setItem( i, 1, item );
 
-            item = new QTableWidgetItem( desc->location() );
+            item = new QTableWidgetItem( desc->getDescription().location() );
             item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
             item->setCheckState ( Qt::Checked );
             ui->availablePlugins->setItem( i, LOCATION_COLUMN, item );
@@ -136,8 +136,41 @@ void QPluginList::on_cancelButton_clicked()
     setResult( Rejected );
 }
 
-QList<QPluginDescriptor *> QPluginList::getAllActivePlugins( InterfaceType_t type ){
+QList<PluginDescription> QPluginList::getAllActivePlugins( InterfaceType_t type ){
+    QList<PluginDescription> plugin_desc;
     reloadPlugins();
     type = type;
-    return  m_PluginList.values();
+    QList<QPluginDescriptor*> listPl = m_PluginList.values();//TODO FIX ME to type
+    foreach( QPluginDescriptor* pDesc, listPl )
+    {
+        if( pDesc )
+        {
+            plugin_desc.append( pDesc->getDescription() );
+        }
+    }
+
+    return plugin_desc;
 }
+
+
+QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *parent )
+{
+
+    QObject* object = NULL;
+    QList<QPluginDescriptor*> listPl = m_PluginList.values();//TODO FIX ME to type
+    foreach( QPluginDescriptor* pDesc, listPl )
+    {
+        if(  *pDesc == desc )
+        {
+            object = pDesc->cretate_plugin_object( desc.type(), parent );
+            if( object )
+            {
+              break;
+            }
+        }
+    }
+
+    return object;
+}
+
+

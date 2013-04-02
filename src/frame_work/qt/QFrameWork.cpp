@@ -26,16 +26,15 @@ bool QFrameWork::Create() {
 
 QList<QObject*> QFrameWork::CreateObjectFromType(QObject * parent) {
       QList<QObject*> ret_List;
-      QList<QPluginDescriptor *> list;
-  
+      QList<PluginDescription> list;
+
       list = QPluginList::Instance()->getAllActivePlugins( DATA_PLOT );
   
       for( int i = 0; i < list.count(); i++ ){
-          if( list[i] &&  ( list[i]->type() != FRAME_WORK ) ){
-              ret_List.append( list[i]->cretate_plugin_object( list[i]->type() , parent ) );//DELL ME
+     //     if( list[i] &&  ( list[i]->type() != FRAME_WORK ) ){
+    //          ret_List.append( list[i]->cretate_plugin_object( list[i]->type() , parent ) );//DELL ME
           }
   
-      }
       return ret_List;
 }
 

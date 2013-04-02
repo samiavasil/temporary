@@ -25,8 +25,8 @@ public:
     ~QPluginList();
     static QPluginList* Instance();
 
-    QList<QPluginDescriptor*> getAllActivePlugins( InterfaceType_t type );
-    
+    QList<PluginDescription> getAllActivePlugins( InterfaceType_t type );
+    QObject* cretate_plugin_object( PluginDescription &desc , QObject *parent = 0 );
 private slots:
     void on_okButton_clicked();
     void on_cancelButton_clicked();

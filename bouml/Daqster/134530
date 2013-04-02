@@ -1,6 +1,6 @@
 format 76
 "QTFrameWorkPackage" // QTFrameWorkPackage
-  revision 90
+  revision 91
   modified_by 2 "vasil"
   // class settings
   //class diagram settings
@@ -1083,6 +1083,20 @@ ${inlines}
 	public explicit_return_type "void"
 	nparams 0
 	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	
+	
+	
+	
+      end
+
+      operation 518530 "getAllActivePlugins"
+	public explicit_return_type "QList<QPluginDescriptor>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
 "
 	
 	

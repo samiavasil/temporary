@@ -165,13 +165,14 @@ void MainWindow::on_actionHideMainMenu_triggered(bool checked)
 
 void MainWindow::on_actionSave_triggered()
 {
-    QList<QPluginDescriptor*> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
+    QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
     for( int i = 0; i < list.count(); i++ ){
         QObject* obj;
-        if( list[i] ){
+        obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+        /*if( list[i] ){
             obj = list[i]->cretate_plugin_object( list[i]->type() , NULL );//DELL ME
-        }
-        if( obj && list[i]->type() != PORT_IO ){
+        }*/
+        if( obj && list.value(i).type() != PORT_IO ){
             dynamic_cast<QWidget*>(obj)->show();//DELL ME
         }
     }

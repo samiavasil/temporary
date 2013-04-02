@@ -34,14 +34,14 @@ bool QFraCreator::Create( CFrameWork *fW )
                if( ui )
                {
                  ui->setupUi(qfW);
-                 QList<QPluginDescriptor*> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
+                 QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
                  for( int i = 0; i < list.count(); i++ ){
                      QObject* obj;
-                     if( 0 == list[i]->name().compare("DATA Plot") ){
+                  /*   if( 0 == list[i]->name().compare("DATA Plot") ){
                          obj = list[i]->cretate_plugin_object( DATA_PLOT ,NULL );//DELL ME
                          ui->verticalLayout->addWidget(dynamic_cast<QWidget*>(obj));
                          break;
-                     }
+                     }*/
                  }
                }
 
