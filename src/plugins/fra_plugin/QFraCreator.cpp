@@ -1,6 +1,5 @@
 #include "QFraCreator.h"
-#include "qt/QFrameWork.h"
-#include <ui_qfra_frame_work_view.h>
+#include "QFraFrameWork.h"
 #include "qt/QPacketCollector.h"
 #include "qt/QPortIOSimulator.h"
 #include "qt/QProtocolLoader.h"
@@ -19,34 +18,56 @@ QFraCreator::~QFraCreator( )
 {
 
 }
-
+#include "qt/QSerialPortIO.h"
 bool QFraCreator::Create( CFrameWork *fW )
 {
    bool bRet = false;
 
     if( fW )
     {
-       QFrameWork* qfW =  dynamic_cast<QFrameWork*>(fW);
+       QFraFrameWork* qfW =  dynamic_cast<QFraFrameWork*>(fW);
         if( qfW )
         {
-            DEBUG("%d\n", qfW->metaObject()->indexOfSignal("destroyed"));
-               Ui::QFraFrameWorkView * ui = new Ui::QFraFrameWorkView;
-               if( ui )
-               {
-                 ui->setupUi(qfW);
-                 QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
+                  QSerialPortIO* portSer = NULL;
+                  QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
+
                  for( int i = 0; i < list.count(); i++ ){
                      QObject* obj;
-                  /*   if( 0 == list[i]->name().compare("DATA Plot") ){
-                         obj = list[i]->cretate_plugin_object( DATA_PLOT ,NULL );//DELL ME
-                         ui->verticalLayout->addWidget(dynamic_cast<QWidget*>(obj));
-                         break;
-                     }*/
+                     if(  DATA_PLOT == list[i].type() )
+                     {
+                         obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+                         /*ui->verticalLayout->addWidget(dynamic_cast<QWidget*>(obj));
+                         if( obj ){
+                             dynamic_cast<QWidget*>(obj)->show();//DELL ME
+                         }*/
+                         qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
+                     }
+                     if(  PORT_IO == list[i].type() )
+                     {
+                         obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+
+                          portSer =    dynamic_cast<QSerialPortIO*>(obj);//DELL ME
+
+                          if( portSer )
+                          {
+                              QWidget* widg = new QWidget( qfW );
+                              qfW->AddWidgetToControlArrea( widg );
+                              portSer->showPortConfiguration(widg);
+                          }
+                     }
                  }
-               }
+
 
                qfW->show();
-               QPortIOSimulator* port      = new QPortIOSimulator( qfW );
+               QPortIO* port = NULL;
+               if( portSer )
+               {
+                  port = portSer;
+               }
+               else
+               {
+                  port = new QPortIOSimulator( qfW );
+               }
                if( port )
                {
                    //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno qfW) za da moje da se trie lesno
@@ -72,7 +93,7 @@ bool QFraCreator::Create( CFrameWork *fW )
                    /*TODO DELL ME*/
                    sleep(1);
                   // pExecutor->startExecution(true);
-                   pExecutor->pauseExecution(false);
+                   pExecutor->pauseExecution(false);//DELL ME set to false to run commands
 
             }
             bRet = true;

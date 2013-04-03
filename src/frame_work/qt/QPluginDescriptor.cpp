@@ -20,9 +20,9 @@ QPluginDescriptor::QPluginDescriptor( const char *name, QObject *parent ):
     state        = 0;
     m_enabled    = true;
     m_loader     = 0;
-    PluginDescription b(m_PluginDecription);
+
     read_plugin_description();
-    PluginDescription a(m_PluginDecription);
+
 }
 
 QPluginDescriptor::~QPluginDescriptor(){

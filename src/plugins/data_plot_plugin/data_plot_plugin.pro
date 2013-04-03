@@ -23,29 +23,34 @@ CONFIG      += plugin
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 
 LIBS        += -lframe_work -lqwt
-TARGET       = FraPlugin
+TARGET   = DataPlotPlugin
 
-
-
-
-SOURCES  += \
-    qtestcommand.cpp \
-    FraFrameWorkInterface.cpp \
-    QFraCreator.cpp \
-    QFraFrameWork.cpp
+SOURCES += \
+    DataPlotWorkInterface.cpp \
+    QwtPlotExt.cpp \
+    QwtPlotConfigurator.cpp \
+    QDataPlot.cpp \
+    CurveConfigurator.cpp \
+    CurveConfigurationMenu.cpp
 
 HEADERS += \
-    qtestcommand.h \
-    FraFrameWorkInterface.h \
-    QFraCreator.h \
-    QFraFrameWork.h
+    DataPlotWorkInterface.h \
+    QwtPlotExt.h \
+    QwtPlotConfigurator.h \
+    QDataPlot.h \
+    CurveConfigurator.h \
+    CurveConfigurationMenu.h
 
+
+#LIBS += -L../../  -lfra
 
 FORMS += \
-    qfra_frame_work_view.ui
+    QwtPlotConfigurator.ui \
+    qdataplot.ui \
+    CurveConfigurator.ui
 
 RESOURCES += \
+    proba.qrc \
     proba.qrc
-
 
 

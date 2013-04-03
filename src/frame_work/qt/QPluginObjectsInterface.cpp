@@ -9,7 +9,9 @@ QPluginObjectsInterface::~QPluginObjectsInterface() {
 
 QObject* QPluginObjectsInterface::createObject(QObject * obj) {
   QObject* ret_obj = allocateObject( obj );
+
   if( 0 != ret_obj ){
+      ret_obj->setObjectName( name() );
       m_fw_objects.append( ret_obj );
       connect( ret_obj,SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)),Qt::QueuedConnection);
   }

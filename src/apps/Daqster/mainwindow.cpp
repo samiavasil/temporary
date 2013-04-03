@@ -167,14 +167,25 @@ void MainWindow::on_actionSave_triggered()
 {
     QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
     for( int i = 0; i < list.count(); i++ ){
-        QObject* obj;
-        obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+        if( FRAME_WORK == list[i].type() )
+        {
+          QObject* obj;
+          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+          QFrameWork* fw = dynamic_cast<QFrameWork*>(obj);
+          if(fw)
+          {
+             fw->Create();
+
+             ui->mdiArea->addSubWindow(fw);
+             fw->show();//DELL ME
+          }
+        }
         /*if( list[i] ){
             obj = list[i]->cretate_plugin_object( list[i]->type() , NULL );//DELL ME
         }*/
-        if( obj && list.value(i).type() != PORT_IO ){
-            dynamic_cast<QWidget*>(obj)->show();//DELL ME
-        }
+//        if( obj && list.value(i).type() != PORT_IO ){
+    //        dynamic_cast<QWidget*>(obj)->show();//DELL ME
+  //      }
     }
 
 }

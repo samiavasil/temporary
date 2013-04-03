@@ -2,8 +2,8 @@
 #define QFRACREATOR_H
 #include "plugin_global.h"
 #include"qt/QCreator.h"
-#include "qt/QFrameWork.h"
-
+//#include "qt/QFrameWork.h"
+class CFrameWork;
 class PLUGIN_EXPORT QFraCreator :  public QCreator
 {
     Q_OBJECT

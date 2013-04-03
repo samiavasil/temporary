@@ -32,11 +32,20 @@
       <property name="mouseTracking">
        <bool>false</bool>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
       <property name="autoFillBackground">
        <bool>true</bool>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="activationOrder">
+       <enum>QMdiArea::CreationOrder</enum>
+      </property>
       <property name="viewMode">
-       <enum>QMdiArea::TabbedView</enum>
+       <enum>QMdiArea::SubWindowView</enum>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -45,7 +54,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="tabPosition">
-       <enum>QTabWidget::South</enum>
+       <enum>QTabWidget::East</enum>
       </property>
      </widget>
     </item>
