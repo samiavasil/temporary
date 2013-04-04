@@ -31,7 +31,7 @@ public:
         return m_Icon;
     }
     virtual  InterfaceType_t type(){
-       return DATA_PLOT;
+       return DATA_OUT;
     }
 
 protected:

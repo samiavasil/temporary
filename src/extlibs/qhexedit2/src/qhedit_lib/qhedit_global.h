@@ -1,0 +1,10 @@
+#ifndef QHEDIT_GLOBAL_H
+#define QHEDIT_GLOBAL_H
+
+#if defined(QHEDIT_LIB_LIBRARY)
+#  define QHEDIT_EXPORT Q_DECL_EXPORT
+#else
+#  define QHEDIT_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // FRAME_WORK_GLOBAL_H

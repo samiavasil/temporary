@@ -33,7 +33,7 @@ bool QFraCreator::Create( CFrameWork *fW )
 
                  for( int i = 0; i < list.count(); i++ ){
                      QObject* obj;
-                     if(  DATA_PLOT == list[i].type() )
+                     if(  DATA_OUT == list[i].type() )
                      {
                          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
                          /*ui->verticalLayout->addWidget(dynamic_cast<QWidget*>(obj));

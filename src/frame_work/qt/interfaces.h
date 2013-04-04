@@ -9,7 +9,7 @@
 typedef enum{
   FRAME_WORK,
   PORT_IO,
-  DATA_PLOT, 
+  DATA_OUT,
   UNDEFINED
 }InterfaceType_t;
 
