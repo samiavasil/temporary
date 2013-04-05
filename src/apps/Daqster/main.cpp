@@ -114,12 +114,77 @@ void testBits(){
 
 
 
+
+class DataType{
+
+public:
+    typedef enum{
+        Real,
+        Complex
+    } Types;
+
+    typedef enum{
+        I8,
+        I16,
+        I32,
+        I64,
+        U8,
+        U16,
+        U32,
+        FLOAT,
+        DOUBLE
+    } TypeOrder;
+public:
+    DataType( Types T, TypeOrder N ):m_Type(T),m_TypeOrder(N){
+
+    }
+    Types      type(){return m_Type;}
+    TypeOrder  typeOrder(){return m_TypeOrder;}
+    int compatible( DataType& other ){
+        int ret = -1;
+        if( m_Type == other.m_Type )
+        {
+            if( m_TypeOrder >= other.m_TypeOrder )
+            {
+                qDebug("Full compatible types");
+                ret = 0;
+            }
+            else
+            {
+                qDebug("Truncated not full compatible types");
+                ret = 1;
+            }
+        }
+        else
+        {
+            qDebug("Not compatible types");
+        }
+        return ret;
+    }
+
+protected:
+    Types     m_Type;
+    TypeOrder m_TypeOrder;
+};
+
+
+DataType obj(DataType::Real,     DataType::I64);
+DataType obj1(DataType::Real,    DataType::I32);
+DataType obj2(DataType::Complex, DataType::I32);
+
 int main(int argc, char *argv[])
 {
     msg m;
     qInstallMsgHandler(m.myMessageOutput);
     QApplication a(argc, argv);
     MainWindow w;
+
+    obj.compatible(obj);
+    obj.compatible(obj1);
+    obj1.compatible(obj);
+
+    obj1.compatible(obj2);
+
     w.show();
 
 

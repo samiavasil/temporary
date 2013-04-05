@@ -362,8 +362,19 @@ int QDataPlot::removeLine( QDataPlot::lineId_t id )
     return 0;
 }
 
-int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> &  ){
-    return 0;
+int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> & data  ){
+
+    QwtPlotCurve* curve = m_CurveMap.value( id, NULL );
+
+    if( curve )
+    {
+       curve->setSamples( data );
+       return 0;
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 QVector<QPointF>* QDataPlot::getLineData( lineId_t id ){
