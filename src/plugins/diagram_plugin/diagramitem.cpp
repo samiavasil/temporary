@@ -50,9 +50,10 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPolygonItem(parent, scene)
 {
+    int pos;
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
-
+qDebug("DiagramItem %d DiagramType %d\n",this->type(),this->diagramType());
     QPainterPath path;
     switch (myDiagramType) {
         case StartEnd:
@@ -74,6 +75,12 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
                       << QPointF(100, 100) << QPointF(-100, 100)
                       << QPointF(-100, -100);
             break;
+        case TestPoint:
+            //QRectF rect = parent->boundingRect();
+             pos = (int)parent->boundingRect().width()/2;
+            myPolygon << QPointF(pos-5, -5) << QPointF(pos+5, -5)
+                      << QPointF(pos-5, 5)  ;
+            break;
         default:
             myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
                       << QPointF(120, 80) << QPointF(70, -80)
@@ -81,8 +88,20 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             break;
     }
     setPolygon(myPolygon);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+
+    if( myDiagramType == Step )
+    {
+        new DiagramItem( TestPoint, NULL, this );
+    }
+    if( myDiagramType != TestPoint )
+    {
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+    }
+    if( myDiagramType == TestPoint  )
+    {
+        setAcceptsHoverEvents(true);
+    }
 }
 
 DiagramItem::DiagramItem(QMenu *contextMenu,
@@ -91,7 +110,7 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
 {
     myDiagramType = None;
     myContextMenu = contextMenu;
-
+qDebug("DiagramItem %d DiagramType %d\n",this->type(),this->diagramType());
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
@@ -101,6 +120,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 	QGraphicsPolygonItem(diagram.parentItem(),diagram.scene());
 	//QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
 	// copy from general GraphcsItem
+    qDebug("DiagramItem %d DiagramType %d\n",this->type(),this->diagramType());
 	setBrush(diagram.brush());
 	setPen(diagram.pen());
 	setTransform(diagram.transform());
@@ -130,6 +150,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 					  << QPointF(100, 100) << QPointF(-100, 100)
 					  << QPointF(-100, -100);
 			break;
+
 		default:
 			myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
 					  << QPointF(120, 80) << QPointF(70, -80)
@@ -141,6 +162,33 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
+void DiagramItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
+#ifdef DEBUG
+    std::cout << "entered" << std::endl;
+    std::cout << e->pos().x() << "/" << e->pos().y() << std::endl;
+#endif
+     if ( myDiagramType == TestPoint )
+    {
+        setPen(QColor(Qt::red));
+        setBrush(QColor(Qt::red));
+        update();
+    }
+    QGraphicsPolygonItem::hoverEnterEvent(e);
+}
+
+void DiagramItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+#ifdef DEBUG
+    std::cout << "entered" << std::endl;
+    std::cout << e->pos().x() << "/" << e->pos().y() << std::endl;
+#endif
+     if ( myDiagramType == TestPoint )
+    {
+        setPen(QColor(Qt::black));
+        setBrush(QColor(Qt::white));
+        update();
+    }
+    QGraphicsPolygonItem::hoverLeaveEvent(e);
+}
 
 //! [4]
 QPixmap DiagramItem::image() const
@@ -161,6 +209,7 @@ void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
+    if( myContextMenu )
     myContextMenu->exec(event->screenPos());
 }
 //! [5]

@@ -54,6 +54,7 @@ DiagramPathItem::DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPathItem(parent)
 {
+    qDebug("DiagramTextItem %d\n",this->type());
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
     myPoints.clear();
@@ -80,7 +81,7 @@ DiagramPathItem::DiagramPathItem(QMenu *contextMenu,
     myContextMenu = contextMenu;
     myPoints.clear();
 
-    len = 10.0; // Pfeillänge
+    len = 10.0; // Pfeillnge
     breite = 4.0; // Divisor Pfeilbreite
 
 	// standard initialize
@@ -211,11 +212,11 @@ void DiagramPathItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 //! [6]
 void DiagramPathItem::append(const QPointF point)
 {
-	if(myPoints.size()>1)
+    if(myPoints.size()>1)
 	{
-		prepareGeometryChange();
-		updateLast(point);
-		myPoints.append(mapFromScene(point));
+        prepareGeometryChange();
+        updateLast(point);
+        myPoints.append(mapFromScene(point));
 	}
 	else
 	{
@@ -241,9 +242,9 @@ void DiagramPathItem::updateLast(const QPointF point)
 {
 	int i = myPoints.size()-1;
 	if (i>0){
-		prepareGeometryChange();
-		myPoints[i]=mapFromScene(point);
-		createPath();
+        prepareGeometryChange();
+        myPoints[i]=mapFromScene(point);
+        createPath();
 	}
 }
 

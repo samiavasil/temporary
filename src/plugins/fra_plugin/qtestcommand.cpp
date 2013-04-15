@@ -33,7 +33,7 @@ int QtestCommand::handler() {
   int ret =  1;
   CPacket* packet = NULL;
 
-  if( a >= 100000 ){
+  if( a >= 1 ){
       ret =  0;
       //  DEBUG("QCommand Finished");
   }

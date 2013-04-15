@@ -51,6 +51,7 @@
 DiagramTextItem::DiagramTextItem(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsTextItem(parent, scene)
 {
+    qDebug("DiagramTextItem %d\n",this->type());
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     QObject::connect(this->document(), SIGNAL(contentsChanged()),
@@ -59,6 +60,7 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent, QGraphicsScene *scene)
 //! [0]
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
 {
+    qDebug("DiagramTextItem %d\n",this->type());
 	//QGraphicsTextItem();
 	setFont(textItem.font());
 	setDefaultTextColor(textItem.defaultTextColor());

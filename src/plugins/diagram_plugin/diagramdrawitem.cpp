@@ -55,7 +55,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
 	myPos2=pos();
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
-
+qDebug("DiagramDrawItem %d DiagramType %d\n",this->type(),this->diagramType());
     myPolygon=createPath();
     setPolygon(myPolygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -72,6 +72,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 
 	myDiagramType=diagram.myDiagramType;
 	// copy from general GraphcsItem
+    qDebug("DiagramDrawItem %d DiagramType %d\n",this->type(),this->diagramType());
 	setBrush(diagram.brush());
 	setPen(diagram.pen());
 	setTransform(diagram.transform());
