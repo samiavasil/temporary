@@ -46,7 +46,7 @@ protected:
     void updateNextColor();
 
 public slots:
-
+int setCurrentCurve( QwtPlotCurve *curve );
 private slots:
 
     void on_actionGrid_X_on_triggered(bool checked);
@@ -66,7 +66,7 @@ private slots:
 
 protected:
 
-int setCurrentCurve( QwtPlotCurve *curve );
+
     QwtPlotCurve* currentCurve();
     void enableSnapPickerToCurve( bool enble );
     bool isEnabledSnapPickerToCurve( );

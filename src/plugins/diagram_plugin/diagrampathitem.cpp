@@ -214,6 +214,21 @@ void DiagramPathItem::append(const QPointF point)
 {
     if(myPoints.size()>1)
 	{
+#if 0
+        int i =myPoints.size()-1;
+        QPointF point1 = mapToScene(myPoints[i-1]);
+        QPointF point2 = mapToScene(myPoints[i]);
+        QPointF point3 = point1;
+//        if( point2.y() != point1.y() )
+//        {
+//           point3.setY( point1.y() );
+//        }
+        if( point2.y() != point3.y() )
+        {
+            point3.setX(point2.x());
+            myPoints.insert(i,mapFromScene(point3));
+         }
+#endif
         prepareGeometryChange();
         updateLast(point);
         myPoints.append(mapFromScene(point));
@@ -241,7 +256,7 @@ void DiagramPathItem::remove()
 void DiagramPathItem::updateLast(const QPointF point)
 {
 	int i = myPoints.size()-1;
-	if (i>0){
+    if (i>0){
         prepareGeometryChange();
         myPoints[i]=mapFromScene(point);
         createPath();

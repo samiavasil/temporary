@@ -3,7 +3,7 @@
 #include <QTimer>
 
 #include <QObject>
-
+#include<QWidget>
 
 QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
   DEBUG("Create QPortIOSimulator");   
@@ -15,6 +15,11 @@ QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
 }
 
 QPortIOSimulator::~QPortIOSimulator() {
+}
+
+void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
+    QWidget* widget = new QWidget(parent);
+    widget->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 int64 QPortIOSimulator::bytesAvailable() {

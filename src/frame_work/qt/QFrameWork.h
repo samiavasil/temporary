@@ -21,8 +21,6 @@ Q_OBJECT
 
     bool Create();
 
-    QList<QObject*> CreateObjectFromType(QObject * parent);
-
     virtual void AddWidgetToControlArrea ( QWidget* widget ) = 0;
     virtual void AddWidgetToDataViewArrea( QWidget* widget ) = 0;
 signals:

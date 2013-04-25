@@ -514,7 +514,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case InsertLine:
          QGraphicsScene::mouseMoveEvent(mouseEvent);
     	if (insertedPathItem != 0) {
-    	        insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+           insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
     	}
 
         break;

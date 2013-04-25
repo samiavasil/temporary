@@ -15,6 +15,8 @@ Q_OBJECT
   public:
     QPortIOSimulator(QObject * parent = 0);
 
+    void showPortConfiguration(QWidget * parent);
+
     virtual ~QPortIOSimulator();
 
     virtual int64 bytesAvailable();
