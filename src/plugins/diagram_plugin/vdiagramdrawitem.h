@@ -41,11 +41,12 @@
 **
 ****************************************************************************/
 
-#ifndef DIAGRAMITEM_H
-#define DIAGRAMITEM_H
+#ifndef VDIAGRAM_DRAW_ITEM_H
+#define VDIAGRAM_DRAW_ITEM_H
 
 #include <QGraphicsPixmapItem>
 #include <QList>
+#include "vdiagramitem.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -62,19 +63,17 @@ class QPolygonF;
 QT_END_NAMESPACE
 
 //! [0]
-class DiagramItem : public QGraphicsPolygonItem
+class VDiagramDrawItem : public VDiagramItem
 {
 public:
-    enum { Type = UserType + 15 };
-    enum DiagramType { Step, Conditional, StartEnd, Io, None };
+    enum { Type = UserType + 16 };
+    enum DiagramType { Ellipse, Rectangle };
 
-    DiagramItem(DiagramType diagramType, QMenu *contextMenu,
+    VDiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
-    DiagramItem(QMenu *contextMenu,
-    		QGraphicsItem *parent, QGraphicsScene *scene);//constructor fuer Vererbung
-    DiagramItem(const DiagramItem& diagram);//copy constructor
+    VDiagramDrawItem(const VDiagramDrawItem& diagram);//copy constructor
 
-    virtual DiagramItem* copy();
+    VDiagramItem* copy();
 
     DiagramType diagramType() const
         { return myDiagramType; }
@@ -84,14 +83,36 @@ public:
     int type() const
         { return Type;}
 
+    void setPos2(qreal x,qreal y);
+    void setPos2(QPointF pos);
+    QPointF getPos2() const
+		{ return mapToScene(myPos2); }
+
+    void setDimension(QPointF newPos);
+    QPointF getDimension();
+
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QPolygonF createPath();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+    QPainterPath shape() const;
+    QRectF boundingRect() const;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
+    bool hasClickedOn(QPointF press_point, QPointF point) const ;
+    QPointF onGrid(QPointF pos);
 
 private:
     DiagramType myDiagramType;
     QPolygonF myPolygon;
     QMenu *myContextMenu;
+    QPointF myPos2;
+    int myHoverPoint,mySelPoint;
+    qreal myHandlerWidth;
 };
 //! [0]
 

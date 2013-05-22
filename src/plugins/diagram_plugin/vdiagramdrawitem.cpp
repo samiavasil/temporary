@@ -44,14 +44,13 @@
 #include <QtGui>
 #include <iostream>
 
-#include "diagramdrawitem.h"
-#include "diagramscene.h"
 #include "vdiagramdrawitem.h"
+#include "diagramscene.h"
 
 //! [0]
-DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
+VDiagramDrawItem::VDiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
-	: DiagramItem(contextMenu,parent,scene)
+    : VDiagramItem(contextMenu,parent,scene)
 {
 	myPos2=pos();
     myDiagramType = diagramType;
@@ -65,11 +64,10 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    new VDiagramItem( VDiagramItem::Conditional, NULL, this, scene );
 }
 //! [0]
-DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
-	: DiagramItem(diagram.myContextMenu,diagram.parentItem(),0)
+VDiagramDrawItem::VDiagramDrawItem(const VDiagramDrawItem& diagram)
+    : VDiagramItem(diagram.myContextMenu,diagram.parentItem(),0)
 {
 
 	myDiagramType=diagram.myDiagramType;
@@ -89,7 +87,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 
 }
 //! [1]
-QPolygonF DiagramDrawItem::createPath()
+QPolygonF VDiagramDrawItem::createPath()
 {
 		qreal dx=myPos2.x();
 	    qreal dy=myPos2.y();
@@ -116,7 +114,7 @@ QPolygonF DiagramDrawItem::createPath()
 	    return polygon;
 }
 //! [4]
-QPixmap DiagramDrawItem::image() const
+QPixmap VDiagramDrawItem::image() const
 {
     QPixmap pixmap(250, 250);
     pixmap.fill(Qt::transparent);
@@ -130,17 +128,16 @@ QPixmap DiagramDrawItem::image() const
 //! [4]
 
 //! [5]
-void DiagramDrawItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void VDiagramDrawItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
-    if( myContextMenu )
-        myContextMenu->exec(event->screenPos());
+    myContextMenu->exec(event->screenPos());
 }
 //! [5]
 
 //! [6]
-QVariant DiagramDrawItem::itemChange(GraphicsItemChange change,
+QVariant VDiagramDrawItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange) {
@@ -150,20 +147,20 @@ QVariant DiagramDrawItem::itemChange(GraphicsItemChange change,
     return value;
 }
 //! [6]
-DiagramItem* DiagramDrawItem::copy()
+VDiagramItem *VDiagramDrawItem::copy()
 {
-    DiagramDrawItem* newDiagramDrawItem=new DiagramDrawItem(*this);
-    return dynamic_cast<DiagramItem*>(newDiagramDrawItem);
+    VDiagramDrawItem* newVDiagramDrawItem=new VDiagramDrawItem(*this);
+    return dynamic_cast<VDiagramItem*>(newVDiagramDrawItem);
 }
 
-void DiagramDrawItem::setPos2(qreal x,qreal y)
+void VDiagramDrawItem::setPos2(qreal x,qreal y)
 {
 	myPos2=mapFromScene(QPointF(x,y));
 	myPolygon=createPath();
 	setPolygon(myPolygon);
 }
 
-void DiagramDrawItem::setPos2(QPointF newPos)
+void VDiagramDrawItem::setPos2(QPointF newPos)
 {
 	prepareGeometryChange();
 	myPos2=mapFromScene(newPos);
@@ -171,7 +168,7 @@ void DiagramDrawItem::setPos2(QPointF newPos)
 	setPolygon(myPolygon);
 }
 
-void DiagramDrawItem::setDimension(QPointF newPos)
+void VDiagramDrawItem::setDimension(QPointF newPos)
 {
 	prepareGeometryChange();
 	myPos2=newPos;
@@ -179,12 +176,12 @@ void DiagramDrawItem::setDimension(QPointF newPos)
 	setPolygon(myPolygon);
 }
 
-QPointF DiagramDrawItem::getDimension()
+QPointF VDiagramDrawItem::getDimension()
 {
 	return myPos2;
 }
 
-void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+void VDiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
 {
 	 painter->setPen(pen());
@@ -227,7 +224,7 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
      }// if
 }
 
-void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
+void VDiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
 #ifdef DEBUG
 	std::cout << "entered" << std::endl;
 	std::cout << e->pos().x() << "/" << e->pos().y() << std::endl;
@@ -245,10 +242,10 @@ void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
 		if(myHoverPoint==8) myHoverPoint=-1;
 		else update();
 	}
-	DiagramItem::hoverEnterEvent(e);
+    VDiagramItem::hoverEnterEvent(e);
 }
 
-void DiagramDrawItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+void VDiagramDrawItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 #ifdef DEBUG
 	std::cout << "left" << std::endl;
 #endif
@@ -258,10 +255,10 @@ void DiagramDrawItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 			update();
 		}
 	}
-	DiagramItem::hoverLeaveEvent(e);
+    VDiagramItem::hoverLeaveEvent(e);
 }
 
-bool DiagramDrawItem::hasClickedOn(QPointF press_point, QPointF point) const {
+bool VDiagramDrawItem::hasClickedOn(QPointF press_point, QPointF point) const {
 	return (
 		press_point.x() >= point.x() - myHandlerWidth &&\
 		press_point.x() <  point.x() + myHandlerWidth &&\
@@ -270,14 +267,14 @@ bool DiagramDrawItem::hasClickedOn(QPointF press_point, QPointF point) const {
 	);
 }
 
-QPointF DiagramDrawItem::onGrid(QPointF pos)
+QPointF VDiagramDrawItem::onGrid(QPointF pos)
 {
 	DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
 	QPointF result = myScene->onGrid(pos);
 	return result;
 }
 
-QPainterPath DiagramDrawItem::shape() const {
+QPainterPath VDiagramDrawItem::shape() const {
 	QPainterPath myPath;
 	myPath.addPolygon(polygon());
 	if(isSelected()){
@@ -295,7 +292,7 @@ QPainterPath DiagramDrawItem::shape() const {
 	return myPath;
 }
 
-QRectF DiagramDrawItem::boundingRect() const
+QRectF VDiagramDrawItem::boundingRect() const
 {
     qreal extra = pen().width()+20 / 2.0 + myHandlerWidth;
     qreal minx = myPos2.x() < 0 ? myPos2.x() : 0;
@@ -308,7 +305,7 @@ QRectF DiagramDrawItem::boundingRect() const
     return newRect;
 }
 
-void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
+void VDiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
 	if(isSelected()){
 		if (e -> buttons() & Qt::LeftButton) {
 			QPointF mouse_point = e -> pos();
@@ -324,10 +321,10 @@ void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
 			else e->accept();
 		}
 	}
-	DiagramItem::mousePressEvent(e);
+    VDiagramItem::mousePressEvent(e);
 }
 
-void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
+void VDiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
 	// left click
 	if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
 		QPointF mouse_point = onGrid(e -> pos());
@@ -377,5 +374,5 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
 		setPolygon(myPolygon);
 	}
 	else
-	DiagramItem::mouseMoveEvent(e);
+    VDiagramItem::mouseMoveEvent(e);
 }

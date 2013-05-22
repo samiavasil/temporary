@@ -43,10 +43,10 @@
 
 #include <QtGui>
 
-#include "diagramitem.h"
+#include "vdiagramitem.h"
 
 //! [0]
-DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
+VDiagramItem::VDiagramItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPolygonItem(parent, scene)
 {
@@ -65,9 +65,9 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             myPolygon = path.toFillPolygon();
             break;
         case Conditional:
-            myPolygon << QPointF(-100, 0) << QPointF(0, 100)
-                      << QPointF(100, 0) << QPointF(0, -100)
-                      << QPointF(-100, 0);
+            myPolygon << QPointF(-10, 0) << QPointF(0, 10)
+                      << QPointF(10, 0) << QPointF(0, -10)
+                      << QPointF(-10, 0);
             break;
         case Step:
             myPolygon << QPointF(-100, -100) << QPointF(100, -100)
@@ -83,9 +83,10 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
     setPolygon(myPolygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setAcceptHoverEvents(true);
 }
 
-DiagramItem::DiagramItem(QMenu *contextMenu,
+VDiagramItem::VDiagramItem(QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsPolygonItem(parent, scene)
 {
@@ -96,7 +97,7 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 //! [0]
-DiagramItem::DiagramItem(const DiagramItem& diagram)
+VDiagramItem::VDiagramItem(const VDiagramItem& diagram)
 {
 	QGraphicsPolygonItem(diagram.parentItem(),diagram.scene());
 	//QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
@@ -105,7 +106,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 	setPen(diagram.pen());
 	setTransform(diagram.transform());
 
-	// copy DiagramItem
+    // copy VDiagramItem
 	myDiagramType = diagram.myDiagramType;
 	myContextMenu = diagram.myContextMenu;
 
@@ -143,7 +144,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 
 
 //! [4]
-QPixmap DiagramItem::image() const
+QPixmap VDiagramItem::image() const
 {
     QPixmap pixmap(250, 250);
     pixmap.fill(Qt::transparent);
@@ -157,7 +158,7 @@ QPixmap DiagramItem::image() const
 //! [4]
 
 //! [5]
-void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void VDiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
@@ -166,7 +167,7 @@ void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 //! [5]
 
 //! [6]
-QVariant DiagramItem::itemChange(GraphicsItemChange change,
+QVariant VDiagramItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange) {
@@ -176,8 +177,48 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change,
     return value;
 }
 //! [6]
-DiagramItem* DiagramItem::copy()
+VDiagramItem* VDiagramItem::copy()
 {
-    DiagramItem* newDiagramItem=new DiagramItem(*this);
-    return newDiagramItem;
+    VDiagramItem* newVDiagramItem=new VDiagramItem(*this);
+    return newVDiagramItem;
+}
+#include<QDebug>
+void VDiagramItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
+
+  //
+    QGraphicsItem *parent = parentItem();
+    if( parent )
+    {
+
+      QPointF point =   e->scenePos() ;
+      QRectF rect   =  parent->sceneBoundingRect();
+      int x=point.x(),y=point.y();
+      qDebug() << "point: " << point<<endl;
+
+      qDebug() << "rect:  " << rect <<endl;
+
+      if( x > ((rect.x() +rect.width())/2) )
+      {
+          x = rect.x()+rect.width();
+      }
+      else
+      {
+          x = rect.x();
+      }
+
+
+      if( y > ((rect.y()+rect.height())/2) )
+      {
+          y = rect.y()+rect.height();
+      }
+      else
+      {
+          y = rect.y();
+      }
+      setPos(parent->mapFromScene(QPointF(x,y)));
+      qDebug() << "QPointF(x,y):  " << QPointF(x,y) <<endl<<endl<<endl<<endl<<endl;
+   //   point = parent->pos();FromScene
+     // setPos(10,10);// mapToParent( e->screenPos() ).x(),mapToParent( e->screenPos() ).y());
+    }/**/
+  //  QGraphicsPolygonItem::hoverEnterEvent(e);
 }

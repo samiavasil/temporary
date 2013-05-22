@@ -32,7 +32,9 @@ SOURCES += \
     diagramscene.cpp \
     diagrampathitem.cpp \
     diagramitem.cpp \
-    DiagMainWindow.cpp
+    DiagMainWindow.cpp \
+    vdiagramitem.cpp \
+    vdiagramdrawitem.cpp
 
 HEADERS += \
     QDiagramPluginInterface.h \
@@ -41,7 +43,9 @@ HEADERS += \
     diagrampathitem.h \
     diagramitem.h \
     diagramdrawitem.h \
-    DiagMainWindow.h
+    DiagMainWindow.h \
+    vdiagramitem.h \
+    vdiagramdrawitem.h
 
 
 #LIBS += -L../../  -lfra

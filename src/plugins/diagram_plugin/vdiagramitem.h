@@ -41,8 +41,8 @@
 **
 ****************************************************************************/
 
-#ifndef DIAGRAMITEM_H
-#define DIAGRAMITEM_H
+#ifndef VDIAGRAMITEM_H
+#define VDIAGRAMITEM_H
 
 #include <QGraphicsPixmapItem>
 #include <QList>
@@ -62,19 +62,19 @@ class QPolygonF;
 QT_END_NAMESPACE
 
 //! [0]
-class DiagramItem : public QGraphicsPolygonItem
+class VDiagramItem : public QGraphicsPolygonItem
 {
 public:
     enum { Type = UserType + 15 };
     enum DiagramType { Step, Conditional, StartEnd, Io, None };
 
-    DiagramItem(DiagramType diagramType, QMenu *contextMenu,
+    VDiagramItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
-    DiagramItem(QMenu *contextMenu,
+    VDiagramItem(QMenu *contextMenu,
     		QGraphicsItem *parent, QGraphicsScene *scene);//constructor fuer Vererbung
-    DiagramItem(const DiagramItem& diagram);//copy constructor
+    VDiagramItem(const VDiagramItem& diagram);//copy constructor
 
-    virtual DiagramItem* copy();
+    virtual VDiagramItem* copy();
 
     DiagramType diagramType() const
         { return myDiagramType; }
@@ -87,7 +87,7 @@ public:
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
 private:
     DiagramType myDiagramType;
     QPolygonF myPolygon;
