@@ -54,7 +54,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 {
     myItemMenu = itemMenu;
     myMode = MoveItem;
-    myItemType = DiagramItem::Step;
+    myItemType = DiagramItem::Output;
     line = 0;
     textItem = 0;
     insertedItem = 0;
@@ -201,8 +201,6 @@ void DiagramScene::setMode(Mode mode,bool m_abort)
 			break;
 		case Zoom:
 			enableAllItems(false);
-        case InsertLine:
-            enableAllItems(true);
 			break;
 		default:
 			enableAllItems(false);
@@ -343,8 +341,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         	break;
         case MoveItems:
         {
-        	QPointF point=onGrid(mouseEvent->scenePos());
-        	if(!myMoveItems.isEmpty()){
+            QPointF point=onGrid(mouseEvent->scenePos());
+            if(!myMoveItems.isEmpty()){
         		qreal dx=point.rx()-myDx;
         		qreal dy=point.ry()-myDy;
         		foreach(QGraphicsItem* item,myMoveItems){
@@ -379,33 +377,16 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         case InsertLine:
         	if (insertedPathItem == 0){
-                QList<QGraphicsItem *> list = items(mouseEvent->scenePos());
-                for(int i=0;i<list.count();i++)
-                {
-                    DiagramItem* ptr = dynamic_cast<DiagramItem*>(list[i]);
-
-                    if( ptr  && (ptr->type() == DiagramItem::UserType + 15 )&&
-                            ptr->diagramType() == DiagramItem::TestPoint )
-                    {
-                        insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
-                        insertedPathItem->setPen(myLineColor);
-                        insertedPathItem->setBrush(myLineColor);
-                        insertedPathItem->setZValue(maxZ);
-                        maxZ+=0.1;
-                        addItem(insertedPathItem);
-                        insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
-    insertedPathItem->append(onGrid(mouseEvent->scenePos()));
-                        //insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-                        break;
-                    }
-                }
-
-
+        		insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
+        		insertedPathItem->setPen(myLineColor);
+        		insertedPathItem->setBrush(myLineColor);
+        		insertedPathItem->setZValue(maxZ);
+        		maxZ+=0.1;
+        		addItem(insertedPathItem);
+        		insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
+        		//insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
         	}
-             if( insertedPathItem )
-             {
-               insertedPathItem->append(onGrid(mouseEvent->scenePos()));
-             }
+        	insertedPathItem->append(onGrid(mouseEvent->scenePos()));
             break;
 //! [7] //! [8]
         case InsertText:
@@ -512,15 +493,13 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	// preview der Zeichnung
     switch (myMode){
     case InsertLine:
-         QGraphicsScene::mouseMoveEvent(mouseEvent);
     	if (insertedPathItem != 0) {
-           insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+    	        insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
     	}
-
         break;
     case MoveItem:
-    	QGraphicsScene::mouseMoveEvent(mouseEvent);
-    	checkOnGrid();
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
+        checkOnGrid();
     	break;
     case MoveItems:
     {
@@ -575,7 +554,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		break;
 
     default:
-        ;
+    	;
     }
 }
 //! [10]
@@ -600,13 +579,10 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 	switch (myMode){
 	case InsertLine:
 		//insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
-        if(insertedPathItem)
-        {
-        //insertedPathItem->remove();
+		insertedPathItem->remove();
 		insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
 		insertedPathItem->setEnabled(false);
 		insertedPathItem=0;
-        }
 		break;
 	default:
 		if(!selectedItems().isEmpty()){
@@ -897,11 +873,11 @@ bool DiagramScene::save(QFile *file)
 					break;
 			}
 			xmlWriter.writeEmptyElement("Transform");
-			xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
+            xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
 			xmlWriter.writeAttribute("m12",QString::number(item->transform().m12()));
 			xmlWriter.writeAttribute("m21",QString::number(item->transform().m21()));
 			xmlWriter.writeAttribute("m22",QString::number(item->transform().m22()));
-			xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
+            xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
 			xmlWriter.writeAttribute("dy",QString::number(item->transform().dy()));
 			xmlWriter.writeEndElement();
 		}
@@ -1198,7 +1174,7 @@ bool DiagramScene::load(QFile *file)
 				  << xmlReader.lineNumber()
 				  << std::endl;
 	}
-    // Aufrumen
+	// Aufräumen
 	insertedItem = 0;
 	insertedDrawItem = 0;
 	insertedPathItem = 0;

@@ -556,9 +556,9 @@ void DiagMainWindow::createToolBox()
             this, SLOT(buttonGroupClicked(int)));
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(createCellWidget(tr("Conditional"),
-                               DiagramItem::Conditional), 0, 0);
+                               DiagramItem::Input), 0, 0);
     layout->addWidget(createCellWidget(tr("Process"),
-                      DiagramItem::Step),0, 1);
+                      DiagramItem::Output),0, 1);
     layout->addWidget(createCellWidget(tr("Input/Output"),
                       DiagramItem::Io), 1, 0);
 // added DrawItem
@@ -614,6 +614,7 @@ void DiagMainWindow::createToolBox()
     toolBox->setMinimumWidth(itemWidget->sizeHint().width());
     toolBox->addItem(itemWidget, tr("Basic Flowchart Shapes"));
     toolBox->addItem(backgroundWidget, tr("Backgrounds"));
+    toolBox->addItem(new QWidget(toolBox), tr("Vasil Flowchart Shapes"));
 }
 //! [22]
 

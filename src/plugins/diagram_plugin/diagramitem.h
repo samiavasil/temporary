@@ -66,7 +66,7 @@ class DiagramItem : public QGraphicsPolygonItem
 {
 public:
     enum { Type = UserType + 15 };
-    enum DiagramType { Step, Conditional, StartEnd, Io,TestPoint, None };
+    enum DiagramType { Output, Input, StartEnd, Io, None };
 
     DiagramItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
@@ -87,8 +87,8 @@ public:
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *e);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    QPointF onGrid(QPointF pos);
 private:
     DiagramType myDiagramType;
     QPolygonF myPolygon;

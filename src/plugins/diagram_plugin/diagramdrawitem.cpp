@@ -45,7 +45,6 @@
 #include <iostream>
 
 #include "diagramdrawitem.h"
-#include "diagramscene.h"
 
 //! [0]
 DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
@@ -55,7 +54,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
 	myPos2=pos();
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
-qDebug("DiagramDrawItem %d DiagramType %d\n",this->type(),this->diagramType());
+
     myPolygon=createPath();
     setPolygon(myPolygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -64,6 +63,12 @@ qDebug("DiagramDrawItem %d DiagramType %d\n",this->type(),this->diagramType());
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
+    for( int i = 0; i < 4; i++ )
+    {
+        addInput();
+        addOutput();
+    }
+
 }
 //! [0]
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -72,7 +77,6 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 
 	myDiagramType=diagram.myDiagramType;
 	// copy from general GraphcsItem
-    qDebug("DiagramDrawItem %d DiagramType %d\n",this->type(),this->diagramType());
 	setBrush(diagram.brush());
 	setPen(diagram.pen());
 	setTransform(diagram.transform());
@@ -87,6 +91,24 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 	myHandlerWidth=2.0;
 
 }
+
+void DiagramDrawItem::updateInOutView()
+{
+
+}
+
+void DiagramDrawItem::addInput()
+{
+    listIn.append(new DiagramItem(DiagramItem::Input,NULL,this));
+    updateInOutView();
+}
+
+void DiagramDrawItem::addOutput()
+{
+    listOut.append( new DiagramItem(DiagramItem::Output,NULL,this) );
+    updateInOutView();
+}
+
 //! [1]
 QPolygonF DiagramDrawItem::createPath()
 {
@@ -185,10 +207,12 @@ QPointF DiagramDrawItem::getDimension()
 void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
 {
+
 	 painter->setPen(pen());
 	 painter->setBrush(brush());
 	 painter->drawPolygon(polygon());
-	 // selected
+
+     // selected
 	 if(isSelected()){
 		 // Rect
 		 QPen selPen=QPen(Qt::DashLine);
@@ -226,6 +250,7 @@ void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
 	std::cout << "entered" << std::endl;
 	std::cout << e->pos().x() << "/" << e->pos().y() << std::endl;
 #endif
+
 	if (isSelected()) {
 		QPointF hover_point = e -> pos();
 		QPointF point;
@@ -264,12 +289,6 @@ bool DiagramDrawItem::hasClickedOn(QPointF press_point, QPointF point) const {
 	);
 }
 
-QPointF DiagramDrawItem::onGrid(QPointF pos)
-{
-	DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
-	QPointF result = myScene->onGrid(pos);
-	return result;
-}
 
 QPainterPath DiagramDrawItem::shape() const {
 	QPainterPath myPath;
@@ -291,7 +310,7 @@ QPainterPath DiagramDrawItem::shape() const {
 
 QRectF DiagramDrawItem::boundingRect() const
 {
-    qreal extra = pen().width()+20 / 2.0 + myHandlerWidth;
+    qreal extra = pen().width() / 2.0 + myHandlerWidth;
     qreal minx = myPos2.x() < 0 ? myPos2.x() : 0;
     qreal maxx = myPos2.x() < 0 ? 0 : myPos2.x() ;
     qreal miny = myPos2.y() < 0 ? myPos2.y() : 0;
@@ -330,30 +349,73 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
 		std::cout << "mouse: " << mouse_point.x() << "/" << mouse_point.y() << std::endl;
 		std::cout << "pos2: " << myPos2.x() << "/" << myPos2.y() << std::endl;
 #endif
+        QPointF t = myPos2-mouse_point;
 		prepareGeometryChange();
 		switch (mySelPoint) {
-			case 0:
-				myPos2=myPos2-mouse_point;
-				setPos(mapToScene(mouse_point));
+            case 0:
+//                myPos2=myPos2-mouse_point;
+//                setPos(mapToScene(mouse_point));
+               if( t.x() < 100 )
+                    t.setX(100);
+                if( t.y() < 50 )
+                    t.setY(50);
+                setPos(mapToScene(mouse_point));
+                myPos2 = t;
 				break;
-			case 1:
-				setPos(pos().x(),mapToScene(mouse_point).y());
-				myPos2.setY(myPos2.y()-mouse_point.y());
+            case 1:
+//				setPos(pos().x(),mapToScene(mouse_point).y());
+//				myPos2.setY(myPos2.y()-mouse_point.y());
+                if( t.y() >= 50 )
+                {
+                   setPos(pos().x(),mapToScene(mouse_point).y());
+                   myPos2.setY(myPos2.y()-mouse_point.y());
+                }
 				break;
 			case 2:
-				myPos2.setX(mouse_point.x());
-				setPos(pos().x(),mapToScene(mouse_point).y());
-				myPos2.setY(myPos2.y()-mouse_point.y());
-				break;
-			case 3:
-				myPos2.setX(mouse_point.x());
+//				myPos2.setX(mouse_point.x());
+//				setPos(pos().x(),mapToScene(mouse_point).y());
+//				myPos2.setY(myPos2.y()-mouse_point.y());
+                if( mouse_point.x() >= 100 )
+                {
+                  myPos2.setX(mouse_point.x());
+                }
+                if( myPos2.y() - mouse_point.y() >= 50 )
+                {
+                    setPos(pos().x(),mapToScene(mouse_point).y());
+                    //t.setY(t.y()-mouse_point.y());
+                    myPos2.setY( myPos2.y() - mouse_point.y() );
+                }
+
+                //myPos2 = t;
+                break;
+            case 3:
+//                myPos2.setX(mouse_point.x());
+                if( mouse_point.x() < 100 )
+                {
+                  myPos2.setX(100);
+                }
+                else
+                {
+                   myPos2.setX(mouse_point.x());
+                }
 				break;
 			case 6:
 				myPos2.setX(mouse_point.x());
 				myPos2.setY(mouse_point.y());
 				break;
 			case 5:
-				myPos2.setY(mouse_point.y());
+//                myPos2.setY(mouse_point.y());
+
+                t = myPos2-mouse_point;
+                if( t.y() < 50 )
+                {
+                  myPos2.setY(50);
+                }
+                else
+                {
+                   myPos2.setY(mouse_point.y());
+                }
+
 				break;
 			case 4:
 				myPos2.setY(mouse_point.y());
@@ -363,11 +425,12 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
 			case 7:
 				setPos(mapToScene(mouse_point).x(),pos().y());
 				myPos2.setX(myPos2.x()-mouse_point.x());
-				break;
+                break;
 			default:
 				break;
-		}
-		myPolygon=createPath();
+        }
+
+        myPolygon=createPath();
 		setPolygon(myPolygon);
 	}
 	else

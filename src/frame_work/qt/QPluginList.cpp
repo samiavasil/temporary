@@ -173,4 +173,7 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
     return object;
 }
 
-
+void TestCalback()
+{
+    qDebug("TEST CALLBACK\n");
+}
