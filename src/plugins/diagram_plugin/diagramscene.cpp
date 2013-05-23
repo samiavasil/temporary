@@ -54,7 +54,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 {
     myItemMenu = itemMenu;
     myMode = MoveItem;
-    myItemType = DiagramItem::Step;
+    myItemType = DiagramItem::Output;
     line = 0;
     textItem = 0;
     insertedItem = 0;
@@ -341,8 +341,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         	break;
         case MoveItems:
         {
-        	QPointF point=onGrid(mouseEvent->scenePos());
-        	if(!myMoveItems.isEmpty()){
+            QPointF point=onGrid(mouseEvent->scenePos());
+            if(!myMoveItems.isEmpty()){
         		qreal dx=point.rx()-myDx;
         		qreal dy=point.ry()-myDy;
         		foreach(QGraphicsItem* item,myMoveItems){
@@ -498,8 +498,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     	}
         break;
     case MoveItem:
-    	QGraphicsScene::mouseMoveEvent(mouseEvent);
-    	checkOnGrid();
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
+        checkOnGrid();
     	break;
     case MoveItems:
     {
@@ -873,11 +873,11 @@ bool DiagramScene::save(QFile *file)
 					break;
 			}
 			xmlWriter.writeEmptyElement("Transform");
-			xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
+            xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
 			xmlWriter.writeAttribute("m12",QString::number(item->transform().m12()));
 			xmlWriter.writeAttribute("m21",QString::number(item->transform().m21()));
 			xmlWriter.writeAttribute("m22",QString::number(item->transform().m22()));
-			xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
+            xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
 			xmlWriter.writeAttribute("dy",QString::number(item->transform().dy()));
 			xmlWriter.writeEndElement();
 		}

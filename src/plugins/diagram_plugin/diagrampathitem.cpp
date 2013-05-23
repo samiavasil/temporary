@@ -80,7 +80,7 @@ DiagramPathItem::DiagramPathItem(QMenu *contextMenu,
     myContextMenu = contextMenu;
     myPoints.clear();
 
-    len = 10.0; // Pfeillnge
+    len = 10.0; // Pfeillänge
     breite = 4.0; // Divisor Pfeilbreite
 
 	// standard initialize

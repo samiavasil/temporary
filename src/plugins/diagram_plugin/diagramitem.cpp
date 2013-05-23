@@ -44,6 +44,9 @@
 #include <QtGui>
 
 #include "diagramitem.h"
+#include "diagramscene.h"
+
+#define IN_SIGN_SIZE  (20)
 
 //! [0]
 DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
@@ -64,15 +67,13 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             path.lineTo(200, 25);
             myPolygon = path.toFillPolygon();
             break;
-        case Conditional:
-            myPolygon << QPointF(-100, 0) << QPointF(0, 100)
-                      << QPointF(100, 0) << QPointF(0, -100)
-                      << QPointF(-100, 0);
+        case Input:
+        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
+                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
             break;
-        case Step:
-            myPolygon << QPointF(-100, -100) << QPointF(100, -100)
-                      << QPointF(100, 100) << QPointF(-100, 100)
-                      << QPointF(-100, -100);
+        case Output:
+         myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
+                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
             break;
         default:
             myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
@@ -81,6 +82,7 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             break;
     }
     setPolygon(myPolygon);
+    setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
@@ -95,6 +97,7 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
+
 //! [0]
 DiagramItem::DiagramItem(const DiagramItem& diagram)
 {
@@ -120,15 +123,13 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 			path.lineTo(200, 25);
 			myPolygon = path.toFillPolygon();
 			break;
-		case Conditional:
-			myPolygon << QPointF(-100, 0) << QPointF(0, 100)
-					  << QPointF(100, 0) << QPointF(0, -100)
-					  << QPointF(-100, 0);
+        case Input:
+        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
+                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
 			break;
-		case Step:
-			myPolygon << QPointF(-100, -100) << QPointF(100, -100)
-					  << QPointF(100, 100) << QPointF(-100, 100)
-					  << QPointF(-100, -100);
+        case Output:
+        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
+                 << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
 			break;
 		default:
 			myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
@@ -161,8 +162,12 @@ void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
+    if( myContextMenu )
     myContextMenu->exec(event->screenPos());
 }
+
+
+
 //! [5]
 
 //! [6]
@@ -180,4 +185,43 @@ DiagramItem* DiagramItem::copy()
 {
     DiagramItem* newDiagramItem=new DiagramItem(*this);
     return newDiagramItem;
+}
+
+
+QPointF DiagramItem::onGrid(QPointF pos)
+{
+    DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
+    QPointF result = myScene->onGrid(pos);
+    return result;
+}
+
+#include<QDebug>
+void DiagramItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
+    if( isSelected() )
+    {
+        QPointF pointInParent = mapToParent(e->pos());
+        qreal  y = 0;
+        qDebug() << parentItem()->pos() <<endl ;
+        qDebug() << parentItem()->boundingRect() <<endl ;
+        qDebug()<<"Map To:" << pointInParent << endl << endl << endl << endl << endl;
+
+          if( pointInParent.y() > parentItem()->boundingRect().height() )
+          {
+              y = parentItem()->boundingRect().height() - IN_SIGN_SIZE ;
+          }
+          else if( pointInParent.y() >= 0 )
+          {
+              y =  pointInParent.y();
+          }
+          if( myDiagramType == Input )
+          {
+              setPos( 0, y );
+          }
+          else if( myDiagramType == Output )
+          {
+              setPos( parentItem()->boundingRect().width() - IN_SIGN_SIZE , y );
+          }
+
+      //   QGraphicsPolygonItem::hoverMoveEvent(e);
+    }
 }

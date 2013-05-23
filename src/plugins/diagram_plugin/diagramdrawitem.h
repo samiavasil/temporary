@@ -104,9 +104,13 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     bool hasClickedOn(QPointF press_point, QPointF point) const ;
-    QPointF onGrid(QPointF pos);
+    void addOutput();
+    void addInput();
+    void updateInOutView();
 
 private:
+    QList<DiagramItem*> listIn;
+    QList<DiagramItem*> listOut;
     DiagramType myDiagramType;
     QPolygonF myPolygon;
     QMenu *myContextMenu;
