@@ -46,6 +46,7 @@
 
 #include "diagramdrawitem.h"
 #include "vdiagramdrawitem.h"
+#include"diagramscene.h"
 
 //! [0]
 DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
@@ -96,6 +97,37 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 void DiagramDrawItem::updateInOutView()
 {
 
+    qreal grid;
+    if( scene() )
+    {
+        if( 0 < listIn.count() )
+        {
+           grid  = ((DiagramScene*)scene())->grid();
+           grid  = ceil( listIn[0]->boundingRect().height()/grid )*grid;
+           if( listIn.count() > 1)
+           {
+             grid += (( boundingRect().height() - (2*(myHandlerWidth + pen().width())) - ((listIn.count())*grid) )/(listIn.count()-1));
+           }
+           for( int i = 0; i < listIn.count() ;i++ )
+           {
+               listIn[i]->setPos( 0, i*grid );
+           }
+        }
+
+        if( 0 < listOut.count() )
+        {
+            grid  = ((DiagramScene*)scene())->grid();
+            grid  = ceil( listOut[0]->boundingRect().height()/grid )*grid;
+            if( listOut.count() > 1)
+            {
+              grid += (( boundingRect().height() - (2*(myHandlerWidth + pen().width())) - ((listOut.count())*grid) )/(listOut.count()-1));
+            }
+            for( int i = 0; i < listOut.count() ;i++ )
+            {
+                listOut[i]->setPos( boundingRect().width()-listOut[i]->boundingRect().width()-2*(myHandlerWidth + pen().width()), i*grid );
+            }
+        }
+    }
 }
 
 void DiagramDrawItem::addInput()
@@ -168,9 +200,9 @@ QVariant DiagramDrawItem::itemChange(GraphicsItemChange change,
     if (change == QGraphicsItem::ItemPositionChange) {
         ;
     }
-
     return value;
 }
+
 //! [6]
 DiagramItem* DiagramDrawItem::copy()
 {
@@ -204,6 +236,48 @@ void DiagramDrawItem::setDimension(QPointF newPos)
 QPointF DiagramDrawItem::getDimension()
 {
     return myPos2;
+}
+qreal DiagramDrawItem::getMinX()
+{
+    qreal size = 10;
+
+    if( 0 < listIn.count() )
+    {
+       size = 3 * listIn[0]->boundingRect().width();
+    }
+    if( 0 < listOut.count() )
+    {
+       size = 3 * listOut[0]->boundingRect().width();
+    }
+
+    return size;
+}
+
+qreal DiagramDrawItem::getMinY()
+{
+    qreal size = 0;
+    qreal outp_size = 0;
+    qreal grid;
+
+    if( 0 < listIn.count() )
+    {
+       grid = ((DiagramScene*)scene())->grid();
+       grid = ceil( listIn[0]->boundingRect().height()/grid )*grid;
+       size = ( listIn.count())  * grid;
+    }
+
+    if( 0 < listOut.count() )
+    {
+        grid = ((DiagramScene*)scene())->grid();
+        grid = ceil( listOut[0]->boundingRect().height()/grid )*grid;
+        outp_size = ( listOut.count()) * grid;
+    }
+
+    if(  size < outp_size )
+    {
+        size = outp_size;
+    }
+    return size;
 }
 
 void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
@@ -354,50 +428,51 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         std::cout << "mouse: " << mouse_point.x() << "/" << mouse_point.y() << std::endl;
         std::cout << "pos2: " << myPos2.x() << "/" << myPos2.y() << std::endl;
 #endif
-        QPointF t = myPos2-mouse_point;
+
         prepareGeometryChange();
         switch (mySelPoint) {
         case 0:
-            //                myPos2=myPos2-mouse_point;
-            //                setPos(mapToScene(mouse_point));
-            if( t.x() < 100 )
-                t.setX(100);
-            if( t.y() < 50 )
-                t.setY(50);
-            setPos(mapToScene(mouse_point));
-            myPos2 = t;
+        {
+            QPointF t(0,0);
+            if( myPos2.x() - mouse_point.x() >= getMinX() )
+            {
+                t.setX( mouse_point.x() );
+            }
+
+            if( myPos2.y() - mouse_point.y() >= getMinY() )
+            {
+                t.setY( mouse_point.y() );
+            }
+
+            if( t != QPointF(0,0) )
+            {
+                myPos2 = myPos2-t;
+                setPos(mapToScene(t));
+            }
             break;
+        }
         case 1:
-            //				setPos(pos().x(),mapToScene(mouse_point).y());
-            //				myPos2.setY(myPos2.y()-mouse_point.y());
-            if( t.y() >= 50 )
+            if( myPos2.y() - mouse_point.y() >= getMinY() )
             {
                 setPos(pos().x(),mapToScene(mouse_point).y());
                 myPos2.setY(myPos2.y()-mouse_point.y());
             }
             break;
         case 2:
-            //				myPos2.setX(mouse_point.x());
-            //				setPos(pos().x(),mapToScene(mouse_point).y());
-            //				myPos2.setY(myPos2.y()-mouse_point.y());
-            if( mouse_point.x() >= 100 )
+            if( mouse_point.x() >= getMinX() )
             {
                 myPos2.setX(mouse_point.x());
             }
-            if( myPos2.y() - mouse_point.y() >= 50 )
+            if( myPos2.y() - mouse_point.y() >= getMinY() )
             {
                 setPos(pos().x(),mapToScene(mouse_point).y());
-                //t.setY(t.y()-mouse_point.y());
                 myPos2.setY( myPos2.y() - mouse_point.y() );
             }
-
-            //myPos2 = t;
             break;
         case 3:
-            //                myPos2.setX(mouse_point.x());
-            if( mouse_point.x() < 100 )
+            if( mouse_point.x() < getMinX() )
             {
-                myPos2.setX(100);
+                myPos2.setX(getMinX());
             }
             else
             {
@@ -405,48 +480,43 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
             }
             break;
         case 6:
-            //                myPos2.setX(mouse_point.x());
-            //                myPos2.setY(mouse_point.y());
-            if( mouse_point.x() - pos().x() >= 100 )
+            if( mouse_point.x() >= getMinX() )
                 myPos2.setX(mouse_point.x());
-//            else
-//                myPos2.setX(100);
-            if( mouse_point.y() - pos().y()  >= 50 )
+            else
+                myPos2.setX(getMinX());
+            if( mouse_point.y()  >= getMinY() )
                 myPos2.setY(mouse_point.y());
-//            else
-//                myPos2.setY(50);
+            else
+                myPos2.setY(getMinY());
             break;
         case 5:
-            //                myPos2.setY(mouse_point.y());
-
-            t = myPos2-mouse_point;
-            if( t.y() < 50 )
+            if( mouse_point.y() >= getMinY() )
             {
-                myPos2.setY(50);
+                myPos2.setY(mouse_point.y());
             }
             else
             {
-                myPos2.setY(mouse_point.y());
+                myPos2.setY(getMinY());
             }
 
             break;
         case 4:
-            //				myPos2.setY(mouse_point.y());
-            //				setPos(mapToScene(mouse_point).x(),pos().y());
-            //				myPos2.setX(myPos2.x()-mouse_point.x());
-            if(   mouse_point.y() >= 50 )
+            if(   mouse_point.y() >= getMinY() )
             {
                 myPos2.setY(  mouse_point.y() );
             }
-            if( myPos2.x() - mouse_point.x() >= 100 )
+            if( myPos2.x() - mouse_point.x() >= getMinX() )
             {
                 setPos( mapToScene(mouse_point).x() , pos().y() );
                 myPos2.setX(myPos2.x()-mouse_point.x());
             }
             break;
         case 7:
-            setPos(mapToScene(mouse_point).x(),pos().y());
-            myPos2.setX(myPos2.x()-mouse_point.x());
+            if( myPos2.x() - mouse_point.x() >= getMinX() )
+            {
+               setPos(mapToScene(mouse_point).x(),pos().y());
+               myPos2.setX(myPos2.x()-mouse_point.x());
+            }
             break;
         default:
             break;
@@ -454,7 +524,10 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
 
         myPolygon=createPath();
         setPolygon(myPolygon);
+        updateInOutView();
     }
     else
         DiagramItem::mouseMoveEvent(e);
+
 }
+

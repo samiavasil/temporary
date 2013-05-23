@@ -90,7 +90,8 @@ public:
 
     void setDimension(QPointF newPos);
     QPointF getDimension();
-
+    qreal getMinX();
+    qreal getMinY();
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);

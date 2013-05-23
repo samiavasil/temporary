@@ -78,6 +78,10 @@ public:
         { return myItemColor; }
     QColor lineColor() const
         { return myLineColor; }
+    qreal grid()
+    {
+        return myGrid;
+    }
     void setLineColor(const QColor &color);
     void setTextColor(const QColor &color);
     void setItemColor(const QColor &color);

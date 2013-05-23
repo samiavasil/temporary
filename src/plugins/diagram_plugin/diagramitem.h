@@ -88,6 +88,7 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     QPointF onGrid(QPointF pos);
 private:
     DiagramType myDiagramType;

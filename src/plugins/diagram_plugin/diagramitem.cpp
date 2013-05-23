@@ -197,14 +197,18 @@ QPointF DiagramItem::onGrid(QPointF pos)
 
 #include<QDebug>
 void DiagramItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
-    if( isSelected() )
-    {
-        QPointF pointInParent = mapToParent(e->pos());
-        qreal  y = 0;
-        qDebug() << parentItem()->pos() <<endl ;
-        qDebug() << parentItem()->boundingRect() <<endl ;
-        qDebug()<<"Map To:" << pointInParent << endl << endl << endl << endl << endl;
+    return;
+}
 
+void DiagramItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
+{
+    QPointF pointInParent = mapToParent(e->pos());
+    qreal  y = 0;
+//    qDebug() << parentItem()->pos() <<endl ;
+//    qDebug() << parentItem()->boundingRect() <<endl ;
+//    qDebug()<<"Map To:" << pointInParent << endl << endl << endl << endl << endl;
+      if( parentItem() )
+      {
           if( pointInParent.y() > parentItem()->boundingRect().height() )
           {
               y = parentItem()->boundingRect().height() - IN_SIGN_SIZE ;
@@ -221,7 +225,5 @@ void DiagramItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
           {
               setPos( parentItem()->boundingRect().width() - IN_SIGN_SIZE , y );
           }
-
-      //   QGraphicsPolygonItem::hoverMoveEvent(e);
-    }
+     }
 }
