@@ -92,7 +92,7 @@ public:
     QPointF getDimension();
     qreal getMinX();
     qreal getMinY();
-
+    void updateInOutView();
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -107,7 +107,7 @@ protected:
     bool hasClickedOn(QPointF press_point, QPointF point) const ;
     void addOutput();
     void addInput();
-    void updateInOutView();
+
 
 private:
     QList<DiagramItem*> listIn;

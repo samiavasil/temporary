@@ -204,10 +204,9 @@ void DiagramItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
     QPointF pointInParent = mapToParent(e->pos());
     qreal  y = 0;
-//    qDebug() << parentItem()->pos() <<endl ;
-//    qDebug() << parentItem()->boundingRect() <<endl ;
-//    qDebug()<<"Map To:" << pointInParent << endl << endl << endl << endl << endl;
-      if( parentItem() )
+    QGraphicsPolygonItem::mouseMoveEvent(e);
+
+    if( (( myDiagramType == Output )||( myDiagramType == Input ))&& parentItem() )
       {
           if( pointInParent.y() > parentItem()->boundingRect().height() )
           {
@@ -226,4 +225,5 @@ void DiagramItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
               setPos( parentItem()->boundingRect().width() - IN_SIGN_SIZE , y );
           }
      }
+
 }

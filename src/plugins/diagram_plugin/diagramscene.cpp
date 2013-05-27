@@ -480,6 +480,11 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     default:
     	;
     }
+    if( insertedDrawItem )
+    {
+        insertedDrawItem->updateInOutView();
+    }
+
 if(!mouseEvent->isAccepted()) QGraphicsScene::mousePressEvent(mouseEvent);
 }
 //! [9]
@@ -532,6 +537,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		break;
     case InsertDrawItem:
 		if (insertedDrawItem != 0){
+
 			insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
 		}
 		break;
@@ -555,6 +561,10 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     default:
     	;
+    }
+    if( insertedDrawItem )
+    {
+       insertedDrawItem->updateInOutView();
     }
 }
 //! [10]

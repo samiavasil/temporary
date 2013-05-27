@@ -65,12 +65,17 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    for( int i = 0; i < 4; i++ )
+    int j = rand()%10;
+    for( int i = 0; i < j; i++ )
     {
         addInput();
         addOutput();
     }
-
+    j = rand()%10;
+    for( int i = 0; i < j; i++ )
+    {
+        addOutput();
+    }
 }
 //! [0]
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -220,7 +225,11 @@ void DiagramDrawItem::setPos2(qreal x,qreal y)
 void DiagramDrawItem::setPos2(QPointF newPos)
 {
     prepareGeometryChange();
-    myPos2=mapFromScene(newPos);
+    myPos2   = mapFromScene( newPos );
+    if( myPos2.x() < getMinX() )
+        myPos2.setX( getMinX()  );
+    if( myPos2.y() < getMinY() )
+        myPos2.setY( getMinY()  );
     myPolygon=createPath();
     setPolygon(myPolygon);
 }
