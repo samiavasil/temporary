@@ -65,13 +65,12 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    int j = rand()%10;
+    int j = rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addInput();
-        addOutput();
     }
-    j = rand()%10;
+    j = rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addOutput();
@@ -137,13 +136,17 @@ void DiagramDrawItem::updateInOutView()
 
 void DiagramDrawItem::addInput()
 {
-    listIn.append(new DiagramItem(DiagramItem::Input,NULL,this));
+    DiagramItem* item = new DiagramItem(DiagramItem::Input,NULL,this);
+    item->setToolTip( QString("%1").arg(listIn.count()+1) );
+    listIn.append(item);
     updateInOutView();
 }
 
 void DiagramDrawItem::addOutput()
 {
-    listOut.append( new DiagramItem(DiagramItem::Output,NULL,this) );
+    DiagramItem* item = new DiagramItem(DiagramItem::Input,NULL,this);
+    item->setToolTip( QString("%1").arg(listOut.count()+1) );
+    listOut.append( item );
     updateInOutView();
 }
 

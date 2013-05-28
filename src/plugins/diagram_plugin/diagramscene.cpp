@@ -355,7 +355,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         		}
         		myMoveItems.clear();
         		myMode=MoveItem;
-        	}
+            }
         	else
         	{
         		if(!selectedItems().isEmpty()){
@@ -598,18 +598,25 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 		if(!selectedItems().isEmpty()){
 			QGraphicsItem *item = selectedItems().first();//itemAt(mouseEvent->scenePos());
 			if(item){
-				QList<QGraphicsItem *> children = item->childItems();
-				if (children.count()>0){
-					if (QGraphicsTextItem *child = (QGraphicsTextItem*) item->childItems().first()) {
+                QList<QGraphicsItem *> childrens = item->childItems();
+                QGraphicsTextItem *child = NULL;
+                for( int i=0; i < childrens.count();i++ )
+                {
+                    child = dynamic_cast<QGraphicsTextItem*>( childrens[i] );
+                  if( child )
+                  {
+                      break;
+                  }
+                }
+                if( child ) {
 #ifdef DEBUG
-						std::cout << "edit:" << child->toPlainText().toStdString() << std::endl;
+                    std::cout << "edit:" << child->toPlainText().toStdString() << std::endl;
 #endif
-						if (child->textInteractionFlags() == Qt::NoTextInteraction)
-							child->setTextInteractionFlags(Qt::TextEditorInteraction);
-						emit editorHasReceivedFocus();
-						child->setFocus();
-					}
-				}
+                    if (child->textInteractionFlags() == Qt::NoTextInteraction)
+                        child->setTextInteractionFlags(Qt::TextEditorInteraction);
+                    emit editorHasReceivedFocus();
+                    child->setFocus();
+                }
 				else {
 					if(item->type()!=DiagramTextItem::Type){
 						// added
