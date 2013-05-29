@@ -97,6 +97,30 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     myHandlerWidth=2.0;
 
 }
+void SortItemsByPosition( QList<DiagramItem*> &list )
+{
+    int i;
+    bool sort;
+    int count = list.count() - 1;
+    if( count > 0 )
+    {
+        do
+        {
+            qreal pos1,pos2;
+            sort = false;
+            for( i = 0; i < count ; i++ )
+            {
+                pos1 = list[i]->pos().y();
+                pos2 = list[ i+1 ]->pos().y();
+                if( pos2 < pos1 )
+                {
+                   list.move( i+1, i );
+                   sort = true;
+                }
+            }
+        } while( sort );
+    }
+}
 
 void DiagramDrawItem::updateInOutView()
 {
@@ -106,12 +130,8 @@ void DiagramDrawItem::updateInOutView()
     {
         if( 0 < listIn.count() )
         {
-           grid  = ((DiagramScene*)scene())->grid();
-           grid  = ceil( listIn[0]->boundingRect().height()/grid )*grid;
-           if( listIn.count() > 1)
-           {
-             grid += (( boundingRect().height() - (2*(myHandlerWidth + pen().width())) - ((listIn.count())*grid) )/(listIn.count()-1));
-           }
+           SortItemsByPosition( listIn );
+           grid  = ( boundingRect().height()  -  2*(myHandlerWidth + pen().width()))/(listIn.count());
            for( int i = 0; i < listIn.count() ;i++ )
            {
                listIn[i]->setPos( 0, i*grid );
@@ -120,12 +140,9 @@ void DiagramDrawItem::updateInOutView()
 
         if( 0 < listOut.count() )
         {
-            grid  = ((DiagramScene*)scene())->grid();
-            grid  = ceil( listOut[0]->boundingRect().height()/grid )*grid;
-            if( listOut.count() > 1)
-            {
-              grid += (( boundingRect().height() - (2*(myHandlerWidth + pen().width())) - ((listOut.count())*grid) )/(listOut.count()-1));
-            }
+            SortItemsByPosition( listOut );
+            grid  = ( boundingRect().height() -  2*(myHandlerWidth + pen().width()) )/(listOut.count());
+
             for( int i = 0; i < listOut.count() ;i++ )
             {
                 listOut[i]->setPos( boundingRect().width()-listOut[i]->boundingRect().width()-2*(myHandlerWidth + pen().width()), i*grid );
@@ -144,7 +161,7 @@ void DiagramDrawItem::addInput()
 
 void DiagramDrawItem::addOutput()
 {
-    DiagramItem* item = new DiagramItem(DiagramItem::Input,NULL,this);
+    DiagramItem* item = new DiagramItem(DiagramItem::Output,NULL,this);
     item->setToolTip( QString("%1").arg(listOut.count()+1) );
     listOut.append( item );
     updateInOutView();
@@ -275,14 +292,14 @@ qreal DiagramDrawItem::getMinY()
     {
        grid = ((DiagramScene*)scene())->grid();
        grid = ceil( listIn[0]->boundingRect().height()/grid )*grid;
-       size = ( listIn.count())  * grid;
+       size = ( ( listIn.count())  * grid ) + (2*(myHandlerWidth + pen().width()));
     }
 
     if( 0 < listOut.count() )
     {
         grid = ((DiagramScene*)scene())->grid();
         grid = ceil( listOut[0]->boundingRect().height()/grid )*grid;
-        outp_size = ( listOut.count()) * grid;
+        outp_size = (( listOut.count()) * grid) + - (2*(myHandlerWidth + pen().width()));
     }
 
     if(  size < outp_size )
@@ -292,8 +309,7 @@ qreal DiagramDrawItem::getMinY()
     return size;
 }
 
-void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
-                            QWidget *)
+void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(pen());
 
