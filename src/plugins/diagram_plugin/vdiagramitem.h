@@ -66,17 +66,17 @@ class VDiagramItem : public QGraphicsPolygonItem
 {
 public:
     enum { Type = UserType + 15 };
-    enum DiagramType { Step, Conditional, StartEnd, Io, None };
+    enum VDiagramType { Output, Input, StartEnd, Io, None };
 
-    VDiagramItem(DiagramType diagramType, QMenu *contextMenu,
+    VDiagramItem(VDiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     VDiagramItem(QMenu *contextMenu,
-    		QGraphicsItem *parent, QGraphicsScene *scene);//constructor fuer Vererbung
+            QGraphicsItem *parent, QGraphicsScene *scene);//constructor fuer Vererbung
     VDiagramItem(const VDiagramItem& diagram);//copy constructor
 
     virtual VDiagramItem* copy();
 
-    DiagramType diagramType() const
+    VDiagramType diagramType() const
         { return myDiagramType; }
     QPolygonF polygon() const
         { return myPolygon; }
@@ -87,9 +87,11 @@ public:
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
+    QPointF onGrid(QPointF pos);
 private:
-    DiagramType myDiagramType;
+    VDiagramType myDiagramType;
     QPolygonF myPolygon;
     QMenu *myContextMenu;
 };

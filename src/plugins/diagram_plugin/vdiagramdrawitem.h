@@ -67,15 +67,15 @@ class VDiagramDrawItem : public VDiagramItem
 {
 public:
     enum { Type = UserType + 16 };
-    enum DiagramType { Ellipse, Rectangle };
+    enum VDiagramType { Ellipse, Rectangle };
 
-    VDiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
+    VDiagramDrawItem(VDiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     VDiagramDrawItem(const VDiagramDrawItem& diagram);//copy constructor
 
     VDiagramItem* copy();
 
-    DiagramType diagramType() const
+    VDiagramType diagramType() const
         { return myDiagramType; }
     QPolygonF polygon() const
         { return myPolygon; }
@@ -86,12 +86,13 @@ public:
     void setPos2(qreal x,qreal y);
     void setPos2(QPointF pos);
     QPointF getPos2() const
-		{ return mapToScene(myPos2); }
+        { return mapToScene(myPos2); }
 
     void setDimension(QPointF newPos);
     QPointF getDimension();
-
-
+    qreal getMinX();
+    qreal getMinY();
+    void updateInOutView();
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -104,10 +105,14 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     bool hasClickedOn(QPointF press_point, QPointF point) const ;
-    QPointF onGrid(QPointF pos);
+    void addOutput();
+    void addInput();
+
 
 private:
-    DiagramType myDiagramType;
+    QList<VDiagramItem*> listIn;
+    QList<VDiagramItem*> listOut;
+    VDiagramType myDiagramType;
     QPolygonF myPolygon;
     QMenu *myContextMenu;
     QPointF myPos2;
