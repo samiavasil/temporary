@@ -65,12 +65,12 @@ VDiagramDrawItem::VDiagramDrawItem(VDiagramType diagramType, QMenu *contextMenu,
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    int j = rand()%10 + 1;
+    int j = 2;//rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addInput();
     }
-    j = rand()%10 + 1;
+    j = 2;//rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addOutput();

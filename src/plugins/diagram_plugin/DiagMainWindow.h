@@ -51,6 +51,9 @@
 #include "diagramdrawitem.h"
 #include "diagrampathitem.h"
 
+#include "vdiagramitem.h"
+#include "vdiagramdrawitem.h"
+
 class DiagramScene;
 
 QT_BEGIN_NAMESPACE
@@ -135,6 +138,12 @@ private:
     QWidget *createCellWidget(const QString &text,
                           DiagramDrawItem::DiagramType type);
     QMenu *createColorMenu(const char *slot, QColor defaultColor);
+
+    //VVV
+    QWidget *createCellVVVWidget(const QString &text,
+                          VDiagramDrawItem::VDiagramType type);
+
+
     QIcon createColorToolButtonIcon(const QString &image, QColor color);
     QIcon createColorIcon(QColor color);
 

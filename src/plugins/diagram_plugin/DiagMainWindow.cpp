@@ -52,6 +52,8 @@
 #include "diagramscene.h"
 #include "diagramtextitem.h"
 
+
+
 const int InsertTextButton = 10;
 const int InsertDrawItemButton = 64;
 
@@ -608,13 +610,48 @@ void DiagMainWindow::createToolBox()
     backgroundWidget->setLayout(backgroundLayout);
 
 
+
+///////////////////VVVVVVVV
+    QGridLayout *layoutVVV = new QGridLayout;
+    layout->addWidget(createCellWidget(tr("Conditional"),
+                               DiagramItem::Input), 0, 0);
+
+// added DrawItem
+    layoutVVV->addWidget(createCellVVVWidget(tr("Rectangle"),
+                          VDiagramDrawItem::Rectangle), 2, 0);
+    layoutVVV->addWidget(createCellVVVWidget(tr("Ellipse"),
+                              VDiagramDrawItem::Ellipse), 2, 1);
+//! [21]
+
+    QToolButton *textVVVButton = new QToolButton;
+    textVVVButton->setCheckable(true);
+    buttonGroup->addButton(textVVVButton, InsertTextButton);
+    textVVVButton->setIcon(QIcon(QPixmap(":/images/textpointer.png")
+                        .scaled(30, 30)));
+    textVVVButton->setIconSize(QSize(50, 50));
+    QGridLayout *textVVVLayout = new QGridLayout;
+    textVVVLayout->addWidget(textVVVButton, 0, 0, Qt::AlignHCenter);
+    textVVVLayout->addWidget(new QLabel(tr("Text")), 1, 0, Qt::AlignCenter);
+    QWidget *textVVVWidget = new QWidget;
+    textVVVWidget->setLayout(textVVVLayout);
+    layoutVVV->addWidget(textVVVWidget, 1, 1);
+
+    layoutVVV->setRowStretch(3, 10);
+    layoutVVV->setColumnStretch(2, 10);
+
+    QWidget *itemVVVWidget = new QWidget;
+    itemVVVWidget->setLayout(layoutVVV);
+
+
+///////////////////////////////
+
 //! [22]
     toolBox = new QToolBox;
     toolBox->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Ignored));
     toolBox->setMinimumWidth(itemWidget->sizeHint().width());
     toolBox->addItem(itemWidget, tr("Basic Flowchart Shapes"));
     toolBox->addItem(backgroundWidget, tr("Backgrounds"));
-    toolBox->addItem(new QWidget(toolBox), tr("Vasil Flowchart Shapes"));
+    toolBox->addItem(itemVVVWidget, tr("Vasil Flowchart Shapes"));
 }
 //! [22]
 
@@ -995,7 +1032,7 @@ QWidget *DiagMainWindow::createCellWidget(const QString &text,
     button->setIcon(icon);
     button->setIconSize(QSize(50, 50));
     button->setCheckable(true);
-    buttonGroup->addButton(button, int(type)+64);
+    buttonGroup->addButton(button, int(type)+InsertDrawItemButton);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(button, 0, 0, Qt::AlignHCenter);
@@ -1006,6 +1043,32 @@ QWidget *DiagMainWindow::createCellWidget(const QString &text,
 
     return widget;
 }
+
+//! [29]
+QWidget *DiagMainWindow::createCellVVVWidget(const QString &text,
+                      VDiagramDrawItem::VDiagramType type)
+{
+
+    VDiagramDrawItem item(type, itemMenu);
+    item.setPos2(230,230);
+    QIcon icon(item.image());
+
+    QToolButton *button = new QToolButton;
+    button->setIcon(icon);
+    button->setIconSize(QSize(50, 50));
+    button->setCheckable(true);
+    buttonGroup->addButton(button, int(type)+274);
+
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(button, 0, 0, Qt::AlignHCenter);
+    layout->addWidget(new QLabel(text), 1, 0, Qt::AlignCenter);
+
+    QWidget *widget = new QWidget;
+    widget->setLayout(layout);
+
+    return widget;
+}
+
 
 //! [30]
 QMenu *DiagMainWindow::createColorMenu(const char *slot, QColor defaultColor)
