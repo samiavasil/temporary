@@ -27,25 +27,26 @@ TARGET   = QDiagramPlugin
 
 SOURCES += \
     QDiagramPluginInterface.cpp \
-    diagramdrawitem.cpp \
     diagramtextitem.cpp \
     diagramscene.cpp \
     diagrampathitem.cpp \
-    diagramitem.cpp \
     DiagMainWindow.cpp \
     vdiagramitem.cpp \
-    vdiagramdrawitem.cpp
+    vdiagramdrawitem.cpp \
+    diagramitem.cpp \
+    diagramdrawitem.cpp
 
 HEADERS += \
     QDiagramPluginInterface.h \
     diagramtextitem.h \
     diagramscene.h \
     diagrampathitem.h \
-    diagramitem.h \
-    diagramdrawitem.h \
     DiagMainWindow.h \
     vdiagramitem.h \
-    vdiagramdrawitem.h
+    vdiagramdrawitem.h \
+    items_type_names.h \
+    diagramdrawitem.h \
+    diagramitem.h
 
 
 #LIBS += -L../../  -lfra

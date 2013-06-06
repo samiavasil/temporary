@@ -45,8 +45,8 @@
 #define DIAGRAMSCENE_H
 
 #include <QGraphicsScene>
-#include "diagramitem.h"
-#include "diagramdrawitem.h"
+#include "vdiagramitem.h"
+#include "vdiagramdrawitem.h"
 #include "diagramtextitem.h"
 #include "diagrampathitem.h"
 
@@ -67,7 +67,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems};
+    enum Mode { InsertVItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertVDrawItem, Zoom , MoveItems};
 
     DiagramScene(QMenu *itemMenu, QObject *parent = 0);
     QFont font() const
@@ -111,15 +111,15 @@ public:
 public slots:
     void setMode(Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
-    void setItemType(DiagramItem::DiagramType type);
-    void setItemType(DiagramDrawItem::DiagramType type);
+    void setItemType(VDiagramItem::VDiagramType type);
+    void setItemType(VDiagramDrawItem::VDiagramType type);
     void editorLostFocus(DiagramTextItem *item);
     void editorReceivedFocus(DiagramTextItem *item);
     void checkOnGrid();
     void clear();
 
 signals:
-    void itemInserted(DiagramItem *item);
+    void itemInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void itemSelected(QGraphicsItem *item);
     void editorHasLostFocus();
@@ -142,8 +142,8 @@ protected:
 private:
     bool isItemChange(int type);
 
-    DiagramItem::DiagramType myItemType;
-    DiagramDrawItem::DiagramType myDrawItemType;
+    VDiagramItem::VDiagramType myVItemType;
+    VDiagramDrawItem::VDiagramType myVDrawItemType;
     QMenu *myItemMenu;
     Mode myMode;
     bool leftButtonDown;
@@ -154,8 +154,8 @@ private:
     QColor myTextColor;
     QColor myItemColor;
     QColor myLineColor;
-    DiagramItem *insertedItem;
-    DiagramDrawItem *insertedDrawItem;
+    VDiagramItem *insertedVItem;
+    VDiagramDrawItem *insertedVDrawItem;
     DiagramPathItem *insertedPathItem;
     QList<QGraphicsItem *> *copiedItems;
     qreal myDx,myDy;

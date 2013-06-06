@@ -47,6 +47,7 @@
 #include <QGraphicsPixmapItem>
 #include <QList>
 #include "vdiagramitem.h"
+#include "items_type_names.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -66,7 +67,7 @@ QT_END_NAMESPACE
 class VDiagramDrawItem : public VDiagramItem
 {
 public:
-    enum { Type = UserType + 16 };
+    enum { Type = UserType + DIAGRAM_VDRAWITEM_TYPE };
     enum VDiagramType { Ellipse, Rectangle };
 
     VDiagramDrawItem(VDiagramType diagramType, QMenu *contextMenu,

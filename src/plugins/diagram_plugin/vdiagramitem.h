@@ -46,6 +46,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QList>
+#include"items_type_names.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -65,7 +66,7 @@ QT_END_NAMESPACE
 class VDiagramItem : public QGraphicsPolygonItem
 {
 public:
-    enum { Type = UserType + 15 };
+    enum { Type = UserType + DIAGRAM_VITEM_TYPE };
     enum VDiagramType { Output, Input, StartEnd, Io, None };
 
     VDiagramItem(VDiagramType diagramType, QMenu *contextMenu,

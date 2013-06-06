@@ -1,0 +1,7 @@
+#ifndef ITEMS_TYPE_NAMES_H
+#define ITEMS_TYPE_NAMES_H
+
+#define DIAGRAM_VITEM_TYPE      21
+#define DIAGRAM_VDRAWITEM_TYPE  54
+#define DIAGRAM_PATH_TYPE       66
+#endif // ITEMS_TYPE_NAMES_H

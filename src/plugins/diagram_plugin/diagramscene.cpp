@@ -54,11 +54,11 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 {
     myItemMenu = itemMenu;
     myMode = MoveItem;
-    myItemType = DiagramItem::Output;
+    myVItemType = VDiagramItem::Output;
     line = 0;
     textItem = 0;
-    insertedItem = 0;
-    insertedDrawItem = 0;
+    insertedVItem = 0;
+    insertedVDrawItem = 0;
     insertedPathItem = 0;
     copiedItems = 0;
     myDx=0.0;
@@ -87,20 +87,20 @@ void DiagramScene::setLineColor(const QColor &color)
 {
     myLineColor = color;
     if(insertedPathItem!=0) insertedPathItem->setPen(myLineColor);
-    if(insertedItem!=0) insertedItem->setPen(myLineColor);
-    if(insertedDrawItem!=0) insertedDrawItem->setPen(myLineColor);
+    if(insertedVItem!=0) insertedVItem->setPen(myLineColor);
+    if(insertedVDrawItem!=0) insertedVDrawItem->setPen(myLineColor);
     if (!selectedItems().empty()){
     	foreach(QGraphicsItem* item,selectedItems()){
     		switch(item->type()){
     		case QGraphicsItem::UserType+3:
 				// Textitem does not possess Linecolor !
 				break;
-    		case QGraphicsItem::UserType+6:
+            case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 				qgraphicsitem_cast<DiagramPathItem*>(item)->setPen(myLineColor);
 				qgraphicsitem_cast<DiagramPathItem*>(item)->setBrush(myLineColor);
 				break;
     		default:
-    			dynamic_cast<DiagramItem*>(item)->setPen(myLineColor);
+                dynamic_cast<VDiagramItem*>(item)->setPen(myLineColor);
     			break;
     		}
     	}
@@ -124,27 +124,27 @@ void DiagramScene::setTextColor(const QColor &color)
 void DiagramScene::setItemColor(const QColor &color)
 {
     myItemColor = color;
-    if(insertedItem!=0) insertedItem->setBrush(myItemColor);
-    if(insertedDrawItem!=0) insertedDrawItem->setBrush(myItemColor);
+    if(insertedVItem!=0) insertedVItem->setBrush(myItemColor);
+    if(insertedVDrawItem!=0) insertedVDrawItem->setBrush(myItemColor);
     if (!selectedItems().empty()){
     	foreach(QGraphicsItem* item,selectedItems()){
     		switch(item->type()){
     		case QGraphicsItem::UserType+3:
     		// Textitem does not possess Linecolor !
     		break;
-    		case QGraphicsItem::UserType+6:
+            case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
     		// Path does not need Backgroundcolor
     		break;
     		default:
-    			dynamic_cast<DiagramItem*>(item)->setBrush(myItemColor);
+                dynamic_cast<VDiagramItem*>(item)->setBrush(myItemColor);
     			break;
     		}
     	}
     }
        // old code by Trolltech
-    /*if (isItemChange(DiagramItem::Type)) {
-        DiagramItem *item =
-            qgraphicsitem_cast<DiagramItem *>(selectedItems().first());
+    /*if (isItemChange(VDiagramItem::Type)) {
+        VDiagramItem *item =
+            qgraphicsitem_cast<VDiagramItem *>(selectedItems().first());
         item->setBrush(myItemColor);
     }*/
 }
@@ -220,13 +220,13 @@ void DiagramScene::enableAllItems(bool enable)
     return mode;
 }*/
 
-void DiagramScene::setItemType(DiagramItem::DiagramType type)
+void DiagramScene::setItemType(VDiagramItem::VDiagramType type)
 {
-    myItemType = type;
+    myVItemType = type;
 }
-void DiagramScene::setItemType(DiagramDrawItem::DiagramType type)
+void DiagramScene::setItemType(VDiagramDrawItem::VDiagramType type)
 {
-    myDrawItemType = type;
+    myVDrawItemType = type;
 }
 
 
@@ -273,9 +273,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 #endif
 	if (mouseEvent->button() == Qt::RightButton){
 		switch (myMode) {
-			case InsertItem:
-				if (insertedItem != 0){
-					insertedItem->rotate(90);
+            case InsertVItem:
+                if (insertedVItem != 0){
+                    insertedVItem->rotate(90);
 				}
 				break;
 			default:
@@ -303,39 +303,39 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
-    //DiagramItem *item;
+    //VDiagramItem *item;
     switch (myMode) {
-        case InsertItem:
-        	if (insertedItem == 0){
-				insertedItem = new DiagramItem(myItemType, myItemMenu);
-				insertedItem->setBrush(myItemColor);
-				insertedItem->setPen(myLineColor);
-				insertedItem->setZValue(maxZ);
+        case InsertVItem:
+            if (insertedVItem == 0){
+                insertedVItem = new VDiagramItem(myVItemType, myItemMenu);
+                insertedVItem->setBrush(myItemColor);
+                insertedVItem->setPen(myLineColor);
+                insertedVItem->setZValue(maxZ);
 				maxZ+=0.1;
-				addItem(insertedItem);
+                addItem(insertedVItem);
             }
-            insertedItem->setPos(onGrid(mouseEvent->scenePos()));
-            insertedItem->setEnabled(false);
-            emit itemInserted(insertedItem);
-            insertedItem = 0;
+            insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
+            insertedVItem->setEnabled(false);
+            emit itemInserted(insertedVItem);
+            insertedVItem = 0;
 
             break;
 //! [6] //! [7]
-        case InsertDrawItem:
-        	if (insertedDrawItem == 0){
-        		insertedDrawItem = new DiagramDrawItem(myDrawItemType, myItemMenu);
-        		insertedDrawItem->setBrush(myItemColor);
-        		insertedDrawItem->setPen(myLineColor);
-        		insertedDrawItem->setZValue(maxZ);
+        case InsertVDrawItem:
+            if (insertedVDrawItem == 0){
+                insertedVDrawItem = new VDiagramDrawItem(myVDrawItemType, myItemMenu);
+                insertedVDrawItem->setBrush(myItemColor);
+                insertedVDrawItem->setPen(myLineColor);
+                insertedVDrawItem->setZValue(maxZ);
         		maxZ+=0.1;
-        		addItem(insertedDrawItem);
-        		insertedDrawItem->setPos(onGrid(mouseEvent->scenePos()));
+                addItem(insertedVDrawItem);
+                insertedVDrawItem->setPos(onGrid(mouseEvent->scenePos()));
         	}
         	else
         	{
-        		insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
-        		insertedDrawItem->setEnabled(false);
-        		insertedDrawItem = 0;
+                insertedVDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+                insertedVDrawItem->setEnabled(false);
+                insertedVDrawItem = 0;
         	}
 
         	break;
@@ -458,10 +458,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 				break;
         case CopyingItem:
 				if (copiedItems->count() > 0){
-					insertedItem=static_cast<DiagramItem*>(copiedItems->first());
+                    insertedVItem=static_cast<VDiagramItem*>(copiedItems->first());
 					QPointF point=onGrid(mouseEvent->scenePos());
-					qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
-					qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
+                    qreal dx=insertedVItem->pos().rx()-point.rx()-myDx;
+                    qreal dy=insertedVItem->pos().ry()-point.ry()-myDy;
 					foreach(QGraphicsItem* item,*copiedItems){
 						if(item->parentItem()!=0){
 							if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
@@ -471,7 +471,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 						}
 					}
 					clearSelection();
-					insertedItem=0;
+                    insertedVItem=0;
 					myDx=0.0;
 					myDy=0.0;
 					myMode=MoveItem;
@@ -480,9 +480,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     default:
     	;
     }
-    if( insertedDrawItem )
+    if( insertedVDrawItem )
     {
-        insertedDrawItem->updateInOutView();
+        insertedVDrawItem->updateInOutView();
     }
 
 if(!mouseEvent->isAccepted()) QGraphicsScene::mousePressEvent(mouseEvent);
@@ -523,31 +523,31 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     	myDy=point.ry();
     	break;
     }
-    case InsertItem:
-    	if (insertedItem == 0){
-			insertedItem = new DiagramItem(myItemType, myItemMenu);
-			insertedItem->setBrush(myItemColor);
-			insertedItem->setPen(myLineColor);
-			insertedItem->setSelected(true);
-			insertedItem->setZValue(maxZ);
+    case InsertVItem:
+        if (insertedVItem == 0){
+            insertedVItem = new VDiagramItem(myVItemType, myItemMenu);
+            insertedVItem->setBrush(myItemColor);
+            insertedVItem->setPen(myLineColor);
+            insertedVItem->setSelected(true);
+            insertedVItem->setZValue(maxZ);
 			maxZ+=0.1;
-			addItem(insertedItem);
+            addItem(insertedVItem);
 		}
-    	insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
 		break;
-    case InsertDrawItem:
-		if (insertedDrawItem != 0){
+    case InsertVDrawItem:
+        if (insertedVDrawItem != 0){
 
-			insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+            insertedVDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
 		}
 		break;
     case CopyingItem:
     	if (copiedItems->count() > 0){
         	//copiedItems->setPos(onGrid(mouseEvent->scenePos()));
-    		insertedItem=static_cast<DiagramItem*>(copiedItems->first());
+            insertedVItem=static_cast<VDiagramItem*>(copiedItems->first());
     		QPointF point=onGrid(mouseEvent->scenePos());
-			qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
-			qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
+            qreal dx=insertedVItem->pos().rx()-point.rx()-myDx;
+            qreal dy=insertedVItem->pos().ry()-point.ry()-myDy;
 			foreach(QGraphicsItem* item,*copiedItems){
 				if(item->parentItem()!=0){
 					if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
@@ -562,9 +562,9 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     default:
     	;
     }
-    if( insertedDrawItem )
+    if( insertedVDrawItem )
     {
-       insertedDrawItem->updateInOutView();
+       insertedVDrawItem->updateInOutView();
     }
 }
 //! [10]
@@ -637,8 +637,8 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 						QPointF mPos=QPointF(0,0);
 						// mPos adaptieren je nach DiaType ...
 						switch (item->type()) {
-							case DiagramDrawItem::Type:
-								mPos+=dynamic_cast<DiagramDrawItem*>(item)->getDimension()/2;
+                            case VDiagramDrawItem::Type:
+                                mPos+=dynamic_cast<VDiagramDrawItem*>(item)->getDimension()/2;
 								break;
 							default:
 								break;
@@ -727,11 +727,11 @@ void DiagramScene::abort(bool keepSelection)
 		//destroyItemGroup(copiedItems);
 		//removeItem(insertedItem);
 		break;
-	case InsertItem:
-		removeItem(insertedItem);
+    case InsertVItem:
+        removeItem(insertedVItem);
 		break;
-	case InsertDrawItem:
-		removeItem(insertedDrawItem);
+    case InsertVDrawItem:
+        removeItem(insertedVDrawItem);
 		break;
 	case InsertLine:
 		removeItem(insertedPathItem);
@@ -740,8 +740,8 @@ void DiagramScene::abort(bool keepSelection)
 		;
 	}
 
-    insertedItem=0;
-    insertedDrawItem=0;
+    insertedVItem=0;
+    insertedVDrawItem=0;
     copiedItems=0;
     myMode=MoveItem;
     if(!keepSelection) clearSelection();
@@ -756,12 +756,12 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
 	case QGraphicsItem::UserType+3:
 		return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramTextItem*>(item)->copy());
 		break;
-	case QGraphicsItem::UserType+6:
+    case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 			return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
 			break;
 	default:
 		{
-			DiagramItem* newItem=dynamic_cast<DiagramItem*>(item)->copy();
+            VDiagramItem* newItem=dynamic_cast<VDiagramItem*>(item)->copy();
 			return dynamic_cast<QGraphicsItem*>(newItem);
 		}
 		break;
@@ -780,7 +780,7 @@ void DiagramScene::setArrow(const int i)
     		case QGraphicsItem::UserType+3:
 				// Textitem does not possess Linecolor !
 				break;
-    		case QGraphicsItem::UserType+6:
+            case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 				qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(myArrow);
 				break;
     		default:
@@ -825,10 +825,10 @@ bool DiagramScene::save(QFile *file)
 			xmlWriter.writeAttribute("y",QString::number(item->pos().y()));
 			xmlWriter.writeAttribute("z",QString::number(item->zValue()));
 			switch (item->type()) {
-				case QGraphicsItem::UserType+16:
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
 					{
-						DiagramDrawItem *mItem = dynamic_cast<DiagramDrawItem *>(item);
-						//xmlWriter.writeComment("DiagramDrawItem");
+                        VDiagramDrawItem *mItem = dynamic_cast<VDiagramDrawItem *>(item);
+                        //xmlWriter.writeComment("VDiagramDrawItem");
 						xmlWriter.writeEmptyElement("DiagramType");
 						xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
 						xmlWriter.writeEmptyElement("Dimensions");
@@ -842,10 +842,10 @@ bool DiagramScene::save(QFile *file)
 						xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
 					}
 					break;
-				case QGraphicsItem::UserType+15:
+                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
 					{
-						DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
-						//xmlWriter.writeComment("DiagramItem");
+                        VDiagramItem *mItem = dynamic_cast<VDiagramItem *>(item);
+                        //xmlWriter.writeComment("VDiagramItem");
 						xmlWriter.writeEmptyElement("DiagramType");
 						xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
 						xmlWriter.writeEmptyElement("Pen");
@@ -867,7 +867,7 @@ bool DiagramScene::save(QFile *file)
 						xmlWriter.writeEndElement();
 					}
 					break;
-				case QGraphicsItem::UserType+6:
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 					{
 						DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
 						//xmlWriter.writeComment("DiagramPathItem");
@@ -914,9 +914,9 @@ bool DiagramScene::load(QFile *file)
 	QPointF mPos;
 	qreal z;
 	int type;
-	insertedItem=0;
+    insertedVItem=0;
 	insertedPathItem=0;
-	insertedDrawItem=0;
+    insertedVDrawItem=0;
 	textItem=0;
 	while(!xmlReader.atEnd()){
 		xmlReader.readNext();
@@ -959,25 +959,25 @@ bool DiagramScene::load(QFile *file)
 					continue;
 				}
 				switch (DiaType) {
-					case QGraphicsItem::UserType+15:
-						insertedItem = new DiagramItem(DiagramItem::DiagramType(type),myItemMenu);
-						addItem(insertedItem);
+                    case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+                        insertedVItem = new VDiagramItem(VDiagramItem::VDiagramType(type),myItemMenu);
+                        addItem(insertedVItem);
 #ifdef DEBUG
-						std::cout << "DiagramItem" << std::endl;
+                        std::cout << "VDiagramItem" << std::endl;
 #endif
-						insertedItem->setPos(mPos);
-						insertedItem->setZValue(z);
+                        insertedVItem->setPos(mPos);
+                        insertedVItem->setZValue(z);
 						break;
-					case QGraphicsItem::UserType+16:
-						insertedDrawItem = new DiagramDrawItem(DiagramDrawItem::DiagramType(type),myItemMenu);
-						addItem(insertedDrawItem);
+                    case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                        insertedVDrawItem = new VDiagramDrawItem(VDiagramDrawItem::VDiagramType(type),myItemMenu);
+                        addItem(insertedVDrawItem);
 #ifdef DEBUG
-						std::cout << "DiagramDrawItem" << std::endl;
+                        std::cout << "VDiagramDrawItem" << std::endl;
 #endif
-						insertedDrawItem->setPos(mPos);
-						insertedDrawItem->setZValue(z);
+                        insertedVDrawItem->setPos(mPos);
+                        insertedVDrawItem->setZValue(z);
 						break;
-					case QGraphicsItem::UserType+6:
+                    case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 						insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(type),myItemMenu);
 						addItem(insertedPathItem);
 #ifdef DEBUG
@@ -1007,7 +1007,7 @@ bool DiagramScene::load(QFile *file)
 				continue;
 			}
 			//DiamgramType nicht gesetzt ? -> Fehler
-			if(DiaType and !(insertedItem or insertedDrawItem or textItem or insertedPathItem)){
+            if(DiaType and !(insertedVItem or insertedVDrawItem or textItem or insertedPathItem)){
 				xmlReader.raiseError(tr("DiagramType definition missing"));
 				continue;
 			}
@@ -1027,13 +1027,13 @@ bool DiagramScene::load(QFile *file)
 					continue;
 				}
 				switch (DiaType) {
-				case QGraphicsItem::UserType+15:
-					insertedItem->setPen(color);
+                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+                    insertedVItem->setPen(color);
 					break;
-				case QGraphicsItem::UserType+16:
-					insertedDrawItem->setPen(color);
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                    insertedVDrawItem->setPen(color);
 					break;
-				case QGraphicsItem::UserType+6:
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 					insertedPathItem->setPen(color);
 					break;
 				default:
@@ -1057,13 +1057,13 @@ bool DiagramScene::load(QFile *file)
 					continue;
 				}
 				switch (DiaType) {
-				case QGraphicsItem::UserType+15:
-					insertedItem->setBrush(color);
+                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+                    insertedVItem->setBrush(color);
 					break;
-				case QGraphicsItem::UserType+16:
-					insertedDrawItem->setBrush(color);
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                    insertedVDrawItem->setBrush(color);
 					break;
-				case QGraphicsItem::UserType+6:
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 					insertedPathItem->setBrush(color);
 					break;
 				default:
@@ -1085,8 +1085,8 @@ bool DiagramScene::load(QFile *file)
 					continue;
 				}
 				switch (DiaType) {
-				case QGraphicsItem::UserType+16:
-					insertedDrawItem->setDimension(mPos2);
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                    insertedVDrawItem->setDimension(mPos2);
 				break;
 				default:
 					break;
@@ -1107,7 +1107,7 @@ bool DiagramScene::load(QFile *file)
 					continue;
 				}
 				switch (DiaType) {
-				case QGraphicsItem::UserType+6:
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 					insertedPathItem->append(mPos2+insertedPathItem->pos());
 				break;
 				default:
@@ -1149,13 +1149,13 @@ bool DiagramScene::load(QFile *file)
 				}
 				QTransform trans=QTransform(m11,m12,m21,m22,dx,dy);
 				switch (DiaType) {
-				case QGraphicsItem::UserType+15:
-					insertedItem->setTransform(trans);
+                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+                    insertedVItem->setTransform(trans);
 					break;
-				case QGraphicsItem::UserType+16:
-					insertedDrawItem->setTransform(trans);
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                    insertedVDrawItem->setTransform(trans);
 					break;
-				case QGraphicsItem::UserType+6:
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
 					insertedPathItem->setTransform(trans);
 					break;
 				case QGraphicsItem::UserType+3:
@@ -1175,8 +1175,8 @@ bool DiagramScene::load(QFile *file)
 		if(xmlReader.isEndElement()){
 			if(DiaType and (xmlReader.name()=="Item")){
 				DiaType = 0;
-				insertedItem = 0;
-				insertedDrawItem = 0;
+                insertedVItem = 0;
+                insertedVDrawItem = 0;
 				insertedPathItem = 0;
 				textItem = 0;
 			}
@@ -1192,8 +1192,8 @@ bool DiagramScene::load(QFile *file)
 				  << std::endl;
 	}
 	// Aufräumen
-	insertedItem = 0;
-	insertedDrawItem = 0;
+    insertedVItem = 0;
+    insertedVDrawItem = 0;
 	insertedPathItem = 0;
 	textItem = 0;
 	myMode = MoveItem;
