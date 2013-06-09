@@ -100,8 +100,9 @@ VDiagramItem::VDiagramItem(QMenu *contextMenu,
 
 //! [0]
 VDiagramItem::VDiagramItem(const VDiagramItem& diagram)
+    : QGraphicsPolygonItem(diagram.parentItem(),diagram.scene())
 {
-    QGraphicsPolygonItem(diagram.parentItem(),diagram.scene());
+
     //QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
     // copy from general GraphcsItem
     setBrush(diagram.brush());

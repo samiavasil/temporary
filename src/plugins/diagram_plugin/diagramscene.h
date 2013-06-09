@@ -45,6 +45,8 @@
 #define DIAGRAMSCENE_H
 
 #include <QGraphicsScene>
+#include "diagramitem.h"
+#include "diagramdrawitem.h"
 #include "vdiagramitem.h"
 #include "vdiagramdrawitem.h"
 #include "diagramtextitem.h"
@@ -67,7 +69,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertVItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertVDrawItem, Zoom , MoveItems};
+    enum Mode { InsertItem,InsertVItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem,InsertVDrawItem, Zoom , MoveItems};
 
     DiagramScene(QMenu *itemMenu, QObject *parent = 0);
     QFont font() const
@@ -111,6 +113,8 @@ public:
 public slots:
     void setMode(Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
+    void setItemType(DiagramItem::DiagramType type);
+    void setItemType(DiagramDrawItem::DiagramType type);
     void setItemType(VDiagramItem::VDiagramType type);
     void setItemType(VDiagramDrawItem::VDiagramType type);
     void editorLostFocus(DiagramTextItem *item);
@@ -119,6 +123,7 @@ public slots:
     void clear();
 
 signals:
+    void itemInserted(DiagramItem *item);
     void itemInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void itemSelected(QGraphicsItem *item);
@@ -142,6 +147,8 @@ protected:
 private:
     bool isItemChange(int type);
 
+    DiagramItem::DiagramType myItemType;
+    DiagramDrawItem::DiagramType myDrawItemType;
     VDiagramItem::VDiagramType myVItemType;
     VDiagramDrawItem::VDiagramType myVDrawItemType;
     QMenu *myItemMenu;
@@ -154,6 +161,8 @@ private:
     QColor myTextColor;
     QColor myItemColor;
     QColor myLineColor;
+    DiagramItem *insertedItem;
+    DiagramDrawItem *insertedDrawItem;
     VDiagramItem *insertedVItem;
     VDiagramDrawItem *insertedVDrawItem;
     DiagramPathItem *insertedPathItem;

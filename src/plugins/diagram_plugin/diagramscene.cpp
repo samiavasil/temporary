@@ -54,9 +54,12 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 {
     myItemMenu = itemMenu;
     myMode = MoveItem;
+    myItemType = DiagramItem::Step;
     myVItemType = VDiagramItem::Output;
     line = 0;
     textItem = 0;
+    insertedItem = 0;
+    insertedDrawItem = 0;
     insertedVItem = 0;
     insertedVDrawItem = 0;
     insertedPathItem = 0;
@@ -87,23 +90,25 @@ void DiagramScene::setLineColor(const QColor &color)
 {
     myLineColor = color;
     if(insertedPathItem!=0) insertedPathItem->setPen(myLineColor);
+    if(insertedItem!=0) insertedItem->setPen(myLineColor);
+    if(insertedDrawItem!=0) insertedDrawItem->setPen(myLineColor);
     if(insertedVItem!=0) insertedVItem->setPen(myLineColor);
     if(insertedVDrawItem!=0) insertedVDrawItem->setPen(myLineColor);
     if (!selectedItems().empty()){
-    	foreach(QGraphicsItem* item,selectedItems()){
-    		switch(item->type()){
-    		case QGraphicsItem::UserType+3:
-				// Textitem does not possess Linecolor !
-				break;
+        foreach(QGraphicsItem* item,selectedItems()){
+            switch(item->type()){
+            case QGraphicsItem::UserType+3:
+                // Textitem does not possess Linecolor !
+                break;
             case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-				qgraphicsitem_cast<DiagramPathItem*>(item)->setPen(myLineColor);
-				qgraphicsitem_cast<DiagramPathItem*>(item)->setBrush(myLineColor);
-				break;
-    		default:
-                dynamic_cast<VDiagramItem*>(item)->setPen(myLineColor);
-    			break;
-    		}
-    	}
+                qgraphicsitem_cast<DiagramPathItem*>(item)->setPen(myLineColor);
+                qgraphicsitem_cast<DiagramPathItem*>(item)->setBrush(myLineColor);
+                break;
+            default:
+                DiagramItem* d_tem = dynamic_cast<DiagramItem*>(item);
+                break;
+            }
+        }
     }
 }
 //! [1]
@@ -114,7 +119,7 @@ void DiagramScene::setTextColor(const QColor &color)
     myTextColor = color;
     if (isItemChange(DiagramTextItem::Type)) {
         DiagramTextItem *item =
-            qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
+                qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
         item->setDefaultTextColor(myTextColor);
     }
 }
@@ -124,29 +129,39 @@ void DiagramScene::setTextColor(const QColor &color)
 void DiagramScene::setItemColor(const QColor &color)
 {
     myItemColor = color;
+    if(insertedItem!=0) insertedItem->setBrush(myItemColor);
+    if(insertedDrawItem!=0) insertedDrawItem->setBrush(myItemColor);
     if(insertedVItem!=0) insertedVItem->setBrush(myItemColor);
     if(insertedVDrawItem!=0) insertedVDrawItem->setBrush(myItemColor);
     if (!selectedItems().empty()){
-    	foreach(QGraphicsItem* item,selectedItems()){
-    		switch(item->type()){
-    		case QGraphicsItem::UserType+3:
-    		// Textitem does not possess Linecolor !
-    		break;
+        foreach(QGraphicsItem* item,selectedItems()){
+            switch(item->type()){
+            case QGraphicsItem::UserType+3:
+                // Textitem does not possess Linecolor !
+                break;
             case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-    		// Path does not need Backgroundcolor
-    		break;
-    		default:
-                dynamic_cast<VDiagramItem*>(item)->setBrush(myItemColor);
-    			break;
-    		}
-    	}
+                // Path does not need Backgroundcolor
+                break;
+            case QGraphicsItem::UserType+15:
+            case QGraphicsItem::UserType+16:
+            {
+                DiagramItem* d_item = dynamic_cast<DiagramItem*>(item);
+                if( d_item )
+                    d_item->setBrush(myItemColor);
+                break;
+            }
+            case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+            case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+            {
+                VDiagramItem* d_vitem = dynamic_cast<VDiagramItem*>(item);
+                if( d_vitem )
+                    d_vitem->setBrush(myItemColor);
+                break;
+            }
+            }
+        }
     }
-       // old code by Trolltech
-    /*if (isItemChange(VDiagramItem::Type)) {
-        VDiagramItem *item =
-            qgraphicsitem_cast<VDiagramItem *>(selectedItems().first());
-        item->setBrush(myItemColor);
-    }*/
+
 }
 //! [3]
 
@@ -157,7 +172,7 @@ void DiagramScene::setFont(const QFont &font)
 
     if (isItemChange(DiagramTextItem::Type)) {
         QGraphicsTextItem *item =
-            qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
+                qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
         item->setFont(myFont);
         // testing
         /*
@@ -175,44 +190,44 @@ void DiagramScene::setFont(const QFont &font)
 
 void DiagramScene::setMode(Mode mode,bool m_abort)
 {
-	if(m_abort) abort(true);
-	/*
-	if(myMode==InsertLine){
-		if(insertedPathItem!=0){
-			insertedPathItem->remove();
-			insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-			insertedPathItem=0;
-		}
-	}
-	*/
+    if(m_abort) abort(true);
+    /*
+    if(myMode==InsertLine){
+        if(insertedPathItem!=0){
+            insertedPathItem->remove();
+            insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            insertedPathItem=0;
+        }
+    }
+    */
     myMode = mode;
     switch (mode) {
-		case MoveItem:
-			enableAllItems(true);
-			break;
-		case MoveItems:
-			enableAllItems(true);
-			break;
-		case CopyItem:
-			enableAllItems(true);
-			break;
-		case CopyingItem:
-			enableAllItems(false);
-			break;
-		case Zoom:
-			enableAllItems(false);
-			break;
-		default:
-			enableAllItems(false);
-			break;
-	}
+    case MoveItem:
+        enableAllItems(true);
+        break;
+    case MoveItems:
+        enableAllItems(true);
+        break;
+    case CopyItem:
+        enableAllItems(true);
+        break;
+    case CopyingItem:
+        enableAllItems(false);
+        break;
+    case Zoom:
+        enableAllItems(false);
+        break;
+    default:
+        enableAllItems(false);
+        break;
+    }
 }
 
 void DiagramScene::enableAllItems(bool enable)
 {
-	foreach(QGraphicsItem* item,items()){
-		item->setEnabled(enable);
-	}
+    foreach(QGraphicsItem* item,items()){
+        item->setEnabled(enable);
+    }
 }
 
 /*enum DiagramScene::getMode()
@@ -220,6 +235,14 @@ void DiagramScene::enableAllItems(bool enable)
     return mode;
 }*/
 
+void DiagramScene::setItemType(DiagramItem::DiagramType type)
+{
+    myItemType = type;
+}
+void DiagramScene::setItemType(DiagramDrawItem::DiagramType type)
+{
+    myDrawItemType = type;
+}
 void DiagramScene::setItemType(VDiagramItem::VDiagramType type)
 {
     myVItemType = type;
@@ -233,12 +256,12 @@ void DiagramScene::setItemType(VDiagramDrawItem::VDiagramType type)
 //! [5]
 void DiagramScene::editorLostFocus(DiagramTextItem *item)
 {
-	//Debug
+    //Debug
 #ifdef DEBUG
-	std::cout << "textItem:" << int(textItem) << std::endl;
-	if(textItem){
-		std::cout << "Focus ?:" << textItem->hasFocus() << std::endl;
-	}
+    std::cout << "textItem:" << int(textItem) << std::endl;
+    if(textItem){
+        std::cout << "Focus ?:" << textItem->hasFocus() << std::endl;
+    }
 #endif
     QTextCursor cursor = item->textCursor();
     cursor.clearSelection();
@@ -254,8 +277,8 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
     }
     // avoid double lose focus, which erroneously activates shortcuts for second textitem
     if((textItem==item)or(textItem==0)){
-    	textItem=0;
-    	emit editorHasLostFocus();
+        textItem=0;
+        emit editorHasLostFocus();
     }
 
 }
@@ -269,223 +292,297 @@ void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 #ifdef DEBUG
-	std::cout << "click" << myMode << std::endl;
+    std::cout << "click" << myMode << std::endl;
 #endif
-	if (mouseEvent->button() == Qt::RightButton){
-		switch (myMode) {
-            case InsertVItem:
-                if (insertedVItem != 0){
-                    insertedVItem->rotate(90);
-				}
-				break;
-			default:
-				;
-		}
-	    return;
-	}
+    if (mouseEvent->button() == Qt::RightButton){
+        switch (myMode) {
+        case InsertItem:
+            if (insertedItem != 0){
+                insertedItem->rotate(90);
+            }
+            break;
+        case InsertVItem:
+            if (insertedVItem != 0){
+                insertedVItem->rotate(90);
+            }
+            break;
 
-	if (mouseEvent->button() == Qt::MidButton){
-			switch (myMode) {
-				case InsertLine:
-					if (insertedPathItem != 0){
-						insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
-						insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-						insertedPathItem->setEnabled(false);
-						insertedPathItem = 0;
-					}
-					break;
-				default:
-					;
-			}
-		    return;
-		}
+        default:
+            ;
+        }
+        return;
+    }
+
+    if (mouseEvent->button() == Qt::MidButton){
+        switch (myMode) {
+        case InsertLine:
+            if (insertedPathItem != 0){
+                insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+                insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                insertedPathItem->setEnabled(false);
+                insertedPathItem = 0;
+            }
+            break;
+        default:
+            ;
+        }
+        return;
+    }
 
     if (mouseEvent->button() != Qt::LeftButton)
         return;
 
-    //VDiagramItem *item;
+
     switch (myMode) {
-        case InsertVItem:
-            if (insertedVItem == 0){
-                insertedVItem = new VDiagramItem(myVItemType, myItemMenu);
-                insertedVItem->setBrush(myItemColor);
-                insertedVItem->setPen(myLineColor);
-                insertedVItem->setZValue(maxZ);
-				maxZ+=0.1;
-                addItem(insertedVItem);
-            }
-            insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
-            insertedVItem->setEnabled(false);
-            emit itemInserted(insertedVItem);
-            insertedVItem = 0;
 
-            break;
-//! [6] //! [7]
-        case InsertVDrawItem:
-            if (insertedVDrawItem == 0){
-                insertedVDrawItem = new VDiagramDrawItem(myVDrawItemType, myItemMenu);
-                insertedVDrawItem->setBrush(myItemColor);
-                insertedVDrawItem->setPen(myLineColor);
-                insertedVDrawItem->setZValue(maxZ);
-        		maxZ+=0.1;
-                addItem(insertedVDrawItem);
-                insertedVDrawItem->setPos(onGrid(mouseEvent->scenePos()));
-        	}
-        	else
-        	{
-                insertedVDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
-                insertedVDrawItem->setEnabled(false);
-                insertedVDrawItem = 0;
-        	}
-
-        	break;
-        case MoveItems:
-        {
-            QPointF point=onGrid(mouseEvent->scenePos());
-            if(!myMoveItems.isEmpty()){
-        		qreal dx=point.rx()-myDx;
-        		qreal dy=point.ry()-myDy;
-        		foreach(QGraphicsItem* item,myMoveItems){
-        			if(item->parentItem()!=0){
-        				if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-        			}
-        			else {
-        				item->moveBy(dx,dy);
-        			}
-        		}
-        		myMoveItems.clear();
-        		myMode=MoveItem;
-            }
-        	else
-        	{
-        		if(!selectedItems().isEmpty()){
-        			// lösche doppelte Verweise (Child&selected)
-        			myMoveItems=selectedItems();
-        			foreach(QGraphicsItem* item,myMoveItems){
-        				if(item->parentItem())
-        					if(item->parentItem()->isSelected()) {
-        						item->setSelected(false);
-        						myMoveItems.removeOne(item);
-        					}
-        			}
-        			// speichere Referenzpunkt
-        			myDx=point.rx();
-        			myDy=point.ry();
-        		}
-        	}
-        	break;
-        }
-        case InsertLine:
-        	if (insertedPathItem == 0){
-        		insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
-        		insertedPathItem->setPen(myLineColor);
-        		insertedPathItem->setBrush(myLineColor);
-        		insertedPathItem->setZValue(maxZ);
-        		maxZ+=0.1;
-        		addItem(insertedPathItem);
-        		insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
-        		//insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        	}
-        	insertedPathItem->append(onGrid(mouseEvent->scenePos()));
-            break;
-//! [7] //! [8]
-        case InsertText:
-        	emit editorHasReceivedFocus();
-            textItem = new DiagramTextItem();
-            textItem->setFont(myFont);
-            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-            textItem->setZValue(maxZ);
+    case InsertItem:
+        if (insertedItem == 0){
+            insertedItem = new DiagramItem(myItemType, myItemMenu);
+            insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setZValue(maxZ);
             maxZ+=0.1;
-            connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
-                    this, SLOT(editorLostFocus(DiagramTextItem *)));
-            connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
-                                this, SLOT(editorReceivedFocus(DiagramTextItem *)));
-            connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
-                    this, SIGNAL(itemSelected(QGraphicsItem *)));
-            addItem(textItem);
-            textItem->setDefaultTextColor(myTextColor);
-            textItem->setFocus();
-            textItem->setCenterPoint(onGrid(mouseEvent->scenePos()));
-            textItem->activateEditor();
-            emit textInserted(textItem);
-            mouseEvent->setAccepted(true);
-            break;
-//! [8] //! [9]
-        case CopyItem:
-				if (!selectedItems().empty()){
-						copiedItems=new QList<QGraphicsItem*>;
-						copiedItems->clear();
-						// lösche doppelte Verweise (Child&selected)
-						QList<QGraphicsItem*> myList=selectedItems();
-						foreach(QGraphicsItem* item,myList){
-							if(item->parentItem())
-								if(item->parentItem()->isSelected()) {
-									item->setSelected(false);
-									myList.removeOne(item);
-								}
-						}
-						// Vorbereitung copy
-						QGraphicsItem *insItem;
-						insItem=myList.first();
-						QPointF point=onGrid(mouseEvent->scenePos());
-						myDx=insItem->pos().rx()-point.rx();
-						myDy=insItem->pos().ry()-point.ry();
-						// copy
-						foreach(QGraphicsItem* item,myList){
-							insItem=copy(item);
-							addItem(insItem);
-							insItem->setPos(item->pos());
-							copiedItems->append(item);
-							item->setZValue(maxZ);
-							maxZ+=0.1;
-							//check for children
-							if(item->childItems().count()>0){
-								foreach(QGraphicsItem* item_l1,item->childItems()){
-									QGraphicsItem* addedItem=copy(item_l1);
-									addItem(addedItem);
-									addedItem->setParentItem(insItem);
-									addedItem->setPos(item_l1->pos());
-								}
-							}
-							//move original to knew position
-							item->setSelected(true);
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        insertedItem->setEnabled(false);
+        emit itemInserted(insertedItem);
+        insertedItem = 0;
+
+        break;
+        //! [6] //! [7]
+        //! [6] //! [7]
+    case InsertDrawItem:
+        if (insertedDrawItem == 0){
+            insertedDrawItem = new DiagramDrawItem(myDrawItemType, myItemMenu);
+            insertedDrawItem->setBrush(myItemColor);
+            insertedDrawItem->setPen(myLineColor);
+            insertedDrawItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedDrawItem);
+            insertedDrawItem->setPos(onGrid(mouseEvent->scenePos()));
+        }
+        else
+        {
+            insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+            insertedDrawItem->setEnabled(false);
+            insertedDrawItem = 0;
+        }
+
+        break;
+
+    case InsertVItem:
+        if (insertedVItem == 0){
+            insertedVItem = new VDiagramItem(myVItemType, myItemMenu);
+            insertedVItem->setBrush(myItemColor);
+            insertedVItem->setPen(myLineColor);
+            insertedVItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedVItem);
+        }
+        insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
+        insertedVItem->setEnabled(false);
+        emit itemInserted(insertedVItem);
+        insertedVItem = 0;
+
+        break;
+        //! [6] //! [7]
+        //! [6] //! [7]
+    case InsertVDrawItem:
+        if (insertedVDrawItem == 0){
+            insertedVDrawItem = new VDiagramDrawItem(myVDrawItemType, myItemMenu);
+            insertedVDrawItem->setBrush(myItemColor);
+            insertedVDrawItem->setPen(myLineColor);
+            insertedVDrawItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedVDrawItem);
+            insertedVDrawItem->setPos(onGrid(mouseEvent->scenePos()));
+        }
+        else
+        {
+            insertedVDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+            insertedVDrawItem->setEnabled(false);
+            insertedVDrawItem = 0;
+        }
+
+        break;
+    case MoveItems:
+    {
+        QPointF point=onGrid(mouseEvent->scenePos());
+        if(!myMoveItems.isEmpty()){
+            qreal dx=point.rx()-myDx;
+            qreal dy=point.ry()-myDy;
+            foreach(QGraphicsItem* item,myMoveItems){
+                if(item->parentItem()!=0){
+                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
+                }
+                else {
+                    item->moveBy(dx,dy);
+                }
+            }
+            myMoveItems.clear();
+            myMode=MoveItem;
+        }
+        else
+        {
+            if(!selectedItems().isEmpty()){
+                // lï¿½sche doppelte Verweise (Child&selected)
+                myMoveItems=selectedItems();
+                foreach(QGraphicsItem* item,myMoveItems){
+                    if(item->parentItem())
+                        if(item->parentItem()->isSelected()) {
+                            item->setSelected(false);
+                            myMoveItems.removeOne(item);
+                        }
+                }
+                // speichere Referenzpunkt
+                myDx=point.rx();
+                myDy=point.ry();
+            }
+        }
+        break;
+    }
+    case InsertLine:
+        if (insertedPathItem == 0){
+            insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
+            insertedPathItem->setPen(myLineColor);
+            insertedPathItem->setBrush(myLineColor);
+            insertedPathItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedPathItem);
+            insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
+            //insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }
+        insertedPathItem->append(onGrid(mouseEvent->scenePos()));
+        break;
+        //! [7] //! [8]
+    case InsertText:
+        emit editorHasReceivedFocus();
+        textItem = new DiagramTextItem();
+        textItem->setFont(myFont);
+        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+        textItem->setZValue(maxZ);
+        maxZ+=0.1;
+        connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
+                this, SLOT(editorLostFocus(DiagramTextItem *)));
+        connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
+                this, SLOT(editorReceivedFocus(DiagramTextItem *)));
+        connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
+                this, SIGNAL(itemSelected(QGraphicsItem *)));
+        addItem(textItem);
+        textItem->setDefaultTextColor(myTextColor);
+        textItem->setFocus();
+        textItem->setCenterPoint(onGrid(mouseEvent->scenePos()));
+        textItem->activateEditor();
+        emit textInserted(textItem);
+        mouseEvent->setAccepted(true);
+        break;
+        //! [8] //! [9]
+    case CopyItem:
+        if (!selectedItems().empty()){
+            copiedItems=new QList<QGraphicsItem*>;
+            copiedItems->clear();
+            // lsche doppelte Verweise (Child&selected)
+            QList<QGraphicsItem*> myList=selectedItems();
+            foreach(QGraphicsItem* item,myList){
+                if(item->parentItem())
+                    if(item->parentItem()->isSelected()) {
+                        item->setSelected(false);
+                        myList.removeOne(item);
+                    }
+            }
+            // Vorbereitung copy
+            QGraphicsItem *insItem;
+            insItem=myList.first();
+            QPointF point=onGrid(mouseEvent->scenePos());
+            myDx=insItem->pos().rx()-point.rx();
+            myDy=insItem->pos().ry()-point.ry();
+            // copy
+            foreach(QGraphicsItem* item,myList){
+                insItem=copy(item);
+                addItem(insItem);
+                insItem->setPos(item->pos());
+                copiedItems->append(item);
+                item->setZValue(maxZ);
+                maxZ+=0.1;
+                //check for children
+                if(item->childItems().count()>0){
+                    foreach(QGraphicsItem* item_l1,item->childItems()){
+                        QGraphicsItem* addedItem=copy(item_l1);
+                        addItem(addedItem);
+                        addedItem->setParentItem(insItem);
+                        addedItem->setPos(item_l1->pos());
+                    }
+                }
+                //move original to knew position
+                item->setSelected(true);
 #ifdef DEBUG
-							std::cout<< item->pos().rx()<< ","<<item->pos().ry() << std::endl;
+                std::cout<< item->pos().rx()<< ","<<item->pos().ry() << std::endl;
 #endif
-						}
-						myMode=CopyingItem;
-				}
-				break;
-        case CopyingItem:
-				if (copiedItems->count() > 0){
-                    insertedVItem=static_cast<VDiagramItem*>(copiedItems->first());
-					QPointF point=onGrid(mouseEvent->scenePos());
-                    qreal dx=insertedVItem->pos().rx()-point.rx()-myDx;
-                    qreal dy=insertedVItem->pos().ry()-point.ry()-myDy;
-					foreach(QGraphicsItem* item,*copiedItems){
-						if(item->parentItem()!=0){
-							if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-						}
-						else {
-							item->moveBy(-dx,-dy);
-						}
-					}
-					clearSelection();
-                    insertedVItem=0;
-					myDx=0.0;
-					myDy=0.0;
-					myMode=MoveItem;
-				}
-				break;
+            }
+            myMode=CopyingItem;
+        }
+        break;
+    case CopyingItem:
+        if (copiedItems->count() > 0){
+
+            qreal dx;
+            qreal dy;
+            QPointF point=onGrid(mouseEvent->scenePos());
+            insertedItem  = dynamic_cast<DiagramItem*>(copiedItems->first());
+            if( insertedItem )
+            {
+                dx=insertedItem->pos().rx()-point.rx()-myDx;
+                dy=insertedItem->pos().ry()-point.ry()-myDy;
+            }
+            else
+            {
+                insertedVItem = dynamic_cast<VDiagramItem*>(copiedItems->first());
+                if( insertedVItem )
+                {
+                    dx=insertedVItem->pos().rx()-point.rx()-myDx;
+                    dy=insertedVItem->pos().ry()-point.ry()-myDy;
+                }
+                else
+                {
+                    qDebug( "Error someting wrong......" );
+                    return;
+                }
+
+            }
+
+
+            foreach(QGraphicsItem* item,*copiedItems){
+                if(item->parentItem()!=0){
+                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
+                }
+                else {
+                    item->moveBy(-dx,-dy);
+                }
+            }
+            clearSelection();
+            if( insertedItem )
+            {
+                insertedItem=0;
+            }
+            if( insertedVItem )
+            {
+                insertedVItem=0;
+            }
+            myDx=0.0;
+            myDy=0.0;
+            myMode=MoveItem;
+        }
+        break;
     default:
-    	;
+        ;
     }
     if( insertedVDrawItem )
     {
         insertedVDrawItem->updateInOutView();
     }
 
-if(!mouseEvent->isAccepted()) QGraphicsScene::mousePressEvent(mouseEvent);
+    if(!mouseEvent->isAccepted()) QGraphicsScene::mousePressEvent(mouseEvent);
 }
 //! [9]
 
@@ -493,36 +590,48 @@ if(!mouseEvent->isAccepted()) QGraphicsScene::mousePressEvent(mouseEvent);
 void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     // move cursor
-	myCursor.setPos(onGrid(mouseEvent->scenePos()));
+    myCursor.setPos(onGrid(mouseEvent->scenePos()));
 
-	// preview der Zeichnung
+    // preview der Zeichnung
     switch (myMode){
     case InsertLine:
-    	if (insertedPathItem != 0) {
-    	        insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
-    	}
+        if (insertedPathItem != 0) {
+            insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+        }
         break;
     case MoveItem:
         QGraphicsScene::mouseMoveEvent(mouseEvent);
         checkOnGrid();
-    	break;
+        break;
     case MoveItems:
     {
-    	QPointF point=onGrid(mouseEvent->scenePos());
-    	qreal dx=point.rx()-myDx;
-    	qreal dy=point.ry()-myDy;
-    	foreach(QGraphicsItem* item,myMoveItems){
-    		if(item->parentItem()!=0){
-    			if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
-    		}
-    		else {
-    			item->moveBy(dx,dy);
-    		}
-    	}
-    	myDx=point.rx();
-    	myDy=point.ry();
-    	break;
+        QPointF point=onGrid(mouseEvent->scenePos());
+        qreal dx=point.rx()-myDx;
+        qreal dy=point.ry()-myDy;
+        foreach(QGraphicsItem* item,myMoveItems){
+            if(item->parentItem()!=0){
+                if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
+            }
+            else {
+                item->moveBy(dx,dy);
+            }
+        }
+        myDx=point.rx();
+        myDy=point.ry();
+        break;
     }
+    case InsertItem:
+        if (insertedItem == 0){
+            insertedItem = new DiagramItem(myItemType, myItemMenu);
+            insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setSelected(true);
+            insertedItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        break;
     case InsertVItem:
         if (insertedVItem == 0){
             insertedVItem = new VDiagramItem(myVItemType, myItemMenu);
@@ -530,41 +639,66 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedVItem->setPen(myLineColor);
             insertedVItem->setSelected(true);
             insertedVItem->setZValue(maxZ);
-			maxZ+=0.1;
+            maxZ+=0.1;
             addItem(insertedVItem);
-		}
+        }
         insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
-		break;
+        break;
+    case InsertDrawItem:
+        if (insertedDrawItem != 0){
+            insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+        }
+        break;
     case InsertVDrawItem:
         if (insertedVDrawItem != 0){
-
             insertedVDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
-		}
-		break;
+        }
+        break;
     case CopyingItem:
-    	if (copiedItems->count() > 0){
-        	//copiedItems->setPos(onGrid(mouseEvent->scenePos()));
-            insertedVItem=static_cast<VDiagramItem*>(copiedItems->first());
-    		QPointF point=onGrid(mouseEvent->scenePos());
-            qreal dx=insertedVItem->pos().rx()-point.rx()-myDx;
-            qreal dy=insertedVItem->pos().ry()-point.ry()-myDy;
-			foreach(QGraphicsItem* item,*copiedItems){
-				if(item->parentItem()!=0){
-					if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-				}
-				else {
-					item->moveBy(-dx,-dy);
-				}
-			}
-		}
-		break;
+        if (copiedItems->count() > 0){
+            //copiedItems->setPos(onGrid(mouseEvent->scenePos()));
+            qreal dx;
+            qreal dy;
+            QPointF point=onGrid(mouseEvent->scenePos());
+            insertedItem  = dynamic_cast<DiagramItem*>(copiedItems->first());
+            if( insertedItem )
+            {
+                dx=insertedItem->pos().rx()-point.rx()-myDx;
+                dy=insertedItem->pos().ry()-point.ry()-myDy;
+            }
+            else
+            {
+                insertedVItem = dynamic_cast<VDiagramItem*>(copiedItems->first());
+                if( insertedVItem )
+                {
+                    dx=insertedVItem->pos().rx()-point.rx()-myDx;
+                    dy=insertedVItem->pos().ry()-point.ry()-myDy;
+                }
+                else
+                {
+                    qDebug( "Error someting wrong......" );
+                    return;
+                }
+
+            }
+
+            foreach(QGraphicsItem* item,*copiedItems){
+                if(item->parentItem()!=0){
+                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
+                }
+                else {
+                    item->moveBy(-dx,-dy);
+                }
+            }
+        }
+        break;
 
     default:
-    	;
+        ;
     }
     if( insertedVDrawItem )
     {
-       insertedVDrawItem->updateInOutView();
+        insertedVDrawItem->updateInOutView();
     }
 }
 //! [10]
@@ -572,11 +706,11 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 //! [11]
 void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-	if (myMode == Zoom) {
-		emit zoomRect(mouseEvent->scenePos(),mouseEvent->lastScenePos());
-		return;
-	}
-//! [12] //! [13]
+    if (myMode == Zoom) {
+        emit zoomRect(mouseEvent->scenePos(),mouseEvent->lastScenePos());
+        return;
+    }
+    //! [12] //! [13]
     line = 0;
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
@@ -584,29 +718,29 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
 #ifdef DEBUG
-	std::cout << "d click" << myMode << std::endl;
+    std::cout << "d click" << myMode << std::endl;
 #endif
-	switch (myMode){
-	case InsertLine:
-		//insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
-		insertedPathItem->remove();
-		insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-		insertedPathItem->setEnabled(false);
-		insertedPathItem=0;
-		break;
-	default:
-		if(!selectedItems().isEmpty()){
-			QGraphicsItem *item = selectedItems().first();//itemAt(mouseEvent->scenePos());
-			if(item){
+    switch (myMode){
+    case InsertLine:
+        //insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+        insertedPathItem->remove();
+        insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        insertedPathItem->setEnabled(false);
+        insertedPathItem=0;
+        break;
+    default:
+        if(!selectedItems().isEmpty()){
+            QGraphicsItem *item = selectedItems().first();//itemAt(mouseEvent->scenePos());
+            if(item){
                 QList<QGraphicsItem *> childrens = item->childItems();
                 QGraphicsTextItem *child = NULL;
                 for( int i=0; i < childrens.count();i++ )
                 {
                     child = dynamic_cast<QGraphicsTextItem*>( childrens[i] );
-                  if( child )
-                  {
-                      break;
-                  }
+                    if( child )
+                    {
+                        break;
+                    }
                 }
                 if( child ) {
 #ifdef DEBUG
@@ -617,61 +751,64 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     emit editorHasReceivedFocus();
                     child->setFocus();
                 }
-				else {
-					if(item->type()!=DiagramTextItem::Type){
-						// added
-						// text wird per Doppelclick eingefuegt
-						textItem = new DiagramTextItem();
-						textItem->setFont(myFont);
-						textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-						textItem->setZValue(1000.0);
-						connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
-								this, SLOT(editorLostFocus(DiagramTextItem *)));
-						connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
-								this, SLOT(editorReceivedFocus(DiagramTextItem *)));
-						connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
-								this, SIGNAL(itemSelected(QGraphicsItem *)));
-						addItem(textItem);
-						textItem->setParentItem(item);
-						textItem->setDefaultTextColor(myTextColor);
-						QPointF mPos=QPointF(0,0);
-						// mPos adaptieren je nach DiaType ...
-						switch (item->type()) {
-                            case VDiagramDrawItem::Type:
-                                mPos+=dynamic_cast<VDiagramDrawItem*>(item)->getDimension()/2;
-								break;
-							default:
-								break;
-						}
-						//textItem->setPos(mPos);
-						textItem->setCenterPoint(mPos);
-						emit editorHasReceivedFocus();
-						emit textInserted(textItem);
-						textItem->setFocus(Qt::OtherFocusReason);
-					}
-					else
-						QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
-				}
-			}
-		}
-	}
+                else {
+                    if(item->type()!=DiagramTextItem::Type){
+                        // added
+                        // text wird per Doppelclick eingefuegt
+                        textItem = new DiagramTextItem();
+                        textItem->setFont(myFont);
+                        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+                        textItem->setZValue(1000.0);
+                        connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
+                                this, SLOT(editorLostFocus(DiagramTextItem *)));
+                        connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
+                                this, SLOT(editorReceivedFocus(DiagramTextItem *)));
+                        connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
+                                this, SIGNAL(itemSelected(QGraphicsItem *)));
+                        addItem(textItem);
+                        textItem->setParentItem(item);
+                        textItem->setDefaultTextColor(myTextColor);
+                        QPointF mPos=QPointF(0,0);
+                        // mPos adaptieren je nach DiaType ...
+                        switch (item->type()) {
+                        case DiagramDrawItem::Type:
+                            mPos+=dynamic_cast<DiagramDrawItem*>(item)->getDimension()/2;
+                            break;
+                        case VDiagramDrawItem::Type:
+                            mPos+=dynamic_cast<VDiagramDrawItem*>(item)->getDimension()/2;
+                            break;
+                        default:
+                            break;
+                        }
+                        //textItem->setPos(mPos);
+                        textItem->setCenterPoint(mPos);
+                        emit editorHasReceivedFocus();
+                        emit textInserted(textItem);
+                        textItem->setFocus(Qt::OtherFocusReason);
+                    }
+                    else
+                        QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+                }
+            }
+        }
+    }
 }
 
 void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
 {
-	if(mouseEvent->modifiers()==Qt::ControlModifier){
-		int i =  mouseEvent->delta();
-		qreal factor;
-		if(i>=0){
-			factor = i/100.0;
-		}
-		else {
-			factor = -100.0/i; // negative Richtung ...
-		}
-		emit zoom(factor);
-		mouseEvent->setAccepted(true);
-		return;
-	}
+    if(mouseEvent->modifiers()==Qt::ControlModifier){
+        int i =  mouseEvent->delta();
+        qreal factor;
+        if(i>=0){
+            factor = i/100.0;
+        }
+        else {
+            factor = -100.0/i; // negative Richtung ...
+        }
+        emit zoom(factor);
+        mouseEvent->setAccepted(true);
+        return;
+    }
     QGraphicsScene::wheelEvent(mouseEvent);
 }
 
@@ -694,52 +831,61 @@ void DiagramScene::checkOnGrid()
 {
     foreach (QGraphicsItem *item, selectedItems()) {
 
-    	if(item->type()==DiagramTextItem::Type){
-    		// not item position but center position needs to be on grid
-    		QPointF centerPoint=dynamic_cast<DiagramTextItem*>(item)->centerPoint();
-    		std::cout << "rec:" << centerPoint.x() << "/" << centerPoint.y() << std::endl;
-    		qreal x = qRound(centerPoint.x()/10)*10.0;
-    		qreal y = qRound(centerPoint.y()/10)*10.0;
-    		dynamic_cast<DiagramTextItem*>(item)->setCenterPoint(QPointF(x,y));
-    	}
-    	else
-    	{
-    		qreal x = qRound(item->x()/10)*10.0;
-    		qreal y = qRound(item->y()/10)*10.0;
-    		item->setPos(x,y);
-    	}
+        if(item->type()==DiagramTextItem::Type){
+            // not item position but center position needs to be on grid
+            QPointF centerPoint=dynamic_cast<DiagramTextItem*>(item)->centerPoint();
+            std::cout << "rec:" << centerPoint.x() << "/" << centerPoint.y() << std::endl;
+            qreal x = qRound(centerPoint.x()/10)*10.0;
+            qreal y = qRound(centerPoint.y()/10)*10.0;
+            dynamic_cast<DiagramTextItem*>(item)->setCenterPoint(QPointF(x,y));
+        }
+        else
+        {
+            qreal x = qRound(item->x()/10)*10.0;
+            qreal y = qRound(item->y()/10)*10.0;
+            item->setPos(x,y);
+        }
     }
 }
 
 QPointF DiagramScene::onGrid(QPointF pos)
 {
-	qreal x = qRound(pos.x()/myGrid)*myGrid;
-	qreal y = qRound(pos.y()/myGrid)*myGrid;
-	QPointF result = QPointF(x,y);
-	return result;
+    qreal x = qRound(pos.x()/myGrid)*myGrid;
+    qreal y = qRound(pos.y()/myGrid)*myGrid;
+    QPointF result = QPointF(x,y);
+    return result;
 }
 
 void DiagramScene::abort(bool keepSelection)
 {
-	switch(myMode){
-	case CopyingItem:
-		//removeItem(copiedItems);
-		//destroyItemGroup(copiedItems);
-		//removeItem(insertedItem);
-		break;
+    switch(myMode){
+    case CopyingItem:
+        //removeItem(copiedItems);
+        //destroyItemGroup(copiedItems);
+        //removeItem(insertedItem);
+        break;
+    case InsertItem:
+        removeItem(insertedItem);
+        break;
+    case InsertDrawItem:
+        removeItem(insertedDrawItem);
+        break;
     case InsertVItem:
         removeItem(insertedVItem);
-		break;
+        break;
     case InsertVDrawItem:
         removeItem(insertedVDrawItem);
-		break;
-	case InsertLine:
-		removeItem(insertedPathItem);
-		break;
-	default:
-		;
-	}
+        break;
 
+    case InsertLine:
+        removeItem(insertedPathItem);
+        break;
+    default:
+        ;
+    }
+
+    insertedItem=0;
+    insertedDrawItem=0;
     insertedVItem=0;
     insertedVDrawItem=0;
     copiedItems=0;
@@ -750,44 +896,61 @@ void DiagramScene::abort(bool keepSelection)
 QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
 {
 #ifdef DEBUG
-	std::cout<<"copy: " << item->type()<<std::endl;
+    std::cout<<"copy: " << item->type()<<std::endl;
 #endif
-	switch(item->type()){
-	case QGraphicsItem::UserType+3:
-		return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramTextItem*>(item)->copy());
-		break;
+    switch(item->type()){
+    case QGraphicsItem::UserType+3:
+        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramTextItem*>(item)->copy());
+        break;
     case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-			return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
-			break;
-	default:
-		{
-            VDiagramItem* newItem=dynamic_cast<VDiagramItem*>(item)->copy();
-			return dynamic_cast<QGraphicsItem*>(newItem);
-		}
-		break;
-	}
+        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
+        break;
+    default:
+    {
+        DiagramItem* newItem=dynamic_cast<DiagramItem*>(item);
+        if( newItem )
+        {
+            return dynamic_cast<QGraphicsItem*>(newItem->copy());
+        }
+        else
+        {
+            VDiagramItem* newVItem=dynamic_cast<VDiagramItem*>(item)->copy();
+            if( newVItem )
+            {
+                return dynamic_cast<QGraphicsItem*>(newVItem->copy());
+            }
+            else
+            {
+                qDebug("Someting Wrong here !!!\n");
+            }
+        }
+
+
+    }
+        break;
+    }
 }
 
 void DiagramScene::setArrow(const int i)
 {
-	myArrow=DiagramPathItem::DiagramType(i);
-	if(insertedPathItem!=0){
-		insertedPathItem->setDiagramType(myArrow);
-	}
+    myArrow=DiagramPathItem::DiagramType(i);
+    if(insertedPathItem!=0){
+        insertedPathItem->setDiagramType(myArrow);
+    }
     if (!selectedItems().empty()){
-    	foreach(QGraphicsItem* item,selectedItems()){
-    		switch(item->type()){
-    		case QGraphicsItem::UserType+3:
-				// Textitem does not possess Linecolor !
-				break;
+        foreach(QGraphicsItem* item,selectedItems()){
+            switch(item->type()){
+            case QGraphicsItem::UserType+3:
+                // Textitem does not possess Linecolor !
+                break;
             case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-				qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(myArrow);
-				break;
-    		default:
-    			// nothing to do
-    			break;
-    		}
-    	}
+                qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(myArrow);
+                break;
+            default:
+                // nothing to do
+                break;
+            }
+        }
     }
 
 
@@ -795,469 +958,549 @@ void DiagramScene::setArrow(const int i)
 
 bool DiagramScene::event(QEvent *mEvent)
 {
-	if (mEvent->type()==QEvent::Enter) {
-		myCursor.setVisible(true);
-		return true;
-	}
-	if (mEvent->type()==QEvent::Leave) {
-		myCursor.setVisible(false);
-		return true;
-	}
+    if (mEvent->type()==QEvent::Enter) {
+        myCursor.setVisible(true);
+        return true;
+    }
+    if (mEvent->type()==QEvent::Leave) {
+        myCursor.setVisible(false);
+        return true;
+    }
     return QGraphicsScene::event(mEvent);
 }
 
 bool DiagramScene::save(QFile *file)
 {
 #ifdef DEBUG
-	std::cout << "save..."  << std::endl;
+    std::cout << "save..."  << std::endl;
 #endif
-	QXmlStreamWriter xmlWriter(file);
-	xmlWriter.setAutoFormatting(true);
-	xmlWriter.writeStartDocument();
-	xmlWriter.writeComment("File for QDiagram");
-	xmlWriter.writeStartElement("doc");
-	foreach(QGraphicsItem* item, items()){
-		if(item->type()>QGraphicsItem::UserType){
-			xmlWriter.writeStartElement("Item");
-			xmlWriter.writeAttribute("Type",QString::number(item->type()));
-			xmlWriter.writeEmptyElement("Pos");
-			xmlWriter.writeAttribute("x",QString::number(item->pos().x()));
-			xmlWriter.writeAttribute("y",QString::number(item->pos().y()));
-			xmlWriter.writeAttribute("z",QString::number(item->zValue()));
-			switch (item->type()) {
-                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
-					{
-                        VDiagramDrawItem *mItem = dynamic_cast<VDiagramDrawItem *>(item);
-                        //xmlWriter.writeComment("VDiagramDrawItem");
-						xmlWriter.writeEmptyElement("DiagramType");
-						xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-						xmlWriter.writeEmptyElement("Dimensions");
-						xmlWriter.writeAttribute("width",QString::number(mItem->getDimension().x()));
-						xmlWriter.writeAttribute("height",QString::number(mItem->getDimension().y()));
-						xmlWriter.writeEmptyElement("Pen");
-						xmlWriter.writeAttribute("color",mItem->pen().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-						xmlWriter.writeEmptyElement("Brush");
-						xmlWriter.writeAttribute("color",mItem->brush().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-					}
-					break;
-                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
-					{
-                        VDiagramItem *mItem = dynamic_cast<VDiagramItem *>(item);
-                        //xmlWriter.writeComment("VDiagramItem");
-						xmlWriter.writeEmptyElement("DiagramType");
-						xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-						xmlWriter.writeEmptyElement("Pen");
-						xmlWriter.writeAttribute("color",mItem->pen().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-						xmlWriter.writeEmptyElement("Brush");
-						xmlWriter.writeAttribute("color",mItem->brush().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-					}
-					break;
-				case QGraphicsItem::UserType+3:
-					{
-						DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
-						//xmlWriter.writeComment("DiagramTextItem");
-						xmlWriter.writeEmptyElement("DiagramType");
-						xmlWriter.writeAttribute("type","0");
-						xmlWriter.writeStartElement("Text");
-						xmlWriter.writeCharacters(mItem->toHtml());
-						xmlWriter.writeEndElement();
-					}
-					break;
-                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-					{
-						DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
-						//xmlWriter.writeComment("DiagramPathItem");
-						xmlWriter.writeEmptyElement("DiagramType");
-						xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-						xmlWriter.writeEmptyElement("Pen");
-						xmlWriter.writeAttribute("color",mItem->pen().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-						xmlWriter.writeEmptyElement("Brush");
-						xmlWriter.writeAttribute("color",mItem->brush().color().name());
-						xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-						foreach(QPointF point, mItem->getPoints()){
-							xmlWriter.writeEmptyElement("Point");
-							xmlWriter.writeAttribute("x",QString::number(point.x()));
-							xmlWriter.writeAttribute("y",QString::number(point.y()));
-						}
-					}
-					break;
-				default:
-					break;
-			}
-			xmlWriter.writeEmptyElement("Transform");
-            xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
-			xmlWriter.writeAttribute("m12",QString::number(item->transform().m12()));
-			xmlWriter.writeAttribute("m21",QString::number(item->transform().m21()));
-			xmlWriter.writeAttribute("m22",QString::number(item->transform().m22()));
-            xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
-			xmlWriter.writeAttribute("dy",QString::number(item->transform().dy()));
-			xmlWriter.writeEndElement();
-		}
+    QXmlStreamWriter xmlWriter(file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeComment("File for QDiagram");
+    xmlWriter.writeStartElement("doc");
+    foreach(QGraphicsItem* item, items()){
+        if(item->type()>QGraphicsItem::UserType){
+            xmlWriter.writeStartElement("Item");
+            xmlWriter.writeAttribute("Type",QString::number(item->type()));
+            xmlWriter.writeEmptyElement("Pos");
+            xmlWriter.writeAttribute("x",QString::number(item->pos().x()));
+            xmlWriter.writeAttribute("y",QString::number(item->pos().y()));
+            xmlWriter.writeAttribute("z",QString::number(item->zValue()));
+            switch (item->type()) {
+            case QGraphicsItem::UserType+16:
+            {
+                DiagramDrawItem *mItem = dynamic_cast<DiagramDrawItem *>(item);
+                //xmlWriter.writeComment("DiagramDrawItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
+                xmlWriter.writeEmptyElement("Dimensions");
+                xmlWriter.writeAttribute("width",QString::number(mItem->getDimension().x()));
+                xmlWriter.writeAttribute("height",QString::number(mItem->getDimension().y()));
+                xmlWriter.writeEmptyElement("Pen");
+                xmlWriter.writeAttribute("color",mItem->pen().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+                xmlWriter.writeEmptyElement("Brush");
+                xmlWriter.writeAttribute("color",mItem->brush().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+            }
+                break;
+            case QGraphicsItem::UserType+15:
+            {
+                DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
+                //xmlWriter.writeComment("DiagramItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
+                xmlWriter.writeEmptyElement("Pen");
+                xmlWriter.writeAttribute("color",mItem->pen().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+                xmlWriter.writeEmptyElement("Brush");
+                xmlWriter.writeAttribute("color",mItem->brush().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+            }
+                break;
+            case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+            {
+                VDiagramDrawItem *mItem = dynamic_cast<VDiagramDrawItem *>(item);
+                //xmlWriter.writeComment("VDiagramDrawItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
+                xmlWriter.writeEmptyElement("Dimensions");
+                xmlWriter.writeAttribute("width",QString::number(mItem->getDimension().x()));
+                xmlWriter.writeAttribute("height",QString::number(mItem->getDimension().y()));
+                xmlWriter.writeEmptyElement("Pen");
+                xmlWriter.writeAttribute("color",mItem->pen().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+                xmlWriter.writeEmptyElement("Brush");
+                xmlWriter.writeAttribute("color",mItem->brush().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+            }
+                break;
+            case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+            {
+                VDiagramItem *mItem = dynamic_cast<VDiagramItem *>(item);
+                //xmlWriter.writeComment("VDiagramItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
+                xmlWriter.writeEmptyElement("Pen");
+                xmlWriter.writeAttribute("color",mItem->pen().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+                xmlWriter.writeEmptyElement("Brush");
+                xmlWriter.writeAttribute("color",mItem->brush().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+            }
+                break;
 
-	}
-	xmlWriter.writeEndElement();
-	xmlWriter.writeEndDocument();
-	return true;
+            case QGraphicsItem::UserType+3:
+            {
+                DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
+                //xmlWriter.writeComment("DiagramTextItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type","0");
+                xmlWriter.writeStartElement("Text");
+                xmlWriter.writeCharacters(mItem->toHtml());
+                xmlWriter.writeEndElement();
+            }
+                break;
+            case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
+            {
+                DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
+                //xmlWriter.writeComment("DiagramPathItem");
+                xmlWriter.writeEmptyElement("DiagramType");
+                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
+                xmlWriter.writeEmptyElement("Pen");
+                xmlWriter.writeAttribute("color",mItem->pen().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+                xmlWriter.writeEmptyElement("Brush");
+                xmlWriter.writeAttribute("color",mItem->brush().color().name());
+                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+                foreach(QPointF point, mItem->getPoints()){
+                    xmlWriter.writeEmptyElement("Point");
+                    xmlWriter.writeAttribute("x",QString::number(point.x()));
+                    xmlWriter.writeAttribute("y",QString::number(point.y()));
+                }
+            }
+                break;
+            default:
+                break;
+            }
+            xmlWriter.writeEmptyElement("Transform");
+            xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
+            xmlWriter.writeAttribute("m12",QString::number(item->transform().m12()));
+            xmlWriter.writeAttribute("m21",QString::number(item->transform().m21()));
+            xmlWriter.writeAttribute("m22",QString::number(item->transform().m22()));
+            xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
+            xmlWriter.writeAttribute("dy",QString::number(item->transform().dy()));
+            xmlWriter.writeEndElement();
+        }
+
+    }
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndDocument();
+    return true;
 }
 bool DiagramScene::load(QFile *file)
 {
 #ifdef DEBUG
-	std::cout << "Load..." << std::endl;
+    std::cout << "Load..." << std::endl;
 #endif
-	QXmlStreamReader xmlReader(file);
-	int DiaType = 0;
-	QPointF mPos;
-	qreal z;
-	int type;
+    QXmlStreamReader xmlReader(file);
+    int DiaType = 0;
+    QPointF mPos;
+    qreal z;
+    int type;
+    insertedItem=0;
     insertedVItem=0;
-	insertedPathItem=0;
+    insertedPathItem=0;
+    insertedDrawItem=0;
     insertedVDrawItem=0;
-	textItem=0;
-	while(!xmlReader.atEnd()){
-		xmlReader.readNext();
+    textItem=0;
+    while(!xmlReader.atEnd()){
+        xmlReader.readNext();
 #ifdef DEBUG
-		std::cout << "name: " << DiaType << ":" << qPrintable(xmlReader.name().toString()) << std::endl;
+        std::cout << "name: " << DiaType << ":" << qPrintable(xmlReader.name().toString()) << std::endl;
 #endif
-		if(xmlReader.isStartDocument()) continue;
-		if(xmlReader.isStartElement()){
-			if(xmlReader.name()=="doc") continue;
-			if(!DiaType and (xmlReader.name()=="Item")){
-				bool ok;
-				DiaType = xmlReader.attributes().value("Type").toString().toInt(&ok);
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("Item: type number conversion failed"));
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Pos")){
-				bool ok,okay;
-				okay=true;
-				mPos.setX(xmlReader.attributes().value("x").toString().toDouble(&ok));
-				okay&=ok;
-				mPos.setY(xmlReader.attributes().value("y").toString().toDouble(&ok));
-				okay&=ok;
-				z=xmlReader.attributes().value("z").toString().toDouble(&ok);
-				okay&=ok;
-				if(!okay)
-				{
-					xmlReader.raiseError(tr("Pos: number conversion failed"));
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="DiagramType")){
-				bool ok;
-				type = xmlReader.attributes().value("type").toString().toInt(&ok);
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
-					continue;
-				}
-				switch (DiaType) {
-                    case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
-                        insertedVItem = new VDiagramItem(VDiagramItem::VDiagramType(type),myItemMenu);
-                        addItem(insertedVItem);
+        if(xmlReader.isStartDocument()) continue;
+        if(xmlReader.isStartElement()){
+            if(xmlReader.name()=="doc") continue;
+            if(!DiaType and (xmlReader.name()=="Item")){
+                bool ok;
+                DiaType = xmlReader.attributes().value("Type").toString().toInt(&ok);
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("Item: type number conversion failed"));
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Pos")){
+                bool ok,okay;
+                okay=true;
+                mPos.setX(xmlReader.attributes().value("x").toString().toDouble(&ok));
+                okay&=ok;
+                mPos.setY(xmlReader.attributes().value("y").toString().toDouble(&ok));
+                okay&=ok;
+                z=xmlReader.attributes().value("z").toString().toDouble(&ok);
+                okay&=ok;
+                if(!okay)
+                {
+                    xmlReader.raiseError(tr("Pos: number conversion failed"));
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="DiagramType")){
+                bool ok;
+                type = xmlReader.attributes().value("type").toString().toInt(&ok);
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
+                    continue;
+                }
+                switch (DiaType) {
+                case QGraphicsItem::UserType+15:
+                    insertedItem = new DiagramItem(DiagramItem::DiagramType(type),myItemMenu);
+                    addItem(insertedItem);
 #ifdef DEBUG
-                        std::cout << "VDiagramItem" << std::endl;
+                    std::cout << "DiagramItem" << std::endl;
 #endif
-                        insertedVItem->setPos(mPos);
-                        insertedVItem->setZValue(z);
-						break;
-                    case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
-                        insertedVDrawItem = new VDiagramDrawItem(VDiagramDrawItem::VDiagramType(type),myItemMenu);
-                        addItem(insertedVDrawItem);
+                    insertedItem->setPos(mPos);
+                    insertedItem->setZValue(z);
+                    break;
+                case QGraphicsItem::UserType+16:
+                    insertedDrawItem = new DiagramDrawItem(DiagramDrawItem::DiagramType(type),myItemMenu);
+                    addItem(insertedDrawItem);
 #ifdef DEBUG
-                        std::cout << "VDiagramDrawItem" << std::endl;
+                    std::cout << "DiagramDrawItem" << std::endl;
 #endif
-                        insertedVDrawItem->setPos(mPos);
-                        insertedVDrawItem->setZValue(z);
-						break;
-                    case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-						insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(type),myItemMenu);
-						addItem(insertedPathItem);
+                    insertedDrawItem->setPos(mPos);
+                    insertedDrawItem->setZValue(z);
+                    break;
+                case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+                    insertedVItem = new VDiagramItem(VDiagramItem::VDiagramType(type),myItemMenu);
+                    addItem(insertedVItem);
 #ifdef DEBUG
-						std::cout << "DiagramPathItem" << std::endl;
+                    std::cout << "VDiagramItem" << std::endl;
 #endif
-						insertedPathItem->setPos(mPos);
-						insertedPathItem->setZValue(z);
-						insertedPathItem->setFlag(QGraphicsItem::ItemIsMovable, true);
-						insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-						break;
-					case QGraphicsItem::UserType+3:
-						textItem = new DiagramTextItem();
-						textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-						textItem->setZValue(z);
-						connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
-								this, SLOT(editorLostFocus(DiagramTextItem *)));
-						connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
-								this, SLOT(editorReceivedFocus(DiagramTextItem *)));
-						connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
-								this, SIGNAL(itemSelected(QGraphicsItem *)));
-						addItem(textItem);
-						textItem->setPos(mPos);
-						break;
-					default:
-						break;
-				}
-				continue;
-			}
-			//DiamgramType nicht gesetzt ? -> Fehler
-            if(DiaType and !(insertedVItem or insertedVDrawItem or textItem or insertedPathItem)){
-				xmlReader.raiseError(tr("DiagramType definition missing"));
-				continue;
-			}
-		    // weitere Properties setzen (Farbe,Punkte,etc.)
-			if(DiaType and (xmlReader.name()=="Pen")){
-				QColor color;
-				color.setNamedColor(xmlReader.attributes().value("color").toString());
-				if(!color.isValid()){
-					xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
-					continue;
-				}
-				bool ok;
-				color.setAlpha(xmlReader.attributes().value("alpha").toString().toUInt(&ok));
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
-					continue;
-				}
-				switch (DiaType) {
+                    insertedVItem->setPos(mPos);
+                    insertedVItem->setZValue(z);
+                    break;
+                case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+                    insertedVDrawItem = new VDiagramDrawItem(VDiagramDrawItem::VDiagramType(type),myItemMenu);
+                    addItem(insertedVDrawItem);
+#ifdef DEBUG
+                    std::cout << "VDiagramDrawItem" << std::endl;
+#endif
+                    insertedVDrawItem->setPos(mPos);
+                    insertedVDrawItem->setZValue(z);
+                    break;
+
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
+                    insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(type),myItemMenu);
+                    addItem(insertedPathItem);
+#ifdef DEBUG
+                    std::cout << "DiagramPathItem" << std::endl;
+#endif
+                    insertedPathItem->setPos(mPos);
+                    insertedPathItem->setZValue(z);
+                    insertedPathItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+                    insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                    break;
+                case QGraphicsItem::UserType+3:
+                    textItem = new DiagramTextItem();
+                    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+                    textItem->setZValue(z);
+                    connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
+                            this, SLOT(editorLostFocus(DiagramTextItem *)));
+                    connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
+                            this, SLOT(editorReceivedFocus(DiagramTextItem *)));
+                    connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
+                            this, SIGNAL(itemSelected(QGraphicsItem *)));
+                    addItem(textItem);
+                    textItem->setPos(mPos);
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            //DiamgramType nicht gesetzt ? -> Fehler
+            if(DiaType and !(insertedItem or insertedDrawItem or textItem or insertedPathItem)){
+                xmlReader.raiseError(tr("DiagramType definition missing"));
+                continue;
+            }
+            // weitere Properties setzen (Farbe,Punkte,etc.)
+            if(DiaType and (xmlReader.name()=="Pen")){
+                QColor color;
+                color.setNamedColor(xmlReader.attributes().value("color").toString());
+                if(!color.isValid()){
+                    xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
+                    continue;
+                }
+                bool ok;
+                color.setAlpha(xmlReader.attributes().value("alpha").toString().toUInt(&ok));
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
+                    continue;
+                }
+                switch (DiaType) {
+                case QGraphicsItem::UserType+15:
+                    insertedItem->setPen(color);
+                    break;
+                case QGraphicsItem::UserType+16:
+                    insertedDrawItem->setPen(color);
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
                     insertedVItem->setPen(color);
-					break;
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setPen(color);
-					break;
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-					insertedPathItem->setPen(color);
-					break;
-				default:
-					break;
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Brush")){
-				QColor color;
-				bool ok;
-				QString colorName = xmlReader.attributes().value("color").toString();
-				color.setNamedColor(colorName);
-				if(!color.isValid()){
-					xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
-					continue;
-				}
-				color.setAlpha(xmlReader.attributes().value("alpha").toString().toUInt(&ok));
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
-					continue;
-				}
-				switch (DiaType) {
+                    insertedPathItem->setPen(color);
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Brush")){
+                QColor color;
+                bool ok;
+                QString colorName = xmlReader.attributes().value("color").toString();
+                color.setNamedColor(colorName);
+                if(!color.isValid()){
+                    xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
+                    continue;
+                }
+                color.setAlpha(xmlReader.attributes().value("alpha").toString().toUInt(&ok));
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
+                    continue;
+                }
+                switch (DiaType) {
+                case QGraphicsItem::UserType+15:
+                    insertedItem->setBrush(color);
+                    break;
+                case QGraphicsItem::UserType+16:
+                    insertedDrawItem->setBrush(color);
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
                     insertedVItem->setBrush(color);
-					break;
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setBrush(color);
-					break;
+                    break;
+
                 case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-					insertedPathItem->setBrush(color);
-					break;
-				default:
-					break;
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Dimensions")){
-				QPointF mPos2;
-				bool okay,ok;
-				okay=true;
-				mPos2.setX(xmlReader.attributes().value("width").toString().toDouble(&ok));
-				okay&=ok;
-				mPos2.setY(xmlReader.attributes().value("height").toString().toDouble(&ok));
-				okay&=ok;
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("Dimensions: number conversion failed"));
-					continue;
-				}
-				switch (DiaType) {
+                    insertedPathItem->setBrush(color);
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Dimensions")){
+                QPointF mPos2;
+                bool okay,ok;
+                okay=true;
+                mPos2.setX(xmlReader.attributes().value("width").toString().toDouble(&ok));
+                okay&=ok;
+                mPos2.setY(xmlReader.attributes().value("height").toString().toDouble(&ok));
+                okay&=ok;
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("Dimensions: number conversion failed"));
+                    continue;
+                }
+                switch (DiaType) {
+                case QGraphicsItem::UserType+16:
+                    insertedDrawItem->setDimension(mPos2);
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setDimension(mPos2);
-				break;
-				default:
-					break;
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Point")){
-				QPointF mPos2;
-				bool okay,ok;
-				okay=true;
-				mPos2.setX(xmlReader.attributes().value("x").toString().toDouble(&ok));
-				okay&=ok;
-				mPos2.setY(xmlReader.attributes().value("y").toString().toDouble(&ok));
-				okay&=ok;
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("Point: number conversion failed"));
-					continue;
-				}
-				switch (DiaType) {
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Point")){
+                QPointF mPos2;
+                bool okay,ok;
+                okay=true;
+                mPos2.setX(xmlReader.attributes().value("x").toString().toDouble(&ok));
+                okay&=ok;
+                mPos2.setY(xmlReader.attributes().value("y").toString().toDouble(&ok));
+                okay&=ok;
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("Point: number conversion failed"));
+                    continue;
+                }
+                switch (DiaType) {
                 case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-					insertedPathItem->append(mPos2+insertedPathItem->pos());
-				break;
-				default:
-					break;
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Text")){
-				QString mText;
-				mText = xmlReader.readElementText();
-				switch (DiaType) {
-				case QGraphicsItem::UserType+3:
-					textItem->setHtml(mText);
-				break;
-				default:
-					break;
-				}
-				continue;
-			}
-			if(DiaType and (xmlReader.name()=="Transform")){
-				bool ok,okay;
-				okay=true;
-				qreal m11=xmlReader.attributes().value("m11").toString().toDouble(&ok);
-				okay&=ok;
-				qreal m12=xmlReader.attributes().value("m12").toString().toDouble(&ok);
-				okay&=ok;
-				qreal m21=xmlReader.attributes().value("m21").toString().toDouble(&ok);
-				okay&=ok;
-				qreal m22=xmlReader.attributes().value("m22").toString().toDouble(&ok);
-				okay&=ok;
-				qreal dx=xmlReader.attributes().value("dx").toString().toDouble(&ok);
-				okay&=ok;
-				qreal dy=xmlReader.attributes().value("dx").toString().toDouble(&ok);
-				okay&=ok;
-				if(!ok)
-				{
-					xmlReader.raiseError(tr("Transform: number conversion failed"));
-					continue;
-				}
-				QTransform trans=QTransform(m11,m12,m21,m22,dx,dy);
-				switch (DiaType) {
+                    insertedPathItem->append(mPos2+insertedPathItem->pos());
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Text")){
+                QString mText;
+                mText = xmlReader.readElementText();
+                switch (DiaType) {
+                case QGraphicsItem::UserType+3:
+                    textItem->setHtml(mText);
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            if(DiaType and (xmlReader.name()=="Transform")){
+                bool ok,okay;
+                okay=true;
+                qreal m11=xmlReader.attributes().value("m11").toString().toDouble(&ok);
+                okay&=ok;
+                qreal m12=xmlReader.attributes().value("m12").toString().toDouble(&ok);
+                okay&=ok;
+                qreal m21=xmlReader.attributes().value("m21").toString().toDouble(&ok);
+                okay&=ok;
+                qreal m22=xmlReader.attributes().value("m22").toString().toDouble(&ok);
+                okay&=ok;
+                qreal dx=xmlReader.attributes().value("dx").toString().toDouble(&ok);
+                okay&=ok;
+                qreal dy=xmlReader.attributes().value("dx").toString().toDouble(&ok);
+                okay&=ok;
+                if(!ok)
+                {
+                    xmlReader.raiseError(tr("Transform: number conversion failed"));
+                    continue;
+                }
+                QTransform trans=QTransform(m11,m12,m21,m22,dx,dy);
+                switch (DiaType) {
+                case QGraphicsItem::UserType+15:
+                    insertedItem->setTransform(trans);
+                    break;
+                case QGraphicsItem::UserType+16:
+                    insertedDrawItem->setTransform(trans);
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
                     insertedVItem->setTransform(trans);
-					break;
+                    break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setTransform(trans);
-					break;
-                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-					insertedPathItem->setTransform(trans);
-					break;
-				case QGraphicsItem::UserType+3:
-					textItem->setTransform(trans);
-					break;
-				default:
-					break;
-				}
-				continue;
-			}
-			else {
-				xmlReader.raiseError(tr("unexpected start element"));
-				continue;
-			}
+                    break;
 
-		}
-		if(xmlReader.isEndElement()){
-			if(DiaType and (xmlReader.name()=="Item")){
-				DiaType = 0;
+                case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
+                    insertedPathItem->setTransform(trans);
+                    break;
+                case QGraphicsItem::UserType+3:
+                    textItem->setTransform(trans);
+                    break;
+                default:
+                    break;
+                }
+                continue;
+            }
+            else {
+                xmlReader.raiseError(tr("unexpected start element"));
+                continue;
+            }
+
+        }
+        if(xmlReader.isEndElement()){
+            if(DiaType and (xmlReader.name()=="Item")){
+                DiaType = 0;
+                insertedItem = 0;
+                insertedDrawItem = 0;
                 insertedVItem = 0;
                 insertedVDrawItem = 0;
-				insertedPathItem = 0;
-				textItem = 0;
-			}
-		}
+                insertedPathItem = 0;
+                textItem = 0;
+            }
+        }
 
-	}
-	if(xmlReader.hasError()){
-		std::cerr << "Error in XML Read-in: "
-				  << qPrintable(xmlReader.errorString())
-				  << std::endl
-				  << "Line: "
-				  << xmlReader.lineNumber()
-				  << std::endl;
-	}
-	// Aufräumen
+    }
+    if(xmlReader.hasError()){
+        std::cerr << "Error in XML Read-in: "
+                  << qPrintable(xmlReader.errorString())
+                  << std::endl
+                  << "Line: "
+                  << xmlReader.lineNumber()
+                  << std::endl;
+    }
+    // Aufrumen
+    insertedItem = 0;
+    insertedDrawItem = 0;
     insertedVItem = 0;
     insertedVDrawItem = 0;
-	insertedPathItem = 0;
-	textItem = 0;
-	myMode = MoveItem;
-	return true;
+    insertedPathItem = 0;
+    textItem = 0;
+    myMode = MoveItem;
+    return true;
 }
 
 void DiagramScene::clear()
 {
-	foreach(QGraphicsItem *item,items()){
-		if(item!=&myCursor)
-		{
-			removeItem(item);
-			delete item;
-		}
-	}
+    foreach(QGraphicsItem *item,items()){
+        if(item!=&myCursor)
+        {
+            removeItem(item);
+            delete item;
+        }
+    }
 }
 
 void DiagramScene::setCursorVisible(bool vis)
 {
-	if(vis){
-		if(myCursor.scene()==0){
-			addItem(&myCursor);
-		}
-	}
-	else
-	{
-		if(myCursor.scene()) removeItem(&myCursor);
-	}
+    if(vis){
+        if(myCursor.scene()==0){
+            addItem(&myCursor);
+        }
+    }
+    else
+    {
+        if(myCursor.scene()) removeItem(&myCursor);
+    }
 }
 
 void DiagramScene::drawBackground(QPainter *p, const QRectF &r) {
-	p -> save();
+    p -> save();
 
-	// desactive tout antialiasing, sauf pour le texte
-	p -> setRenderHint(QPainter::Antialiasing, false);
-	p -> setRenderHint(QPainter::TextAntialiasing, true);
-	p -> setRenderHint(QPainter::SmoothPixmapTransform, false);
+    // desactive tout antialiasing, sauf pour le texte
+    p -> setRenderHint(QPainter::Antialiasing, false);
+    p -> setRenderHint(QPainter::TextAntialiasing, true);
+    p -> setRenderHint(QPainter::SmoothPixmapTransform, false);
 
-	// dessine un fond blanc
-	p -> setPen(Qt::NoPen);
-	p -> setBrush(Qt::white);
-	p -> drawRect(r);
+    // dessine un fond blanc
+    p -> setPen(Qt::NoPen);
+    p -> setBrush(Qt::white);
+    p -> drawRect(r);
 
-	if (myGridVisible) {
-		// to ease transition from qelec
-		int xGrid=myGridScale * (int) myGrid;
-		int yGrid=myGridScale * (int) myGrid;
-		// dessine les points de la grille
-		p -> setPen(Qt::black);
-		p -> setBrush(Qt::NoBrush);
-		qreal limite_x = r.x() + r.width();
-		qreal limite_y = r.y() + r.height();
+    if (myGridVisible) {
+        // to ease transition from qelec
+        int xGrid=myGridScale * (int) myGrid;
+        int yGrid=myGridScale * (int) myGrid;
+        // dessine les points de la grille
+        p -> setPen(Qt::black);
+        p -> setBrush(Qt::NoBrush);
+        qreal limite_x = r.x() + r.width();
+        qreal limite_y = r.y() + r.height();
 
-		int g_x = (int)ceil(r.x());
-		while (g_x % xGrid) ++ g_x;
-		int g_y = (int)ceil(r.y());
-		while (g_y % yGrid) ++ g_y;
+        int g_x = (int)ceil(r.x());
+        while (g_x % xGrid) ++ g_x;
+        int g_y = (int)ceil(r.y());
+        while (g_y % yGrid) ++ g_y;
 
-		for (int gx = g_x ; gx < limite_x ; gx += xGrid) {
-			for (int gy = g_y ; gy < limite_y ; gy += yGrid) {
-				p -> drawPoint(gx, gy);
-			}
-		}
-	}
+        for (int gx = g_x ; gx < limite_x ; gx += xGrid) {
+            for (int gy = g_y ; gy < limite_y ; gy += yGrid) {
+                p -> drawPoint(gx, gy);
+            }
+        }
+    }
 
-	p -> restore();
+    p -> restore();
 }

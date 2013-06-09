@@ -93,9 +93,10 @@ DiagramPathItem::DiagramPathItem(QMenu *contextMenu,
     setAcceptHoverEvents(true);
 }
 //! [0]
-DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram)
+DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram):
+    QGraphicsPathItem(diagram.parentItem(),diagram.scene())
 {
-	QGraphicsPathItem(diagram.parentItem(),diagram.scene());
+
 
 	// copy from general GraphcsItem
 	setBrush(diagram.brush());

@@ -44,9 +44,6 @@
 #include <QtGui>
 
 #include "diagramitem.h"
-#include "diagramscene.h"
-
-#define IN_SIGN_SIZE  (20)
 
 //! [0]
 DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
@@ -67,13 +64,15 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             path.lineTo(200, 25);
             myPolygon = path.toFillPolygon();
             break;
-        case Input:
-        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
-                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
+        case Conditional:
+            myPolygon << QPointF(-100, 0) << QPointF(0, 100)
+                      << QPointF(100, 0) << QPointF(0, -100)
+                      << QPointF(-100, 0);
             break;
-        case Output:
-         myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
-                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
+        case Step:
+            myPolygon << QPointF(-100, -100) << QPointF(100, -100)
+                      << QPointF(100, 100) << QPointF(-100, 100)
+                      << QPointF(-100, -100);
             break;
         default:
             myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
@@ -82,7 +81,6 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
             break;
     }
     setPolygon(myPolygon);
-    setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
@@ -97,12 +95,11 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
-
 //! [0]
-DiagramItem::DiagramItem(const DiagramItem& diagram)
+DiagramItem::DiagramItem(const DiagramItem& diagram):
+    QGraphicsPolygonItem(diagram.parentItem(),diagram.scene())
 {
-	QGraphicsPolygonItem(diagram.parentItem(),diagram.scene());
-	//QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
+    //QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
 	// copy from general GraphcsItem
 	setBrush(diagram.brush());
 	setPen(diagram.pen());
@@ -123,13 +120,15 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 			path.lineTo(200, 25);
 			myPolygon = path.toFillPolygon();
 			break;
-        case Input:
-        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
-                  << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
+		case Conditional:
+			myPolygon << QPointF(-100, 0) << QPointF(0, 100)
+					  << QPointF(100, 0) << QPointF(0, -100)
+					  << QPointF(-100, 0);
 			break;
-        case Output:
-        myPolygon << QPointF(0, 0) << QPointF(IN_SIGN_SIZE, IN_SIGN_SIZE/2 )
-                 << QPointF(0, IN_SIGN_SIZE) << QPointF(0, 0);
+		case Step:
+			myPolygon << QPointF(-100, -100) << QPointF(100, -100)
+					  << QPointF(100, 100) << QPointF(-100, 100)
+					  << QPointF(-100, -100);
 			break;
 		default:
 			myPolygon << QPointF(-120, -80) << QPointF(-70, 80)
@@ -162,12 +161,8 @@ void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
-    if( myContextMenu )
     myContextMenu->exec(event->screenPos());
 }
-
-
-
 //! [5]
 
 //! [6]
@@ -185,45 +180,4 @@ DiagramItem* DiagramItem::copy()
 {
     DiagramItem* newDiagramItem=new DiagramItem(*this);
     return newDiagramItem;
-}
-
-
-QPointF DiagramItem::onGrid(QPointF pos)
-{
-    DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
-    QPointF result = myScene->onGrid(pos);
-    return result;
-}
-
-#include<QDebug>
-void DiagramItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
-    return;
-}
-
-void DiagramItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
-{
-    QPointF pointInParent = mapToParent(e->pos());
-    qreal  y = 0;
-    QGraphicsPolygonItem::mouseMoveEvent(e);
-
-    if( (( myDiagramType == Output )||( myDiagramType == Input ))&& parentItem() )
-      {
-          if( pointInParent.y() > parentItem()->boundingRect().height() )
-          {
-              y = parentItem()->boundingRect().height() - IN_SIGN_SIZE ;
-          }
-          else if( pointInParent.y() >= 0 )
-          {
-              y =  pointInParent.y();
-          }
-          if( myDiagramType == Input )
-          {
-              setPos( 0, y );
-          }
-          else if( myDiagramType == Output )
-          {
-              setPos( parentItem()->boundingRect().width() - IN_SIGN_SIZE , y );
-          }
-     }
-
 }

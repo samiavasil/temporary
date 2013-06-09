@@ -90,9 +90,8 @@ public:
 
     void setDimension(QPointF newPos);
     QPointF getDimension();
-    qreal getMinX();
-    qreal getMinY();
-    void updateInOutView();
+
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -105,13 +104,9 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     bool hasClickedOn(QPointF press_point, QPointF point) const ;
-    void addOutput();
-    void addInput();
-
+    QPointF onGrid(QPointF pos);
 
 private:
-    QList<DiagramItem*> listIn;
-    QList<DiagramItem*> listOut;
     DiagramType myDiagramType;
     QPolygonF myPolygon;
     QMenu *myContextMenu;
