@@ -65,12 +65,12 @@ VDiagramDrawItem::VDiagramDrawItem(VDiagramType diagramType, QMenu *contextMenu,
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    int j = 2;//rand()%10 + 1;
+    int j = rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addInput();
     }
-    j = 2;//rand()%10 + 1;
+    j = rand()%10 + 1;
     for( int i = 0; i < j; i++ )
     {
         addOutput();
@@ -81,7 +81,8 @@ VDiagramDrawItem::VDiagramDrawItem(const VDiagramDrawItem& diagram)
     : VDiagramItem(diagram.myContextMenu,diagram.parentItem(),0)
 {
 
-    myDiagramType=diagram.myDiagramType;
+    myDiagramType = diagram.myDiagramType;
+    myContextMenu = diagram.myContextMenu;
     // copy from general GraphcsItem
     setBrush(diagram.brush());
     setPen(diagram.pen());

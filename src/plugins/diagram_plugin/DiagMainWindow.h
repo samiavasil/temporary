@@ -47,6 +47,8 @@
 #include <QMainWindow>
 #include <QShortcut>
 
+#include "diagramitem.h"
+#include "diagramdrawitem.h"
 
 #include "vdiagramitem.h"
 #include "vdiagramdrawitem.h"
@@ -95,6 +97,7 @@ private slots:
     void copyItems();
     void groupItems();
     void ungroupItems();
+    void itemInserted(DiagramItem *item);
     void itemVInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void currentFontChanged(const QFont &font);
@@ -133,13 +136,14 @@ private:
     QWidget *createBackgroundCellWidget(const QString &text,
                                         const QString &image);
     QWidget *createCellWidget(const QString &text,
+                              DiagramItem::DiagramType type);
+    QWidget *createCellWidget(const QString &text,
                               VDiagramItem::VDiagramType type);
+    QWidget *createCellWidget(const QString &text,
+                          DiagramDrawItem::DiagramType type);
     QWidget *createCellWidget(const QString &text,
                           VDiagramDrawItem::VDiagramType type);
     QMenu *createColorMenu(const char *slot, QColor defaultColor);
-
-
-
     QIcon createColorToolButtonIcon(const QString &image, QColor color);
     QIcon createColorIcon(QColor color);
 

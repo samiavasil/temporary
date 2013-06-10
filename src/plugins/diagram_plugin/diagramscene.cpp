@@ -914,7 +914,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         }
         else
         {
-            VDiagramItem* newVItem=dynamic_cast<VDiagramItem*>(item)->copy();
+            VDiagramItem* newVItem=dynamic_cast<VDiagramItem*>(item);
             if( newVItem )
             {
                 return dynamic_cast<QGraphicsItem*>(newVItem->copy());

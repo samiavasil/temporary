@@ -70,7 +70,8 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 	: DiagramItem(diagram.myContextMenu,diagram.parentItem(),0)
 {
 
-	myDiagramType=diagram.myDiagramType;
+    myDiagramType = diagram.myDiagramType;
+    myContextMenu = diagram.myContextMenu;
 	// copy from general GraphcsItem
 	setBrush(diagram.brush());
 	setPen(diagram.pen());

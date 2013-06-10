@@ -46,15 +46,16 @@
 #include <iostream>
 
 #include "DiagMainWindow.h"
+#include "diagramitem.h"
+#include "diagramdrawitem.h"
 #include "vdiagramitem.h"
 #include "vdiagramdrawitem.h"
 #include "diagrampathitem.h"
 #include "diagramscene.h"
 #include "diagramtextitem.h"
 
-
-
 const int InsertTextButton = 10;
+const int InsertDrawItemButton = 64;
 const int InsertVDrawItemButton = 1<<7;
 
 #define NDEBUG
@@ -70,6 +71,8 @@ DiagMainWindow::DiagMainWindow()
     scene->setSceneRect(QRectF(0, 0, 5000, 5000));
     myGrid=10.0;
     scene->setGrid(myGrid);
+    connect(scene, SIGNAL(itemInserted(DiagramItem *)),
+            this, SLOT(itemInserted(DiagramItem *)));
     connect(scene, SIGNAL(itemVInserted(VDiagramItem *)),
             this, SLOT(itemVInserted(VDiagramItem *)));
     connect(scene, SIGNAL(textInserted(QGraphicsTextItem *)),
@@ -141,13 +144,20 @@ void DiagMainWindow::buttonGroupClicked(int id)
         scene->setMode(DiagramScene::InsertText);
     }
     else
-    if( (id&InsertVDrawItemButton) == InsertVDrawItemButton ){
+    if( (id&InsertVDrawItemButton) == InsertVDrawItemButton )
+    {
         scene->setItemType(VDiagramDrawItem::VDiagramType(id&63));
         scene->setMode(DiagramScene::InsertVDrawItem);
     }
-    else {
-        scene->setItemType(VDiagramItem::VDiagramType(id));
-        scene->setMode(DiagramScene::InsertVItem);
+    else  if( (id&InsertDrawItemButton) == InsertDrawItemButton )
+    {
+        scene->setItemType(DiagramDrawItem::DiagramType(id&63));
+        scene->setMode(DiagramScene::InsertDrawItem);
+    }
+    else 
+    {
+        scene->setItemType(DiagramItem::DiagramType(id));
+        scene->setMode(DiagramScene::InsertItem);
     }
     view->setDragMode(QGraphicsView::NoDrag);
     //pointerTypeGroup->checkedButton()->setChecked(false);
@@ -162,9 +172,12 @@ void DiagMainWindow::buttonGroupClicked(int id)
 void DiagMainWindow::deleteItem()
 {
     foreach (QGraphicsItem *item, scene->selectedItems()) {
+        if (item->type() == DiagramItem::Type) {
+            //qgraphicsitem_cast<DiagramItem *>(item)->removeArrows();
+        }
         if (item->type() == VDiagramItem::Type) {
             //qgraphicsitem_cast<VDiagramItem *>(item)->removeArrows();
-        }
+        }        
         scene->removeItem(item);
     }
 }
@@ -197,6 +210,7 @@ void DiagMainWindow::bringToFront()
     qreal zValue = 0;
     foreach (QGraphicsItem *item, overlapItems) {
         if (item->zValue() >= zValue) //&&
+            //item->type() == DiagramItem::Type)
             //item->type() == VDiagramItem::Type)
             zValue = item->zValue() + 0.1;
     }
@@ -217,6 +231,7 @@ void DiagMainWindow::sendToBack()
     qreal zValue = 0;
     foreach (QGraphicsItem *item, overlapItems) {
         if (item->zValue() <= zValue)// &&
+            //item->type() == DiagramItem::Type)
             //item->type() == VDiagramItem::Type)
             zValue = item->zValue() - 0.1;
     }
@@ -351,11 +366,19 @@ void DiagMainWindow::ungroupItems()
 //! [6]
 
 //! [7]
+void DiagMainWindow::itemInserted(DiagramItem *item)
+{
+    //scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
+    buttonGroup->button(int(item->diagramType()))->setChecked(false);
+}
+
+//! [7]
 void DiagMainWindow::itemVInserted(VDiagramItem *item)
 {
     //scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
     buttonGroup->button(int(item->diagramType()))->setChecked(false);
 }
+
 //! [7]
 
 //! [8]
@@ -558,16 +581,16 @@ void DiagMainWindow::createToolBox()
             this, SLOT(buttonGroupClicked(int)));
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(createCellWidget(tr("Conditional"),
-                               VDiagramItem::Input), 0, 0);
+                               DiagramItem::Conditional), 0, 0);
     layout->addWidget(createCellWidget(tr("Process"),
-                      VDiagramItem::Output),0, 1);
+                      DiagramItem::Step),0, 1);
     layout->addWidget(createCellWidget(tr("Input/Output"),
-                      VDiagramItem::Io), 1, 0);
+                      DiagramItem::Io), 1, 0);
 // added DrawItem
     layout->addWidget(createCellWidget(tr("Rectangle"),
-                          VDiagramDrawItem::Rectangle), 2, 0);
+                          DiagramDrawItem::Rectangle), 2, 0);
     layout->addWidget(createCellWidget(tr("Ellipse"),
-                              VDiagramDrawItem::Ellipse), 2, 1);
+                              DiagramDrawItem::Ellipse), 2, 1);
 //! [21]
 
     QToolButton *textButton = new QToolButton;
@@ -613,8 +636,6 @@ void DiagMainWindow::createToolBox()
 
 ///////////////////VVVVVVVV
     QGridLayout *layoutVVV = new QGridLayout;
-    layout->addWidget(createCellWidget(tr("Conditional"),
-                               VDiagramItem::Input), 0, 0);
 
 // added DrawItem
     layoutVVV->addWidget(createCellWidget(tr("Rectangle"),
@@ -998,6 +1019,30 @@ QWidget *DiagMainWindow::createBackgroundCellWidget(const QString &text,
 
 //! [29]
 QWidget *DiagMainWindow::createCellWidget(const QString &text,
+                      DiagramItem::DiagramType type)
+{
+
+    DiagramItem item(type, itemMenu);
+    QIcon icon(item.image());
+
+    QToolButton *button = new QToolButton;
+    button->setIcon(icon);
+    button->setIconSize(QSize(50, 50));
+    button->setCheckable(true);
+    buttonGroup->addButton(button, int(type));
+
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(button, 0, 0, Qt::AlignHCenter);
+    layout->addWidget(new QLabel(text), 1, 0, Qt::AlignCenter);
+
+    QWidget *widget = new QWidget;
+    widget->setLayout(layout);
+
+    return widget;
+}
+
+//! [29]
+QWidget *DiagMainWindow::createCellWidget(const QString &text,
                       VDiagramItem::VDiagramType type)
 {
 
@@ -1019,6 +1064,32 @@ QWidget *DiagMainWindow::createCellWidget(const QString &text,
 
     return widget;
 }
+
+//! [29]
+QWidget *DiagMainWindow::createCellWidget(const QString &text,
+                      DiagramDrawItem::DiagramType type)
+{
+
+    DiagramDrawItem item(type, itemMenu);
+    item.setPos2(230,230);
+    QIcon icon(item.image());
+
+    QToolButton *button = new QToolButton;
+    button->setIcon(icon);
+    button->setIconSize(QSize(50, 50));
+    button->setCheckable(true);
+    buttonGroup->addButton(button, int(type)+64);
+
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(button, 0, 0, Qt::AlignHCenter);
+    layout->addWidget(new QLabel(text), 1, 0, Qt::AlignCenter);
+
+    QWidget *widget = new QWidget;
+    widget->setLayout(layout);
+
+    return widget;
+}
+
 //! [29]
 QWidget *DiagMainWindow::createCellWidget(const QString &text,
                       VDiagramDrawItem::VDiagramType type)
