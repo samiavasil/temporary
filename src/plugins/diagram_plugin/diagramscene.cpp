@@ -382,7 +382,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         insertedVItem->setPos(onGrid(mouseEvent->scenePos()));
         insertedVItem->setEnabled(false);
-        emit itemInserted(insertedVItem);
+        emit itemVInserted(insertedVItem);
         insertedVItem = 0;
 
         break;
@@ -969,132 +969,149 @@ bool DiagramScene::event(QEvent *mEvent)
     return QGraphicsScene::event(mEvent);
 }
 
+void DiagramScene::writeItem( QXmlStreamWriter* xmlWriter , QGraphicsItem* item )
+{
+    if(item->type()>QGraphicsItem::UserType){
+        xmlWriter->writeStartElement("Item");
+        xmlWriter->writeAttribute("Type",QString::number(item->type()));
+        xmlWriter->writeEmptyElement("Pos");
+        xmlWriter->writeAttribute("x",QString::number(item->pos().x()));
+        xmlWriter->writeAttribute("y",QString::number(item->pos().y()));
+        xmlWriter->writeAttribute("z",QString::number(item->zValue()));
+        switch (item->type()) {
+        case QGraphicsItem::UserType+16:
+        {
+            DiagramDrawItem *mItem = dynamic_cast<DiagramDrawItem *>(item);
+            //xmlWriter->writeComment("DiagramDrawItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type",QString::number(mItem->diagramType()));
+            xmlWriter->writeEmptyElement("Dimensions");
+            xmlWriter->writeAttribute("width",QString::number(mItem->getDimension().x()));
+            xmlWriter->writeAttribute("height",QString::number(mItem->getDimension().y()));
+            xmlWriter->writeEmptyElement("Pen");
+            xmlWriter->writeAttribute("color",mItem->pen().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+            xmlWriter->writeEmptyElement("Brush");
+            xmlWriter->writeAttribute("color",mItem->brush().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+        }
+            break;
+        case QGraphicsItem::UserType+15:
+        {
+            DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
+            //xmlWriter->writeComment("DiagramItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type",QString::number(mItem->diagramType()));
+            xmlWriter->writeEmptyElement("Pen");
+            xmlWriter->writeAttribute("color",mItem->pen().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+            xmlWriter->writeEmptyElement("Brush");
+            xmlWriter->writeAttribute("color",mItem->brush().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+        }
+            break;
+        case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
+        {
+            VDiagramDrawItem *mItem = dynamic_cast<VDiagramDrawItem *>(item);
+            //xmlWriter->writeComment("VDiagramDrawItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type",QString::number(mItem->diagramType()));
+            xmlWriter->writeEmptyElement("Dimensions");
+            xmlWriter->writeAttribute("width",QString::number(mItem->getDimension().x()));
+            xmlWriter->writeAttribute("height",QString::number(mItem->getDimension().y()));
+            xmlWriter->writeEmptyElement("Pen");
+            xmlWriter->writeAttribute("color",mItem->pen().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+            xmlWriter->writeEmptyElement("Brush");
+            xmlWriter->writeAttribute("color",mItem->brush().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+        }
+            break;
+        case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
+        {
+            VDiagramItem *mItem = dynamic_cast<VDiagramItem *>(item);
+            //xmlWriter->writeComment("VDiagramItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type",QString::number(mItem->diagramType()));
+            xmlWriter->writeEmptyElement("Pen");
+            xmlWriter->writeAttribute("color",mItem->pen().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+            xmlWriter->writeEmptyElement("Brush");
+            xmlWriter->writeAttribute("color",mItem->brush().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+        }
+            break;
+
+        case QGraphicsItem::UserType+3:
+        {
+            DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
+            //xmlWriter->writeComment("DiagramTextItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type","0");
+            xmlWriter->writeStartElement("Text");
+            xmlWriter->writeCharacters(mItem->toHtml());
+            xmlWriter->writeEndElement();
+        }
+            break;
+        case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
+        {
+            DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
+            //xmlWriter->writeComment("DiagramPathItem");
+            xmlWriter->writeEmptyElement("DiagramType");
+            xmlWriter->writeAttribute("type",QString::number(mItem->diagramType()));
+            xmlWriter->writeEmptyElement("Pen");
+            xmlWriter->writeAttribute("color",mItem->pen().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
+            xmlWriter->writeEmptyElement("Brush");
+            xmlWriter->writeAttribute("color",mItem->brush().color().name());
+            xmlWriter->writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
+            foreach(QPointF point, mItem->getPoints()){
+                xmlWriter->writeEmptyElement("Point");
+                xmlWriter->writeAttribute("x",QString::number(point.x()));
+                xmlWriter->writeAttribute("y",QString::number(point.y()));
+            }
+        }
+            break;
+        default:
+            break;
+        }
+        xmlWriter->writeEmptyElement("Transform");
+        xmlWriter->writeAttribute("m11",QString::number(item->transform().m11()));
+        xmlWriter->writeAttribute("m12",QString::number(item->transform().m12()));
+        xmlWriter->writeAttribute("m21",QString::number(item->transform().m21()));
+        xmlWriter->writeAttribute("m22",QString::number(item->transform().m22()));
+        xmlWriter->writeAttribute("dx",QString::number(item->transform().dx()));
+        xmlWriter->writeAttribute("dy",QString::number(item->transform().dy()));
+        xmlWriter->writeEndElement();
+    }
+}
+
+
 bool DiagramScene::save(QFile *file)
 {
 #ifdef DEBUG
     std::cout << "save..."  << std::endl;
 #endif
+    QList<QGraphicsItem*> baseItems;
+    QList<QGraphicsItem*> subItems;
     QXmlStreamWriter xmlWriter(file);
     xmlWriter.setAutoFormatting(true);
     xmlWriter.writeStartDocument();
     xmlWriter.writeComment("File for QDiagram");
     xmlWriter.writeStartElement("doc");
-    foreach(QGraphicsItem* item, items()){
-        if(item->type()>QGraphicsItem::UserType){
-            xmlWriter.writeStartElement("Item");
-            xmlWriter.writeAttribute("Type",QString::number(item->type()));
-            xmlWriter.writeEmptyElement("Pos");
-            xmlWriter.writeAttribute("x",QString::number(item->pos().x()));
-            xmlWriter.writeAttribute("y",QString::number(item->pos().y()));
-            xmlWriter.writeAttribute("z",QString::number(item->zValue()));
-            switch (item->type()) {
-            case QGraphicsItem::UserType+16:
-            {
-                DiagramDrawItem *mItem = dynamic_cast<DiagramDrawItem *>(item);
-                //xmlWriter.writeComment("DiagramDrawItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-                xmlWriter.writeEmptyElement("Dimensions");
-                xmlWriter.writeAttribute("width",QString::number(mItem->getDimension().x()));
-                xmlWriter.writeAttribute("height",QString::number(mItem->getDimension().y()));
-                xmlWriter.writeEmptyElement("Pen");
-                xmlWriter.writeAttribute("color",mItem->pen().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-                xmlWriter.writeEmptyElement("Brush");
-                xmlWriter.writeAttribute("color",mItem->brush().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-            }
-                break;
-            case QGraphicsItem::UserType+15:
-            {
-                DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
-                //xmlWriter.writeComment("DiagramItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-                xmlWriter.writeEmptyElement("Pen");
-                xmlWriter.writeAttribute("color",mItem->pen().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-                xmlWriter.writeEmptyElement("Brush");
-                xmlWriter.writeAttribute("color",mItem->brush().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-            }
-                break;
-            case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
-            {
-                VDiagramDrawItem *mItem = dynamic_cast<VDiagramDrawItem *>(item);
-                //xmlWriter.writeComment("VDiagramDrawItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-                xmlWriter.writeEmptyElement("Dimensions");
-                xmlWriter.writeAttribute("width",QString::number(mItem->getDimension().x()));
-                xmlWriter.writeAttribute("height",QString::number(mItem->getDimension().y()));
-                xmlWriter.writeEmptyElement("Pen");
-                xmlWriter.writeAttribute("color",mItem->pen().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-                xmlWriter.writeEmptyElement("Brush");
-                xmlWriter.writeAttribute("color",mItem->brush().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-            }
-                break;
-            case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
-            {
-                VDiagramItem *mItem = dynamic_cast<VDiagramItem *>(item);
-                //xmlWriter.writeComment("VDiagramItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-                xmlWriter.writeEmptyElement("Pen");
-                xmlWriter.writeAttribute("color",mItem->pen().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-                xmlWriter.writeEmptyElement("Brush");
-                xmlWriter.writeAttribute("color",mItem->brush().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-            }
-                break;
 
-            case QGraphicsItem::UserType+3:
+    foreach(QGraphicsItem* item, items())
+    {
+        if( NULL == item->parentItem() )
+        {
+            writeItem( &xmlWriter, item );
+            foreach(QGraphicsItem* subitem, item->childItems() )
             {
-                DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
-                //xmlWriter.writeComment("DiagramTextItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type","0");
-                xmlWriter.writeStartElement("Text");
-                xmlWriter.writeCharacters(mItem->toHtml());
-                xmlWriter.writeEndElement();
+               writeItem( &xmlWriter, subitem );
             }
-                break;
-            case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
-            {
-                DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
-                //xmlWriter.writeComment("DiagramPathItem");
-                xmlWriter.writeEmptyElement("DiagramType");
-                xmlWriter.writeAttribute("type",QString::number(mItem->diagramType()));
-                xmlWriter.writeEmptyElement("Pen");
-                xmlWriter.writeAttribute("color",mItem->pen().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->pen().color().alpha()));
-                xmlWriter.writeEmptyElement("Brush");
-                xmlWriter.writeAttribute("color",mItem->brush().color().name());
-                xmlWriter.writeAttribute("alpha",QString::number(mItem->brush().color().alpha()));
-                foreach(QPointF point, mItem->getPoints()){
-                    xmlWriter.writeEmptyElement("Point");
-                    xmlWriter.writeAttribute("x",QString::number(point.x()));
-                    xmlWriter.writeAttribute("y",QString::number(point.y()));
-                }
-            }
-                break;
-            default:
-                break;
-            }
-            xmlWriter.writeEmptyElement("Transform");
-            xmlWriter.writeAttribute("m11",QString::number(item->transform().m11()));
-            xmlWriter.writeAttribute("m12",QString::number(item->transform().m12()));
-            xmlWriter.writeAttribute("m21",QString::number(item->transform().m21()));
-            xmlWriter.writeAttribute("m22",QString::number(item->transform().m22()));
-            xmlWriter.writeAttribute("dx",QString::number(item->transform().dx()));
-            xmlWriter.writeAttribute("dy",QString::number(item->transform().dy()));
-            xmlWriter.writeEndElement();
         }
-
     }
+
     xmlWriter.writeEndElement();
     xmlWriter.writeEndDocument();
     return true;
@@ -1115,6 +1132,7 @@ bool DiagramScene::load(QFile *file)
     insertedDrawItem=0;
     insertedVDrawItem=0;
     textItem=0;
+    readBaseItem = NULL;
     while(!xmlReader.atEnd()){
         xmlReader.readNext();
 #ifdef DEBUG
@@ -1175,7 +1193,7 @@ bool DiagramScene::load(QFile *file)
                     insertedDrawItem->setZValue(z);
                     break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
-                    insertedVItem = new VDiagramItem(VDiagramItem::VDiagramType(type),myItemMenu);
+                    insertedVItem = new VDiagramItem(VDiagramItem::VDiagramType(type),myItemMenu ,readBaseItem);
                     addItem(insertedVItem);
 #ifdef DEBUG
                     std::cout << "VDiagramItem" << std::endl;
@@ -1223,7 +1241,7 @@ bool DiagramScene::load(QFile *file)
                 continue;
             }
             //DiamgramType nicht gesetzt ? -> Fehler
-            if(DiaType and !(insertedItem or insertedDrawItem or textItem or insertedPathItem)){
+            if(DiaType and !(insertedItem or insertedVItem or insertedVDrawItem or insertedDrawItem or textItem or insertedPathItem)){
                 xmlReader.raiseError(tr("DiagramType definition missing"));
                 continue;
             }
@@ -1250,7 +1268,7 @@ bool DiagramScene::load(QFile *file)
                     insertedDrawItem->setPen(color);
                     break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
-                    insertedVItem->setPen(color);
+                    //insertedVItem->setPen(color);
                     break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setPen(color);
@@ -1278,6 +1296,7 @@ bool DiagramScene::load(QFile *file)
                     xmlReader.raiseError(tr("DiagramType: type number conversion failed"));
                     continue;
                 }
+
                 switch (DiaType) {
                 case QGraphicsItem::UserType+15:
                     insertedItem->setBrush(color);
@@ -1287,9 +1306,11 @@ bool DiagramScene::load(QFile *file)
                     break;
                 case QGraphicsItem::UserType+DIAGRAM_VITEM_TYPE:
                     insertedVItem->setBrush(color);
+                    readBaseItem = insertedVItem;
                     break;
                 case QGraphicsItem::UserType+DIAGRAM_VDRAWITEM_TYPE:
                     insertedVDrawItem->setBrush(color);
+                    readBaseItem = insertedVDrawItem;
                     break;
 
                 case QGraphicsItem::UserType+DIAGRAM_PATH_TYPE:
@@ -1440,6 +1461,7 @@ bool DiagramScene::load(QFile *file)
     insertedPathItem = 0;
     textItem = 0;
     myMode = MoveItem;
+//    enableAllItems(true);
     return true;
 }
 

@@ -98,6 +98,7 @@ VDiagramDrawItem::VDiagramDrawItem(const VDiagramDrawItem& diagram)
     myHandlerWidth=2.0;
 
 }
+
 void SortItemsByPosition( QList<VDiagramItem*> &list )
 {
     int i;

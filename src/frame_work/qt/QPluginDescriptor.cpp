@@ -45,6 +45,7 @@ void QPluginDescriptor::read_plugin_description( ){
 
     QPluginObjectsInterface* plugin;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_PluginDecription.location() );
+    qDebug()<<m_PluginDecription.location();
     if( 0 != loader ){
         loader->load();
         plugin =  loader->instance();

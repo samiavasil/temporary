@@ -19,7 +19,8 @@ QFraCreator::~QFraCreator( )
 {
 
 }
-
+#include<QStringList>
+ #include <QMetaMethod>
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
@@ -40,6 +41,37 @@ bool QFraCreator::Create( CFrameWork *fW )
                     obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
 
                     qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
+
+                    if( obj )
+                    {
+                       const QMetaObject* metaObject = obj->metaObject();
+
+                        qDebug()<<"DUMP METHODS:   "<<endl;
+                        for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+                        {
+
+                            qDebug()<<"   "<<QString::fromLatin1(metaObject->method(i).signature());
+                            if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
+                            {
+                                qDebug() << ":  Method Not signal";
+                            }
+                            else
+                            {
+                                qDebug() << ":  Its a signal";
+                                if( metaObject->checkConnectArgs ( "testSlot()", metaObject->method(i).signature() ) )
+                                {
+                                     qDebug() << "==> Compatible with slot testSlot";
+                                }
+                                else
+                                {
+                                    qDebug() << "==> Not Compatible with slot testSlot";
+                                }
+                            }
+
+                            qDebug()<<endl;
+                            //testSlot
+                        }
+                    }
                 }
                 if(  PORT_IO == list[i].type() )
                 {

@@ -168,6 +168,7 @@ protected:
 };
 
 
+
 DataType obj(DataType::Real,     DataType::I64);
 DataType obj1(DataType::Real,    DataType::I32);
 DataType obj2(DataType::Complex, DataType::I32);
@@ -178,6 +179,25 @@ int main(int argc, char *argv[])
     qInstallMsgHandler(m.myMessageOutput);
     QApplication a(argc, argv);
     MainWindow w;
+//QDesignerComponents c;
+
+
+
+//if( iface )
+//{
+//    QWidget* w = iface->topLevel();
+//    if(w)
+//    w->show();
+//}
+
+//    QDesignerFormEditorInterface formEditor;
+//    QDesignerObjectInspectorInterface *objectInspector = 0;
+//    objectInspector = formEditor.objectInspector();
+//formEditor.topLevel()->show();
+//    QDesignerFormWindowManagerInterface *manager = 0;
+// //   manager = formEditor.formWindowManager();
+
+    //objectInspector->setFormWindow(manager->formWindow(0));
 
     obj.compatible(obj);
     obj.compatible(obj1);

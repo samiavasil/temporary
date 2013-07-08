@@ -4,6 +4,8 @@
 #include"qt/QCreator.h"
 //#include "qt/QFrameWork.h"
 class CFrameWork;
+class QwtPlotItem;
+
 class PLUGIN_EXPORT QFraCreator :  public QCreator
 {
     Q_OBJECT

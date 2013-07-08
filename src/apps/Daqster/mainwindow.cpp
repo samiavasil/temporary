@@ -81,8 +81,36 @@ void PluginList::populatePluginList(){
 #endif
 
 
+#include <QtDesigner>
+
+#include <QtDesigner/qdesigner_components.h>
+#include <QtDesigner/QDesignerFormEditorInterface>
+
+#include <QDebug>
+#include <QFile>
+#include <QPluginLoader>
+#include <QMdiSubWindow>
+#include <QMessageBox>
+#include <QDir>
+#include <QCloseEvent>
+#include <QScrollBar>
+#include <QTextCodec>
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerComponents>
+#include <QtDesigner/QDesignerWidgetBoxInterface>
+#include <QtDesigner/QDesignerFormEditorPluginInterface>
+#include <QtDesigner/QDesignerFormWindowManagerInterface>
+#include <QtDesigner/QDesignerObjectInspectorInterface>
+#include <QtDesigner/QDesignerPropertyEditorInterface>
+
+#include "internals/qdesigner_integration_p.h"
+#include "internals/pluginmanager_p.h"
+#include "internals/formwindowbase_p.h"
+
+#include "ui_desinger.h"
+
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),ui(new Ui::MainWindow)
+    QMainWindow(parent),ui(new Ui::MainWindow),ui_des(new Ui::Designer)
 {
     ui->setupUi(this);
     setCentralWidget(ui->mdiArea);
@@ -95,11 +123,161 @@ MainWindow::MainWindow(QWidget *parent) :
     setMouseTracking(true);
     ui->mainToolBar->setMouseTracking(true);
     ui->mdiArea->setMouseTracking(true);
+    createQTDesignerWidget();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+class PyNotoIntegration: public qdesigner_internal::QDesignerIntegration
+{
+public:
+    PyNotoIntegration(QDesignerFormEditorInterface *core, QObject *parent = 0):
+        qdesigner_internal::QDesignerIntegration(core, parent)
+    {
+        setSlotNavigationEnabled(true);
+    }
+};
+
+#if defined( DEST_DIR )
+#define DT DEST_DIR
+#else
+#define DT ""
+#endif
+#define  TO_STR(z) z
+
+void MainWindow::createQTDesignerWidget()
+{
+
+    QWidget* w = new QWidget(this);
+     ui->mdiArea->addSubWindow(w);
+    ui_des->setupUi(w);
+    qDebug()<<"1"<<endl<<endl<<endl;
+        QDesignerFormEditorInterface *iface = QDesignerComponents::createFormEditor(this);
+        qDebug()<<"2"<<endl<<endl<<endl;
+        QDesignerPluginManager* man = iface->pluginManager();
+        qDebug()<<"3"<<endl<<endl<<endl;
+        QStringList str;
+        //str   <<man->pluginPaths();
+        str<<"../bin/plugins/";
+        man->setPluginPaths(str);
+
+        qDebug()<<man->pluginPaths()<<endl;
+        iface->setTopLevel(this);
+        QDesignerComponents::createTaskMenu(iface, this);
+        QDesignerComponents::initializePlugins( iface );
+        QDesignerComponents::initializeResources();
+
+        QDesignerWidgetBoxInterface* wb = QDesignerComponents::createWidgetBox(iface, w);
+
+        for(int i=0; i < wb->categoryCount(); i++ )
+            qDebug()<<"Category "<< i << ":  " << wb->category(i).type() << wb->category(i).name()<< endl;
+        ui_des->layout->addWidget(wb,0,0);
+        iface->setWidgetBox(wb);
+
+        QDesignerObjectInspectorInterface *oi;
+        oi = QDesignerComponents::createObjectInspector(iface, w);
+        ui_des->layout->addWidget(oi,0,1);
+        iface->setObjectInspector(oi);
+
+        QDesignerPropertyEditorInterface *pe = QDesignerComponents::createPropertyEditor(iface, w);
+        ui_des->layout->addWidget(pe,0,2);
+        iface->setPropertyEditor(pe);
+
+        QDesignerActionEditorInterface *ae = QDesignerComponents::createActionEditor(iface, w);
+        ui_des->layout->addWidget((QWidget*)ae,1,0);
+        iface->setActionEditor(ae);
+
+        ui_des->layout->addWidget(QDesignerComponents::createSignalSlotEditor(iface, w), 0 , 3 );
+
+        ui_des->layout->addWidget(QDesignerComponents::createResourceEditor(iface, w),1,1);
+
+
+
+        //form->addResourceFile (  "/home/vasil/tmp/Appearance.ui");
+
+//        form->setFeatures(QDesignerFormWindowInterface::EditFeature);
+
+//pe->setObject();
+        //      iface->
+//form->setCurrentTool(1);
+
+
+
+        _designer = new PyNotoIntegration(iface, w);
+        iface->setIntegration(_designer);
+
+        QList<QObject*> plugins = QPluginLoader::staticInstances();
+        plugins += iface->pluginManager()->instances();
+
+        foreach (QObject *plugin, plugins) {
+            if (QDesignerFormEditorPluginInterface *formEditorPlugin = qobject_cast<QDesignerFormEditorPluginInterface*>(plugin)) {
+                if (!formEditorPlugin->isInitialized()){
+                    formEditorPlugin->initialize(iface);
+                }
+            }
+        }
+
+        iface->setIntegration(_designer);
+        iface->setObjectInspector(oi);
+        iface->setWidgetBox(wb);
+        iface->setPropertyEditor(pe);
+        iface->setActionEditor(ae);
+
+//        QDesignerFormWindowManagerInterface *formWindowManager = iface->formWindowManager();
+//        for (int i=0; i<formWindowManager->formWindowCount(); ++i) {
+//            QDesignerFormWindowInterface *formWindow = formWindowManager->formWindow(i);
+//            if (formWindow == form)
+//                formWindow->editWidgets();
+//        }
+
+//        connect(iface->formWindowManager()->actionUndo(), SIGNAL(changed()), SLOT(onUndoAvailable()));
+//        connect(iface->formWindowManager()->actionRedo(), SIGNAL(changed()), SLOT(onRedoAvailable()));
+//        connect(iface->formWindowManager()->actionCopy(), SIGNAL(changed()), SLOT(onCopyAvailable()));
+//        connect(iface->formWindowManager()->actionPaste(), SIGNAL(changed()), SLOT(onPasteAvailable()));
+        //iface->setPropertyEditor(QDesignerComponents::createPropertyEditor(iface, w) );
+        //iface->setFormManager(QDesignerComponents::createFormEditor(iface, w) );
+
+//form->setCurrentTool(1);
+QDesignerFormWindowInterface*  form = iface->formWindowManager()->createFormWindow(0, Qt::Widget );
+ui_des->layout->addWidget( form, 1, 3 );
+//QFile f("/home/vasil/tmp/Appearance.ui");
+//f.open(QIODevice::ReadOnly | QIODevice::Text);
+//form->setContents(f.readAll());
+//f.close();
+form->addResourceFile("/home/vasil/tmp/test.qrc");
+
+form->setMainContainer(new QWidget(w));
+//form->setMainContainer(form);
+form->setGrid(QPoint(10,10));
+//form->setFileName("/home/vasil/tmp/Appearance.ui");
+form->show();
+
+form->setCurrentTool(0);
+iface->formWindowManager()->setActiveFormWindow(form);
+
+}
+
+void MainWindow::onUndoAvailable()
+{
+    emit undoAvailable(_designer->core()->formWindowManager()->actionUndo()->isEnabled());
+}
+
+void MainWindow::onRedoAvailable()
+{
+    emit redoAvailable(_designer->core()->formWindowManager()->actionRedo()->isEnabled());
+}
+
+void MainWindow::onCopyAvailable()
+{
+    emit copyAvailable(_designer->core()->formWindowManager()->actionCopy()->isEnabled());
+}
+
+void MainWindow::onPasteAvailable()
+{
+    emit pasteAvailable(_designer->core()->formWindowManager()->actionPaste()->isEnabled());
 }
 
 void MainWindow::mouseMoveEvent( QMouseEvent * event ){

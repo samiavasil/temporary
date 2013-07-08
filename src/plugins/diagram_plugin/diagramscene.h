@@ -61,6 +61,7 @@ class QFont;
 class QGraphicsTextItem;
 class QColor;
 class QFile;
+class QXmlStreamWriter;
 QT_END_NAMESPACE
 
 //! [0]
@@ -124,7 +125,7 @@ public slots:
 
 signals:
     void itemInserted(DiagramItem *item);
-    void itemInserted(VDiagramItem *item);
+    void itemVInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void itemSelected(QGraphicsItem *item);
     void editorHasLostFocus();
@@ -142,7 +143,7 @@ protected:
     QGraphicsItem* copy(QGraphicsItem* item);
     void drawBackground(QPainter *p, const QRectF &r);
     void enableAllItems(bool enable=true);
-
+    void writeItem( QXmlStreamWriter* xmlWriter , QGraphicsItem* item );
 
 private:
     bool isItemChange(int type);
@@ -161,6 +162,7 @@ private:
     QColor myTextColor;
     QColor myItemColor;
     QColor myLineColor;
+    QGraphicsItem *readBaseItem;
     DiagramItem *insertedItem;
     DiagramDrawItem *insertedDrawItem;
     VDiagramItem *insertedVItem;
