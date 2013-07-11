@@ -58,6 +58,7 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent, QGraphicsScene *scene)
 }
 //! [0]
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
+     : QGraphicsTextItem(textItem.parentItem(),textItem.scene())
 {
 	//QGraphicsTextItem();
 	setFont(textItem.font());

@@ -19,7 +19,7 @@ Q_OBJECT
 
     virtual ~QFrameWork();
 
-    bool Create();
+//    bool Create();
 
     virtual void AddWidgetToControlArrea ( QWidget* widget ) = 0;
     virtual void AddWidgetToDataViewArrea( QWidget* widget ) = 0;

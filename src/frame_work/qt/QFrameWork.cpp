@@ -12,16 +12,14 @@ QFrameWork::QFrameWork(QCreator * creator, QWidget * parent):QWidget(parent),CFr
 
 QFrameWork::~QFrameWork() {
   DEBUG( "Destroy QFrameWork\n" );
-    emit fwDestroy();
-    if( m_creator )
-    {
-       delete m_creator;
-        m_creator = 0;
-    }
+  emit fwDestroy();
 }
 
-bool QFrameWork::Create() {
-  return m_creator->Create( this );
-}
+//bool QFrameWork::Create() {
+//  if( m_creator )
+//    return m_creator->Create( this );
+//  else
+//    return true;
+//}
 
 

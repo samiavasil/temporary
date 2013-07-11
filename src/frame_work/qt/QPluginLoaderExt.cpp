@@ -39,9 +39,7 @@ void QPluginLoaderExt::closeSafety() {
       ++i;
   }
 }
-#include<QtDesigner/QDesignerFormEditorPluginInterface>
-#include<QtDesigner/QDesignerFormEditorInterface>
-#include<QWidget>
+
 QPluginObjectsInterface* QPluginLoaderExt::instance() {
   QObject *instance = (dynamic_cast<QPluginLoader*>(this))->instance();
   m_instance = dynamic_cast< QPluginObjectsInterface* >(instance);
@@ -58,35 +56,7 @@ QPluginObjectsInterface* QPluginLoaderExt::instance() {
       qDebug()<<"EEEEEEEEEEEEEEEEEEEEEEEEEEeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE   ";
       qDebug()<<instance;
   }
-  if( NULL == m_instance )
-  {
 
-     QDesignerFormEditorPluginInterface* inst = dynamic_cast< QDesignerFormEditorPluginInterface* >(instance);
-     if( inst )
-     {
-        QDesignerFormEditorInterface *core = inst->core();
-        if(core)
-        {
-          QWidget *top = core->topLevel();
-          if(top)
-          {
-              top->show();
-          }
-          else
-          {
-               qDebug()<<"NO TOPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
-          }
-        }
-        else
-        {
-             qDebug()<<"NO COREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
-        }
-     }
-     else
-     {
-          qDebug()<<"NO INSTANCEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE";
-     }
-  }
   return m_instance;
 }
 

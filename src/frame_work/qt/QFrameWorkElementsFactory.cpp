@@ -69,7 +69,7 @@ CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
 
 CPacketCollector* QFrameWorkElementsFactory::createPacketCollector(CFrameWork * cFwk) {
     DEBUG("Create Packet Collector");                
-    QPacketCollector* coll ;//TODO= new QPacketCollector(cFwk)
+    QPacketCollector* coll = NULL;//TODO= new QPacketCollector(cFwk)
     if( 0 == coll ){                                 
         CRITICAL( "Can't create QPacketCollector" ); 
     }                                                

@@ -5,5 +5,6 @@ SUBDIRS += fra_plugin \
            hexedit_plugin \
            diagram_plugin \
            template_plugin \
-           template_designer_plugin
+           template_designer_plugin \
+           qt_designer_plugin
 

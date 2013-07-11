@@ -22,6 +22,19 @@ QFraIoPortsView::~QFraIoPortsView()
     mIoPorts.clear();
 }
 
+class gpWidget:public QWidget
+{
+public:
+    gpWidget(QWidget* parent=NULL):QWidget(parent)
+    {
+
+    }
+    ~gpWidget()
+    {
+        qDebug()<<"destroy  gpWidget"<<endl;
+    }
+};
+
 void QFraIoPortsView::addToList( PluginDescription desc )
 {
     mIoPorts.append( new PluginDescription( desc ) );
@@ -31,7 +44,7 @@ void QFraIoPortsView::addToList( PluginDescription desc )
         mCurrentIo = dynamic_cast<QPortIO*>(QPluginList::Instance()->cretate_plugin_object( desc, this ));
         if( NULL != mCurrentIo )
         {
-            QWidget* w = new QWidget();
+            gpWidget* w = new gpWidget();
             ui->IoCtrlLayout->addWidget( w );
             mCurrentIo->showPortConfiguration( w );
             ui->IoList->setCurrentRow(0);

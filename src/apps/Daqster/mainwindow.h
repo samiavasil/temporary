@@ -8,12 +8,7 @@ namespace Ui {
 class MainWindow;
 }
 
-namespace Ui {
-class Designer;
-}
-namespace qdesigner_internal {
-    class QDesignerIntegration;
-}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -49,11 +44,10 @@ signals:
 protected:
     virtual void mouseMoveEvent ( QMouseEvent * event );
 protected:
-    void createQTDesignerWidget();
-    qdesigner_internal::QDesignerIntegration * _designer;
+
 private:
     Ui::MainWindow *ui;
-    Ui::Designer   *ui_des;
+
 };
 
 #endif // MAINWINDOW_H

@@ -28,7 +28,8 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
     //return dynamic_cast<QObject *> ( new QFraFrameWork( new QFraFrameWorkElementsFactory(), parent_widget ) );
-    QFraFrameWork*fw = new QFraFrameWork( new QFraCreator() ,  parent_widget );
+    QFraCreator* c = new QFraCreator();
+    QFraFrameWork*fw = new QFraFrameWork( c ,  parent_widget );
     return fw;
 }
-Q_EXPORT_PLUGIN2(pnp_graplugin, FraFrameWorkInterface)
+Q_EXPORT_PLUGIN2(FraPlugin, FraFrameWorkInterface)

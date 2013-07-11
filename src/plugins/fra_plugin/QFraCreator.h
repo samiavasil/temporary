@@ -11,7 +11,7 @@ class PLUGIN_EXPORT QFraCreator :  public QCreator
     Q_OBJECT
 public:
     explicit QFraCreator( QObject * parent = NULL );
-    ~QFraCreator( );
+    virtual ~QFraCreator( );
     virtual bool Create(CFrameWork *fW);
 public slots:
     virtual void Free();

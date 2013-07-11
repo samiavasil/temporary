@@ -3,7 +3,7 @@
 #include "qt/QProtocolLoader.h"
 #include "base/CPacket.h"
 
-QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent):QObject(parent),CProtocolPackFactory(pLoader) {
+QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent):CProtocolPackFactory(pLoader),QObject(parent) {
       DEBUG("Create QProtocolPackFactory");
       if(  attachProtocolLoader(pLoader) ) {
           DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");

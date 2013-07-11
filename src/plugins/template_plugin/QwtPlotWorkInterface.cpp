@@ -31,4 +31,4 @@ QObject*  QwtPlotWorkInterface::allocateObject( QObject* parent ){
                                                     widget-a pri closeEvent*/
     return obj;
 }
-Q_EXPORT_PLUGIN2(pnp_qwtplotplugin, QwtPlotWorkInterface)
+Q_EXPORT_PLUGIN2(QwtPlotPlugin, QwtPlotWorkInterface)

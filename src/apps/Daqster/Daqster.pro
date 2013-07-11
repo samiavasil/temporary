@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 QT       += core gui
- CONFIG += designer
+# CONFIG += designer
 OBJECTS_DIR  = $$PWD/Build
 MOC_DIR      = $$PWD/Build
 RCC_DIR      = $$PWD/Build
@@ -20,10 +20,10 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui \
-    desinger.ui
+FORMS    += mainwindow.ui
 
-LIBS += -L../../../bin/libs  -lframe_work -lQtDesignerComponents
-CCFLAG += -E
+LIBS += -L../../../bin/libs  -lframe_work
+#-lQtDesignerComponents
+#CCFLAG += -E
 RESOURCES += \
     icons.qrc

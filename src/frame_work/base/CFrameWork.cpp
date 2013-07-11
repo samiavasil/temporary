@@ -7,10 +7,15 @@ CFrameWork::CFrameWork(CCreator * creator) {
 }
 
 CFrameWork::~CFrameWork() {
+    if( m_creator )
+    {
+       delete m_creator;
+       m_creator = 0;
+    }
 }
 
 bool CFrameWork::Create() {
-  bool bRet  = false;
+  bool bRet  = true;
   if( m_creator )
       bRet = m_creator->Create( this );
   return bRet;
