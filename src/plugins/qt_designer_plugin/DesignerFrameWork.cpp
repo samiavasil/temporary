@@ -1,32 +1,35 @@
 #include "DesignerFrameWork.h"
 #include <QDebug>
-#include "ui_desinger.h"
+#include <QGridLayout>
+
 #include "base/CCreator.h"
-namespace Plugins
-{
+
 DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QWidget * parent ):
-                        QFrameWork( creator , parent ),ui(new Ui::Designer)
+    QFrameWork( creator , parent )
 {
-    ui->setupUi( this );
-    setAttribute(Qt::WA_DeleteOnClose, true);
+
+    //setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 DesignerFrameWork::~DesignerFrameWork()
 {
- //qDebug()<<"iooopiop"<<endl<<endl<<endl;
+    //qDebug()<<"iooopiop"<<endl<<endl<<endl;
     m_creator->Free();
-    delete ui;
 }
 
 void DesignerFrameWork::AddWidgetToControlArrea ( QWidget* widget )
 {
-
-  if( widget )
-      ui->layout->addWidget( widget, ui->layout->count()/3,ui->layout->count()%3   );
+    if( NULL == this->layout() )
+    {
+        setLayout( new QGridLayout(this) );
+    }
+    if( widget )
+    {
+        layout()->addWidget( widget );
+    }
 }
 
 void DesignerFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
 {
 
-}
 }

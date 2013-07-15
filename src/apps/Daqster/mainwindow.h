@@ -45,6 +45,7 @@ protected:
     virtual void mouseMoveEvent ( QMouseEvent * event );
 protected:
 
+
 private:
     Ui::MainWindow *ui;
 

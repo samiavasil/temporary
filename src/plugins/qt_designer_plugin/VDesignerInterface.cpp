@@ -34,7 +34,8 @@ QObject*  VDesignerInterface::allocateObject( QObject* parent ){
     }
     DesignerCreator* c = new DesignerCreator();
     DesignerFrameWork*fw = new DesignerFrameWork( c,  parent_widget );
-
+    fw->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
+                                                    widget-a pri closeEvent*/
     return fw;
 
 }

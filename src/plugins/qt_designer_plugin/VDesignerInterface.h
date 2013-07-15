@@ -6,6 +6,7 @@
 #include "qt/QPluginObjectsInterface.h"
 
 #define DES_VERSION    "V0.0"
+
 namespace Plugins
 {
 

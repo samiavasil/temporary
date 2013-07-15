@@ -1,10 +1,11 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "qt/interfaces.h"
+
 #include"qt/QFrameWork.h"
 #include<QMdiSubWindow>
 #include<QMouseEvent>
 
+#include"ui_mainwindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setMouseTracking(true);
     ui->mainToolBar->setMouseTracking(true);
     ui->mdiArea->setMouseTracking(true);
-   // createQTDesignerWidget();
+
 }
 
 MainWindow::~MainWindow()
@@ -30,25 +31,24 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::onUndoAvailable()
 {
-  //  emit undoAvailable(_designer->core()->formWindowManager()->actionUndo()->isEnabled());
+    //emit undoAvailable(_designer->core()->formWindowManager()->actionUndo()->isEnabled());
 }
 
 void MainWindow::onRedoAvailable()
 {
- //   emit redoAvailable(_designer->core()->formWindowManager()->actionRedo()->isEnabled());
+    //emit redoAvailable(_designer->core()->formWindowManager()->actionRedo()->isEnabled());
 }
 
 void MainWindow::onCopyAvailable()
 {
-  //  emit copyAvailable(_designer->core()->formWindowManager()->actionCopy()->isEnabled());
+    //emit copyAvailable(_designer->core()->formWindowManager()->actionCopy()->isEnabled());
 }
 
 void MainWindow::onPasteAvailable()
 {
-  //  emit pasteAvailable(_designer->core()->formWindowManager()->actionPaste()->isEnabled());
+    //emit pasteAvailable(_designer->core()->formWindowManager()->actionPaste()->isEnabled());
 }
 
 void MainWindow::mouseMoveEvent( QMouseEvent * event ){
@@ -119,23 +119,19 @@ void MainWindow::on_actionSave_triggered()
         if( FRAME_WORK == list[i].type() )
         {
           QObject* obj;
-          QWidget* wd = new QWidget(this);
-          ui->mdiArea->addSubWindow(wd);
-          wd->show();//DELL ME
-          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , wd );
+          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
           if( !obj )
               continue;
           QFrameWork* fw = dynamic_cast<QFrameWork*>(obj);
           if(fw)
           {
              fw->Create();
-             fw->show();
           }
           if( obj->isWidgetType() )
           {
-                QWidget* wd = (QWidget*)obj;
-//               ui->mdiArea->addSubWindow(wd);
-                wd->show();//DELL ME
+              QWidget* wd = (QWidget*)obj;
+              ui->mdiArea->addSubWindow(wd);
+              wd->show();//DELL ME
           }
         }
 
