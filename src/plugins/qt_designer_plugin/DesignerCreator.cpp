@@ -74,8 +74,13 @@ bool DesignerCreator::Create( CFrameWork *fW )
         if( qfW )
         {
             QDesignerFormEditorInterface *iface = QDesignerComponents::createFormEditor( wid->parent() );
-        //    QObject* obj = wid->parentWidget();
+
+            //    QObject* obj = wid->parentWidget();
             _menu = QDesignerComponents::createTaskMenu(iface, wid );
+
+            QStringList m = iface->pluginManager()->pluginPaths();
+            m.append("/home/vasil/projects/Daqster/bin/plugins/designer");
+            iface->pluginManager()->setPluginPaths( m );
             QDesignerComponents::initializePlugins( iface );
             QDesignerComponents::initializeResources();
 //_menu->deleteLater();
@@ -92,7 +97,7 @@ bool DesignerCreator::Create( CFrameWork *fW )
             iface->setActionEditor(QDesignerComponents::createActionEditor(iface, wid));
 
 
-            _designer = new PyNotoIntegration(iface, wid);
+            _designer = new /*PyNotoIntegration*/qdesigner_internal::QDesignerIntegration(iface, wid);
             iface->setIntegration(_designer);
 
             qdesigner_internal::QDesignerIntegration::initializePlugins( iface );
@@ -128,27 +133,27 @@ bool DesignerCreator::Create( CFrameWork *fW )
             QDesignerActionEditorInterface * actionEditor = _designer->core()->actionEditor();
             ui->layout->addWidget( (QWidget*)actionEditor, ui->layout->count()/3,ui->layout->count()%3   );
 
-/*
+
             //form->setCurrentTool(1);
-            form = iface->formWindowManager()->createFormWindow(0, Qt::Widget );
+            form = iface->formWindowManager()->createFormWindow(wid, Qt::Widget );
             ui->layout->addWidget( form, ui->layout->count()/3,ui->layout->count()%3   );
 
-            //QFile f("/home/vasil/tmp/Appearance.ui");
-            //f.open(QIODevice::ReadOnly | QIODevice::Text);
-            //form->setContents(f.readAll());
-            //f.close();
+            QFile f("/home/vasil/tmp/Appearance.ui");
+            f.open(QIODevice::ReadOnly | QIODevice::Text);
+            form->setContents(f.readAll());
+            f.close();
             //form->addResourceFile("/home/vasil/tmp/test.qrc");
 
-            form->setMainContainer(new QWidget(wid));
-            //form->setMainContainer(form);
+            //form->setMainContainer(new QWidget(wid));
+
             form->setGrid(QPoint(10,10));
             //form->setFileName("/home/vasil/tmp/Appearance.ui");
             form->show();
 
             form->setCurrentTool(0);
             iface->formWindowManager()->setActiveFormWindow(form);
-*/
             qfW->AddWidgetToControlArrea( wid );
+
         }
 
     }

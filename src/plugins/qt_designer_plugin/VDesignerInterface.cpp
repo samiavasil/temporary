@@ -3,6 +3,9 @@
 #include "DesignerCreator.h"
 
 #include<QWidget>
+
+
+
 namespace Plugins
 {
 

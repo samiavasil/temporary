@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 include(../../include/paths_cfg.pri)
-DESTDIR      = $${PLUGINS_DEST_DIR}
+DESTDIR      = $${PLUGINS_DEST_DIR}/designer
 QT          += core gui
 TEMPLATE     = lib
 INCLUDEPATH += ../
