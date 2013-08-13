@@ -23,6 +23,8 @@ public:
     explicit DesignerCreator( QObject * parent = NULL );
     virtual ~DesignerCreator( );
     virtual bool Create(CFrameWork *fW);
+protected:
+    QWidget* loadUiFile();
 public slots:
     virtual void Free();
 

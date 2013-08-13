@@ -24,7 +24,7 @@ LIBS        += -L$${EXT_LIBS_DIR} -L$${LIBS_DIR}
 
 
 TEMPLATE     = lib
-
+CONFIG += uitools
 CONFIG      += plugin
 CONFIG      += designer
 
