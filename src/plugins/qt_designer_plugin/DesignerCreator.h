@@ -24,10 +24,10 @@ public:
     virtual ~DesignerCreator( );
     virtual bool Create(CFrameWork *fW);
 protected:
-    QWidget* loadUiFile();
+    QWidget* loadUiFile(QWidget *parent, QString &file_name);
 public slots:
     virtual void Free();
-
+    virtual void save();
 private:
        qdesigner_internal::QDesignerIntegration * _designer;
        QObject * _menu;

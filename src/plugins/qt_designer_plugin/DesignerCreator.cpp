@@ -14,7 +14,7 @@
 
 #include<QAction>
 #include<QLayout>
-
+#include<QPushButton>
 #include "internals/qdesigner_integration_p.h"
 #include "internals/pluginmanager_p.h"
 #include "internals/formwindowbase_p.h"
@@ -138,10 +138,12 @@ bool DesignerCreator::Create( CFrameWork *fW )
             form = iface->formWindowManager()->createFormWindow(wid, Qt::Widget );
             ui->layout->addWidget( form, ui->layout->count()/3,ui->layout->count()%3   );
 
-            QFile f("/home/vasil/tmp/Appearance.ui");
+form->setFileName("/home/vasil/tmp/Appearance.ui");
+            QFile f(form->fileName());
             f.open(QIODevice::ReadOnly | QIODevice::Text);
             form->setContents(f.readAll());
             f.close();
+
             //form->addResourceFile("/home/vasil/tmp/test.qrc");
 
            // form->setMainContainer(new QWidget(wid));
@@ -151,12 +153,14 @@ bool DesignerCreator::Create( CFrameWork *fW )
             form->show();
 iface->formWindowManager()->setActiveFormWindow(form);
             form->setCurrentTool(0);
-
+            QPushButton* saveBtn = new QPushButton(qfW);
+            connect(saveBtn,SIGNAL(clicked()),this,SLOT(save()));
+            qfW->AddWidgetToControlArrea( saveBtn );
             qfW->AddWidgetToControlArrea( wid );
 
            // qfW->AddWidgetToControlArrea(loadUiFile());
 
-loadUiFile()->show();
+
         }
 
     }
@@ -164,22 +168,34 @@ loadUiFile()->show();
 }
 #include<QtUiTools>
 #include<QFile>
-QWidget* DesignerCreator::loadUiFile()
+QWidget* DesignerCreator::loadUiFile( QWidget* parent, QString& file_name )
 {
     QUiLoader loader;
-
-    QFile file("/home/vasil/tmp/Appearance.ui");
+    loader.addPluginPath("/home/vasil/Projects/Daqster/bin/plugins/designer");
+    QFile file( file_name );
     file.open(QFile::ReadOnly);
 
-    QWidget *formWidget = loader.load(&file, NULL);
+    QWidget *formWidget = loader.load( &file, parent );
+    file.close();
+    connect( formWidget, SIGNAL(destroyed()), this, SLOT(Free()) );
+    formWidget->setAttribute(Qt::WA_DeleteOnClose, true);
+    return formWidget;
+}
+
+void DesignerCreator::save()
+{
+    QString fname( form->fileName() );
+    QFile file( fname );
+    file.open( QFile::WriteOnly );
+    file.write(form->contents().toAscii());
     file.close();
 
-    return formWidget;
+    loadUiFile( NULL,fname)->show();
 }
 
 void DesignerCreator::Free()
 {
-   //delete _designer;
+    qDebug("Frees");
 }
 
 
