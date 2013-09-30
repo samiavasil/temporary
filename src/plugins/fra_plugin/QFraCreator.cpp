@@ -8,7 +8,7 @@
 #include "qt/QCommandExecutor.h"
 #include "qtestcommand.h"
 #include "qt/QPluginList.h"
-
+#include"qt/debug.h"
 
 QFraCreator::QFraCreator(QObject *parent):QCreator(parent)
 {
@@ -28,6 +28,7 @@ bool QFraCreator::Create( CFrameWork *fW )
     if( fW )
     {
         QFraFrameWork* qfW =  dynamic_cast<QFraFrameWork*>(fW);
+        DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
         if( qfW )
         {
             QPortIO* port = NULL;
@@ -49,7 +50,7 @@ bool QFraCreator::Create( CFrameWork *fW )
                         qDebug()<<"DUMP METHODS:   "<<endl;
                         for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
                         {
-
+DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
                             qDebug()<<"   "<<QString::fromLatin1(metaObject->method(i).signature());
                             if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
                             {
@@ -117,7 +118,7 @@ bool QFraCreator::Create( CFrameWork *fW )
 
             }
             bRet = true;
-
+DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
         }
     }
 

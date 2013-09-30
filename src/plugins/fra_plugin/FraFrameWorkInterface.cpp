@@ -2,8 +2,12 @@
 #include "QFraFrameWork.h"
 #include "qt/QFrameWorkElementsFactory.h"
 #include "QFraCreator.h"
+#include"qt/debug.h"
+
+QDbg* m_Debug = NULL;
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
+    DEBUG_ENABLE( 1 );
     DEBUG("FraFrameWorkInterface object create");
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
@@ -11,6 +15,7 @@ FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInt
 FraFrameWorkInterface::~FraFrameWorkInterface(  )
 {
     DEBUG("FraFrameWorkInterface object delete");
+    DEBUG_ENABLE( 0 );
 }
 
 /* FIX ME - remove input params. New creted here framework should
@@ -28,7 +33,7 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
     //return dynamic_cast<QObject *> ( new QFraFrameWork( new QFraFrameWorkElementsFactory(), parent_widget ) );
-    QFraCreator* c = new QFraCreator();
+    QFraCreator* c   = new QFraCreator();
     QFraFrameWork*fw = new QFraFrameWork( c ,  parent_widget );
     return fw;
 }

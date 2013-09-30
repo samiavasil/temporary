@@ -48,13 +48,15 @@ void DesignerTamplate::update()
 {
    static  Qt::GlobalColor col = Qt::color0;
     QListWidgetItem *item = new QListWidgetItem();
-    item->setBackgroundColor(QColor( col ) );
+    QColor color( col );
+    item->setBackgroundColor( color );
     col=(Qt::GlobalColor)((int)col + 1);
     if( col > Qt::transparent)
     {
         col = Qt::color0;
     }
     list->insertItem(0, item);
+    emit colorChanged(R);
 }
 
 void DesignerTamplate::start_stop()

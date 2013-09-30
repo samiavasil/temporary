@@ -15,8 +15,12 @@ public:
     virtual ~QFraFrameWork();
     virtual void AddWidgetToDataViewArrea( QWidget* widget );
     void AddWidgetToControlArrea ( QWidget* widget );
+private slots:
+    void on_StartButton_clicked();
+
 private:
     Ui::QFraFrameWorkView* ui;
+    QList<QObject*> list;
 };
 
 #endif // QFRAFRAMEWORK_H

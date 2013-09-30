@@ -79,7 +79,7 @@ bool DesignerCreator::Create( CFrameWork *fW )
             _menu = QDesignerComponents::createTaskMenu(iface, wid );
 
             QStringList m = iface->pluginManager()->pluginPaths();
-            m.append("/home/vasil/Projects/Daqster/bin/plugins/designer");
+            m.append("./plugins/designer");
             iface->pluginManager()->setPluginPaths( m );
             QDesignerComponents::initializePlugins( iface );
             QDesignerComponents::initializeResources();
@@ -138,7 +138,7 @@ bool DesignerCreator::Create( CFrameWork *fW )
             form = iface->formWindowManager()->createFormWindow(wid, Qt::Widget );
             ui->layout->addWidget( form, ui->layout->count()/3,ui->layout->count()%3   );
 
-form->setFileName("/home/vasil/tmp/Appearance.ui");
+form->setFileName("./plugins/test/Appearance.ui");
             QFile f(form->fileName());
             f.open(QIODevice::ReadOnly | QIODevice::Text);
             form->setContents(f.readAll());

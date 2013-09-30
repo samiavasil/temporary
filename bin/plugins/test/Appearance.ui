@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PluginList</class>
+ <widget class="QWidget" name="PluginList">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>414</width>
+    <height>534</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PluginList</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QTabWidget" name="pluginsTab">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="AvailablePlugins">
+        <attribute name="title">
+         <string>Available Plugins</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="5" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QSplitter" name="splitter">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <widget class="DesignerTamplate" name="DesignerTamplate">
+              <property name="toolTip">
+               <string>The current time</string>
+              </property>
+              <property name="whatsThis">
+               <string>The analog clock widget displays the current time.</string>
+              </property>
+              <property name="color">
+               <enum>DesignerTamplate::B</enum>
+              </property>
+              <property name="sortingEnabled" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="KLed" name="kled"/>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0">
+          <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="KSysGuardProcessList" name="ksysguardprocesslist">
+           <property name="showTotalsInTree" stdset="0">
+            <bool>true</bool>
+           </property>
+           <property name="updateIntervalMSecs">
+            <number>0</number>
+           </property>
+           <property name="killButtonVisible">
+            <bool>true</bool>
+           </property>
+           <property name="scriptingEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QPushButton" name="pushButton">
+           <property name="text">
+            <string>StartStop</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QSpinBox" name="spinBox">
+           <property name="maximum">
+            <number>2000</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="okButton">
+           <property name="text">
+            <string>OK</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancelButton">
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLed</class>
+   <extends></extends>
+   <header>kled.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSysGuardProcessList</class>
+   <extends></extends>
+   <header>ksysguardprocesslist.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DesignerTamplate</class>
+   <extends></extends>
+   <header>DesignerTamplate.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>okButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>DesignerTamplate</receiver>
+   <slot>start_stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>310</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>420</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ksysguardprocesslist</receiver>
+   <slot>setUpdateIntervalMSecs(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>okButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PluginList</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>521</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DesignerTamplate</sender>
+   <signal>colorChanged(Color)</signal>
+   <receiver>ksysguardprocesslist</receiver>
+   <slot>updateList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>448</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
