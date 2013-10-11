@@ -4,9 +4,12 @@
 #include "QFraCreator.h"
 #include"qt/debug.h"
 
+
+
 QDbg* m_Debug = NULL;
-FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
+FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent),QloggerInterface(this)
 {
+    LogerTree::connectLogger( this,QloggerInterface::ROOT_ID );
     DEBUG_ENABLE( 1 );
     DEBUG("FraFrameWorkInterface object create");
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));

@@ -6,11 +6,12 @@
 #include "qt/QPluginObjectsInterface.h"
 
 #define FRA_VERSION    "V0.0"
+#include "qt/qloggerinterface.h"
 
-class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface
+class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface, public QloggerInterface
 {
     Q_OBJECT
-    Q_INTERFACES(QPluginObjectsInterface)
+    Q_INTERFACES(QPluginObjectsInterface QloggerInterface )
 public:
     FraFrameWorkInterface( QObject* parent = 0);
     ~FraFrameWorkInterface(  );
