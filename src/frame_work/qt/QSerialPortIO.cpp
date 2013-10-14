@@ -156,12 +156,12 @@ void QSerialPortIO::initUi() {
   int i;
   QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
   foreach (QextPortInfo info, ports) {
-      qDebug() << "port name:"       << info.portName;
-      qDebug() << "friendly name:"   << info.friendName;
-      qDebug() << "physical name:"   << info.physName;
-      qDebug() << "enumerator name:" << info.enumName;
-      qDebug() << "vendor ID:"       << info.vendorID;
-      qDebug() << "product ID:"      << info.productID;
+      DEBUG() << "port name:"       << info.portName;
+      DEBUG() << "friendly name:"   << info.friendName;
+      DEBUG() << "physical name:"   << info.physName;
+      DEBUG() << "enumerator name:" << info.enumName;
+      DEBUG() << "vendor ID:"       << info.vendorID;
+      DEBUG() << "product ID:"      << info.productID;
       ui->portCombo->addItem( info.physName );
       //ui->queryModeCombo->setItemData();
   }
@@ -214,7 +214,7 @@ void QSerialPortIO::setPortName(const QString & portName) {
 
 void QSerialPortIO::setQueryMode(int act) {
   QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
-  qDebug()<<mode;
+  DEBUG()<<mode;
   m_Serial.setQueryMode( mode );
 }
 

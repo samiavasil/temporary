@@ -8,13 +8,13 @@ QPluginList* QPluginList::m_This = NULL;
 QMap< QString, QPluginDescriptor*  > QPluginList::m_PluginList;
 QPluginList* QPluginList::Instance()
 {
-    qDebug() << "INPUT" << m_This;
+    DEBUG() << "INPUT" << m_This;
         if( NULL == m_This )
         {
             m_This = new QPluginList();
         }
 
-    qDebug() << "OUTPUT" << m_This;
+    DEBUG() << "OUTPUT" << m_This;
     return m_This;
 }
 
@@ -175,5 +175,5 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
 
 void TestCalback()
 {
-    qDebug("TEST CALLBACK\n");
+    DEBUG("TEST CALLBACK\n");
 }

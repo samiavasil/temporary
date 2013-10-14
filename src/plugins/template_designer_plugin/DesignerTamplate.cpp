@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include"DesignerTamplate.h"
 #include<QTimer>
 #include<QListWidget>
@@ -11,7 +12,7 @@ DesignerTamplate::DesignerTamplate(QWidget* parent):QWidget(parent){
 }
 DesignerTamplate::~DesignerTamplate()
 {
-    qDebug("DESTROY DesignerTamplate\n");
+    DEBUG("DESTROY DesignerTamplate\n");
     m_timer->stop();
     m_timer->deleteLater();
 }

@@ -10,7 +10,7 @@ CPacketCollector::CPacketCollector(CPortIO * port, CProtocolPackFactory * protoc
   m_Protocol = protocol;
   if( !(port && protocol) )
   {
-     qDebug("ERROR!!!!!!: Port or Protocol NULL pointer");
+     DEBUG("ERROR!!!!!!: Port or Protocol NULL pointer");
   }
   m_RecState    = COL_IDLE;
   m_TransState  = TBD;

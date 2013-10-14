@@ -90,7 +90,7 @@ protected:
 protected slots:
     void  showPopupMenu(const QPoint &pos );
     void  showLinesConfigurationDialog( );
-    void selectCurveActionSlot(  bool sel );
+    void selectCurveActionSlot( );
     void legendClicked(QwtPlotItem* item);
 private:
     Ui::QDataPlot *ui;

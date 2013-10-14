@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include "CurveConfigurationMenu.h"
 #include<QWidgetAction>
 
@@ -22,10 +23,10 @@ CurveConfigurationMenu::CurveConfigurationMenu(QWidget *parent) :
 void CurveConfigurationMenu::mousePressEvent ( QMouseEvent * event ){
     if( activeAction() != m_WidedAct  ){
           QMenu::mousePressEvent (  event );
-          qDebug( " activeAction() != m_WidedAct" );
+          DEBUG( " activeAction() != m_WidedAct" );
     }
     else{
-        qDebug( " activeAction() == m_WidedAct" );
+        DEBUG( " activeAction() == m_WidedAct" );
     }
 }
 
@@ -34,7 +35,7 @@ void CurveConfigurationMenu::setVisibleLine( bool visible ){
             m_curCurve->setVisible( visible );
         }
         else{
-            qDebug( "Errror!!Not defined curCurve" );
+            DEBUG( "Errror!!Not defined curCurve" );
         }
 }
 
@@ -43,7 +44,7 @@ void CurveConfigurationMenu::setCurent(){
        emit setAsCurrent( m_curCurve );
     }
     else{
-        qDebug( "Errror!!Not defined curCurve" );
+        DEBUG( "Errror!!Not defined curCurve" );
     }
 }
 
@@ -55,7 +56,7 @@ void CurveConfigurationMenu::setMenuCurve(){
         if( action->data().isValid()&&( !action->data().isNull() ) ){
             m_curCurve =  dynamic_cast<QwtPlotCurve*>( (QwtPlotCurve*)action->data().toULongLong() );
             if( m_curCurve && m_curve_conf ){
-                qDebug("1 %x",(qlonglong)m_curCurve);
+                DEBUG("1 %x",(qlonglong)m_curCurve);
                 m_curve_conf->removeCurves( );
                 m_curve_conf->addCurve( m_curCurve );
                 m_actVisible->setChecked( m_curCurve->isVisible() );

@@ -1,7 +1,8 @@
+#include "base/global.h"
 #include "qdbg.h"
 #include<QDebug>
 #include<QDynamicPropertyChangeEvent>
-
+QDbg* m_Debug;
 PropertyChangedFilter::PropertyChangedFilter(  QObject *parent ):QObject(parent)
 {
 
@@ -18,7 +19,7 @@ bool PropertyChangedFilter::eventFilter(QObject *obj, QEvent *event)
             bool x;
             event->accept();
             x = obj->property ( pChEv->propertyName().constData() ).toInt();
-            qDebug(" TestPropety Changed!!! - %s Value=%d", pChEv->propertyName().constData(),x );
+            DEBUG(" TestPropety Changed!!! - %s Value=%d", pChEv->propertyName().constData(),x );
             emit debug(x);
         }
         return true;
@@ -57,7 +58,7 @@ void QDbg::log(QString Bla)
 {
     if( m_Enable )
     {
-        qDebug() << tr("QDbg%1 [%2]: %3").arg((unsigned int)this).arg(m_Local).arg( Bla );
+        DEBUG() << tr("QDbg%1 [%2]: %3").arg((unsigned int)this).arg(m_Local).arg( Bla );
     }
 }
 

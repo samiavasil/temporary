@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include "QFraIoPortsView.h"
 #include "ui_QFraIoPortsView.h"
 #include "qt/QPortIO.h"
@@ -31,7 +32,7 @@ public:
     }
     ~gpWidget()
     {
-        qDebug()<<"destroy  gpWidget"<<endl;
+        DEBUG()<<"destroy  gpWidget"<<endl;
     }
 };
 

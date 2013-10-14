@@ -40,7 +40,7 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include "base/global.h"
 #include <QtGui>
 #include <iostream>
 
@@ -545,7 +545,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
                 else
                 {
-                    qDebug( "Error someting wrong......" );
+                    DEBUG( "Error someting wrong......" );
                     return;
                 }
 
@@ -676,7 +676,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
                 else
                 {
-                    qDebug( "Error someting wrong......" );
+                    DEBUG( "Error someting wrong......" );
                     return;
                 }
 
@@ -814,9 +814,7 @@ void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
 
 
 //! [14]
-void setArrow(const int i)
-{
-}
+
 
 bool DiagramScene::isItemChange(int type)
 {
@@ -921,7 +919,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
             }
             else
             {
-                qDebug("Someting Wrong here !!!\n");
+                DEBUG("Someting Wrong here !!!\n");
             }
         }
 
@@ -929,6 +927,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
     }
         break;
     }
+    return NULL;
 }
 
 void DiagramScene::setArrow(const int i)

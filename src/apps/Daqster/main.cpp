@@ -146,18 +146,18 @@ public:
         {
             if( m_TypeOrder >= other.m_TypeOrder )
             {
-                qDebug("Full compatible types");
+                DEBUG("Full compatible types");
                 ret = 0;
             }
             else
             {
-                qDebug("Truncated not full compatible types");
+                DEBUG("Truncated not full compatible types");
                 ret = 1;
             }
         }
         else
         {
-            qDebug("Not compatible types");
+            DEBUG("Not compatible types");
         }
         return ret;
     }

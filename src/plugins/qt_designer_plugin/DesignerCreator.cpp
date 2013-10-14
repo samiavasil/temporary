@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include "DesignerCreator.h"
 #include "DesignerFrameWork.h"
 
@@ -195,7 +196,7 @@ void DesignerCreator::save()
 
 void DesignerCreator::Free()
 {
-    qDebug("Frees");
+    DEBUG("Frees");
 }
 
 

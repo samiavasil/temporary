@@ -1,4 +1,4 @@
-#include<QDebug>
+#include "base/global.h"
 #include "QDataPlot.h"
 #include "ui_qdataplot.h"
 #include<QBoxLayout>
@@ -327,7 +327,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         for( int i=0; i < 100; i++ ){
             x[i] = i;
             y[i] = 400*sin(((6.28*i)/100) + phase );
-            //qDebug("sin(%d)=%f",i,z[i]);
+            //DEBUG("sin(%d)=%f",i,z[i]);
         }
         curve->setSamples( x,y,100 );
         ////////////DELL ME
@@ -374,7 +374,6 @@ int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> & data  ){
 }
 
 QVector<QPointF>* QDataPlot::getLineData( lineId_t id ){
-
 }
 
 /*TODO - generate next line color */
@@ -508,7 +507,7 @@ void QDataPlot::showPopupMenu( const QPoint &pos ){
     menu.addAction(action);
     action = new QAction("No current line selection",&menu);
     action->setData((qlonglong)NULL);
-    connect( action, SIGNAL(triggered(bool)), this, SLOT(selectCurveActionSlot(bool)),Qt::DirectConnection );
+    connect( action, SIGNAL(triggered()), this, SLOT(selectCurveActionSlot()),Qt::DirectConnection );
     if( NULL == m_CurCurve ){
         action->setCheckable(true);
         action->setChecked(true);
@@ -535,14 +534,14 @@ void QDataPlot::showPopupMenu( const QPoint &pos ){
 
         }
         else{
-            qDebug("Misterious NULL Pointer");
+            DEBUG("Misterious NULL Pointer");
         }
     }
     //connect( men, SIGNAL( aboutToShow() ), men, SLOT( setMenuCurve() ),Qt::QueuedConnection );
     menu.exec(pos);
 }
 
-void QDataPlot::selectCurveActionSlot( bool sel ){
+void QDataPlot::selectCurveActionSlot( ){
     QAction* action = dynamic_cast<QAction*>(sender());
     if( action ){
         QwtPlotCurve* curve =  (QwtPlotCurve*)( action->data().toULongLong() );
@@ -563,7 +562,7 @@ QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
             }
         }
         else{
-            qDebug("Misterious NULL Pointer");
+            DEBUG("Misterious NULL Pointer");
         }
     }
     return NULL;

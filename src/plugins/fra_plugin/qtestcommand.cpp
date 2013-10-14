@@ -34,7 +34,7 @@ int QtestCommand::handler() {
   int ret =  1;
   CPacket* packet = NULL;
   DEB1(  tr("Bliak[%1]").arg(a) );
-  if( a >= 1000 ){
+  if( a >= 1 ){
       ret =  0;
       //  DEBUG("QCommand Finished");
   }

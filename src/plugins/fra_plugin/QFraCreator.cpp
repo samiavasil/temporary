@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include "QFraCreator.h"
 #include "QFraFrameWork.h"
 #include "QFraIoPortsView.h"
@@ -47,29 +48,29 @@ bool QFraCreator::Create( CFrameWork *fW )
                     {
                        const QMetaObject* metaObject = obj->metaObject();
 
-                        qDebug()<<"DUMP METHODS:   "<<endl;
+                        DEBUG()<<"DUMP METHODS:   "<<endl;
                         for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
                         {
 DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
-                            qDebug()<<"   "<<QString::fromLatin1(metaObject->method(i).signature());
+                            DEBUG()<<"   "<<QString::fromLatin1(metaObject->method(i).signature());
                             if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
                             {
-                                qDebug() << ":  Method Not signal";
+                                DEBUG() << ":  Method Not signal";
                             }
                             else
                             {
-                                qDebug() << ":  Its a signal";
+                                DEBUG() << ":  Its a signal";
                                 if( metaObject->checkConnectArgs ( "testSlot()", metaObject->method(i).signature() ) )
                                 {
-                                     qDebug() << "==> Compatible with slot testSlot";
+                                     DEBUG() << "==> Compatible with slot testSlot";
                                 }
                                 else
                                 {
-                                    qDebug() << "==> Not Compatible with slot testSlot";
+                                    DEBUG() << "==> Not Compatible with slot testSlot";
                                 }
                             }
 
-                            qDebug()<<endl;
+                            DEBUG()<<endl;
                             //testSlot
                         }
                     }
