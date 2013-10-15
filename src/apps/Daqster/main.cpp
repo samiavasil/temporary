@@ -19,16 +19,16 @@ public:
     {
         switch (type) {
         case QtDebugMsg:
-            fprintf(stderr, "Debug: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             break;
         case QtWarningMsg:
-            fprintf(stderr, "Warning: %s\n", msg);
+         //TODO:   fprintf(stderr, "%s\n", msg);
             break;
         case QtCriticalMsg:
-            fprintf(stderr, "Critical: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             break;
         case QtFatalMsg:
-            fprintf(stderr, "Fatal: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             abort();
         }
     }
@@ -105,15 +105,7 @@ void testBits(){
 #endif
 
 
-
-
-
-
 #include<QLayout>
-
-
-
-
 
 class DataType{
 
@@ -146,18 +138,18 @@ public:
         {
             if( m_TypeOrder >= other.m_TypeOrder )
             {
-                qDebug("Full compatible types");
+                DEBUG << "Full compatible types";
                 ret = 0;
             }
             else
             {
-                qDebug("Truncated not full compatible types");
+                DEBUG << "Truncated not full compatible types";
                 ret = 1;
             }
         }
         else
         {
-            qDebug("Not compatible types");
+            DEBUG << "Not compatible types";
         }
         return ret;
     }
@@ -166,6 +158,7 @@ protected:
     Types     m_Type;
     TypeOrder m_TypeOrder;
 };
+
 
 
 DataType obj(DataType::Real,     DataType::I64);
@@ -178,6 +171,25 @@ int main(int argc, char *argv[])
     qInstallMsgHandler(m.myMessageOutput);
     QApplication a(argc, argv);
     MainWindow w;
+//QDesignerComponents c;
+
+
+
+//if( iface )
+//{
+//    QWidget* w = iface->topLevel();
+//    if(w)
+//    w->show();
+//}
+
+//    QDesignerFormEditorInterface formEditor;
+//    QDesignerObjectInspectorInterface *objectInspector = 0;
+//    objectInspector = formEditor.objectInspector();
+//formEditor.topLevel()->show();
+//    QDesignerFormWindowManagerInterface *manager = 0;
+// //   manager = formEditor.formWindowManager();
+
+    //objectInspector->setFormWindow(manager->formWindow(0));
 
     obj.compatible(obj);
     obj.compatible(obj1);

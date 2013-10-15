@@ -1,22 +1,25 @@
-
 #include "qt/QPacketCollector.h"
 #include "base/CPortIO.h"
 #include "base/CPacket.h"
 #include "base/CProtocolPackFactory.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
+
 QPacketCollector::QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent):QObject(parent),CPacketCollector( port,protocol ) {
-  DEBUG("Create QPacketCollector");
+  DEBUG << "Create QPacketCollector";
 }
 
 QPacketCollector::~QPacketCollector() {
-  DEBUG("Destroy QPacketCollector");
+  DEBUG << "Destroy QPacketCollector";
   while( m_PacketsList.count( ) ){
       delete m_PacketsList.takeFirst();
   }
 }
 
 int QPacketCollector::getRecPacket() {
-  DEBUG("TODO:Not implemented");
+  DEBUG << "TODO:Not implemented";
   return 0;
 }
 
@@ -32,7 +35,7 @@ int QPacketCollector::transmitPacket(CPacket * packet) {
 }
 
 int QPacketCollector::getRecPacketNum() {
-  DEBUG("TODO:Not implemented");
+  DEBUG << "TODO:Not implemented";
   return 0;
 }
 
@@ -55,7 +58,7 @@ int QPacketCollector::collectPacket(CPacket * packet) {
   int ret = NO_ERR;                                                                                          
   static int a;                                                                                              
   if( packet ){                                                                                              
-      DEBUG("Append Packet pointer: TODO free pointer after usage  PackId[%d] num %d",packet->packType(),a); 
+      DEBUG << "Append Packet pointer: TODO free pointer after usage  PackId["<< packet->packType()<< "] num " << a;
       if( 1 ){//packet ){
           const u8*data = packet->data();
           for( int i=0;i < packet->packLenBytes();i++ ){

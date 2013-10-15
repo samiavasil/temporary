@@ -1,15 +1,15 @@
-
 #include "qt/QSerialPortIO.h"
 #include <QDialog>
-
 #include <qtserial/qextserialenumerator.h>
-
 #include <QObject>
-
 #include <QWidget>
-
-
 #include "ui_serial_port.h"
+
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
+
 #define GET_NAME(x) #x
 #define EXPAND_TO_NAME_AND_ENUM(x) { GET_NAME(x),x }
 
@@ -130,13 +130,13 @@ queryMode_t queryModeArrea[]=
 };
 
 QSerialPortIO::QSerialPortIO(QObject * parent, const QextSerialPort::QueryMode & mode) :QPortIO(parent),m_Serial( mode ),ui(new Ui::SerialPortConfig){
-  DEBUG("Create QSerialPortIO");
+  DEBUG << "Create QSerialPortIO";
   m_PortType = SERIALPORT_IO;
   connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );
 }
 
 QSerialPortIO::~QSerialPortIO() {
-  DEBUG("Destroy QPortIO");
+  DEBUG << "Destroy QPortIO";
 }
 
 void QSerialPortIO::showPortConfiguration(QWidget * parent) {
@@ -156,12 +156,12 @@ void QSerialPortIO::initUi() {
   int i;
   QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
   foreach (QextPortInfo info, ports) {
-      qDebug() << "port name:"       << info.portName;
-      qDebug() << "friendly name:"   << info.friendName;
-      qDebug() << "physical name:"   << info.physName;
-      qDebug() << "enumerator name:" << info.enumName;
-      qDebug() << "vendor ID:"       << info.vendorID;
-      qDebug() << "product ID:"      << info.productID;
+      DEBUG << "port name:"       << info.portName;
+      DEBUG << "friendly name:"   << info.friendName;
+      DEBUG << "physical name:"   << info.physName;
+      DEBUG << "enumerator name:" << info.enumName;
+      DEBUG << "vendor ID:"       << info.vendorID;
+      DEBUG << "product ID:"      << info.productID;
       ui->portCombo->addItem( info.physName );
       //ui->queryModeCombo->setItemData();
   }
@@ -214,7 +214,7 @@ void QSerialPortIO::setPortName(const QString & portName) {
 
 void QSerialPortIO::setQueryMode(int act) {
   QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
-  qDebug()<<mode;
+  DEBUG <<mode;
   m_Serial.setQueryMode( mode );
 }
 

@@ -46,7 +46,7 @@ protected:
     void updateNextColor();
 
 public slots:
-
+int setCurrentCurve( QwtPlotCurve *curve );
 private slots:
 
     void on_actionGrid_X_on_triggered(bool checked);
@@ -66,7 +66,7 @@ private slots:
 
 protected:
 
-int setCurrentCurve( QwtPlotCurve *curve );
+
     QwtPlotCurve* currentCurve();
     void enableSnapPickerToCurve( bool enble );
     bool isEnabledSnapPickerToCurve( );
@@ -90,7 +90,7 @@ protected:
 protected slots:
     void  showPopupMenu(const QPoint &pos );
     void  showLinesConfigurationDialog( );
-    void selectCurveActionSlot(  bool sel );
+    void selectCurveActionSlot( );
     void legendClicked(QwtPlotItem* item);
 private:
     Ui::QDataPlot *ui;

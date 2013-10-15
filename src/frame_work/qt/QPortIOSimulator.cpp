@@ -1,12 +1,13 @@
-
 #include "qt/QPortIOSimulator.h"
 #include <QTimer>
-
 #include <QObject>
+#include <QWidget>
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
-  DEBUG("Create QPortIOSimulator");   
+  DEBUG << "Create QPortIOSimulator";
   m_PortType = SIMULATOR_IO;          
   qsrand ( qrand() );                 
   m_ReadCounter  = 0;                 
@@ -15,6 +16,11 @@ QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
 }
 
 QPortIOSimulator::~QPortIOSimulator() {
+}
+
+void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
+    QWidget* widget = new QWidget(parent);
+    widget->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 int64 QPortIOSimulator::bytesAvailable() {

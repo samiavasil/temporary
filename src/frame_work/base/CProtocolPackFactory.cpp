@@ -3,6 +3,9 @@
 #include "base/CProtocolLoader.h"
 #include "base/CPacket.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
   pLoader = pLoader;
   m_hDrLenBits       = 0;    
@@ -38,13 +41,14 @@ CPacket* CProtocolPackFactory::createPacket(const pack_id_t packId) {
                 const u8 *data;                                                                                     
                 for( int i=0; i < num; i++ ){                                                                       
                     if( NO_ERR != getMessage( msgArr[i], &data ) ){
-                        CRITICAL( "Wrong Message Id[%d] for Packet Id[%d]",msgArr[i] , packId );
+                        CRITICAL << "Wrong Message Id[" << msgArr[i] << "] for Packet Id[" << packId << "]";
                         delete packet;
                         packet = NULL;
                         break;
                     }
                     if( NO_ERR != setPacketMessage( packet,msgArr[i], data ) ){
-                        CRITICAL( "Can't set Message with Id[%d] for Packet with Id[%d]",msgArr[i] , packId );
+                        CRITICAL << "Can't set Message with Id[" << msgArr[i]
+                                 << "] for Packet with Id[" << packId << "]";
                         delete packet;
                         packet = NULL;
                         break;
@@ -65,14 +69,14 @@ CPacket* CProtocolPackFactory::createPacketFromData(const u8 * data) {
   
     packet = new CPacket( getPacketTypeFromData(data), getPacketLenFromData(data) );
     if( NO_ERR != packet->setData( data ) ){
-        CRITICAL( "Can't create packet from data"  );
+        CRITICAL <<  "Can't create packet from data";
         delete packet;
         packet = NULL;
     }
     if( NO_ERR != checkPacketConsistency( packet ) ){
         delete packet;
         packet = NULL;
-        CRITICAL( "Can't create packet: Data inconsistent."  );                              
+        CRITICAL <<  "Can't create packet: Data inconsistent.";
     }                                                                                        
     return packet;                      
 }
@@ -91,11 +95,11 @@ int CProtocolPackFactory::setPacketMessage(CPacket * packet, msg_id_t msgId, con
             ret = packet->setBits( offset, msgLen, data );                      
         }
         else{
-            CRITICAL("Can't set Message bits in packet for msgID[%d]",msgId);
+            CRITICAL << "Can't set Message bits in packet for msgID["<< msgId << "]";
         }
     }
     else{
-        CRITICAL("Can't get Message offset in packet for msgID[%d]",msgId);
+        CRITICAL << "Can't get Message offset in packet for msgID[" << msgId << "]";
     }
     return ret;
 }
@@ -143,7 +147,7 @@ int CProtocolPackFactory::getPacketPostFix(CPacket * packet, u8 * retPostFix) {
      ret = packet->getBits( offset, getProtocolPostFixLenBits(), retPostFix ); 
   }                                                                            
   else{                                                                        
-     CRITICAL("Not correct packet semantic");                                  
+     CRITICAL << "Not correct packet semantic";
      ret = WRONG_DATA;                                                         
   }                                                                            
   return ret;                                                                  

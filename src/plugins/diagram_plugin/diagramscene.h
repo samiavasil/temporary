@@ -47,6 +47,8 @@
 #include <QGraphicsScene>
 #include "diagramitem.h"
 #include "diagramdrawitem.h"
+#include "vdiagramitem.h"
+#include "vdiagramdrawitem.h"
 #include "diagramtextitem.h"
 #include "diagrampathitem.h"
 
@@ -59,6 +61,7 @@ class QFont;
 class QGraphicsTextItem;
 class QColor;
 class QFile;
+class QXmlStreamWriter;
 QT_END_NAMESPACE
 
 //! [0]
@@ -67,7 +70,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems};
+    enum Mode { InsertItem,InsertVItem, InsertLine, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem,InsertVDrawItem, Zoom , MoveItems};
 
     DiagramScene(QMenu *itemMenu, QObject *parent = 0);
     QFont font() const
@@ -78,6 +81,10 @@ public:
         { return myItemColor; }
     QColor lineColor() const
         { return myLineColor; }
+    qreal grid()
+    {
+        return myGrid;
+    }
     void setLineColor(const QColor &color);
     void setTextColor(const QColor &color);
     void setItemColor(const QColor &color);
@@ -109,6 +116,8 @@ public slots:
     void abort(bool keepSelection=false);
     void setItemType(DiagramItem::DiagramType type);
     void setItemType(DiagramDrawItem::DiagramType type);
+    void setItemType(VDiagramItem::VDiagramType type);
+    void setItemType(VDiagramDrawItem::VDiagramType type);
     void editorLostFocus(DiagramTextItem *item);
     void editorReceivedFocus(DiagramTextItem *item);
     void checkOnGrid();
@@ -116,6 +125,7 @@ public slots:
 
 signals:
     void itemInserted(DiagramItem *item);
+    void itemVInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void itemSelected(QGraphicsItem *item);
     void editorHasLostFocus();
@@ -133,13 +143,15 @@ protected:
     QGraphicsItem* copy(QGraphicsItem* item);
     void drawBackground(QPainter *p, const QRectF &r);
     void enableAllItems(bool enable=true);
-
+    void writeItem( QXmlStreamWriter* xmlWriter , QGraphicsItem* item );
 
 private:
     bool isItemChange(int type);
 
     DiagramItem::DiagramType myItemType;
     DiagramDrawItem::DiagramType myDrawItemType;
+    VDiagramItem::VDiagramType myVItemType;
+    VDiagramDrawItem::VDiagramType myVDrawItemType;
     QMenu *myItemMenu;
     Mode myMode;
     bool leftButtonDown;
@@ -150,8 +162,11 @@ private:
     QColor myTextColor;
     QColor myItemColor;
     QColor myLineColor;
+    QGraphicsItem *readBaseItem;
     DiagramItem *insertedItem;
     DiagramDrawItem *insertedDrawItem;
+    VDiagramItem *insertedVItem;
+    VDiagramDrawItem *insertedVDrawItem;
     DiagramPathItem *insertedPathItem;
     QList<QGraphicsItem *> *copiedItems;
     qreal myDx,myDy;

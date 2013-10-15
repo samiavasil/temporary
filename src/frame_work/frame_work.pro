@@ -55,7 +55,9 @@ SOURCES += \
     qt/QPortIO.cpp \
     base/CCreator.cpp \
     qt/QCreator.cpp \
-    qt/PluginDescription.cpp
+    qt/PluginDescription.cpp \
+    qt/qdbg.cpp \
+    qt/QloggerInterface.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -88,7 +90,10 @@ HEADERS +=\
     qt/QPortIO.h \
     base/CCreator.h \
     qt/QCreator.h \
-    qt/PluginDescription.h
+    qt/PluginDescription.h \
+    qt/qdbg.h \
+    qt/QloggerInterface.h \
+    base/debug.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

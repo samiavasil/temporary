@@ -2,13 +2,16 @@
 #include "qt/QCommandExecutor.h"
 #include "base/CCommand.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QCommandExecutor::QCommandExecutor(QObject * parent) :QThread(parent){
   m_timer = NULL;
 }
 
 QCommandExecutor::~QCommandExecutor() {
   int ret = NO_ERR;                                              
-  DEBUG( "Destroy Command Executor" );                           
+  DEBUG << "Destroy Command Executor";
   ret = startExecution( false );                                 
   if( NO_ERR == ret){                                            
       if( false == wait( 1000 ) ){                               
@@ -16,7 +19,7 @@ QCommandExecutor::~QCommandExecutor() {
       }                                                          
   }                                                              
   if( NO_ERR != ret ){                                           
-     DEBUG(" Can't terminate Command Executor thread corectly"); 
+     DEBUG << " Can't terminate Command Executor thread corectly";
   }                                                              
   if( m_timer ){
       m_timer->deleteLater();
@@ -78,11 +81,11 @@ int QCommandExecutor::pauseExecution(bool pause) {
   if( true == isRunning() ){                         
       if( m_timer ){                                 
           if( true == pause ){
-              DEBUG("Pause Commands Execution loop");
+              DEBUG << "Pause Commands Execution loop";
               emit stopTimer();
           }                                          
           else{
-              DEBUG("Run Command Execution loop");
+              DEBUG << "Run Command Execution loop";
               emit runTimer(m_CommandLoopTime);
           }                                          
       }                                              
@@ -116,15 +119,15 @@ int QCommandExecutor::startExecution(bool starting) {
 void QCommandExecutor::finish() {
   
       startExecution( false );
-      DEBUG("FINISH!!!! QCommandExecutor\n");
+      DEBUG << "FINISH!!!! QCommandExecutor";
       if( false == wait( 10000 ) ){
-         DEBUG("FINISH!!!! Not Finished QCommandExecutor\n");
+         DEBUG << "FINISH!!!! Not Finished QCommandExecutor";
       }
       else
       {
-          DEBUG("FINISH!!!! FINISHED QCommandExecutor\n");
+          DEBUG << "FINISH!!!! FINISHED QCommandExecutor";
       }
-    //  sleep(1);
+
 }
 
 int QCommandExecutor::executeCommand(int comm_num) {
@@ -146,19 +149,19 @@ void QCommandExecutor::unlockObject() {
 
 void QCommandExecutor::startTimer() {
   if( 0 == m_timer ){                         
-       DEBUG("Timer isn't initialised");
+       DEBUG << "Timer isn't initialised";
   } 
   emit runTimer(m_CommandLoopTime);                                        
 }
 
 void QCommandExecutor::run() {
     int retCode = NO_ERR;
-    DEBUG("Run Command Executor thread");
+    DEBUG << "Run Command Executor thread";
     lockObject();                                               
     retCode = initTimer();
     unlockObject();                                             
     retCode = exec();                                           
-    DEBUG("Exit Command Executor Thread with code: %d",retCode);
+    DEBUG << "Exit Command Executor Thread with code: %d",retCode;
 }
 
 int QCommandExecutor::initTimer() {

@@ -3,10 +3,13 @@
 #include "qt/QProtocolLoader.h"
 #include "base/CPacket.h"
 
-QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent):QObject(parent),CProtocolPackFactory(pLoader) {
-      DEBUG("Create QProtocolPackFactory");
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
+QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * parent):CProtocolPackFactory(pLoader),QObject(parent) {
+      DEBUG << "Create QProtocolPackFactory";
       if(  attachProtocolLoader(pLoader) ) {
-          DEBUG("!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()");
+          DEBUG << "!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()";
       }
       //4231 4 7 11 6
       u8 data[2];
@@ -24,14 +27,14 @@ QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * 
       setMessage(MSG1_ID,data);
   
 #ifdef DUMP_PROTOCOL_LOAD
-      DEBUG("DUMP protocol loaded packet types");
+      DEBUG << "DUMP protocol loaded packet types");
       QMapIterator< pack_id_t, QList<msg_id_t> > i(m_packMap);
       while (i.hasNext()) {
           i.next();
-          DEBUG( "PACKET ID[%d] MESSAGES:",i.key() );
+          DEBUG <<  "PACKET ID[%d] MESSAGES:",i.key() );
           QList<msg_id_t> m_Id = i.value();
           for(int j=0;j < m_Id.size() ;j++){
-              DEBUG( "       MSG ID[%d] size=%d,",m_Id.value(j), m_msgMap.value(m_Id.value(j)).bitLen );
+              DEBUG <<  "       MSG ID[%d] size=%d,",m_Id.value(j), m_msgMap.value(m_Id.value(j)).bitLen );
               /*for(int i=0;i < BITS_TO_BYTES_CEIL(m_msgMap.value(m_Id.value(j)).bitLen);i++){
                     fprintf(stderr," %02x",m_msgMap.value(m_Id.value(j)).data[i]);
                 }
@@ -62,7 +65,7 @@ int QProtocolPackFactory::addPacket(const pack_id_t id) {
           m_packMap.insert( id,QList< msg_id_t>() );
       }
       else{
-          DEBUG("Packet Id[%d] already exist.",id);
+          DEBUG << "Packet Id["<< id <<"] already exist.";
           ret = WRONG_PARAMS;
       }
       return ret;
@@ -79,7 +82,7 @@ int QProtocolPackFactory::addMessage(const msg_id_t id, int len) {
           m_msgMap.insert( id, descMsg );
       }
       else{
-          DEBUG("Message Id[%d] already exist.",id);
+          DEBUG << "Message Id["<< id << "] already exist.";
           ret = WRONG_PARAMS;
       }
       return ret;
@@ -92,12 +95,12 @@ int QProtocolPackFactory::addMessageToPacket(const pack_id_t packID, const msg_i
               m_packMap[packID].append( msgID );
           }
           else{
-              DEBUG( "Message [%d] was already added to Packet Id[%d]",msgID, packID );
+              DEBUG <<  "Message ["<< msgID << "] was already added to Packet Id[" << packID << "]";
               ret = WRONG_PARAMS;
           }
       }
       else{
-          DEBUG( "Packet Id[%d] not defined",packID );
+          DEBUG <<  "Packet Id[" << packID << "] not defined";
           ret = WRONG_PARAMS;
       }
       return ret;
@@ -132,13 +135,13 @@ int QProtocolPackFactory::getMessageBitLen(msg_id_t msgId, int * msgLen) {
               *msgLen = m_msgMap[ msgId ].bitLen;
           }
           else{
-              DEBUG("Message Id[%d] already exist.",msgId);
+              DEBUG << "Message Id[" << msgId << "] already exist.";
               *msgLen = 0;
               ret     = WRONG_PARAMS;
           }
       }
       else{
-          DEBUG("Invalid Message Id[%d]",msgId);
+          DEBUG << "Invalid Message Id[" << msgId << "]";
           ret = WRONG_PARAMS;
       }
       return ret;
@@ -159,12 +162,16 @@ int QProtocolPackFactory::getMessageBitOffsetInPack(pack_id_t packId, msg_id_t m
                           }
                           else{
                               if( 0 == m_msgMap[ m_packMap.value(packId,QList<msg_id_t>())[i] ].bitLen ){
-                                  DEBUG("Someting Wrong!!!: Size equal to 0 for MessageId[%d] in PacketId[%d]",m_packMap.value(packId,QList<msg_id_t>())[i] ,packId);
+                                  DEBUG << "Someting Wrong!!!: Size equal to 0 for MessageId["
+                                        <<  m_packMap.value(packId,QList<msg_id_t>())[i]
+                                        << "] in PacketId["<<packId << "]";
                               }
                               else{
                                   msgPos = -1;
-                                  DEBUG("Can't'find MessageId[%d] offset for packet Id[%d]: maybe packet max size is reached ==> Last MessageId[%d] size=%d",
-                                        msgId, packId, m_packMap.value(packId,QList<msg_id_t>())[i], m_msgMap[ m_packMap.value(packId,QList<msg_id_t>())[i] ].bitLen );
+                                  DEBUG << "Can't'find MessageId[" << msgId << "]offset for packet Id[" << packId
+                                        << "]: maybe packet max size is reached ==> Last MessageId["
+                                        << m_packMap.value(packId,QList<msg_id_t>())[i]
+                                        << "] size=" << m_msgMap[ m_packMap.value(packId,QList<msg_id_t>())[i] ].bitLen;
                                   ret = SOME_ERROR;
                                   break;
                               }
@@ -172,7 +179,8 @@ int QProtocolPackFactory::getMessageBitOffsetInPack(pack_id_t packId, msg_id_t m
                       }
                       else{
                           msgPos = -1;
-                          DEBUG("Wrong Message Id[%d] for packetId[%d].",m_packMap.value(packId,QList<msg_id_t>())[i],packId );
+                          DEBUG << "Wrong Message Id[" << m_packMap.value(packId,QList<msg_id_t>())[i]
+                                << "] for packetId[" << packId << "].";
                           ret = SOME_ERROR;
                           break;
                       }
@@ -180,12 +188,12 @@ int QProtocolPackFactory::getMessageBitOffsetInPack(pack_id_t packId, msg_id_t m
               }
               else{
                   msgPos = -1;
-                  CRITICAL("Mising Packet ID[%d] in message map",packId);
+                  CRITICAL << "Mising Packet ID[ " << packId << "] in message map";
                   ret = SOME_ERROR;
               }
           }
           else{
-              DEBUG("Message Id[%d] doesn't' exist in packetId[%d]",msgId,packId);
+              DEBUG << "Message Id[" << msgId << "] doesn't' exist in packetId[" << packId << "]";
               msgPos  = -1;
               ret     = WRONG_PARAMS;
           }
@@ -194,7 +202,7 @@ int QProtocolPackFactory::getMessageBitOffsetInPack(pack_id_t packId, msg_id_t m
           }
       }
       else{
-          DEBUG("Invalid Input parameters");
+          DEBUG << "Invalid Input parameters";
           ret = WRONG_PARAMS;
       }
       return ret;
@@ -207,7 +215,7 @@ int QProtocolPackFactory::getPacketMessagesId(const pack_id_t packId, msg_id_t *
           if( !packMsgs.isEmpty() ){
               if( num > packMsgs.count() ){
                   num = packMsgs.count();
-                  DEBUG("!!!Return only first %d messages from packet[%d]", num, packId);
+                  DEBUG << "!!!Return only first " <<  num << " messages from packet[" << packId << "]";
               }
               for( int i=0;i < num;i++ ){
                   msgArr[i] = packMsgs.value(i,MSG_ID_INVALID);
@@ -254,19 +262,19 @@ int QProtocolPackFactory::packetPayloadBitLen(const pack_id_t packId, int * payl
           }
           else{
               *payloadLenBits = 0;
-              DEBUG("Wrong Message Id[%d] for packetId[%d].",msgId, packId );
+              DEBUG << "Wrong Message Id[" << msgId <<"] for packetId[" << packId << "]";
               ret = SOME_ERROR;
               break;
           }
       }
       if( *payloadLenBits > m_maxPacketSize){
-          DEBUG("!!!! Packet Size > maxPacketSize for packetId[%d].", packId );
+          DEBUG << "!!!! Packet Size > maxPacketSize for packetId[" << packId << "].";
           *payloadLenBits = 0;
           ret = SOME_ERROR;
       }
   }
   else{
-      DEBUG("Invalid Input parameters");
+      DEBUG << "Invalid Input parameters";
       ret = WRONG_PARAMS;
   }
   return ret;
@@ -344,7 +352,8 @@ int QProtocolPackFactory::calCulateCrc8(const u8 * data, int numBits) {
   if( bitsNum ){
       crc |=  (data[i]&((1<<bitsNum)-1));
   }
-  DEBUG("CRC=%02x",crc);
+  // ios:hex( crc );
+  DEBUG << "CRC=" << std::hex << crc;
   return crc;
 }
 

@@ -1,15 +1,18 @@
 #include "QSerialPortWorkInterface.h"
 #include "qt/QSerialPortIO.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QSerialPortWorkInterface::QSerialPortWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("QSerialPortWorkInterface object create");
+    DEBUG << "QSerialPortWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 QSerialPortWorkInterface::~QSerialPortWorkInterface(  )
 {
-    DEBUG("QSerialPortWorkInterface object delete");
+    DEBUG << "QSerialPortWorkInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should

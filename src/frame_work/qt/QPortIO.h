@@ -12,6 +12,7 @@ Q_OBJECT
 
   public:
     explicit QPortIO(QObject * parent);
+    virtual void showPortConfiguration(QWidget * parent) = 0;
 
 signals:
     void readyReadBytesSignal();

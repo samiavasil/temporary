@@ -19,9 +19,7 @@ Q_OBJECT
 
     virtual ~QFrameWork();
 
-    bool Create();
-
-    QList<QObject*> CreateObjectFromType(QObject * parent);
+//    bool Create();
 
     virtual void AddWidgetToControlArrea ( QWidget* widget ) = 0;
     virtual void AddWidgetToDataViewArrea( QWidget* widget ) = 0;

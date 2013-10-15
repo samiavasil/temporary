@@ -20,9 +20,14 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui
+CONFIG      += designer
 
-LIBS += -L../../../bin/libs  -lframe_work
-CCFLAG += -E
+LIBS += -L../../../bin/libs  -lframe_work -lQtDesignerComponents -lQtDesigner
+
+
+
 RESOURCES += \
     icons.qrc
+
+FORMS += \
+    mainwindow.ui

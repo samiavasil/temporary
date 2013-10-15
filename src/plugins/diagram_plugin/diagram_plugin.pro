@@ -3,6 +3,8 @@
 # Project created by QtCreator 2012-06-21T13:34:25
 #
 #-------------------------------------------------
+ENABLE_DIAGRAM=
+
 include(../../include/paths_cfg.pri)
 DESTDIR      = $${PLUGINS_DEST_DIR}
 QT          += core gui
@@ -25,24 +27,31 @@ DEFINES     += BUILD_AVAILABLE_PLUGIN
 LIBS        += -lframe_work -lqwt
 TARGET   = QDiagramPlugin
 
+
+#contains( ENABLE_DIAGRAM, 1 ){
 SOURCES += \
     QDiagramPluginInterface.cpp \
-    diagramdrawitem.cpp \
     diagramtextitem.cpp \
     diagramscene.cpp \
     diagrampathitem.cpp \
+    DiagMainWindow.cpp \
+    vdiagramitem.cpp \
+    vdiagramdrawitem.cpp \
     diagramitem.cpp \
-    DiagMainWindow.cpp
+    diagramdrawitem.cpp
 
 HEADERS += \
     QDiagramPluginInterface.h \
     diagramtextitem.h \
     diagramscene.h \
     diagrampathitem.h \
-    diagramitem.h \
+    DiagMainWindow.h \
+    vdiagramitem.h \
+    vdiagramdrawitem.h \
+    items_type_names.h \
     diagramdrawitem.h \
-    DiagMainWindow.h
-
+    diagramitem.h
+#}
 
 #LIBS += -L../../  -lfra
 
@@ -50,5 +59,6 @@ FORMS +=
 
 RESOURCES += \
     qdiagram.qrc
+
 
 

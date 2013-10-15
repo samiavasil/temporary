@@ -43,6 +43,7 @@ PluginDescription & PluginDescription::operator=(const PluginDescription &b){
      m_Description = b.m_Description;
      m_Icon        = b.m_Icon       ;
 
+     return *this;
  }
 
 bool  PluginDescription::operator==(const PluginDescription &b){

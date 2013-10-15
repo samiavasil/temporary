@@ -172,7 +172,7 @@
            <enum>QTabWidget::North</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="ControlTab">
            <attribute name="icon">
@@ -534,8 +534,7 @@
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
-                  <widget class="QListWidget" name="listWidget"/>
-                  <widget class="QWidget" name="">
+                  <widget class="QWidget" name="layoutWidget">
                    <layout class="QVBoxLayout" name="PortIoConfig">
                     <property name="spacing">
                      <number>6</number>

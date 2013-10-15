@@ -96,10 +96,10 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 //! [0]
-DiagramItem::DiagramItem(const DiagramItem& diagram)
+DiagramItem::DiagramItem(const DiagramItem& diagram):
+    QGraphicsPolygonItem(diagram.parentItem(),diagram.scene())
 {
-	QGraphicsPolygonItem(diagram.parentItem(),diagram.scene());
-	//QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
+    //QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
 	// copy from general GraphcsItem
 	setBrush(diagram.brush());
 	setPen(diagram.pen());

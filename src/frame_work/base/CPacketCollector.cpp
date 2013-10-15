@@ -1,16 +1,18 @@
-
 #include "base/CPacketCollector.h"
 #include "base/CPacket.h"
 #include "base/CProtocolPackFactory.h"
 #include "base/CPortIO.h"
 
-#include<stdio.h>//TODO DELL ME
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 CPacketCollector::CPacketCollector(CPortIO * port, CProtocolPackFactory * protocol) {
   m_PortIo   = port;
   m_Protocol = protocol;
   if( !(port && protocol) )
   {
-     qDebug("ERROR!!!!!!: Port or Protocol NULL pointer");
+     DEBUG << "ERROR!!!!!!: Port or Protocol NULL pointer";
   }
   m_RecState    = COL_IDLE;
   m_TransState  = TBD;

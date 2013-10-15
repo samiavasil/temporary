@@ -1,15 +1,18 @@
 #include "QDiagramPluginInterface.h"
 #include "DiagMainWindow.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QDiagramPluginInterface::QDiagramPluginInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("QDiagramPluginInterface object create");
+    DEBUG << "QDiagramPluginInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 QDiagramPluginInterface::~QDiagramPluginInterface(  )
 {
-    DEBUG("QDiagramPluginInterface object delete");
+    DEBUG << "QDiagramPluginInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should

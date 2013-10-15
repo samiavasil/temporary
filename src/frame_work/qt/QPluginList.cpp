@@ -8,13 +8,13 @@ QPluginList* QPluginList::m_This = NULL;
 QMap< QString, QPluginDescriptor*  > QPluginList::m_PluginList;
 QPluginList* QPluginList::Instance()
 {
-    qDebug() << "INPUT" << m_This;
+    DEBUG  << "INPUT" << m_This;
         if( NULL == m_This )
         {
             m_This = new QPluginList();
         }
 
-    qDebug() << "OUTPUT" << m_This;
+    DEBUG  << "OUTPUT" << m_This;
     return m_This;
 }
 
@@ -75,7 +75,7 @@ void QPluginList::populatePluginList(){
         plugin_list.next();
         QPluginDescriptor* desc = plugin_list.value();
         if( desc ){
-            DEBUG() <<  desc;
+            DEBUG  <<  desc;
             ui->availablePlugins->insertRow( i );
             QTableWidgetItem *item = new QTableWidgetItem( desc->getDescription().name() );
             if( !desc->getDescription().icon().isNull() ){
@@ -117,7 +117,7 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
 }
 
 void QPluginList::reloadPlugins( ){
-    DEBUG("Reload List");
+    DEBUG << "Reload List";
     ui->availablePlugins->blockSignals(true);
     readPluginsDir();
     ui->availablePlugins->blockSignals(false);
@@ -173,4 +173,7 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
     return object;
 }
 
-
+void TestCalback()
+{
+    DEBUG << "TEST CALLBACK";
+}

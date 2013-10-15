@@ -1,7 +1,6 @@
 #include "QwtPlotExt.h"
 #include<QMessageBox>
 
-
 QwtPlotExt::QwtPlotExt( QWidget * parent ):QwtPlot( parent ){
 
 }

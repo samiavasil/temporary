@@ -4,12 +4,14 @@
 #include"qt/QCreator.h"
 //#include "qt/QFrameWork.h"
 class CFrameWork;
+class QwtPlotItem;
+
 class PLUGIN_EXPORT QFraCreator :  public QCreator
 {
     Q_OBJECT
 public:
     explicit QFraCreator( QObject * parent = NULL );
-    ~QFraCreator( );
+    virtual ~QFraCreator( );
     virtual bool Create(CFrameWork *fW);
 public slots:
     virtual void Free();

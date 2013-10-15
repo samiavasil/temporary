@@ -49,6 +49,10 @@
 
 #include "diagramitem.h"
 #include "diagramdrawitem.h"
+
+#include "vdiagramitem.h"
+#include "vdiagramdrawitem.h"
+
 #include "diagrampathitem.h"
 
 class DiagramScene;
@@ -94,6 +98,7 @@ private slots:
     void groupItems();
     void ungroupItems();
     void itemInserted(DiagramItem *item);
+    void itemVInserted(VDiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
     void currentFontChanged(const QFont &font);
     void fontSizeChanged(const QString &size);
@@ -133,7 +138,11 @@ private:
     QWidget *createCellWidget(const QString &text,
                               DiagramItem::DiagramType type);
     QWidget *createCellWidget(const QString &text,
+                              VDiagramItem::VDiagramType type);
+    QWidget *createCellWidget(const QString &text,
                           DiagramDrawItem::DiagramType type);
+    QWidget *createCellWidget(const QString &text,
+                          VDiagramDrawItem::VDiagramType type);
     QMenu *createColorMenu(const char *slot, QColor defaultColor);
     QIcon createColorToolButtonIcon(const QString &image, QColor color);
     QIcon createColorIcon(QColor color);

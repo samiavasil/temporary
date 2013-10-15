@@ -1,15 +1,18 @@
 #include "QwtPlotWorkInterface.h"
 #include<qwt/qwt_plot.h>
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QwtPlotWorkInterface::QwtPlotWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("QwtPlotWorkInterface object create");
+    DEBUG << "QwtPlotWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 QwtPlotWorkInterface::~QwtPlotWorkInterface(  )
 {
-    DEBUG("QwtPlotWorkInterface object delete");
+    DEBUG << "QwtPlotWorkInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should
@@ -31,4 +34,4 @@ QObject*  QwtPlotWorkInterface::allocateObject( QObject* parent ){
                                                     widget-a pri closeEvent*/
     return obj;
 }
-Q_EXPORT_PLUGIN2(pnp_qwtplotplugin, QwtPlotWorkInterface)
+Q_EXPORT_PLUGIN2(QwtPlotPlugin, QwtPlotWorkInterface)

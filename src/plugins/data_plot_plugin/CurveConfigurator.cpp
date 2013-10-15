@@ -1,3 +1,4 @@
+#include "base/global.h"
 #include "CurveConfigurator.h"
 #include "ui_CurveConfigurator.h"
 #include "qwt/qwt_symbol.h"
@@ -5,6 +6,9 @@
 #include <QColorDialog>
 #include<QScrollBar>
 #include<QComboBox>
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 enum{
     LINE_NAME_COL ,
@@ -154,13 +158,13 @@ void CurveConfigurator::updateConfigurator()
 
                 // item = new QTableWidgetItem();
                 comboLineStyle = new  QComboBox(ui->curvesTable);
-                for( int j=0; j < ( sizeof(curve_styles_names)/sizeof(curve_styles_names[0]) ); j++ ){
+                for( int j=0; j < ((int)( sizeof(curve_styles_names)/sizeof(curve_styles_names[0])) ); j++ ){
                     comboLineStyle->addItem( curve_styles_names[j].name );
                 }
                 ui->curvesTable->setCellWidget( i,LINE_STYLE_COL,comboLineStyle);
 
                 comboSymbolStyle = new  QComboBox( ui->curvesTable );
-                for( int j=0; j < ( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0]) ); j++ ){
+                for( int j=0; j < ((int)( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0])) ); j++ ){
                     comboSymbolStyle->addItem( curve_symbol_styles[j].name );
                 }
                 ui->curvesTable->setCellWidget( i,SYMBOL_STYLE_COL,comboSymbolStyle);
@@ -172,7 +176,7 @@ void CurveConfigurator::updateConfigurator()
 
             }
             else{
-                qDebug("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                DEBUG << __FUNCTION__ << "Line[" << __LINE__ << "]Someting Wropng Here";
                 return;
             }
 
@@ -181,7 +185,7 @@ void CurveConfigurator::updateConfigurator()
             comboLineStyle   = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,LINE_STYLE_COL ))  ;
             comboSymbolStyle = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL ));
             if( (!comboLineStyle)||(!comboSymbolStyle) ){
-                qDebug("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                DEBUG << __FUNCTION__ << " Line[" << __LINE__ << "]Someting Wropng Here";
                 return;
             }
         }
@@ -194,7 +198,7 @@ void CurveConfigurator::updateConfigurator()
                 item->setBackgroundColor( curve->pen().color() );
             }
 
-            for( int j=0; j < ( sizeof(curve_styles_names)/sizeof(curve_styles_names[0]) ); j++ ){
+            for( int j=0; j < ((int)( sizeof(curve_styles_names)/sizeof(curve_styles_names[0])) ); j++ ){
                 if( curve_styles_names[j].style == curve->style() ){
                     comboLineStyle->blockSignals(true);
                     comboLineStyle->setCurrentIndex(j);
@@ -202,7 +206,7 @@ void CurveConfigurator::updateConfigurator()
                 }
             }
 
-            for( int j=0; j < ( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0]) ); j++ ){
+            for( int j=0; j < ((int)( sizeof(curve_symbol_styles)/sizeof(curve_symbol_styles[0])) ); j++ ){
                 if( curve->symbol()&&( curve_symbol_styles[j].style == curve->symbol()->style() ) ){
                     comboSymbolStyle->blockSignals(true);
                     comboSymbolStyle->setCurrentIndex(j);
@@ -216,7 +220,7 @@ void CurveConfigurator::updateConfigurator()
     }
 
     ui->curvesTable->resizeColumnsToContents();
-    qDebug()<<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
+    DEBUG <<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
               ui->curvesTable->sizeHint();
 }
 
@@ -277,7 +281,7 @@ void CurveConfigurator::applyChanges()
 
             if( ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL) ){
                 QComboBox* combo = static_cast<QComboBox*>(ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL));
-                if( curve_symbol_styles[combo->currentIndex()].style != curve->style() ){
+                if( curve_symbol_styles[combo->currentIndex()].style != curve->symbol()->style() ){
                     change_symbol = true;
                 }
             }

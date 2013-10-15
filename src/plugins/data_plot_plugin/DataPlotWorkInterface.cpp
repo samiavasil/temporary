@@ -1,15 +1,19 @@
 #include "DataPlotWorkInterface.h"
 #include "QDataPlot.h"
+#include <QDynamicPropertyChangeEvent>
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 DataPlotWorkInterface::DataPlotWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("DataPlotWorkInterface object create");
+    DEBUG << "DataPlotWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 DataPlotWorkInterface::~DataPlotWorkInterface(  )
 {
-    DEBUG("DataPlotWorkInterface object delete");
+    DEBUG << "DataPlotWorkInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should
@@ -23,12 +27,20 @@ DataPlotWorkInterface::~DataPlotWorkInterface(  )
 //QFrameWork* DataPlotWorkInterface::getFrameWork( QWidget* parent )
 QObject*  DataPlotWorkInterface::allocateObject( QObject* parent ){
     QWidget* parent_widget = 0;
+
     if( parent && parent->isWidgetType() ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
     QWidget * obj = new QDataPlot(parent_widget);
     obj->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
                                                     widget-a pri closeEvent*/
+
+/*
+    obj->setProperty( "TestPropety", 0 );
+    PropertyChangedFilter*  Filter = new PropertyChangedFilter( obj );
+    obj->installEventFilter( Filter );
+    QObject::connect( Filter, SIGNAL(debug(bool)), m_Debug, SLOT(logEnable(bool) ) );
+*/
     return obj;
 }
 Q_EXPORT_PLUGIN2(pnp_dataplotplugin, DataPlotWorkInterface)

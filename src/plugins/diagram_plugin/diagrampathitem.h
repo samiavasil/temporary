@@ -46,6 +46,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QList>
+#include"items_type_names.h"
 
 QT_BEGIN_NAMESPACE
 class QPixmap;
@@ -65,7 +66,7 @@ QT_END_NAMESPACE
 class DiagramPathItem : public QGraphicsPathItem
 {
 public:
-    enum { Type = UserType + 6 };
+    enum { Type = UserType + DIAGRAM_PATH_TYPE };
     enum DiagramType { Path, Start, End, StartEnd };
 
     DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
