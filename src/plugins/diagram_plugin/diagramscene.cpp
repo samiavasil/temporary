@@ -43,10 +43,10 @@
 #include "base/global.h"
 #include <QtGui>
 #include <iostream>
-
 #include "diagramscene.h"
 
-#define NDEBUG
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 //! [0]
 DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
@@ -545,7 +545,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
                 else
                 {
-                    DEBUG( "Error someting wrong......" );
+                    DEBUG <<  "Error someting wrong......";
                     return;
                 }
 
@@ -676,7 +676,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
                 else
                 {
-                    DEBUG( "Error someting wrong......" );
+                    DEBUG <<  "Error someting wrong......";
                     return;
                 }
 
@@ -919,7 +919,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
             }
             else
             {
-                DEBUG("Someting Wrong here !!!\n");
+                DEBUG << "Someting Wrong here !!!";
             }
         }
 

@@ -19,16 +19,16 @@ public:
     {
         switch (type) {
         case QtDebugMsg:
-            fprintf(stderr, "Debug: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             break;
         case QtWarningMsg:
-            fprintf(stderr, "Warning: %s\n", msg);
+         //TODO:   fprintf(stderr, "%s\n", msg);
             break;
         case QtCriticalMsg:
-            fprintf(stderr, "Critical: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             break;
         case QtFatalMsg:
-            fprintf(stderr, "Fatal: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             abort();
         }
     }
@@ -105,15 +105,7 @@ void testBits(){
 #endif
 
 
-
-
-
-
 #include<QLayout>
-
-
-
-
 
 class DataType{
 
@@ -146,18 +138,18 @@ public:
         {
             if( m_TypeOrder >= other.m_TypeOrder )
             {
-                DEBUG("Full compatible types");
+                DEBUG << "Full compatible types";
                 ret = 0;
             }
             else
             {
-                DEBUG("Truncated not full compatible types");
+                DEBUG << "Truncated not full compatible types";
                 ret = 1;
             }
         }
         else
         {
-            DEBUG("Not compatible types");
+            DEBUG << "Not compatible types";
         }
         return ret;
     }

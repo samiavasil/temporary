@@ -1,5 +1,7 @@
-
 #include "qt/QPluginObjectsInterface.h"
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 QPluginObjectsInterface::QPluginObjectsInterface(QObject * parent):QObject(parent){
 }
@@ -28,9 +30,9 @@ void QPluginObjectsInterface::destroyPI() {
 
 void QPluginObjectsInterface::objectDestroyed(QObject * obj) {
     if(  obj && m_fw_objects.contains(  obj ) ){
-        DEBUG("Remove from list Destroyed QFraFrameWork[%x]",(unsigned int)obj);
+        DEBUG << "Remove from list Destroyed QFraFrameWork[" << (void *)obj << "]";
         m_fw_objects.takeAt(m_fw_objects.indexOf( obj ));
-        DEBUG("On List %d",m_fw_objects.count());
+        DEBUG << "On List " << m_fw_objects.count();
         if( 0 == m_fw_objects.count() ){
            deleteLater();
         }

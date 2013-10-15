@@ -1,13 +1,15 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
+#include <qglobal.h>
 
-typedef  short int          int8;
-typedef  short int          int16;
-typedef  int                   int32;
-typedef long long int     int64;
-typedef unsigned char  u8;
-typedef unsigned short int u16;
-typedef unsigned int     u32;
+typedef qint8    int8;
+typedef qint16   int16;
+typedef qint32   int32;
+typedef qint64   int64;
+typedef quint8   u8;
+typedef quint16  u16;
+typedef quint32  u32;
+typedef quint64  u64;
 
 enum{
 	NO_ERR,
@@ -17,12 +19,7 @@ enum{
     SOME_ERROR
 };
 
-/*TODO: FIX ME*/
-#include  <QDebug>
-#include  <QtGlobal>
-#define DEBUG    qDebug
-#define CRITICAL qCritical
-#define FATAL    qFatal
+
 
 /* Calculate number of bytes needed for X bits */
 #define BITS_TO_BYTES_CEIL(x) (( x/8 ) + (( x%8 )?1:0))

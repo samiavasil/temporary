@@ -3,6 +3,10 @@
 #include<QTimer>
 #include<QListWidget>
 #include<QVBoxLayout>
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 DesignerTamplate::DesignerTamplate(QWidget* parent):QWidget(parent){
     this->setLayout(new QVBoxLayout(this));
     list = new QListWidget(this);
@@ -12,7 +16,7 @@ DesignerTamplate::DesignerTamplate(QWidget* parent):QWidget(parent){
 }
 DesignerTamplate::~DesignerTamplate()
 {
-    DEBUG("DESTROY DesignerTamplate\n");
+    DEBUG << "DESTROY DesignerTamplate";
     m_timer->stop();
     m_timer->deleteLater();
 }

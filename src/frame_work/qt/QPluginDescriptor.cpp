@@ -30,7 +30,7 @@ QPluginDescriptor::~QPluginDescriptor(){
     if( m_loader ){
         m_loader->deleteLater();
     }
-    DEBUG() << "Destroy plugin_descriptor:\n" << this;
+    DEBUG  << "Destroy plugin_descriptor:\n" << this;
 }
 
 QPluginObjectsInterface* QPluginDescriptor::cast_to_plugin_interface( QObject* object ){
@@ -45,7 +45,7 @@ void QPluginDescriptor::read_plugin_description( ){
 
     QPluginObjectsInterface* plugin;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_PluginDecription.location() );
-    DEBUG()<<m_PluginDecription.location();
+    DEBUG <<m_PluginDecription.location();
     if( 0 != loader ){
         loader->load();
         plugin =  loader->instance();
@@ -63,13 +63,13 @@ void QPluginDescriptor::read_plugin_description( ){
             delete plugin;
         }
         else{
-            DEBUG()<<"Can't load object from file " << loader->fileName().toUtf8().constData();
+            DEBUG <<"Can't load object from file " << loader->fileName().toUtf8().constData();
         }
         loader->unload();
         delete loader;
     }
     else{
-        DEBUG()<<"Can't create object loader from file " << m_PluginDecription.location().toUtf8().constData();
+        DEBUG <<"Can't create object loader from file " << m_PluginDecription.location().toUtf8().constData();
     }
 }
 
@@ -77,11 +77,11 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t pl_type, QObj
     QObject* object = 0;
 
     if( !m_enabled ){
-        DEBUG() << "plugin_disabled: can't create object";
+        DEBUG  << "plugin_disabled: can't create object";
         return object;
     }
     if( m_PluginDecription.location().isEmpty() ){
-        DEBUG() << "plugin_descriptor: empty file location";
+        DEBUG  << "plugin_descriptor: empty file location";
         return object;
     }
     if( pl_type == m_PluginDecription.type() ){
@@ -111,7 +111,7 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t pl_type, QObj
         }
     }
     if( 0 == object ){
-        DEBUG() << "\nCan't create obect from plugin file: " << m_PluginDecription.location();
+        DEBUG  << "\nCan't create obect from plugin file: " << m_PluginDecription.location();
     }
     return object;
 }

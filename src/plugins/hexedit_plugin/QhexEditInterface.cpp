@@ -1,15 +1,18 @@
 #include "QhexEditInterface.h"
 #include "qhexedit/qhexedit.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QhexEditInterface::QhexEditInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("QhexEditInterface object create");
+    DEBUG << "QhexEditInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 QhexEditInterface::~QhexEditInterface(  )
 {
-    DEBUG("QhexEditInterface object delete");
+    DEBUG << "QhexEditInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should

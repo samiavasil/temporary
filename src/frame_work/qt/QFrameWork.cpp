@@ -6,12 +6,12 @@
 
 #include "qt/QPluginList.h"
 QFrameWork::QFrameWork(QCreator * creator, QWidget * parent):QWidget(parent),CFrameWork(creator){
-  DEBUG( "Create QFrameWork\n" );
+  DEBUG << "Create QFrameWork";
   setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 QFrameWork::~QFrameWork() {
-  DEBUG( "Destroy QFrameWork\n" );
+  DEBUG << "Destroy QFrameWork";
   emit fwDestroy();
 }
 

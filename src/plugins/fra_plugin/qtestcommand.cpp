@@ -4,10 +4,11 @@
 #include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QProtocolLoader.h"
-#include "qt/debug.h"
-
 #include<stdio.h>
 #include"qt/QPacketCollector.h"
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 pack_id_t pId[4]={
     PACK1_ID,
@@ -20,11 +21,11 @@ QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *fa
     m_Col     = colector;
     m_Factory = factory;
     a=0;
-    DEBUG("QtestCommand Created");
+    DEBUG << "QtestCommand Created";
 }
 
 QtestCommand::~QtestCommand() {
-  DEBUG("QtestCommand Deleted");
+  DEBUG << "QtestCommand Deleted";
 }
 
 /**
@@ -33,14 +34,14 @@ QtestCommand::~QtestCommand() {
 int QtestCommand::handler() {
   int ret =  1;
   CPacket* packet = NULL;
-  DEB1(  tr("Bliak[%1]").arg(a) );
+  DEBUG <<   tr("Bliak[%1]").arg(a);
   if( a >= 1 ){
       ret =  0;
-      //  DEBUG("QCommand Finished");
+      //  DEBUG << "QCommand Finished");
   }
   else{
       if( 1 ){//a == 0 ){
-          //DEBUG("QCommand Execution start");
+          //DEBUG << "QCommand Execution start");
 
           if( m_Factory ){
               packet = m_Factory->createPacket( pId[a%4] );
@@ -50,7 +51,7 @@ int QtestCommand::handler() {
 
           if( m_Col ){
               if( 0 < m_Col->transmitPacket( packet ) ){
-                  DEBUG("TRANSMIT PACKET[%d] num[%d]",packet->packType(),a);
+                  DEBUG << "TRANSMIT PACKET[" << packet->packType() << "] num[" << a << "]";
                   if( packet ){
                       const u8*data = packet->data();
                       for( int i=0;i < packet->packLenBytes();i++ ){
@@ -60,7 +61,7 @@ int QtestCommand::handler() {
                   }
               }
               else{
-                  DEBUG("!!!TRANSMIT ERRORR: PACKET[%d] num[%d]",packet->packType(),a);
+                  DEBUG << "!!!TRANSMIT ERRORR: PACKET[" << packet->packType() << "] num[" << a << "]";
               }
           }
 

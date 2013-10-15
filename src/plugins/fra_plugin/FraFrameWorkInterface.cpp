@@ -3,18 +3,21 @@
 #include "qt/QFrameWorkElementsFactory.h"
 #include "QFraCreator.h"
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 static bool bla;
 
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
     LogerTree::connectLogger( this,QloggerInterface::ROOT_ID );
-    DEBUG("FraFrameWorkInterface object create");
+    DEBUG << "FraFrameWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 FraFrameWorkInterface::~FraFrameWorkInterface(  )
 {
-    DEBUG("FraFrameWorkInterface object delete");
+    DEBUG << "FraFrameWorkInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should

@@ -1,8 +1,10 @@
 #include "VDesignerInterface.h"
 #include "DesignerFrameWork.h"
 #include "DesignerCreator.h"
-
 #include<QWidget>
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 
 
@@ -12,13 +14,13 @@ namespace Plugins
 
 VDesignerInterface::VDesignerInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("VDesignerInterface object create");
+    DEBUG << "VDesignerInterface object create";
     //m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 VDesignerInterface::~VDesignerInterface(  )
 {
-    DEBUG("VDesignerInterface object delete");
+    DEBUG << "VDesignerInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should

@@ -91,9 +91,9 @@ HEADERS +=\
     base/CCreator.h \
     qt/QCreator.h \
     qt/PluginDescription.h \
-    qt/debug.h \
     qt/qdbg.h \
-    qt/QloggerInterface.h
+    qt/QloggerInterface.h \
+    base/debug.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

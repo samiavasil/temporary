@@ -1,5 +1,5 @@
+#include "base/debug.h"
 #include "QloggerInterface.h"
-#include <QObject>
 
 QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( parent )
 {
@@ -8,7 +8,7 @@ QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( p
 
 void QloggerInterface_private::Log( const QString& data )
 {
-    qDebug("        LogHop: %s", data.toAscii().constData());
+    DUMP << "        LogHop: " <<  data.toAscii().constData();
     emit LogOutput( data );
 }
 
@@ -42,12 +42,12 @@ void QloggerInterface::Log( const QString &data )
 {
     if( m_enLog )
     {
-        qDebug("LogFrom[%d]: %s",m_Id, data.toAscii().constData());
+        DUMP << "LogFrom[" << m_Id << "]: " << data.toAscii().constData();
         getObject()->Log( data );
     }
     else
     {
-        qDebug("LogFrom[%d] disabled",m_Id );
+        DUMP << "LogFrom[" << m_Id << "] disabled";
     }
 }
 

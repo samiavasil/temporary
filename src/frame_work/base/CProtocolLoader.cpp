@@ -1,5 +1,7 @@
-
 #include "base/CProtocolLoader.h"
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory) {
   int errCode = WRONG_PARAMS;                                                                                   
@@ -20,7 +22,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
-              CRITICAL( "Error[%d]: Can't read packet size",errCode );                                          
+              CRITICAL << "Error[" << errCode << "]: Can't read packet size";
               return errCode;                                                                                   
           }                                                                                                     
           int lenBits = getHeaderLenBits();                                                                     
@@ -29,7 +31,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
-              CRITICAL( "Error[%d]: Can't read packet header size",errCode );                                   
+              CRITICAL << "Error[" << errCode << "]: Can't read packet header size";
               return errCode;                                                                                   
           }                                                                                                     
           lenBits = getPostFixLenBits();                                                                        
@@ -38,7 +40,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
-              CRITICAL( "Error[%d]: Can't read packet post fix size",errCode );                                 
+              CRITICAL << "Error[" << errCode << "]: Can't read packet post fix size";
               return errCode;                                                                                   
           }                                                                                                     
           MsgCount = getMsgCount();                                                                             
@@ -49,19 +51,19 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
                   if( NO_ERR == errCode ){                                                                      
                       errCode = protoFactory->addMessage( msgID, msgLen );                                      
                       if( NO_ERR != errCode ){                                                                  
-                          CRITICAL( "Error[%d]:Can't add message ID[%d]",errCode,msgID );                       
+                          CRITICAL << "Error[" << errCode << "]:Can't add message ID[" << msgID << "]";
                           return errCode;                                                                       
                       }                                                                                         
                   }                                                                                             
                   else{                                                                                         
-                      CRITICAL( "Error[%d]:Can't get Len for message ID[%d] ",errCode,msgID );                  
+                      CRITICAL << "Error[" << errCode << "]:Can't get Len for message ID[" << msgID << "]";
                       return errCode;                                                                           
                   }                                                                                             
               }                                                                                                 
               else{                                                                                             
                   /*TODO Someting*/                                                                             
                   errCode = WRONG_DATA;                                                                         
-                  CRITICAL("TODO: %s : MSG_ID_INVALID",__func__);                                               
+                  CRITICAL << "TODO: " << __func__ << " : MSG_ID_INVALID";
                   return errCode;                                                                               
               }                                                                                                 
           }                                                                                                     
@@ -72,7 +74,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
               if( PKT_ID_INVALID != packID ){                                                                   
                   errCode = protoFactory->addPacket( packID );                                                  
                   if( NO_ERR != errCode ){                                                                      
-                      CRITICAL( "Error[%d]:Can't add packet ID[%d]",errCode, packID );                          
+                      CRITICAL << "Error[" << errCode << "]:Can't add packet ID[" << packID << "]";
                       return errCode;                                                                           
                   }                                                                                             
                                                                                                                 
@@ -83,23 +85,23 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
                           if( MSG_ID_INVALID != msgID ){                                                        
                               errCode = protoFactory->addMessageToPacket( packID, msgID );                      
                               if( NO_ERR != errCode ){                                                          
-                                  CRITICAL( "Error[%d]:Invalid Message ID[%d]",errCode,msgID );                 
+                                  CRITICAL << "Error[" << errCode << "]:Invalid Message ID[" << msgID << "]";
                                   return errCode;                                                               
                               }                                                                                 
                           }                                                                                     
                           else{                                                                                 
-                              CRITICAL( "Error[%d]:Invalid Message ID[%d] for pack ID[%d]"                      
-                                        ,errCode,msgID,packID );                                                
+                              CRITICAL <<  "Error[" << errCode << "]:Invalid Message ID["<< msgID
+                                       <<  "] for pack ID[" << packID << "]";
                           }                                                                                     
                       }                                                                                         
                   }                                                                                             
                   else{                                                                                         
                       /*TODO Someting*/                                                                         
-                      if( 0 >= MsgCount ){                                                                      
-                          CRITICAL("TODO: %s : Packet without messages",__func__);                              
+                      if( 0 >= MsgCount ){
+                          CRITICAL << "TODO: " << __func__ << " : Packet without messages";
                       }                                                                                         
                       else{                                                                                     
-                          CRITICAL("TODO: %s : Max messages in packet limit is exceeded",__func__);             
+                          CRITICAL << "TODO: " << __func__ << " : Max messages in packet limit is exceeded";
                       }                                                                                         
                   }                                                                                             
               }                                                                                                 

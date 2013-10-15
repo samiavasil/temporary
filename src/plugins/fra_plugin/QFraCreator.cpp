@@ -9,7 +9,7 @@
 #include "qt/QCommandExecutor.h"
 #include "qtestcommand.h"
 #include "qt/QPluginList.h"
-#include"qt/debug.h"
+
 
 QFraCreator::QFraCreator(QObject *parent):QCreator(parent)
 {
@@ -29,7 +29,7 @@ bool QFraCreator::Create( CFrameWork *fW )
     if( fW )
     {
         QFraFrameWork* qfW =  dynamic_cast<QFraFrameWork*>(fW);
-        DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
+        DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
         if( qfW )
         {
             QPortIO* port = NULL;
@@ -48,29 +48,29 @@ bool QFraCreator::Create( CFrameWork *fW )
                     {
                        const QMetaObject* metaObject = obj->metaObject();
 
-                        DEBUG()<<"DUMP METHODS:   "<<endl;
+                        DEBUG <<"DUMP METHODS:   "<<endl;
                         for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
                         {
-DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
-                            DEBUG()<<"   "<<QString::fromLatin1(metaObject->method(i).signature());
+                            DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
+                            DEBUG <<"   "<<QString::fromLatin1(metaObject->method(i).signature());
                             if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
                             {
-                                DEBUG() << ":  Method Not signal";
+                                DEBUG << ":  Method Not signal";
                             }
                             else
                             {
-                                DEBUG() << ":  Its a signal";
+                                DEBUG << ":  Its a signal";
                                 if( metaObject->checkConnectArgs ( "testSlot()", metaObject->method(i).signature() ) )
                                 {
-                                     DEBUG() << "==> Compatible with slot testSlot";
+                                     DEBUG  << "==> Compatible with slot testSlot";
                                 }
                                 else
                                 {
-                                    DEBUG() << "==> Not Compatible with slot testSlot";
+                                    DEBUG  << "==> Not Compatible with slot testSlot";
                                 }
                             }
 
-                            DEBUG()<<endl;
+                            DEBUG << endl;
                             //testSlot
                         }
                     }
@@ -106,7 +106,7 @@ DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
 
                 if( 0 != pExecutor ){
                     if( NO_ERR != pExecutor->startExecution( true ) ){
-                        CRITICAL( "Can't start Executor thread" );
+                        CRITICAL << "Can't start Executor thread";
                     }
                 }
                 QtestCommand* comm = new QtestCommand( colect, fact, pExecutor);
@@ -119,7 +119,7 @@ DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
 
             }
             bRet = true;
-DEB1(  tr("QFraFrameWork[%1]").arg(random()) );
+            DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
         }
     }
 

@@ -1,7 +1,6 @@
 #include "base/global.h"
 #include "DesignerCreator.h"
 #include "DesignerFrameWork.h"
-
 #include <QtDesigner>
 #include <QtDesigner/qdesigner_components.h>
 #include <QtDesigner/QDesignerFormEditorInterface>
@@ -12,7 +11,6 @@
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
 #include <QtDesigner/QDesignerObjectInspectorInterface>
 #include <QtDesigner/QDesignerPropertyEditorInterface>
-
 #include<QAction>
 #include<QLayout>
 #include<QPushButton>
@@ -20,8 +18,10 @@
 #include "internals/pluginmanager_p.h"
 #include "internals/formwindowbase_p.h"
 #include <QMainWindow>
-
 #include "ui_desinger.h"
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 class PyNotoIntegration: public qdesigner_internal::QDesignerIntegration
 {
@@ -196,7 +196,7 @@ void DesignerCreator::save()
 
 void DesignerCreator::Free()
 {
-    DEBUG("Frees");
+    DEBUG << "Frees";
 }
 
 

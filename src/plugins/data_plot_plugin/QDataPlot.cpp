@@ -22,7 +22,8 @@
 #include<QGridLayout>
 #include "CurveConfigurationMenu.h"
 
-#include"qt/debug.h"
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 #define FIRST_LINE_COLOR 255,0,125
 
@@ -53,7 +54,7 @@ protected:
 
 bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
-    DEB1(  tr("Bliak[%1]").arg(random()) );
+    DEBUG <<   tr("Bliak[%1]").arg(random());
     QwtPlotCurve* curve = m_Plot->m_CurCurve;
     QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
     if(  obj == m_Plot->ui->PlotQwt->canvas() )
@@ -327,7 +328,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
         for( int i=0; i < 100; i++ ){
             x[i] = i;
             y[i] = 400*sin(((6.28*i)/100) + phase );
-            //DEBUG("sin(%d)=%f",i,z[i]);
+            //DEBUG << "sin(%d)=%f",i,z[i]);
         }
         curve->setSamples( x,y,100 );
         ////////////DELL ME
@@ -534,7 +535,7 @@ void QDataPlot::showPopupMenu( const QPoint &pos ){
 
         }
         else{
-            DEBUG("Misterious NULL Pointer");
+            DEBUG << "Misterious NULL Pointer";
         }
     }
     //connect( men, SIGNAL( aboutToShow() ), men, SLOT( setMenuCurve() ),Qt::QueuedConnection );
@@ -562,7 +563,7 @@ QwtPlotCurve* QDataPlot::findFirstVisibleCurve(){
             }
         }
         else{
-            DEBUG("Misterious NULL Pointer");
+            DEBUG << "Misterious NULL Pointer";
         }
     }
     return NULL;

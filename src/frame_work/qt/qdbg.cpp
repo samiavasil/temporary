@@ -2,7 +2,10 @@
 #include "qdbg.h"
 #include<QDebug>
 #include<QDynamicPropertyChangeEvent>
-QDbg* m_Debug;
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 PropertyChangedFilter::PropertyChangedFilter(  QObject *parent ):QObject(parent)
 {
 
@@ -19,7 +22,9 @@ bool PropertyChangedFilter::eventFilter(QObject *obj, QEvent *event)
             bool x;
             event->accept();
             x = obj->property ( pChEv->propertyName().constData() ).toInt();
-            DEBUG(" TestPropety Changed!!! - %s Value=%d", pChEv->propertyName().constData(),x );
+            DEBUG << " TestPropety Changed!!! - "
+                  <<  pChEv->propertyName().constData()
+                  << " Value=" << x;
             emit debug(x);
         }
         return true;
@@ -58,7 +63,7 @@ void QDbg::log(QString Bla)
 {
     if( m_Enable )
     {
-        DEBUG() << tr("QDbg%1 [%2]: %3").arg((unsigned int)this).arg(m_Local).arg( Bla );
+        DEBUG  << tr("QDbg%1 [%2]: %3").arg((unsigned int)this).arg(m_Local).arg( Bla );
     }
 }
 

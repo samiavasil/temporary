@@ -14,17 +14,21 @@
 #include "base/CDataPlot.h"
 #include "qt/QPortIOSimulator.h"
 
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QFrameWorkElementsFactory::QFrameWorkElementsFactory() {
-  DEBUG("Create QFrameWorkElementsFactory");
+  DEBUG << "Create QFrameWorkElementsFactory";
 }
 
 QFrameWorkElementsFactory::~QFrameWorkElementsFactory() {
-  DEBUG("Destroy QFrameWorkElementsFactory");
+  DEBUG << "Destroy QFrameWorkElementsFactory";
 }
 
 CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type) {
   CPortIO* port = NULL;                            
-  DEBUG("Create PortIo");                          
+  DEBUG << "Create PortIo";
   switch( type ) {                                 
   case CPortIO::SIMULATOR_IO :{      
        port = new QPortIOSimulator();                 
@@ -42,47 +46,47 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
   }                                                
   }                                                
   if( 0 == port ){                                 
-      CRITICAL( "Can't create QPortIO" );          
+      CRITICAL <<  "Can't create QPortIO";
   }                                                
   return port;                                     
 }
 
 CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
-  DEBUG("Create Protocol"); 
+  DEBUG << "Create Protocol";
   CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader());
   if( 0 == protocol ){
-      CRITICAL( "Can't create QProtocolPackFactory" );
+      CRITICAL <<  "Can't create QProtocolPackFactory";
   }
   return protocol;
 }
 
 CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
-  DEBUG("Create Command Executor");                        
+  DEBUG << "Create Command Executor";
   QCommandExecutor* exec = new QCommandExecutor(NULL);     
   if( 0 != exec ){                                         
       if( NO_ERR != exec->startExecution( true ) ){        
-          CRITICAL( "Can't start Executor thread" );       
+          CRITICAL <<  "Can't start Executor thread";
       }                                                    
   }                                                        
   return ( exec );                                         
 }
 
 CPacketCollector* QFrameWorkElementsFactory::createPacketCollector( CFrameWork * cFwk ) {
-    DEBUG("Create Packet Collector");                
+    DEBUG << "Create Packet Collector";
     QPacketCollector* coll = NULL;//TODO= new QPacketCollector(cFwk)
     if( 0 == coll ){                                 
-        CRITICAL( "Can't create QPacketCollector" ); 
+        CRITICAL <<  "Can't create QPacketCollector";
     }                                                
     return ( coll ); 
 }
 
 CControlView* QFrameWorkElementsFactory::createControlView() {
-  DEBUG("Create Control View");
+  DEBUG << "Create Control View";
   return NULL;                 
 }
 
 CDataPlot* QFrameWorkElementsFactory::createDataPlot() {
-  DEBUG("Create Data Plot");
+  DEBUG << "Create Data Plot";
    return NULL;
 }
 
@@ -100,7 +104,7 @@ void QFrameWorkElementsFactory::deleteProtocol(CProtocolPackFactory * protocol) 
 
 void QFrameWorkElementsFactory::deletePortIO(CPortIO * port) {
     if( port ){                 
-        DEBUG("Delete PortIo");
+        DEBUG << "Delete PortIo";
         switch( port->type() ) {
         case CPortIO::SIMULATOR_IO :{
   		  delete (QPortIOSimulator*) port;
@@ -118,7 +122,7 @@ void QFrameWorkElementsFactory::deletePortIO(CPortIO * port) {
         }
         }
         if( 0 == port ){
-            CRITICAL( "Can't create QPortIO" );
+            CRITICAL <<  "Can't create QPortIO";
         }
     }
     
@@ -131,10 +135,10 @@ void QFrameWorkElementsFactory::deleteColector(CPacketCollector * collector) {
 }
 
 void QFrameWorkElementsFactory::deleteControlView(CControlView * ctrlView) {
-  DEBUG("TODO: Not implemented %x",(unsigned int)ctrlView );
+  DEBUG << "TODO: Not implemented " << std::hex << (unsigned int)ctrlView;
 }
 
 void QFrameWorkElementsFactory::deleteDataPlot(CDataPlot * dataPlot) {
-   DEBUG("TODO: Not implemented %x",(unsigned int)dataPlot );
+   DEBUG << "TODO: Not implemented " << std::hex << (unsigned int)dataPlot;
 }
 

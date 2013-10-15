@@ -2,8 +2,7 @@
 #define QLOGGERINTERFACE_H
 #include "frame_work_global.h"
 #include<QMultiMap>
-
-class QObject;
+#include <QObject>
 
 class QloggerInterface_private:public QObject
 {

@@ -32,7 +32,7 @@ public:
     }
     ~gpWidget()
     {
-        DEBUG()<<"destroy  gpWidget"<<endl;
+        DEBUG << "destroy  gpWidget"<<endl;
     }
 };
 

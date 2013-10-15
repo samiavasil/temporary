@@ -7,6 +7,9 @@
 #include<QScrollBar>
 #include<QComboBox>
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 enum{
     LINE_NAME_COL ,
     LINE_COLOR_COL,
@@ -173,7 +176,7 @@ void CurveConfigurator::updateConfigurator()
 
             }
             else{
-                DEBUG("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                DEBUG << __FUNCTION__ << "Line[" << __LINE__ << "]Someting Wropng Here";
                 return;
             }
 
@@ -182,7 +185,7 @@ void CurveConfigurator::updateConfigurator()
             comboLineStyle   = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,LINE_STYLE_COL ))  ;
             comboSymbolStyle = dynamic_cast<QComboBox*>(ui->curvesTable->cellWidget( i,SYMBOL_STYLE_COL ));
             if( (!comboLineStyle)||(!comboSymbolStyle) ){
-                DEBUG("%s Line[%d]Someting Wropng Here",__FUNCTION__,__LINE__);
+                DEBUG << __FUNCTION__ << " Line[" << __LINE__ << "]Someting Wropng Here";
                 return;
             }
         }
@@ -217,7 +220,7 @@ void CurveConfigurator::updateConfigurator()
     }
 
     ui->curvesTable->resizeColumnsToContents();
-    DEBUG()<<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
+    DEBUG <<""<<ui->curvesTable->rect()<<ui->curvesTable->size()<<
               ui->curvesTable->sizeHint();
 }
 

@@ -1,9 +1,11 @@
-
 #include "base/CPacket.h"
-
 #include <string.h>
+
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 CPacket::CPacket(const pack_id_t packType, int packLenBit) {
-  DEBUG( "Create Packet[%d] - Bit size =%d",packType, packLenBit );                          
+  DEBUG << "Create Packet[" << packType << "] - Bit size = " << packLenBit;
   m_packType        = packType;                                                              
   m_packLenBits     = packLenBit;                                                            
   if( 0 < m_packLenBits ){                                                                   
@@ -11,14 +13,14 @@ CPacket::CPacket(const pack_id_t packType, int packLenBit) {
     memset( m_data,0,BITS_TO_BYTES_CEIL(m_packLenBits) );  
   }                                                                                          
   else{                                                                                      
-    CRITICAL( "Can't memory allocate Packet[%d] - Bit size =%d",m_packType, m_packLenBits ); 
+      CRITICAL <<  "Can't memory allocate Packet[" << m_packType << "] - Bit size =" <<  m_packLenBits;
     m_packType = PKT_ID_INVALID;                                                             
     m_data = NULL;                                                                           
   }                                                                                          
 }
 
 CPacket::~CPacket() {
-  DEBUG("Destroy Packet[%d]",m_packType);
+    DEBUG << "Destroy Packet[" << m_packType << "]";
   if( m_data ){        
       delete [] m_data;
   }                    

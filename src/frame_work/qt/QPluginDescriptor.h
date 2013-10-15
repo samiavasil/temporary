@@ -10,8 +10,8 @@
 #include<QMutex>
 #include<QMessageBox>
 
-
-
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 class FRAME_WORKSHARED_EXPORT QPluginDescriptor:public QObject{
     Q_OBJECT
@@ -48,9 +48,9 @@ public:
             }
         }
         else{
-            DEBUG() << "!!!!!CREATE OBJECT \n";
+            DEBUG << "!!!!!CREATE OBJECT \n";
         }
-        DEBUG() <<  this;
+        DEBUG <<  this;
     }
 public slots:
     void loaderDestroyed(QObject* obj);

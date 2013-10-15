@@ -2,15 +2,18 @@
 #include "QDataPlot.h"
 #include <QDynamicPropertyChangeEvent>
 
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 DataPlotWorkInterface::DataPlotWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    DEBUG("DataPlotWorkInterface object create");
+    DEBUG << "DataPlotWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }
 
 DataPlotWorkInterface::~DataPlotWorkInterface(  )
 {
-    DEBUG("DataPlotWorkInterface object delete");
+    DEBUG << "DataPlotWorkInterface object delete";
 }
 
 /* FIX ME - remove input params. New creted here framework should
