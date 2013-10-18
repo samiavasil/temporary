@@ -22,7 +22,7 @@ public:
 
     enum{
         ROOT_ID,
-        INALID_ID = 0xffffffff
+        INALID_ID = -1
     };
 
     explicit QloggerInterface( QloggerInterface::LogId_t id = INALID_ID );

@@ -8,7 +8,7 @@ QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( p
 
 void QloggerInterface_private::Log( const QString& data )
 {
-    DUMP << "        LogHop: " <<  data.toAscii().constData();
+    WARNING << "        LogHop: " <<  data.toAscii().constData();
     emit LogOutput( data );
 }
 
@@ -42,12 +42,12 @@ void QloggerInterface::Log( const QString &data )
 {
     if( m_enLog )
     {
-        DUMP << "LogFrom[" << m_Id << "]: " << data.toAscii().constData();
+        WARNING << "LogFrom[" << m_Id << "]: " << data.toAscii().constData();
         getObject()->Log( data );
     }
     else
     {
-        DUMP << "LogFrom[" << m_Id << "] disabled";
+        WARNING << "LogFrom[" << m_Id << "] disabled";
     }
 }
 
@@ -73,7 +73,26 @@ bool LogerTree::disconnect( QloggerInterface* Logg, QloggerInterface* destLogg )
 }
 
 bool LogerTree::isLoggerConected( QloggerInterface* Logg, QloggerInterface::LogId_t dest_logger ){
-     return false;//TODO - fix me
+
+    bool ret = false;
+    if( Logg )
+    {
+       QloggerInterface::LogId_t src_id = Logg->getId();
+       if( Logg == m_id_obj_map.value( src_id, NULL ) )
+       {
+           if( m_id_con_map.values( src_id ).contains( dest_logger ) )
+           {
+               /*Already connected. Here can add checks is the Qobject connection is OK*/
+               ret = true;
+           }
+       }
+       else
+       {
+           /*Someting incorrect with object map*/
+           WARNING << "QloggerInterface[" << (void*)Logg << "] isn't founded on id/object map";
+       }
+    }
+    return ret;//TODO - fix me
 }
 
 QloggerInterface::LogId_t LogerTree::getNewLoggerId(){
@@ -159,12 +178,12 @@ int LogerTree::connectLogger( QloggerInterface* logger, QloggerInterface::LogId_
             }
             else
             {
-                //DUMP("Logger Already connected")
+                //WARNING("Logger Already connected")
             }
         }
         else
         {
-            //DUMP("Root Logger doesn' exist - SOMETHING IS VERY WRONG!!!")
+            //WARNING("Root Logger doesn' exist - SOMETHING IS VERY WRONG!!!")
             return -1;
         }
     }

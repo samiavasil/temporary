@@ -375,6 +375,7 @@ int QDataPlot::setLineData  ( lineId_t id, const QVector<QPointF> & data  ){
 }
 
 QVector<QPointF>* QDataPlot::getLineData( lineId_t id ){
+    return NULL;//m_CurveMap.value( id, NULL );//TODO fix me
 }
 
 /*TODO - generate next line color */

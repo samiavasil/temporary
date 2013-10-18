@@ -13,7 +13,7 @@ CPacket::CPacket(const pack_id_t packType, int packLenBit) {
     memset( m_data,0,BITS_TO_BYTES_CEIL(m_packLenBits) );  
   }                                                                                          
   else{                                                                                      
-      CRITICAL <<  "Can't memory allocate Packet[" << m_packType << "] - Bit size =" <<  m_packLenBits;
+    CRITICAL <<  "Can't memory allocate Packet[" << m_packType << "] - Bit size =" <<  m_packLenBits;
     m_packType = PKT_ID_INVALID;                                                             
     m_data = NULL;                                                                           
   }                                                                                          

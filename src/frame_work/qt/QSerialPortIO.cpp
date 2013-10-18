@@ -129,7 +129,7 @@ queryMode_t queryModeArrea[]=
     { "EventDriven" , QextSerialPort::EventDriven },
 };
 
-QSerialPortIO::QSerialPortIO(QObject * parent, const QextSerialPort::QueryMode & mode) :QPortIO(parent),m_Serial( mode ),ui(new Ui::SerialPortConfig){
+QSerialPortIO::QSerialPortIO(QObject * parent, const QextSerialPort::QueryMode & mode) :QPortIO(parent),ui(new Ui::SerialPortConfig),m_Serial( mode ){
   DEBUG << "Create QSerialPortIO";
   m_PortType = SERIALPORT_IO;
   connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );

@@ -12,13 +12,12 @@
     #define DEBUG_V          QDebug(QtDebugMsg)<<"DBG_V: "<<__FILE__<<" Line:"<<__LINE__<<": "
 #elif defined( ENABLE_DUMP ) || defined( FULL_DUMP )
     #define DEBUG            QDebug(QtDebugMsg)<<"DBG:   "<<__FILE__<<" Line:"<<__LINE__<<": "
-    #define DEBUG_V          QNoDebug()
+    #define DEBUG_V          while(false) QNoDebug()
 #else
-    #define DEBUG            QNoDebug()
-    #define DEBUG_V          QNoDebug()
+    #define DEBUG            while(false) QNoDebug()
+    #define DEBUG_V          while(false) QNoDebug()
 #endif
 
-#define DUMP                 QDebug(QtDebugMsg)
 #define WARNING              QDebug(QtWarningMsg) <<"Warn:  "<<__FILE__<<" Line:"<<__LINE__<<": "
 #define CRITICAL             QDebug(QtCriticalMsg)<<"Critic:"<<__FILE__<<" Line:"<<__LINE__<<": "
 #define FATAL                QDebug(QtFatalMsg)   <<"Fatal: "<<__FILE__<<" Line:"<<__LINE__<<": "

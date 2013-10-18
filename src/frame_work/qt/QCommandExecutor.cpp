@@ -161,7 +161,7 @@ void QCommandExecutor::run() {
     retCode = initTimer();
     unlockObject();                                             
     retCode = exec();                                           
-    DEBUG << "Exit Command Executor Thread with code: %d",retCode;
+    DEBUG << "Exit Command Executor Thread with code: " << retCode;
 }
 
 int QCommandExecutor::initTimer() {
