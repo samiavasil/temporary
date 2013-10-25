@@ -64,6 +64,10 @@ private slots:
 
     void on_actionShowLegend_toggled(bool arg1);
 
+    void on_actionPrint_triggered();
+
+    void on_actionExport_to_Pdf_triggered();
+
 protected:
 
 

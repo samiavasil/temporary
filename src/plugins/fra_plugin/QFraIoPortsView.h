@@ -19,6 +19,9 @@ public:
     ~QFraIoPortsView();
     QPortIO* getCurentIO(  );
     void addToList( PluginDescription desc );
+private slots:
+    void on_IoList_currentRowChanged(int currentRow);
+
 private:
     Ui::QfraIoPortsView *ui;
     QList< PluginDescription* > mIoPorts;

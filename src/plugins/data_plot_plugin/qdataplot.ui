@@ -180,7 +180,7 @@
   <action name="actionPrint">
    <property name="icon">
     <iconset resource="proba.qrc">
-     <normaloff>:/new/prefix1/icons/Line Graph.png</normaloff>:/new/prefix1/icons/Line Graph.png</iconset>
+     <normaloff>:/new/prefix1/icons/print.png</normaloff>:/new/prefix1/icons/print.png</iconset>
    </property>
    <property name="text">
     <string>Print</string>
@@ -190,6 +190,10 @@
    </property>
   </action>
   <action name="actionExport_to_Pdf">
+   <property name="icon">
+    <iconset resource="proba.qrc">
+     <normaloff>:/new/prefix1/icons/acroread.png</normaloff>:/new/prefix1/icons/acroread.png</iconset>
+   </property>
    <property name="text">
     <string>Export to Pdf</string>
    </property>

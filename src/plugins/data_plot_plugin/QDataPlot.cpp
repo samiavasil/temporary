@@ -1,25 +1,30 @@
 #include "base/global.h"
 #include "QDataPlot.h"
-#include "ui_qdataplot.h"
+#include<QFileDialog>
 #include<QBoxLayout>
 #include<QToolBar>
-#include<QMenuBar>
-#include<qwt/qwt_plot_canvas.h>
-#include<qwt/qwt_plot_grid.h>
-#include<qwt/qwt_plot_zoomer.h>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPointF>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <CurveConfigurator.h>
+#include <QDialog>
+#include <QGridLayout>
+
+#include "ui_qdataplot.h"
+#include <qwt/qwt_plot_canvas.h>
+#include <qwt/qwt_plot_grid.h>
+#include <qwt/qwt_plot_zoomer.h>
 #include <qwt/qwt_painter.h>
 #include <qwt/qwt_plot_layout.h>
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_legend_item.h>
 #include <qwt/qwt_plot_magnifier.h>
-#include<QMenu>
-#include<QAction>
-#include <QMouseEvent>
-#include <QPainter>
-#include<QPointF>
-#include<CurveConfigurator.h>
-#include<QDialog>
-#include<QGridLayout>
+#include<qwt/qwt_plot_renderer.h>
 #include "CurveConfigurationMenu.h"
 
 //#define ENABLE_VERBOSE_DUMP
@@ -35,7 +40,7 @@ public:
 protected:
     virtual void paintEvent ( QPaintEvent * event ){
         QMenu::paintEvent( event );
-        /*QPainter painter(this);
+        QPainter painter(this);
 
         QList<QAction *> act = actions();
         QRect rect;
@@ -48,15 +53,15 @@ protected:
 
                 }
             }
-        }*/
+        }
     }
 };
 
 bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     DEBUG <<   tr("Bliak[%1]").arg(random());
-    QwtPlotCurve* curve = m_Plot->m_CurCurve;
-    QwtPlot* plotQwt    = m_Plot->ui->PlotQwt;
+    QwtPlotCurve* curve   = m_Plot->m_CurCurve;
+    QwtPlot*      plotQwt = m_Plot->ui->PlotQwt;
     if(  obj == m_Plot->ui->PlotQwt->canvas() )
     {
         if ( event->type() == QEvent::MouseButtonDblClick ) {
@@ -185,6 +190,8 @@ QDataPlot::QDataPlot(QWidget *parent) :
     ptr->addAction(ui->actionMouseTrack);
     ptr->addAction(ui->actionRectangle_Zoom);
     ptr->addAction(ui->actionActionEnablePicker);
+    ptr->addAction(ui->actionExport_to_Pdf);
+    ptr->addAction(ui->actionPrint);
     //l->setMenuBar(ptr);
     l->addWidget(ptr);
     ptr->show();
@@ -614,4 +621,54 @@ void QDataPlot::on_actionShowLegend_toggled(bool arg1)
         ui->PlotQwt->insertLegend( NULL );
     }
 
+}
+
+void QDataPlot::on_actionPrint_triggered()
+{
+    QwtPlotRenderer renderer;
+    QPrinter printer ( QPrinter::HighResolution );
+    printer.setOutputFileName ( "/tmp/bode.ps" );
+    QString docName = ui->PlotQwt->title().text();
+    if ( !docName.isEmpty() )
+    {
+        docName.replace ( QRegExp ( QString::fromLatin1 ( "\n" ) ), tr ( " -- " ) );
+        printer.setDocName ( docName );
+    }
+
+    printer.setCreator ( "Bode example" );
+    printer.setOrientation ( QPrinter::Landscape );
+
+    QPrintDialog dialog(&printer);
+    if ( dialog.exec() )
+    {
+        if ( printer.colorMode() == QPrinter::GrayScale )
+        {
+            renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+            renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+        }
+        renderer.renderTo( ui->PlotQwt, (QPaintDevice &)printer );
+    }
+}
+
+void QDataPlot::on_actionExport_to_Pdf_triggered()
+{
+    const QString fileName = QFileDialog::getSaveFileName (
+                this, "Export File Name", QString(),
+                "PDF Documents (*.pdf)" );
+    if ( !fileName.isEmpty() )
+    {
+        QPrinter printer;
+        QwtPlotRenderer renderer;
+        printer.setOutputFormat ( QPrinter::PdfFormat );
+        printer.setOrientation ( QPrinter::Landscape );
+        printer.setOutputFileName ( fileName );
+        printer.setCreator ( "Bode example" );
+        if ( printer.colorMode() == QPrinter::GrayScale )
+        {
+            renderer.setDiscardFlag( QwtPlotRenderer::DiscardCanvasBackground );
+            renderer.setLayoutFlag( QwtPlotRenderer::FrameWithScales );
+        }
+        renderer.renderTo( ui->PlotQwt, (QPaintDevice &)printer );
+        //PlotQwt->print ( printer );
+    }
 }

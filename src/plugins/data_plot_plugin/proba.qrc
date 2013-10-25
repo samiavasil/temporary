@@ -8,6 +8,8 @@
         <file>icons/grid_h.png</file>
         <file>icons/grid_v.png</file>
         <file>icons/pointer.png</file>
+        <file>icons/acroread.png</file>
+        <file>icons/print.png</file>
     </qresource>
     <qresource prefix="/fra">
         <file>icons/FrameWork.png</file>

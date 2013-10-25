@@ -38,6 +38,7 @@ public:
 
 void QFraIoPortsView::addToList( PluginDescription desc )
 {
+    ui->IoList->blockSignals( true );
     mIoPorts.append( new PluginDescription( desc ) );
     ui->IoList->addItem( desc.name() );
     if( ui->IoList->count() == 1 || mCurrentIo == NULL )
@@ -45,23 +46,43 @@ void QFraIoPortsView::addToList( PluginDescription desc )
         mCurrentIo = dynamic_cast<QPortIO*>(QPluginList::Instance()->cretate_plugin_object( desc, this ));
         if( NULL != mCurrentIo )
         {
-            gpWidget* w = new gpWidget();
-            ui->IoCtrlLayout->addWidget( w );
-            mCurrentIo->showPortConfiguration( w );
+            mCurrentIo->showPortConfiguration( ui->ioCtrlWidget );
             ui->IoList->setCurrentRow(0);
          }
         else
         {
-            QListWidgetItem* ds = ui->IoList->takeItem( ui->IoList->count()-1 );
+            int idx = ui->IoList->count()-1;
+            QListWidgetItem* ds = ui->IoList->takeItem( idx );
             if( ds )
             {
                 delete ds;
             }
+            PluginDescription* desc = mIoPorts.takeAt( idx );
+            if( desc )
+            {
+                delete desc;
+            }
         }
     }
+    ui->IoList->blockSignals( false );
 }
 
- QPortIO* QFraIoPortsView::getCurentIO(  )
+QPortIO* QFraIoPortsView::getCurentIO(  )
 {
    return mCurrentIo;
+}
+
+void QFraIoPortsView::on_IoList_currentRowChanged( int currentRow )
+{
+    mCurrentIo->deleteLater();
+    mCurrentIo = NULL;
+    PluginDescription* desc = mIoPorts.value( currentRow, NULL );
+    if( desc )
+    {
+        mCurrentIo = dynamic_cast<QPortIO*>(QPluginList::Instance()->cretate_plugin_object( *desc, this ));
+        if( NULL != mCurrentIo )
+        {
+            mCurrentIo->showPortConfiguration( ui->ioCtrlWidget );
+        }
+    }
 }

@@ -3,7 +3,7 @@
 
 
 #include "frame_work_global.h"
-#include <QObject>
+#include <QWidget>
 
 #include "base/CPortIO.h"
 
@@ -12,10 +12,13 @@ Q_OBJECT
 
   public:
     explicit QPortIO(QObject * parent);
+    virtual ~QPortIO();
     virtual void showPortConfiguration(QWidget * parent) = 0;
 
 signals:
     void readyReadBytesSignal();
 
+protected:
+    QWidget* m_PioWidget;
 };
 #endif

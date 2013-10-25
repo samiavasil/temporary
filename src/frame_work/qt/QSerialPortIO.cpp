@@ -55,40 +55,40 @@ const baud_rates_t supportedBaudRateType[]=
     EXPAND_TO_NAME_AND_ENUM(BAUD1800),
     #  if defined(B76800) || defined(qdoc)
     EXPAND_TO_NAME_AND_ENUM(BAUD76800), BAUD76800},
-    #  endif
-    #  if (defined(B230400) && defined(B4000000)) || defined(qdoc)
-    EXPAND_TO_NAME_AND_ENUM(BAUD230400),
-    EXPAND_TO_NAME_AND_ENUM(BAUD460800),
-    EXPAND_TO_NAME_AND_ENUM(BAUD500000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD576000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD921600),
-    EXPAND_TO_NAME_AND_ENUM(BAUD1000000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD1152000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD1500000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD2000000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD2500000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD3000000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD3500000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD4000000),
-    #  endif
-    #endif //Q_OS_UNIX
-    #if defined(Q_OS_WIN) || defined(qdoc)
-    EXPAND_TO_NAME_AND_ENUM(BAUD14400) ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD56000) ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD128000),
-    EXPAND_TO_NAME_AND_ENUM(BAUD256000),
-    #endif  //Q_OS_WIN
-    EXPAND_TO_NAME_AND_ENUM(BAUD110)    ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD300)    ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD600)    ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD1200)   ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD2400)   ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD4800)   ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD9600)   ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD19200)  ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD38400)  ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD57600)  ,
-    EXPAND_TO_NAME_AND_ENUM(BAUD115200) ,
+#  endif
+#  if (defined(B230400) && defined(B4000000)) || defined(qdoc)
+EXPAND_TO_NAME_AND_ENUM(BAUD230400),
+EXPAND_TO_NAME_AND_ENUM(BAUD460800),
+EXPAND_TO_NAME_AND_ENUM(BAUD500000),
+EXPAND_TO_NAME_AND_ENUM(BAUD576000),
+EXPAND_TO_NAME_AND_ENUM(BAUD921600),
+EXPAND_TO_NAME_AND_ENUM(BAUD1000000),
+EXPAND_TO_NAME_AND_ENUM(BAUD1152000),
+EXPAND_TO_NAME_AND_ENUM(BAUD1500000),
+EXPAND_TO_NAME_AND_ENUM(BAUD2000000),
+EXPAND_TO_NAME_AND_ENUM(BAUD2500000),
+EXPAND_TO_NAME_AND_ENUM(BAUD3000000),
+EXPAND_TO_NAME_AND_ENUM(BAUD3500000),
+EXPAND_TO_NAME_AND_ENUM(BAUD4000000),
+#  endif
+#endif //Q_OS_UNIX
+#if defined(Q_OS_WIN) || defined(qdoc)
+EXPAND_TO_NAME_AND_ENUM(BAUD14400) ,
+EXPAND_TO_NAME_AND_ENUM(BAUD56000) ,
+EXPAND_TO_NAME_AND_ENUM(BAUD128000),
+EXPAND_TO_NAME_AND_ENUM(BAUD256000),
+#endif  //Q_OS_WIN
+EXPAND_TO_NAME_AND_ENUM(BAUD110)    ,
+EXPAND_TO_NAME_AND_ENUM(BAUD300)    ,
+EXPAND_TO_NAME_AND_ENUM(BAUD600)    ,
+EXPAND_TO_NAME_AND_ENUM(BAUD1200)   ,
+EXPAND_TO_NAME_AND_ENUM(BAUD2400)   ,
+EXPAND_TO_NAME_AND_ENUM(BAUD4800)   ,
+EXPAND_TO_NAME_AND_ENUM(BAUD9600)   ,
+EXPAND_TO_NAME_AND_ENUM(BAUD19200)  ,
+EXPAND_TO_NAME_AND_ENUM(BAUD38400)  ,
+EXPAND_TO_NAME_AND_ENUM(BAUD57600)  ,
+EXPAND_TO_NAME_AND_ENUM(BAUD115200) ,
 };
 
 dataBits_t dataBitsArrea[] = {
@@ -130,111 +130,122 @@ queryMode_t queryModeArrea[]=
 };
 
 QSerialPortIO::QSerialPortIO(QObject * parent, const QextSerialPort::QueryMode & mode) :QPortIO(parent),ui(new Ui::SerialPortConfig),m_Serial( mode ){
-  DEBUG << "Create QSerialPortIO";
-  m_PortType = SERIALPORT_IO;
-  connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );
+    DEBUG << "Create QSerialPortIO";
+    m_PortType = SERIALPORT_IO;
+    connect( &m_Serial,SIGNAL(readyRead()),this,SLOT(dataReady()) );
 }
 
 QSerialPortIO::~QSerialPortIO() {
-  DEBUG << "Destroy QPortIO";
+    DEBUG << "Destroy QPortIO";
+    delete ui;
 }
 
 void QSerialPortIO::showPortConfiguration(QWidget * parent) {
-  if( parent ){
-      ui->setupUi( parent );
-      initUi();
-  }
-  else{
-      QDialog dlg;
-      ui->setupUi(&dlg);
-      initUi();
-      dlg.exec();
-  }
+    if( 0 != m_PioWidget )
+    {
+        //TODO ???????
+        m_PioWidget->setVisible( true );
+        return;
+    }
+    if( parent ){
+        m_PioWidget = new  QWidget( parent );
+        parent->setLayout( new QGridLayout(parent) );
+        parent->layout()->addWidget( m_PioWidget );
+        ui->setupUi( m_PioWidget );
+        initUi();
+    }
+    else{
+        QDialog* dlg = new QDialog();
+        m_PioWidget = dlg;
+        ui->setupUi(dlg);
+        initUi();
+        dlg->exec();
+    }
 }
 
 void QSerialPortIO::initUi() {
-  int i;
-  QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
-  foreach (QextPortInfo info, ports) {
-      DEBUG << "port name:"       << info.portName;
-      DEBUG << "friendly name:"   << info.friendName;
-      DEBUG << "physical name:"   << info.physName;
-      DEBUG << "enumerator name:" << info.enumName;
-      DEBUG << "vendor ID:"       << info.vendorID;
-      DEBUG << "product ID:"      << info.productID;
-      ui->portCombo->addItem( info.physName );
-      //ui->queryModeCombo->setItemData();
-  }
-  for( i = 0; i < (int)(sizeof(supportedBaudRateType)/sizeof(supportedBaudRateType[0])) ;i++ ){
-      ui->baudRateCombo->addItem( supportedBaudRateType[i].name );
-      ui->baudRateCombo->setItemData( i,  supportedBaudRateType[i].value );
-  }
-  
-  for( i = 0; i < (int)(sizeof(dataBitsArrea)/sizeof(dataBitsArrea[0])) ;i++ ){
-      ui->dataBitsCombo->addItem( dataBitsArrea[i].name );
-      ui->dataBitsCombo->setItemData( i,  dataBitsArrea[i].value );
-  }
-  
-  for( i=0; i < (int)(sizeof(stopBitsArrea)/sizeof(stopBitsArrea[0])) ;i++ ){
-      ui->stopBitsCombo->addItem( stopBitsArrea[i].name );
-      ui->stopBitsCombo->setItemData(  i, stopBitsArrea[i].value );
-  }
-  
-  for( i=0; i < (int)(sizeof(flowTypeArrea)/sizeof(flowTypeArrea[0])) ;i++ ){
-      ui->flowControlCombo->addItem( flowTypeArrea[i].name );
-      ui->flowControlCombo->setItemData(  i, flowTypeArrea[i].value );
-  }
-  
-  for( i=0; i < (int)(sizeof(parityArrea)/sizeof(parityArrea[0])) ;i++ ){
-      ui->parityCombo->addItem( parityArrea[i].name );
-      ui->parityCombo->setItemData( i, parityArrea[i].value );
-  }
-  
-  for( i=0; i < (int)(sizeof(queryModeArrea)/sizeof(queryModeArrea[0])) ;i++ ){
-      ui->queryModeCombo->addItem( queryModeArrea[i].name );
-      ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
-  }
-  
-  connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )));
-  connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) ) );
-  connect( ui->baudRateCombo,    SIGNAL(activated(int)),     this, SLOT( setBaudRate(int))   );
-  connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(int) )    );
-  connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(int) )  );
-  connect( ui->flowControlCombo, SIGNAL(activated(int)), this, SLOT( setFlowControl(int))    );
-  connect( ui->timeoutSpin,      SIGNAL(valueChanged(int)),     this, SLOT( setTimeout(int) ));
+    int i;
+    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    foreach (QextPortInfo info, ports) {
+        DEBUG << "port name:"       << info.portName;
+        DEBUG << "friendly name:"   << info.friendName;
+        DEBUG << "physical name:"   << info.physName;
+        DEBUG << "enumerator name:" << info.enumName;
+        DEBUG << "vendor ID:"       << info.vendorID;
+        DEBUG << "product ID:"      << info.productID;
+        ui->portCombo->addItem( info.physName );
+        //ui->queryModeCombo->setItemData();
+    }
+    for( i = 0; i < (int)(sizeof(supportedBaudRateType)/sizeof(supportedBaudRateType[0])) ;i++ ){
+        ui->baudRateCombo->addItem( supportedBaudRateType[i].name );
+        ui->baudRateCombo->setItemData( i,  supportedBaudRateType[i].value );
+    }
+
+    for( i = 0; i < (int)(sizeof(dataBitsArrea)/sizeof(dataBitsArrea[0])) ;i++ ){
+        ui->dataBitsCombo->addItem( dataBitsArrea[i].name );
+        ui->dataBitsCombo->setItemData( i,  dataBitsArrea[i].value );
+    }
+
+    for( i=0; i < (int)(sizeof(stopBitsArrea)/sizeof(stopBitsArrea[0])) ;i++ ){
+        ui->stopBitsCombo->addItem( stopBitsArrea[i].name );
+        ui->stopBitsCombo->setItemData(  i, stopBitsArrea[i].value );
+    }
+
+    for( i=0; i < (int)(sizeof(flowTypeArrea)/sizeof(flowTypeArrea[0])) ;i++ ){
+        ui->flowControlCombo->addItem( flowTypeArrea[i].name );
+        ui->flowControlCombo->setItemData(  i, flowTypeArrea[i].value );
+    }
+
+    for( i=0; i < (int)(sizeof(parityArrea)/sizeof(parityArrea[0])) ;i++ ){
+        ui->parityCombo->addItem( parityArrea[i].name );
+        ui->parityCombo->setItemData( i, parityArrea[i].value );
+    }
+
+    for( i=0; i < (int)(sizeof(queryModeArrea)/sizeof(queryModeArrea[0])) ;i++ ){
+        ui->queryModeCombo->addItem( queryModeArrea[i].name );
+        ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
+    }
+
+    connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )));
+    connect( ui->queryModeCombo,   SIGNAL(activated(int)),     this, SLOT( setQueryMode(int) ) );
+    connect( ui->baudRateCombo,    SIGNAL(activated(int)),     this, SLOT( setBaudRate(int))   );
+    connect( ui->parityCombo,      SIGNAL(activated(int)),     this, SLOT( setParity(int) )    );
+    connect( ui->stopBitsCombo,    SIGNAL(activated(int)),     this, SLOT( setStopBits(int) )  );
+    connect( ui->flowControlCombo, SIGNAL(activated(int)), this, SLOT( setFlowControl(int))    );
+    connect( ui->timeoutSpin,      SIGNAL(valueChanged(int)),     this, SLOT( setTimeout(int) ));
 }
 
 void QSerialPortIO::dataReady() {
-  emit readyReadSignal();
+    emit readyReadSignal();
 }
 
 void QSerialPortIO::setPortName(const QString & portName) {
-  m_Serial.setPortName( portName );
+    m_Serial.setPortName( portName );
 }
 
 void QSerialPortIO::setQueryMode(int act) {
-  QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
-  DEBUG <<mode;
-  m_Serial.setQueryMode( mode );
+    QextSerialPort::QueryMode mode = (QextSerialPort::QueryMode)ui->queryModeCombo->itemData( act ).toULongLong();
+    DEBUG <<mode;
+    m_Serial.setQueryMode( mode );
 }
 
 void QSerialPortIO::setBaudRate(int rate) {
-  m_Serial.setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
+    m_Serial.setBaudRate( (BaudRateType)ui->baudRateCombo->itemData( rate ).toInt() );
 }
 
 void QSerialPortIO::setParity(int par) {
-  m_Serial.setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
+    m_Serial.setParity( (ParityType)ui->parityCombo->itemData( par ).toInt()  );
 }
 
 void QSerialPortIO::setStopBits(int stop) {
-  m_Serial.setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
+    m_Serial.setStopBits( (StopBitsType)ui->stopBitsCombo->itemData( stop ).toInt()  );
 }
 
 void QSerialPortIO::setFlowControl(int flow) {
-  m_Serial.setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
+    m_Serial.setFlowControl( (FlowType)ui->flowControlCombo->itemData( flow ).toInt()  );
 }
 
 void QSerialPortIO::setTimeout(int timeout_Ms) {
-  m_Serial.setTimeout( timeout_Ms*1000 );
+    m_Serial.setTimeout( timeout_Ms*1000 );
 }
 

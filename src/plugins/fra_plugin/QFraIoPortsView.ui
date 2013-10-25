@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>274</width>
+    <height>210</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,9 +20,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QListWidget" name="IoList"/>
-     <widget class="QWidget" name="verticalLayoutWidget">
-      <layout class="QVBoxLayout" name="IoCtrlLayout"/>
-     </widget>
+     <widget class="QWidget" name="ioCtrlWidget" native="true"/>
     </widget>
    </item>
   </layout>
