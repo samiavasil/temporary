@@ -20,6 +20,19 @@ QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
 QPortIOSimulator::~QPortIOSimulator() {
 }
 
+class QPortIOSimulatorGUI:public QGroupBox
+{
+public:
+    QPortIOSimulatorGUI(QWidget * parent):QGroupBox( "QPortIOSimulator", parent )
+    {
+        qDebug()<< "Create QPortIOSimulatorGUI\n";
+    }
+    ~QPortIOSimulatorGUI( )
+    {
+        qDebug()<< "Destroy QPortIOSimulatorGUI\n";
+    }
+};
+
 void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
 
     if( 0 != m_PioWidget )
@@ -28,13 +41,14 @@ void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
         m_PioWidget->setVisible( true );
         return;
     }
-    m_PioWidget = new  QGroupBox( "QPortIOSimulator", parent );
+    m_PioWidget = new  QPortIOSimulatorGUI( NULL );
     if( parent->layout() == 0 )
     {
-      QGridLayout*lay =   new QGridLayout(parent);
+      QGridLayout*lay =   new QGridLayout(NULL);
       parent->setLayout( lay );
     }
-    parent->layout()->addWidget( m_PioWidget );
+    m_PioWidget->setVisible( true );
+     parent->layout()->addWidget( m_PioWidget );
 }
 
 int64 QPortIOSimulator::bytesAvailable() {

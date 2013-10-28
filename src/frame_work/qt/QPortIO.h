@@ -4,7 +4,7 @@
 
 #include "frame_work_global.h"
 #include <QWidget>
-
+#include<QPointer>
 #include "base/CPortIO.h"
 
 class FRAME_WORKSHARED_EXPORT QPortIO : public QObject, public CPortIO {
@@ -19,6 +19,6 @@ signals:
     void readyReadBytesSignal();
 
 protected:
-    QWidget* m_PioWidget;
+    QPointer<QWidget> m_PioWidget;
 };
 #endif

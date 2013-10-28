@@ -77,13 +77,7 @@ bool QFraCreator::Create( CFrameWork *fW )
                 }
                 if(  PORT_IO == list[i].type() )
                 {
-                    obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
-                    port =    dynamic_cast<QPortIO*>(obj);//DELL ME
-                    if( port )
-                    {
-                        port->deleteLater();
-                        PIOList->addToList( list[i] );
-                    }
+                     PIOList->addToList( list[i] );
                 }
             }
 
