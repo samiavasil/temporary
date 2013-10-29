@@ -1,5 +1,5 @@
 #include "PortIoSimulatorInterface.h"
-#include<qt/QPortIOSimulator.h>
+#include <QPortIOSimulator.h>
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"

@@ -1,4 +1,4 @@
-#include "qt/QPortIOSimulator.h"
+#include "QPortIOSimulator.h"
 #include<QGridLayout>
 #include <QTimer>
 #include <QObject>
@@ -7,6 +7,7 @@
 #include <QComboBox>
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
+#include "qportiosimulatorui.h"
 
 QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
     DEBUG << "Create QPortIOSimulator";
@@ -20,18 +21,6 @@ QPortIOSimulator::QPortIOSimulator(QObject * parent):QPortIO( parent ) {
 QPortIOSimulator::~QPortIOSimulator() {
 }
 
-class QPortIOSimulatorGUI:public QGroupBox
-{
-public:
-    QPortIOSimulatorGUI(QWidget * parent):QGroupBox( "QPortIOSimulator", parent )
-    {
-        qDebug()<< "Create QPortIOSimulatorGUI\n";
-    }
-    ~QPortIOSimulatorGUI( )
-    {
-        qDebug()<< "Destroy QPortIOSimulatorGUI\n";
-    }
-};
 
 void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
 
@@ -41,7 +30,7 @@ void QPortIOSimulator::showPortConfiguration( QWidget * parent ){
         m_PioWidget->setVisible( true );
         return;
     }
-    m_PioWidget = new  QPortIOSimulatorGUI( NULL );
+    m_PioWidget = new  QportIoSimulatorUI( NULL );
     if( parent->layout() == 0 )
     {
       QGridLayout*lay =   new QGridLayout(NULL);

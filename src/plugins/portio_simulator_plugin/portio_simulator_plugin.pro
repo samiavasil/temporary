@@ -26,15 +26,20 @@ LIBS        += -lframe_work -lqwt
 TARGET   = PortIoSimulatorPlugin
 
 SOURCES += \
-    PortIoSimulatorInterface.cpp
+    PortIoSimulatorInterface.cpp \
+    QPortIOSimulator.cpp \
+    qportiosimulatorui.cpp
 
 HEADERS += \
-    PortIoSimulatorInterface.h
+    PortIoSimulatorInterface.h \
+    QPortIOSimulator.h \
+    qportiosimulatorui.h
 
 
 #LIBS += -L../../  -lfra
 
-FORMS +=
+FORMS += \
+    qportiosimulatorui.ui
 
 RESOURCES +=
 

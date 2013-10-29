@@ -17,7 +17,7 @@ public:
     void AddWidgetToControlArrea ( QWidget* widget );
 private slots:
     void on_StartButton_clicked();
-
+    void on_mdi_change_view_mode(int);
 private:
     Ui::QFraFrameWorkView* ui;
     QList<QObject*> list;

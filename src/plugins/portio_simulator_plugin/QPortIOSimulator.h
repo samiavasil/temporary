@@ -2,7 +2,7 @@
 #define _QPORTIOSIMULATOR_H
 
 
-#include "frame_work_global.h"
+#include "plugin_global.h"
 #include <QByteArray>
 
 #include <QMutex>

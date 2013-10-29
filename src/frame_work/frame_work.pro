@@ -45,8 +45,6 @@ SOURCES += \
     base/CFrameWorkElementsFactory.cpp \
     qt/QFrameWorkElementsFactory.cpp \
     base/CPortIO.cpp \
-    qt/QSerialPortIO.cpp \
-    qt/QPortIOSimulator.cpp \
     qt/QPluginLoaderExt.cpp \
     qt/QPluginDescriptor.cpp \
     qt/QPluginList.cpp \
@@ -57,7 +55,8 @@ SOURCES += \
     qt/QCreator.cpp \
     qt/PluginDescription.cpp \
     qt/qdbg.cpp \
-    qt/QloggerInterface.cpp
+    qt/QloggerInterface.cpp \
+    qt/QSerialPortIO.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -78,8 +77,6 @@ HEADERS +=\
     base/CFrameWorkElementsFactory.h \
     qt/QFrameWorkElementsFactory.h \
     base/CPortIO.h \
-    qt/QSerialPortIO.h \
-    qt/QPortIOSimulator.h \
     qt/QPluginLoaderExt.h \
     qt/QPluginDescriptor.h \
     qt/QPluginList.h \
@@ -93,7 +90,8 @@ HEADERS +=\
     qt/PluginDescription.h \
     qt/qdbg.h \
     qt/QloggerInterface.h \
-    base/debug.h
+    base/debug.h \
+    qt/QSerialPortIO.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

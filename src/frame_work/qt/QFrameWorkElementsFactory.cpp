@@ -12,7 +12,7 @@
 #include "base/CFrameWork.h"
 #include "base/CControlView.h"
 #include "base/CDataPlot.h"
-#include "qt/QPortIOSimulator.h"
+
 
 
 //#define ENABLE_VERBOSE_DUMP
@@ -31,7 +31,7 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
   DEBUG << "Create PortIo";
   switch( type ) {                                 
   case CPortIO::SIMULATOR_IO :{      
-       port = new QPortIOSimulator();                 
+
       break;                                       
   }                                                
   case CPortIO::SERIALPORT_IO :{                   
