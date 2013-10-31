@@ -19,8 +19,12 @@ QFraFrameWork::QFraFrameWork(QCreator * creator  , QWidget * parent ):
     tool->setFloatable( true );
     tool->setMovable( true );
     ui->plotLayout->insertWidget( 0, tool );
-//ui->PlotWidget->addSubWindow(tool,Qt::Tool);
-    //ui->PlotWidget->addWidget(tool);
+    //ui->PlotWidgetMDI->setTabShape( QTabWidget::Triangular );
+    ui->PlotWidgetMDI->setTabsClosable( true );
+    ui->PlotWidgetMDI->setTabsMovable( true );
+   // ui->PlotWidgetMDI->setDocumentMode( true );
+//ui->PlotWidgetMDI->addSubWindow(tool,Qt::Tool);
+    //ui->PlotWidgetMDI->addWidget(tool);
     QObject::connect(combo, SIGNAL(currentIndexChanged(int)) , this, SLOT(on_mdi_change_view_mode(int)));
 }
 
@@ -30,27 +34,56 @@ QFraFrameWork::~QFraFrameWork(){
 
 void QFraFrameWork::on_mdi_change_view_mode(int id )
 {
-    ui->PlotWidget->setViewMode( (QMdiArea::ViewMode)id );
-    ui->PlotWidget->setTabPosition( QTabWidget::South );
+    ui->PlotWidgetMDI->setViewMode( (QMdiArea::ViewMode)id );
+    ui->PlotWidgetMDI->setTabPosition( QTabWidget::South );
 }
 
 #include <QMdiSubWindow>
+void QFraFrameWork::on_detach_MDI_window( bool togg )
+{
+    QAction*act = dynamic_cast<QAction* >( QObject::sender() );
+    if( act )
+    {
+        QMdiSubWindow* win = dynamic_cast<QMdiSubWindow* >( act->parentWidget() );
+        if( win )
+        {
+            if( togg )
+            {
+                ui->PlotWidgetMDI->removeSubWindow( win );
+
+            }
+            else
+            {
+                Q_ASSERT( win->parent() == NULL );
+                ui->PlotWidgetMDI->addSubWindow( win );
+            }
+            win->setVisible(true);
+        }
+    }
+}
+
+
+
 void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
 {
     //ui->verticalLayout->addWidget(widget);
-    //ui->PlotWidget->layout()->addWidget(widget);
-   QMdiSubWindow * mdi_win =  ui->PlotWidget->addSubWindow(widget);
-    //ui->PlotWidget->setVisible(true);
-    //ui->PlotWidget->setCurrentIndex(2);
+    //ui->PlotWidgetMDI->layout()->addWidget(widget);
+    QMdiSubWindow * mdi_win =  ui->PlotWidgetMDI->addSubWindow( widget );
+    //ui->PlotWidgetMDI->setVisible(true);
+    //ui->PlotWidgetMDI->setCurrentIndex(2);
 
     QAction* act = new QAction("Tuk she ti go tura", mdi_win );
+    act->setCheckable(true);
+    act->setChecked(false);
     act->setMenuRole(QAction::ApplicationSpecificRole);
     mdi_win->insertAction(0 , act );
     mdi_win->setContextMenuPolicy ( Qt::ActionsContextMenu );
-
+    QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(on_detach_MDI_window(bool)) );
+//mdi_win->setParent(NULL);
+//mdi_win->setVisible(true);
     list.append(widget);
 
-    //ui->PlotWidget->removeSubWindow( widget );
+    //ui->PlotWidgetMDI->removeSubWindow( widget );
     //widget->setVisible(true);
 }
 

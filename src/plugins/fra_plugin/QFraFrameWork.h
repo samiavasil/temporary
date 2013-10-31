@@ -18,9 +18,9 @@ public:
 private slots:
     void on_StartButton_clicked();
     void on_mdi_change_view_mode(int);
+    void on_detach_MDI_window(bool togg);
 private:
     Ui::QFraFrameWorkView* ui;
     QList<QObject*> list;
 };
-
 #endif // QFRAFRAMEWORK_H

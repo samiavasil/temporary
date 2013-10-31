@@ -22,7 +22,7 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <layout class="QVBoxLayout" name="plotLayout">
        <item>
-        <widget class="QMdiArea" name="PlotWidget"/>
+        <widget class="QMdiArea" name="PlotWidgetMDI"/>
        </item>
       </layout>
      </widget>
