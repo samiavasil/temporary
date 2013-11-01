@@ -50,13 +50,14 @@ void QFraFrameWork::on_detach_MDI_window( bool togg )
             if( togg )
             {
                 ui->PlotWidgetMDI->removeSubWindow( win );
-
+                Q_ASSERT( win->parent() == NULL );
             }
             else
             {
                 Q_ASSERT( win->parent() == NULL );
                 ui->PlotWidgetMDI->addSubWindow( win );
             }
+            win->adjustSize();
             win->setVisible(true);
         }
     }
@@ -66,12 +67,7 @@ void QFraFrameWork::on_detach_MDI_window( bool togg )
 
 void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
 {
-    //ui->verticalLayout->addWidget(widget);
-    //ui->PlotWidgetMDI->layout()->addWidget(widget);
     QMdiSubWindow * mdi_win =  ui->PlotWidgetMDI->addSubWindow( widget );
-    //ui->PlotWidgetMDI->setVisible(true);
-    //ui->PlotWidgetMDI->setCurrentIndex(2);
-
     QAction* act = new QAction("Tuk she ti go tura", mdi_win );
     act->setCheckable(true);
     act->setChecked(false);
@@ -79,12 +75,8 @@ void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
     mdi_win->insertAction(0 , act );
     mdi_win->setContextMenuPolicy ( Qt::ActionsContextMenu );
     QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(on_detach_MDI_window(bool)) );
-//mdi_win->setParent(NULL);
-//mdi_win->setVisible(true);
+    mdi_win->adjustSize();
     list.append(widget);
-
-    //ui->PlotWidgetMDI->removeSubWindow( widget );
-    //widget->setVisible(true);
 }
 
 void QFraFrameWork::AddWidgetToControlArrea ( QWidget* widget ){
