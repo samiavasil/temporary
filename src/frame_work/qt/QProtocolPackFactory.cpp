@@ -15,16 +15,16 @@ QProtocolPackFactory::QProtocolPackFactory(QProtocolLoader * pLoader, QObject * 
       u8 data[2];
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG4_ID,data);
+      setMessage(AIN1_ENBLE,data);
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG2_ID,data);
+      setMessage(AIN1_ENBLE,data);
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG3_ID,data);
+      setMessage(AIN2_ENBLE,data);
       data[0]=0xff;
       data[1]=0xff;
-      setMessage(MSG1_ID,data);
+      setMessage(AIN1_ENBLE,data);
   
 #ifdef DUMP_PROTOCOL_LOAD
       DEBUG << "DUMP protocol loaded packet types");
