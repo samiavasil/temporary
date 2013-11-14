@@ -52,43 +52,8 @@
             <bool>false</bool>
            </property>
            <property name="columnCount">
-            <number>1</number>
+            <number>0</number>
            </property>
-           <column>
-            <property name="text">
-             <string notr="true">1</string>
-            </property>
-           </column>
-           <item>
-            <property name="text">
-             <string>New Item</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>New Item</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>New Item</string>
-            </property>
-            <item>
-             <property name="text">
-              <string>New Subitem</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>New Subitem</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>New Subitem</string>
-               </property>
-              </item>
-             </item>
-            </item>
-           </item>
           </widget>
          </item>
         </layout>
@@ -180,8 +145,14 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNewProject"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNewProject">
+   <property name="text">
+    <string>NewProject</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

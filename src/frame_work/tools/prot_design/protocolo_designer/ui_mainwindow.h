@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Nov 13 17:31:46 2013
+** Created: Thu Nov 14 18:22:35 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -32,6 +32,7 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionNewProject;
     QWidget *centralWidget;
     QGridLayout *gridLayout_3;
     QSplitter *splitter;
@@ -52,6 +53,8 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(622, 546);
+        actionNewProject = new QAction(MainWindow);
+        actionNewProject->setObjectName(QString::fromUtf8("actionNewProject"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_3 = new QGridLayout(centralWidget);
@@ -83,19 +86,10 @@ public:
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         treeWidget = new QTreeWidget(Packets);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
-        treeWidget->setHeaderItem(__qtreewidgetitem);
-        new QTreeWidgetItem(treeWidget);
-        new QTreeWidgetItem(treeWidget);
-        QTreeWidgetItem *__qtreewidgetitem1 = new QTreeWidgetItem(treeWidget);
-        QTreeWidgetItem *__qtreewidgetitem2 = new QTreeWidgetItem(__qtreewidgetitem1);
-        QTreeWidgetItem *__qtreewidgetitem3 = new QTreeWidgetItem(__qtreewidgetitem2);
-        new QTreeWidgetItem(__qtreewidgetitem3);
         treeWidget->setObjectName(QString::fromUtf8("treeWidget"));
         treeWidget->setAnimated(true);
         treeWidget->setExpandsOnDoubleClick(false);
-        treeWidget->setColumnCount(1);
+        treeWidget->setColumnCount(0);
 
         gridLayout_2->addWidget(treeWidget, 0, 0, 1, 1);
 
@@ -144,6 +138,8 @@ public:
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
+        mainToolBar->addAction(actionNewProject);
+
         retranslateUi(MainWindow);
 
         tabWidget->setCurrentIndex(0);
@@ -155,24 +151,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        actionNewProject->setText(QApplication::translate("MainWindow", "NewProject", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(Messages), QApplication::translate("MainWindow", "Messages", 0, QApplication::UnicodeUTF8));
-
-        const bool __sortingEnabled = treeWidget->isSortingEnabled();
-        treeWidget->setSortingEnabled(false);
-        QTreeWidgetItem *___qtreewidgetitem = treeWidget->topLevelItem(0);
-        ___qtreewidgetitem->setText(0, QApplication::translate("MainWindow", "New Item", 0, QApplication::UnicodeUTF8));
-        QTreeWidgetItem *___qtreewidgetitem1 = treeWidget->topLevelItem(1);
-        ___qtreewidgetitem1->setText(0, QApplication::translate("MainWindow", "New Item", 0, QApplication::UnicodeUTF8));
-        QTreeWidgetItem *___qtreewidgetitem2 = treeWidget->topLevelItem(2);
-        ___qtreewidgetitem2->setText(0, QApplication::translate("MainWindow", "New Item", 0, QApplication::UnicodeUTF8));
-        QTreeWidgetItem *___qtreewidgetitem3 = ___qtreewidgetitem2->child(0);
-        ___qtreewidgetitem3->setText(0, QApplication::translate("MainWindow", "New Subitem", 0, QApplication::UnicodeUTF8));
-        QTreeWidgetItem *___qtreewidgetitem4 = ___qtreewidgetitem3->child(0);
-        ___qtreewidgetitem4->setText(0, QApplication::translate("MainWindow", "New Subitem", 0, QApplication::UnicodeUTF8));
-        QTreeWidgetItem *___qtreewidgetitem5 = ___qtreewidgetitem4->child(0);
-        ___qtreewidgetitem5->setText(0, QApplication::translate("MainWindow", "New Subitem", 0, QApplication::UnicodeUTF8));
-        treeWidget->setSortingEnabled(__sortingEnabled);
-
         tabWidget->setTabText(tabWidget->indexOf(Packets), QApplication::translate("MainWindow", "Packets", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->verticalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "MsgId", 0, QApplication::UnicodeUTF8));

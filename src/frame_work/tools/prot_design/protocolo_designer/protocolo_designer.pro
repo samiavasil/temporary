@@ -5,14 +5,17 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += sql
 TARGET = protocolo_designer
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    qsqlconnectiondialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    qsqlconnectiondialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    qsqlconnectiondialog.ui
