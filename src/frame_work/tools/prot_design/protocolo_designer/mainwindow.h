@@ -8,6 +8,8 @@ class MainWindow;
 }
 
 QT_FORWARD_DECLARE_CLASS(QSqlError)
+QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
+
 typedef struct table_desc_ table_desc_t;
 
 class MainWindow : public QMainWindow
@@ -21,8 +23,8 @@ public:
 protected:
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                 const QString &user, const QString &passwd, int port);
-    int  createTables();
-    int  createTable( const table_desc_t *desc );
+    int  createTables(QSqlDatabase &db);
+    int  createTable( QSqlDatabase &db, const table_desc_t *desc );
 private slots:
     void on_actionNewProject_triggered();
 
