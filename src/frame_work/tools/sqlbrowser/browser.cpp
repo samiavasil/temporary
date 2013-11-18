@@ -58,7 +58,7 @@ Browser::Browser(QWidget *parent)
                                  tr("This demo requires at least one Qt database driver. "
                                     "Please check the documentation how to build the "
                                     "Qt SQL plugins."));
-
+    connect( this, SIGNAL(statusMessage(QString)), logEdit, SLOT(append(QString)) );
     emit statusMessage(tr("Ready."));
 }
 
@@ -66,6 +66,7 @@ Browser::~Browser()
 {
     QSqlDatabase::database("in_mem_db", false).close();
     QSqlDatabase::database("in_mem_db1", false).close();
+
 }
 
 void Browser::exec()
@@ -100,6 +101,11 @@ QSqlError Browser::addConnection(const QString &driver, const QString &dbName, c
         db = QSqlDatabase();
         QSqlDatabase::removeDatabase(QString("Browser%1").arg(cCount));
     }
+    QSqlQuery q("", db);
+  //  q.exec("drop table Movies");
+//     q.exec("drop table Names");
+   if(!  q.exec("PRAGMA foreign_keys = ON") )
+       qDebug("Can't enable foreign keys!!!! ");
     connectionWidget->refresh();
 
     return err;
@@ -131,6 +137,7 @@ void Browser::addConnection()
         if (!db.open())
             QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                          "opening the connection: ") + db.lastError().text());
+
 
         QSqlQuery q("", db);
       //  q.exec("drop table Movies");
@@ -264,4 +271,9 @@ void Browser::about()
     QMessageBox::about(this, tr("About"), tr("The SQL Browser demonstration "
         "shows how a data browser can be used to visualize the results of SQL"
         "statements on a live database"));
+}
+
+void Browser::on_pushButton_clicked()
+{
+    logEdit->clear();
 }
