@@ -111,6 +111,66 @@ QSqlError Browser::addConnection(const QString &driver, const QString &dbName, c
     return err;
 }
 
+void createRelationalTables( QSqlDatabase& db )
+{
+    QSqlQuery query( "",db );
+    if(!  query.exec("PRAGMA foreign_keys = ON") )
+        qDebug("Can't enable foreign keys!!!! ");
+    query.exec("CREATE TABLE MsgValueTypes ( ID INTEGER PRIMARY KEY AUTOINCREMENT, typeName VARCHAR( 1, 20 )  NOT NULL UNIQUE );");
+
+    /*query.exec("insert into MsgValueTypes values(1, 'Espen', 5000, 47)");
+    query.exec("insert into employee values(2, 'Harald', 80000, 49)");
+    query.exec("insert into employee values(3, 'Sam', 100, 1)");*/
+    query.exec("CREATE TABLE Messages ( ID INTEGER( 1, 11111 )  PRIMARY KEY,bitLen INTEGER NOT NULL, type  INTEGER NOT NULL,  FOREIGN KEY(type) REFERENCES MsgValueTypes ( ID ) )");
+
+    /*query.exec("insert into city values(100, 'San Jose')");
+    query.exec("insert into city values(5000, 'Oslo')");
+    query.exec("insert into city values(80000, 'Munich')");*/
+
+    query.exec("CREATE TABLE EnumTable ( ID INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR  NOT NULL,value  INTEGER( 1, 10001 ),enumID INTEGER( 1, 20 ) NOT NULL )");
+    /*query.exec("insert into country values(1, 'USA')");
+    query.exec("insert into country values(47, 'Norway')");
+    query.exec("insert into country values(49, 'Germany')");*/
+}
+
+void initializeModel( const QString &t, QSqlRelationalTableModel *model )
+{
+    if( NULL == model )
+    {
+        return;
+    }
+    model->setTable( t );
+    model->setEditStrategy(QSqlTableModel::OnFieldChange);
+    if(  !t.compare("MsgValueTypes") )
+    {
+
+    }
+    else if( !t.compare("Messages") )
+    {
+        model->setRelation(2, QSqlRelation("MsgValueTypes", "ID", "typeName"));
+        //model->setRelation(3, QSqlRelation("country", "id", "name"));
+    }else if( !t.compare("EnumTable") )
+    {
+
+    }
+    model->select();
+
+#if 0
+    model->setTable("employee");
+
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->setRelation(2, QSqlRelation("city", "id", "name"));
+    model->setRelation(3, QSqlRelation("country", "id", "name"));
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("City"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Country"));
+
+    model->select();
+#endif
+}
+
 void Browser::addConnection()
 {
     QSqlConnectionDialog dialog(this);
@@ -131,17 +191,22 @@ void Browser::addConnection()
 
         //db.setDatabaseName(":bauuu:");
         db.setHostName("localhost");
-             db.setDatabaseName("customdb");
-             db.setUserName("mojito");
-             db.setPassword("J0a1m8");
+        db.setDatabaseName("customdb");
+        db.setUserName("mojito");
+        db.setPassword("J0a1m8");
         if (!db.open())
             QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                          "opening the connection: ") + db.lastError().text());
+       QSqlQuery q("", db);
+       q.exec("drop table EnumTable");
+        q.exec("drop table Messages");
+        q.exec("drop table MsgValueTypes");
+
+        createRelationalTables( db );
+#if 0
 
 
-        QSqlQuery q("", db);
-      //  q.exec("drop table Movies");
-   //     q.exec("drop table Names");
+
         if(! q.exec("create table Movies (id integer primary key, Title varchar, Director varchar, Rating number)") )
                  qDebug() << q.lastError().databaseText();
         q.exec("insert into Movies values (0, 'Metropolis', 'Fritz Lang', '8.4')");
@@ -157,6 +222,7 @@ void Browser::addConnection()
      //   q.exec("insert into Names values (4, 'Sherlock', 'Holmes', 'London')");
          if(! q.exec("insert into Names values (5, 'Wlock', 'Holmes', 'London')") )
                 qDebug() << q.lastError().databaseText();
+#endif
         connectionWidget->refresh();
         qDebug()<< db.record( db.tables()[0] );
     } else {
@@ -171,13 +237,23 @@ void Browser::addConnection()
 
 void Browser::showTable(const QString &t)
 {
-    QSqlTableModel *model = new QSqlTableModel(table, connectionWidget->currentDatabase());
+    //QSqlTableModel *model = new QSqlTableModel(table, connectionWidget->currentDatabase());
+
+    QSqlRelationalTableModel* model = new QSqlRelationalTableModel(table, connectionWidget->currentDatabase());
+
+#if 0
     model->setEditStrategy(QSqlTableModel::OnRowChange);
     model->setTable(connectionWidget->currentDatabase().driver()->escapeIdentifier(t, QSqlDriver::TableName));
     model->select();
+#endif
+    initializeModel( t, model );
+
     if (model->lastError().type() != QSqlError::NoError)
         emit statusMessage(model->lastError().text());
+    QItemSelectionModel *m = table->selectionModel();
     table->setModel(model);
+    delete m;
+    table->setItemDelegate(new QSqlRelationalDelegate(table));
     table->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
 
     connect(table->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -277,3 +353,5 @@ void Browser::on_pushButton_clicked()
 {
     logEdit->clear();
 }
+
+

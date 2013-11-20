@@ -96,6 +96,7 @@ signals:
     void statusMessage(const QString &message);
 private slots:
     void on_pushButton_clicked();
+
 };
 
 #endif
