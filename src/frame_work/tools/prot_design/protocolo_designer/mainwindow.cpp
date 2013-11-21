@@ -57,7 +57,7 @@ QSqlError MainWindow::addConnection(const QString &driver, const QString &dbName
     }
     createTables(db);
     showTable( ePACKET );
-    db.close();
+  //  db.close();
     return err;
 }
 
@@ -84,9 +84,9 @@ const items_t net_table_items_names[] =
 
 const items_t node_table_items_names[] =
 {
-    {"ID",        " integer(1,200) primary key" },
+    {"ID",        " integer primary key" },
     {"nodeName",  " varchar"             },
-    {"netName",   " varchar NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" }
+    {"netName",   " INTEGER NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( ID )" }
 };
 
 
@@ -94,7 +94,7 @@ const items_t packets_table_items_names[] = {
     {"ID",         " integer primary key"},
     {"packName",   " varchar"            },
     {"Messages",   " integer"            },
-    {"nodeName",   " varchar NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( nodeName )" }
+    {"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" }
 };
 
 const items_t messages_table_items_names[] =
@@ -168,17 +168,17 @@ void initializeModel( column_t type, QSqlRelationalTableModel *model )
         }
         case eNODE    :
         {
-            model->setRelation( 2, QSqlRelation( tables[eNET], "netName", "netName") );
+            model->setRelation( 2, QSqlRelation( tables[eNET], "ID", "netName") );
             break;
         }
         case ePACKET  :
         {
-            model->setRelation( 3, QSqlRelation( tables[eNODE], "nodeName", "nodeName") );
+            model->setRelation( 3, QSqlRelation( tables[eNODE], "ID", "nodeName") );
             break;
         }
         case eMESSAGES:
         {
-          //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "packName", "packName") );
+          //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
             break;
         }
         default:
@@ -207,39 +207,14 @@ void initializeModel( column_t type, QSqlRelationalTableModel *model )
 
 
 
-void createRelationalTables( QSqlDatabase& db )
-{
-    QSqlQuery query( "",db );
-    if(!  query.exec("PRAGMA foreign_keys = ON") )
-        qDebug("Can't enable foreign keys!!!! ");
-
-    query.exec("CREATE TABLE MsgValueTypes ( ID INTEGER PRIMARY KEY AUTOINCREMENT, typeName VARCHAR( 1, 20 )  NOT NULL UNIQUE );");
-    /*
-    query.exec("insert into MsgValueTypes values(1, 'Espen', 5000, 47)");
-    query.exec("insert into employee values(2, 'Harald', 80000, 49)");
-    query.exec("insert into employee values(3, 'Sam', 100, 1)");
-    */
-
-    query.exec("CREATE TABLE Messages ( ID INTEGER( 1, 11111 )  PRIMARY KEY,bitLen INTEGER NOT NULL, type  INTEGER NOT NULL,  FOREIGN KEY(type) REFERENCES MsgValueTypes ( ID ) )");
-    /*
-    query.exec("insert into city values(100, 'San Jose')");
-    query.exec("insert into city values(5000, 'Oslo')");
-    query.exec("insert into city values(80000, 'Munich')");
-    */
-
-    query.exec("CREATE TABLE EnumTable ( ID INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR  NOT NULL,value  INTEGER( 1, 10001 ),enumID INTEGER( 1, 20 ) NOT NULL )");
-    /*
-    query.exec("insert into country values(1, 'USA')");
-    query.exec("insert into country values(47, 'Norway')");
-    query.exec("insert into country values(49, 'Germany')");
-    */
-}
-
 
 
 void MainWindow::showTable( column_t type )
 {
     QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::connectionNames()[QSqlDatabase::connectionNames().count()-1]);
+    QSqlQuery q("", db);
+  //  EXEC_QUERY(q,"PRAGMA foreign_keys = ON");
+
     QSqlRelationalTableModel* model = new QSqlRelationalTableModel(ui->tableView, db);
 
     initializeModel( type, model );
@@ -249,21 +224,18 @@ void MainWindow::showTable( column_t type )
     QItemSelectionModel *m = ui->tableView->selectionModel();
     ui->tableView->setModel(model);
     delete m;
+    QAbstractItemDelegate* itemDel = ui->tableView->itemDelegate();
     ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
+    delete itemDel;
     ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
-
-   // connect(ui->tableView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-     //       this, SLOT(currentChanged()));
-
 }
 
 
-int MainWindow::createTable( QSqlDatabase& db1, const table_desc_t* desc )
+int MainWindow::createTable( QSqlDatabase& db, const table_desc_t* desc )
 {
     qDebug()<<"Connection names:"<<QSqlDatabase::connectionNames();
-    QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::connectionNames()[QSqlDatabase::connectionNames().count()-1]);
-    qDebug()<<"Used connection"<<db.connectionName();
     QSqlQuery q("", db);
+    qDebug()<<"Used connection"<<db.connectionName();
     QString str(tr("create table %1 (").arg( desc->name ));
     for(int i=0; i< desc->items_count; i++)
     {
@@ -284,11 +256,16 @@ int MainWindow::createTables( QSqlDatabase& db )
     //  q.exec("drop table Movies");
     // q.exec("drop table Packets");
 
+    EXEC_QUERY(q,"PRAGMA foreign_keys = ON");
+
    //TODO DELL ME
-     EXEC_QUERY( q,"drop table Nets");
-    EXEC_QUERY( q,"drop table Nodes");
-    EXEC_QUERY( q,"drop table Packets");
+
+
+
     EXEC_QUERY( q,"drop table Messages");
+    EXEC_QUERY( q,"drop table Packets");
+    EXEC_QUERY( q,"drop table Nodes");
+    EXEC_QUERY( q,"drop table Nets");
 
     for( int i=0; i < GET_ARREA_NUMS(tables_descriptors); i++ )
     {
@@ -406,9 +383,12 @@ void MainWindow::deleteRow()
 
     QModelIndexList currentSelection = ui->tableView->selectionModel()->selectedIndexes();
     for (int i = 0; i < currentSelection.count(); ++i) {
-        if (currentSelection.at(i).column() != 0)
-            continue;
-        model->removeRow(currentSelection.at(i).row());
+       //if (currentSelection.at(i).column() != 0)
+        //    continue;
+        if( !model->removeRow(currentSelection.at(i).row()) )
+        {
+            qDebug() << "Can,t remove row";
+        }
     }
 
     model->submitAll();
