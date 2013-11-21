@@ -57,7 +57,7 @@ QSqlError MainWindow::addConnection(const QString &driver, const QString &dbName
     }
     createTables(db);
     showTable( ePACKET );
-  //  db.close();
+    //  db.close();
     return err;
 }
 
@@ -79,31 +79,35 @@ typedef struct
 const items_t net_table_items_names[] =
 {
     {"ID", " integer primary key"},
-    {"netName",  " varchar"},
+    {"netName",  " varchar  NOT NULL UNIQUE"},
+    {"CHECK(netName!='')",""}
 };
 
 const items_t node_table_items_names[] =
 {
     {"ID",        " integer primary key" },
-    {"nodeName",  " varchar"             },
-    {"netName",   " INTEGER NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( ID )" }
+    {"nodeName",  " varchar NOT NULL UNIQUE"  },
+    {"netName",   " INTEGER NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( ID )" },
+    {"CHECK( nodeName!='' )",""}
 };
 
 
 const items_t packets_table_items_names[] = {
     {"ID",         " integer primary key"},
-    {"packName",   " varchar"            },
+    {"packName",   " varchar NOT NULL UNIQUE" },
     {"Messages",   " integer"            },
-    {"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" }
+    {"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },
+    {"CHECK( packName!='')",""}
 };
 
 const items_t messages_table_items_names[] =
 {
     {"ID",           " integer primary key"},
-    {"msgName",      " varchar"            },
+    {"msgName",      " varchar NOT NULL UNIQUE" },
     {"BitLen",       " integer"            },
     {"Type",         " integer"            },
     {"DefaultValue", " integer"            },
+    {"CHECK( msgName !='')",""}
   /*{"packName",     " INTEGER,  FOREIGN KEY(packName) REFERENCES Packets ( ID )" }*/
 };
 
@@ -223,6 +227,14 @@ void MainWindow::showTable( column_t type )
         qDebug() << model->lastError().text();
     QItemSelectionModel *m = ui->tableView->selectionModel();
     ui->tableView->setModel(model);
+    if (model->lastError().type() != QSqlError::NoError)
+        qDebug() << model->lastError();
+    else if (model->query().isSelect())
+        qDebug() << "Query OK.";
+    else
+        qDebug() << tr("Query OK, number of affected rows: %1").arg(
+                           model->query().numRowsAffected());
+
     delete m;
     QAbstractItemDelegate* itemDel = ui->tableView->itemDelegate();
     ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
@@ -367,10 +379,16 @@ void MainWindow::insertRow()
 
     QModelIndex insertIndex = ui->tableView->currentIndex();
     int row = insertIndex.row() == -1 ? 0 : insertIndex.row();
-    model->insertRow(row);
-    insertIndex = model->index(row, 0);
-    ui->tableView->setCurrentIndex(insertIndex);
-    ui->tableView->edit(insertIndex);
+    if( model->insertRow(row) )
+    {
+        insertIndex = model->index(row, 0);
+        ui->tableView->setCurrentIndex(insertIndex);
+        ui->tableView->edit(insertIndex);
+    }
+    else
+    {
+        qDebug() << model->lastError();
+    }
 }
 
 void MainWindow::deleteRow()
@@ -383,15 +401,13 @@ void MainWindow::deleteRow()
 
     QModelIndexList currentSelection = ui->tableView->selectionModel()->selectedIndexes();
     for (int i = 0; i < currentSelection.count(); ++i) {
-       //if (currentSelection.at(i).column() != 0)
-        //    continue;
-        if( !model->removeRow(currentSelection.at(i).row()) )
-        {
-            qDebug() << "Can,t remove row";
-        }
+        model->removeRow(currentSelection.at(i).row());
+    }
+    if( ! model->submitAll() )
+    {
+       qDebug() << model->lastError();
     }
 
-    model->submitAll();
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
 
 }
