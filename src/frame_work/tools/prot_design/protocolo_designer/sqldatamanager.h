@@ -28,6 +28,8 @@ public:
 
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port);
+    void deleteRow( QTableView* table );
+    void insertRow( QTableView* table);
 protected:
 
     int createTables( QSqlDatabase& db );

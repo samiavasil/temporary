@@ -73,43 +73,13 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 
 }
 
+
 void MainWindow::insertRow()
 {
-    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
-    if (!model)
-        return;
-
-    QModelIndex insertIndex = ui->tableView->currentIndex();
-    int row = insertIndex.row() == -1 ? 0 : insertIndex.row();
-    if( model->insertRow(row) )
-    {
-        insertIndex = model->index(row, 0);
-        ui->tableView->setCurrentIndex(insertIndex);
-        ui->tableView->edit(insertIndex);
-    }
-    else
-    {
-        qDebug() << model->lastError();
-    }
+    data_manager.insertRow( ui->tableView );
 }
 
 void MainWindow::deleteRow()
 {
-    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
-    if (!model)
-        return;
-
-    model->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
-
-    QModelIndexList currentSelection = ui->tableView->selectionModel()->selectedIndexes();
-    for (int i = 0; i < currentSelection.count(); ++i) {
-        model->removeRow(currentSelection.at(i).row());
-    }
-    if( ! model->submitAll() )
-    {
-       qDebug() << model->lastError();
-    }
-
-    model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
-
+    data_manager.deleteRow( ui->tableView );
 }

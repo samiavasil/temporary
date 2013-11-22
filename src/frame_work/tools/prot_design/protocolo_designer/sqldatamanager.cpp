@@ -119,7 +119,6 @@ QSqlError SqlDataManager::addConnection(const QString &driver, const QString &db
         qDebug() << "New conection to db: " << db;
     }
     createTables(db);
-    //showTable( SqlDataManager::ePACKET );
     db.close();
     return err;
 }
@@ -156,10 +155,10 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 
 
 
-    EXEC_QUERY( q,"drop table Messages");
-    EXEC_QUERY( q,"drop table Packets");
-    EXEC_QUERY( q,"drop table Nodes");
-    EXEC_QUERY( q,"drop table Nets");
+//    EXEC_QUERY( q,"drop table Messages");
+//    EXEC_QUERY( q,"drop table Packets");
+//    EXEC_QUERY( q,"drop table Nodes");
+//    EXEC_QUERY( q,"drop table Nets");
 
     for( int i=0; i < GET_ARREA_NUMS(tables_descriptors); i++ )
     {
@@ -257,7 +256,7 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTa
 
     model->setTable( tables[ type ] );
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
-
+//table->setColumnHidden(0,false);
     switch(type)
     {
         case eNET     :
@@ -266,8 +265,16 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTa
         }
         case eNODE    :
         {
-            model->setRelation( 2, QSqlRelation( tables[eNET], "ID", "netName") );
-            break;
+           static int i;
+           i++;
+
+           if( !(i%3 ))
+           {
+               model->setFilter ( "Nodes.ID > 2" );
+//               table->setColumnHidden(0,true);
+           }
+           model->setRelation( 2, QSqlRelation( tables[eNET], "ID", "netName") );
+           break;
         }
         case ePACKET  :
         {
@@ -302,5 +309,61 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTa
     table->setItemDelegate(new QSqlRelationalDelegate(table));
     delete itemDel;
     table->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
+
+}
+
+void SqlDataManager::insertRow( QTableView* table)
+{
+    if( !table )
+    {
+        qDebug()<< "Wrong input params: Can't insert row";
+        return;
+    }
+    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(table->model());
+    if (!model)
+    {
+        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
+        return;
+    }
+    QModelIndex insertIndex = table->currentIndex();
+    int row = insertIndex.row() == -1 ? 0 : insertIndex.row();
+    if( model->insertRow(row) )
+    {
+        insertIndex = model->index(row, 0);
+        table->setCurrentIndex(insertIndex);
+        table->edit(insertIndex);
+    }
+    else
+    {
+        qDebug() << model->lastError();
+    }
+}
+
+void SqlDataManager::deleteRow( QTableView* table )
+{
+    if( !table )
+    {
+        qDebug()<< "Wrong input params: Can't delete row";
+        return;
+    }
+    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(table->model());
+    if (!model)
+    {
+        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
+        return;
+    }
+
+    model->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
+
+    QModelIndexList currentSelection = table->selectionModel()->selectedIndexes();
+    for (int i = 0; i < currentSelection.count(); ++i) {
+        model->removeRow(currentSelection.at(i).row());
+    }
+    if( ! model->submitAll() )
+    {
+       qDebug() << model->lastError();
+    }
+
+    model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
 
 }
