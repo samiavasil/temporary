@@ -36,7 +36,7 @@
          <string>Protocol Tree</string>
         </property>
         <property name="text">
-         <string>Tree</string>
+         <string>Net</string>
         </property>
         <item>
          <property name="text">
@@ -95,7 +95,7 @@
           <string>Net2</string>
          </property>
          <property name="text">
-          <string>NET</string>
+          <string>Net</string>
          </property>
          <item>
           <property name="text">
@@ -124,57 +124,19 @@
        </item>
        <item>
         <property name="text">
-         <string>Packets</string>
+         <string>Nets</string>
         </property>
         <property name="text">
-         <string>Packet</string>
+         <string>Net</string>
         </property>
         <item>
          <property name="text">
-          <string>Packet00</string>
+          <string>Net1</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Packet1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Packet2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Packet3</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>Messages</string>
-        </property>
-        <property name="text">
-         <string>Message</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Messages1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Messages2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Messages3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Message11</string>
+          <string>Net2</string>
          </property>
         </item>
        </item>
@@ -198,19 +160,81 @@
        </item>
        <item>
         <property name="text">
-         <string>Nets</string>
+         <string>Packets</string>
         </property>
         <property name="text">
-         <string>Net</string>
+         <string>Packet</string>
         </property>
         <item>
          <property name="text">
-          <string>Net1</string>
+          <string>Packet00</string>
+         </property>
+         <property name="text">
+          <string>Packet</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Net2</string>
+          <string>Packet1</string>
+         </property>
+         <property name="text">
+          <string>Packet</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Packet2</string>
+         </property>
+         <property name="text">
+          <string>Packet</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Packet3</string>
+         </property>
+         <property name="text">
+          <string>Packet</string>
+         </property>
+        </item>
+       </item>
+       <item>
+        <property name="text">
+         <string>Messages</string>
+        </property>
+        <property name="text">
+         <string>Message</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Messages1</string>
+         </property>
+         <property name="text">
+          <string>Message</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Messages2</string>
+         </property>
+         <property name="text">
+          <string>Message</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Messages3</string>
+         </property>
+         <property name="text">
+          <string>Message</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Message11</string>
+         </property>
+         <property name="text">
+          <string>Message</string>
          </property>
         </item>
        </item>
@@ -218,6 +242,11 @@
       <widget class="QTableView" name="tableView">
        <property name="contextMenuPolicy">
         <enum>Qt::ActionsContextMenu</enum>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="toolButton">
+       <property name="text">
+        <string>...</string>
        </property>
       </widget>
      </widget>
@@ -230,7 +259,7 @@
      <x>0</x>
      <y>0</y>
      <width>742</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

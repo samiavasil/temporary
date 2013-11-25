@@ -2,12 +2,7 @@
 #include <QTableView>
 #include <QtSql>
 
-const char* tables[ SqlDataManager::eENUM_NUMBER ]={
-    "Nets",
-    "Nodes",
-    "Packets",
-    "Messages"
-};
+
 
 typedef struct
 {
@@ -26,16 +21,17 @@ const items_t node_table_items_names[] =
 {
     {"ID",        " integer primary key" },
     {"nodeName",  " varchar NOT NULL UNIQUE"  },
-    {"netName",   " INTEGER NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( ID )" },
+    {"netName",   " varchar,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" },
+
     {"CHECK( nodeName!='' )",""}
 };
 
 
 const items_t packets_table_items_names[] = {
     {"ID",         " integer primary key"},
-    {"packName",   " varchar NOT NULL UNIQUE" },
-    {"Messages",   " integer"            },
-    {"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },
+    {"packName",    " varchar NOT NULL UNIQUE" },
+
+    /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
     {"CHECK( packName!='')",""}
 };
 
@@ -50,6 +46,24 @@ const items_t messages_table_items_names[] =
     /*{"packName",     " INTEGER,  FOREIGN KEY(packName) REFERENCES Packets ( ID )" }*/
 };
 
+const items_t packet_desc_table[] = {
+    {"packName",   " varchar" },
+    {"msgPos",     " integer NOT NULL" },
+    {"msgName",    " varchar" },
+    {"FOREIGN KEY(msgName) REFERENCES Messages ( msgName )", "FOREIGN KEY(packName) REFERENCES Packets ( packName ) "},
+
+    /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
+  //  {"CHECK( packName!='')",""}
+};
+
+const items_t node_packets_table[] =
+{
+    {"nodeName",  " integer NOT NULL" },
+    {"packName",  " integer NOT NULL" },
+    {"FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )",  "FOREIGN KEY(packName) REFERENCES Packets ( ID )" },
+
+    {"CHECK( nodeName!='' )",""}
+};
 
 
 struct table_desc_
@@ -83,7 +97,18 @@ const table_desc_t tables_descriptors[] =
         "Messages",
         messages_table_items_names,
         GET_ARREA_NUMS( messages_table_items_names )
+    },
+    {
+        "PacketsDesc",
+        packet_desc_table,
+        GET_ARREA_NUMS( packet_desc_table )
+    },
+    {
+        "NodePacks",
+        node_packets_table,
+        GET_ARREA_NUMS( node_packets_table )
     }
+
 };
 
 #define EXEC_QUERY( x,y ) qDebug() << "Execute query " << y;\
@@ -153,12 +178,16 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 
    //TODO DELL ME
 
+EXEC_QUERY( q,"drop table PacketsDesc");
+EXEC_QUERY( q,"drop table NodePacks");
+EXEC_QUERY( q,"drop table Packets");
+    EXEC_QUERY( q,"drop table Messages");
+
+    EXEC_QUERY( q,"drop table Nets");
+    EXEC_QUERY( q,"drop table Nodes");
 
 
-//    EXEC_QUERY( q,"drop table Messages");
-//    EXEC_QUERY( q,"drop table Packets");
-//    EXEC_QUERY( q,"drop table Nodes");
-//    EXEC_QUERY( q,"drop table Nets");
+
 
     for( int i=0; i < GET_ARREA_NUMS(tables_descriptors); i++ )
     {
@@ -240,7 +269,7 @@ QSqlDatabase &SqlDataManager::database( const QString& connectionName,bool open 
 }
 
 //TODO fix these to be created automaticaly from structures
-void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTableView *table )
+void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QString& querry, QTableView *table )
 {
     if( NULL == table )
     {
@@ -254,13 +283,32 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTa
         return;
     }
 
-    model->setTable( tables[ type ] );
+model->setTable( tables_descriptors[ type ].name );
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
 //table->setColumnHidden(0,false);
     switch(type)
     {
         case eNET     :
         {
+
+            if( !querry.isNull() )
+            {
+
+                if( querry=="Net1" || querry == "Net2" )//FIX ME
+                {
+                    model->setTable( "Nodes" );
+                    model->setFilter ( tr("Nodes.netName = '%1'").arg(querry) );
+                    model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "netName", "netName") );
+                }
+                else
+                {
+                    model->setTable( tables_descriptors[ type ].name );
+                }
+            }
+            else
+            {
+                model->setTable( tables_descriptors[ type ].name );
+            }
             break;
         }
         case eNODE    :
@@ -271,19 +319,34 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QTa
            if( !(i%3 ))
            {
                model->setFilter ( "Nodes.ID > 2" );
+
 //               table->setColumnHidden(0,true);
            }
-           model->setRelation( 2, QSqlRelation( tables[eNET], "ID", "netName") );
+           model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "ID", "netName") );
            break;
         }
         case ePACKET  :
         {
-            model->setRelation( 3, QSqlRelation( tables[eNODE], "ID", "nodeName") );
+
+            if( !querry.isNull() &&(querry != "Packets"))
+            {
+                model->setTable( "PacketsDesc" );
+                QString str = tr("PacketsDesc.packName = '%1'").arg(querry);
+                qDebug()<<str;
+               model->setFilter ( str );
+                //model->setQuery("select packName from PacketsDesc");
+                model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
+                model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
+            }
             break;
         }
         case eMESSAGES:
         {
             //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
+            if( !querry.isNull() &&(querry != "Messages"))
+            {
+                model->setFilter ( QString("Messages.msgName = '%1'").arg(querry) );
+            }
             break;
         }
         default:

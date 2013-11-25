@@ -24,7 +24,7 @@ public:
     }sqlTablesTypes_t;
 
     explicit SqlDataManager(QObject *parent = 0);
-    void initializeModel( SqlDataManager::sqlTablesTypes_t type, QTableView *table );
+    void initializeModel( SqlDataManager::sqlTablesTypes_t type, QString &querry, QTableView *table );
 
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port);

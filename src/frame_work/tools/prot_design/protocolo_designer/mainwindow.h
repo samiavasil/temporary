@@ -26,7 +26,7 @@ public:
 protected:
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                 const QString &user, const QString &passwd, int port);
-    void showTable( SqlDataManager::sqlTablesTypes_t type);
+    void showTable( SqlDataManager::sqlTablesTypes_t type, QString &q);
     void deleteRow();
     void insertRow();
 public slots:

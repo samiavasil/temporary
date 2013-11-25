@@ -36,9 +36,9 @@ void MainWindow::on_actionNewProject_triggered()
 }
 
 
-void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type )
+void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, QString &q )
 {
-    data_manager.initializeModel( type, ui->tableView );
+    data_manager.initializeModel( type,q, ui->tableView );
 }
 
 
@@ -66,7 +66,8 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
     {
         if( !qstrcmp( type.toAscii().constData(), table1[ i ]) )
         {
-            showTable( (SqlDataManager::sqlTablesTypes_t)i );
+            QString q = item->data(0,0).toString();
+            showTable( (SqlDataManager::sqlTablesTypes_t)i , q);
             break;
         }
     }
