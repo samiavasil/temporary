@@ -269,7 +269,7 @@ QSqlDatabase &SqlDataManager::database( const QString& connectionName,bool open 
 }
 
 //TODO fix these to be created automaticaly from structures
-void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QString& querry, QTableView *table )
+void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, const QString& querry, QTableView *table )
 {
     if( NULL == table )
     {
@@ -283,7 +283,7 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, QSt
         return;
     }
 
-model->setTable( tables_descriptors[ type ].name );
+    model->setTable( tables_descriptors[ type ].name );
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
 //table->setColumnHidden(0,false);
     switch(type)
@@ -327,23 +327,25 @@ model->setTable( tables_descriptors[ type ].name );
         }
         case ePACKET  :
         {
-
-            if( !querry.isNull() &&(querry != "Packets"))
+            break;
+        }
+        case ePACKETDESC:
+        {
+            if( !querry.isNull() )
             {
-                model->setTable( "PacketsDesc" );
                 QString str = tr("PacketsDesc.packName = '%1'").arg(querry);
-                qDebug()<<str;
-               model->setFilter ( str );
+                qDebug() << str;
+                model->setFilter ( str );
                 //model->setQuery("select packName from PacketsDesc");
-                model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
-                model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
             }
+            model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
+            model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
             break;
         }
         case eMESSAGES:
         {
             //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
-            if( !querry.isNull() &&(querry != "Messages"))
+            if( !querry.isNull() )
             {
                 model->setFilter ( QString("Messages.msgName = '%1'").arg(querry) );
             }
@@ -372,8 +374,9 @@ model->setTable( tables_descriptors[ type ].name );
     table->setItemDelegate(new QSqlRelationalDelegate(table));
     delete itemDel;
     table->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
-
 }
+
+
 
 void SqlDataManager::insertRow( QTableView* table)
 {

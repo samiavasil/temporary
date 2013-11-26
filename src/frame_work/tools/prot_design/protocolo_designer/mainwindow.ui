@@ -26,217 +26,20 @@
          <string>Tree View</string>
         </property>
        </column>
-       <column>
-        <property name="text">
-         <string>Tree Type</string>
-        </property>
-       </column>
        <item>
         <property name="text">
-         <string>Protocol Tree</string>
+         <string>Networks</string>
         </property>
-        <property name="text">
-         <string>Net</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Net1</string>
-         </property>
-         <property name="text">
-          <string>Net</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Node1</string>
-          </property>
-          <property name="text">
-           <string>Node</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Packet00</string>
-           </property>
-           <property name="text">
-            <string>Packet</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Messages1</string>
-            </property>
-            <property name="text">
-             <string>Message</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Packet1</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Messages2</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Packet3</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Messages3</string>
-            </property>
-           </item>
-          </item>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>Net2</string>
-         </property>
-         <property name="text">
-          <string>Net</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Node1</string>
-          </property>
-          <property name="text">
-           <string>Node</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Packet00</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Message11</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Packet1</string>
-           </property>
-          </item>
-         </item>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>Nets</string>
-        </property>
-        <property name="text">
-         <string>Net</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Net1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Net2</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>Nodes</string>
-        </property>
-        <property name="text">
-         <string>Node</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Node1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Node2</string>
-         </property>
-        </item>
        </item>
        <item>
         <property name="text">
          <string>Packets</string>
         </property>
-        <property name="text">
-         <string>Packet</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Packet00</string>
-         </property>
-         <property name="text">
-          <string>Packet</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Packet1</string>
-         </property>
-         <property name="text">
-          <string>Packet</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Packet2</string>
-         </property>
-         <property name="text">
-          <string>Packet</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Packet3</string>
-         </property>
-         <property name="text">
-          <string>Packet</string>
-         </property>
-        </item>
        </item>
        <item>
         <property name="text">
          <string>Messages</string>
         </property>
-        <property name="text">
-         <string>Message</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Messages1</string>
-         </property>
-         <property name="text">
-          <string>Message</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Messages2</string>
-         </property>
-         <property name="text">
-          <string>Message</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Messages3</string>
-         </property>
-         <property name="text">
-          <string>Message</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Message11</string>
-         </property>
-         <property name="text">
-          <string>Message</string>
-         </property>
-        </item>
        </item>
       </widget>
       <widget class="QTableView" name="tableView">
@@ -259,7 +62,7 @@
      <x>0</x>
      <y>0</y>
      <width>742</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

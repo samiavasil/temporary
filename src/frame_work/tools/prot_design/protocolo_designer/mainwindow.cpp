@@ -28,17 +28,27 @@ void MainWindow::on_actionNewProject_triggered()
         return;
 
     QSqlError err = data_manager.addConnection(dialog.driverName(), dialog.databaseName(), dialog.hostName(),
-                                  dialog.userName(), dialog.password(), dialog.port());
+                                               dialog.userName(), dialog.password(), dialog.port());
     if (err.type() != QSqlError::NoError)
         QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                      "opening the connection: ") + err.text());
+    ui->treeWidget->clear();
+    //TODO load db
+    QTreeWidgetItem* item = new QTreeWidgetItem( QStringList("Networks"), (int)SqlDataManager::eNET );
 
+    ui->treeWidget->insertTopLevelItem( 0, item );
+    item = new QTreeWidgetItem( QStringList("Packets"), (int)SqlDataManager::ePACKET );
+
+    ui->treeWidget->insertTopLevelItem( 1, item );
+    item = new QTreeWidgetItem( QStringList("Messages"), (int)SqlDataManager::eMESSAGES );
+    ui->treeWidget->insertTopLevelItem( 2, item );
 }
 
 
-void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, QString &q )
+void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, const QString &q )
 {
     data_manager.initializeModel( type,q, ui->tableView );
+    connect( ui->tableView->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int)),this, SLOT(tableRowsInserted ( const QModelIndex &, int, int)) );
 }
 
 
@@ -61,17 +71,17 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
     eENUM_NUMBER
     */
 
-    QString type( item->data(1,0).toString());
-    for(int i=SqlDataManager::eNET; i<SqlDataManager::eENUM_NUMBER; i++ )
+    if( item->type() >= SqlDataManager::eENUM_NUMBER )
     {
-        if( !qstrcmp( type.toAscii().constData(), table1[ i ]) )
-        {
-            QString q = item->data(0,0).toString();
-            showTable( (SqlDataManager::sqlTablesTypes_t)i , q);
-            break;
-        }
+        qDebug() << "Invalid tree widged data";
+        return;
     }
-
+    QString str;
+    if( item->parent() )
+    {
+        str = item->text(0);
+    }
+    showTable( (SqlDataManager::sqlTablesTypes_t)item->type() ,str );
 }
 
 
@@ -84,3 +94,96 @@ void MainWindow::deleteRow()
 {
     data_manager.deleteRow( ui->tableView );
 }
+
+void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
+{
+
+}
+
+void deleteItems( QTreeWidgetItem* item )
+{
+    if( item )
+    {
+        while( item->childCount() )
+        {
+            deleteItems( item->child(0) );
+        }
+        item->parent()->removeChild(item);
+        delete item;
+    }
+}
+
+void deleteChildItems( QTreeWidgetItem* item )
+{
+    if( item )
+    {
+        while( item->childCount() )
+        {
+            deleteItems( item->child(0) );
+        }
+    }
+}
+
+void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int end )
+{
+    SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eMESSAGES;
+    QStringList  sub_item_name("Messages");
+    qDebug() << "Inserted rows: " << start << " - " << end;
+    QTreeWidgetItem* cur_item =  ui->treeWidget->currentItem();
+    QAbstractItemModel * model = ui->tableView->model();
+    deleteChildItems( cur_item );
+
+    switch( cur_item->type() )
+    {
+        case SqlDataManager::eNET     :
+        {
+            break;
+        }
+        case SqlDataManager::eNODE    :
+        {
+            break;
+        }
+        case SqlDataManager::ePACKET  :
+        {
+            sub_item_name.clear();
+            sub_item_name << "Packets";
+            sub_item_type = SqlDataManager::ePACKETDESC;
+            break;
+        }
+        case SqlDataManager::eMESSAGES:
+        {
+            break;
+        }
+        case SqlDataManager::eNODEPACKS:
+        {
+            break;
+        }
+        case SqlDataManager::ePACKETDESC:
+        {
+            break;
+        }
+        default:
+        {
+            qDebug() << "File: " << __FILE__ "Line " << __LINE__ << "Wrong table type";
+        }
+    }
+
+
+    if( cur_item->type() != SqlDataManager::ePACKETDESC )
+    {
+        QTreeWidgetItem* item;
+        QModelIndex id;
+        for( int i = start; i <= end; i++ )
+        {
+            sub_item_name.clear();
+
+            id = model->index( i, 1, parent );
+            sub_item_name << id.data().toString();
+            item = new QTreeWidgetItem( sub_item_name, (int)sub_item_type );
+            cur_item->addChild(item);
+        }
+    }
+
+}
+
+

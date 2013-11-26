@@ -7,7 +7,7 @@ class QTableView;
 
 typedef struct table_desc_ table_desc_t;
 QT_FORWARD_DECLARE_CLASS(QSqlError)
-
+ #include <QModelIndex>
 //QT_FORWARD_DECLARE_CLASS(QModelIndex)
 
 
@@ -20,11 +20,13 @@ public:
         eNODE,
         ePACKET,
         eMESSAGES,
+        ePACKETDESC,
+        eNODEPACKS,
         eENUM_NUMBER
     }sqlTablesTypes_t;
 
     explicit SqlDataManager(QObject *parent = 0);
-    void initializeModel( SqlDataManager::sqlTablesTypes_t type, QString &querry, QTableView *table );
+    void initializeModel( SqlDataManager::sqlTablesTypes_t type, const QString &querry, QTableView *table );
 
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port);
@@ -42,7 +44,7 @@ protected:
 signals:
     
 public slots:
-    
+
 };
 
 #endif // SQLDATAMANAGER_H

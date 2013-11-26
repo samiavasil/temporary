@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include "sqldatamanager.h"
+#include <QTreeWidgetItem>
 
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 
 
@@ -26,7 +27,7 @@ public:
 protected:
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                 const QString &user, const QString &passwd, int port);
-    void showTable( SqlDataManager::sqlTablesTypes_t type, QString &q);
+    void showTable( SqlDataManager::sqlTablesTypes_t type, const QString &q);
     void deleteRow();
     void insertRow();
 public slots:
@@ -38,6 +39,9 @@ public slots:
 private slots:
     void on_actionNewProject_triggered();
     void on_treeWidget_clicked(const QModelIndex &index);
+    void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    void tableRowsInserted ( const QModelIndex & parent, int start, int end );
+
 protected:
     SqlDataManager data_manager;
 private:
