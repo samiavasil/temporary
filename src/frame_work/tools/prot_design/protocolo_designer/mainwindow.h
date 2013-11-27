@@ -44,6 +44,8 @@ private slots:
 
 protected:
     SqlDataManager data_manager;
+    SqlDataManager::sqlTablesTypes_t m_cur_view_type;
+    QString                          m_cur_view_query;
 private:
     Ui::MainWindow *ui;
 };

@@ -22,7 +22,6 @@ const items_t node_table_items_names[] =
     {"ID",        " integer primary key" },
     {"nodeName",  " varchar NOT NULL UNIQUE"  },
     {"netName",   " varchar,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" },
-
     {"CHECK( nodeName!='' )",""}
 };
 
@@ -49,18 +48,18 @@ const items_t messages_table_items_names[] =
 const items_t packet_desc_table[] = {
     {"packName",   " varchar" },
     {"msgPos",     " integer NOT NULL" },
-    {"msgName",    " varchar" },
+    {"msgName",    " varchar " },
     {"FOREIGN KEY(msgName) REFERENCES Messages ( msgName )", "FOREIGN KEY(packName) REFERENCES Packets ( packName ) "},
-
+    {"CONSTRAINT uc_PersonID UNIQUE (packName,msgPos,msgName)",""}
     /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
-  //  {"CHECK( packName!='')",""}
+    // {"CHECK( packName!='')","CHECK(msgPos != 0)"}
 };
 
 const items_t node_packets_table[] =
 {
-    {"nodeName",  " integer NOT NULL" },
-    {"packName",  " integer NOT NULL" },
-    {"FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )",  "FOREIGN KEY(packName) REFERENCES Packets ( ID )" },
+    {"nodeName",  " varchar NOT NULL" },
+    {"packName",  " varchar NOT NULL" },
+    {"FOREIGN KEY(nodeName) REFERENCES Nodes ( nodeName )",  "FOREIGN KEY(packName) REFERENCES Packets ( packName )" },
 
     {"CHECK( nodeName!='' )",""}
 };
@@ -124,7 +123,7 @@ SqlDataManager::SqlDataManager(QObject *parent) :
 }
 
 QSqlError SqlDataManager::addConnection(const QString &driver, const QString &dbName, const QString &host,
-                                    const QString &user, const QString &passwd, int port)
+                                        const QString &user, const QString &passwd, int port)
 {
     static int cCount = 0;//DELL ME
 
@@ -176,15 +175,16 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 
     EXEC_QUERY(q,"PRAGMA foreign_keys = ON");
 
-   //TODO DELL ME
+    //TODO DELL ME
 
-EXEC_QUERY( q,"drop table PacketsDesc");
-EXEC_QUERY( q,"drop table NodePacks");
-EXEC_QUERY( q,"drop table Packets");
+    EXEC_QUERY( q,"drop table PacketsDesc");
+    EXEC_QUERY( q,"drop table NodePacks");
+    EXEC_QUERY( q,"drop table Packets");
     EXEC_QUERY( q,"drop table Messages");
 
-    EXEC_QUERY( q,"drop table Nets");
     EXEC_QUERY( q,"drop table Nodes");
+    EXEC_QUERY( q,"drop table Nets");
+
 
 
 
@@ -276,84 +276,83 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
         qDebug() << "Incorrect input parameters";
         return;
     }
+    if( 0 >= QSqlDatabase::connectionNames().count() )
+    {
+        qDebug() << "Not connected db";
+        return;
+    }
     QSqlDatabase& db = database(QSqlDatabase::connectionNames()[QSqlDatabase::connectionNames().count()-1]);
     QSqlRelationalTableModel* model = new QSqlRelationalTableModel(table, db);
-    if( NULL == model && eENUM_NUMBER <= type)
+    if( NULL == model && eENUM_NUMBER <= type )
     {
         return;
     }
 
     model->setTable( tables_descriptors[ type ].name );
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
-//table->setColumnHidden(0,false);
+    //table->setColumnHidden(0,false);
     switch(type)
     {
-        case eNET     :
+    case eNET     :
+    {
+        //            if( !querry.isNull() )
+        //            {
+        //                    model->setFilter ( tr("Nets.netName = '%1'").arg(querry) );
+        //            }
+        break;
+    }
+    case eNODE    :
+    {
+        model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "netName", "netName") );
+        if( !querry.isNull() )
         {
-
-            if( !querry.isNull() )
-            {
-
-                if( querry=="Net1" || querry == "Net2" )//FIX ME
-                {
-                    model->setTable( "Nodes" );
-                    model->setFilter ( tr("Nodes.netName = '%1'").arg(querry) );
-                    model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "netName", "netName") );
-                }
-                else
-                {
-                    model->setTable( tables_descriptors[ type ].name );
-                }
-            }
-            else
-            {
-                model->setTable( tables_descriptors[ type ].name );
-            }
-            break;
+            QString str = tr("Nodes.netName = '%1'").arg(querry);
+            qDebug() << str;
+            model->setFilter ( str );
         }
-        case eNODE    :
+        break;
+    }
+    case ePACKET  :
+    {
+        break;
+    }
+    case eNODEPACKS:
+    {
+        if( !querry.isNull() )
         {
-           static int i;
-           i++;
-
-           if( !(i%3 ))
-           {
-               model->setFilter ( "Nodes.ID > 2" );
-
-//               table->setColumnHidden(0,true);
-           }
-           model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "ID", "netName") );
-           break;
+            QString str = tr("NodePacks.nodeName = '%1'").arg(querry);
+            qDebug() << str;
+            model->setFilter ( str );
         }
-        case ePACKET  :
+        model->setRelation( 0, QSqlRelation( "Nodes", "nodeName", "nodeName") );
+        model->setRelation( 1, QSqlRelation( "Packets", "packName", "packName") );
+        break;
+    }
+    case ePACKETDESC:
+    {
+        if( !querry.isNull() )
         {
-            break;
+            QString str = tr("PacketsDesc.packName = '%1'").arg(querry);
+            qDebug() << str;
+            model->setFilter ( str );
+            //model->setQuery("select packName from PacketsDesc");
         }
-        case ePACKETDESC:
+        model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
+        model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
+        break;
+    }
+    case eMESSAGES:
+    {
+        //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
+        if( !querry.isNull() )
         {
-            if( !querry.isNull() )
-            {
-                QString str = tr("PacketsDesc.packName = '%1'").arg(querry);
-                qDebug() << str;
-                model->setFilter ( str );
-                //model->setQuery("select packName from PacketsDesc");
-            }
-            model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
-            model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
-            break;
+            model->setFilter ( QString("Messages.msgName = '%1'").arg(querry) );
         }
-        case eMESSAGES:
-        {
-            //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
-            if( !querry.isNull() )
-            {
-                model->setFilter ( QString("Messages.msgName = '%1'").arg(querry) );
-            }
-            break;
-        }
-        default:
-        {
-        }
+        break;
+    }
+    default:
+    {
+    }
     }
     model->select();
 
@@ -427,7 +426,7 @@ void SqlDataManager::deleteRow( QTableView* table )
     }
     if( ! model->submitAll() )
     {
-       qDebug() << model->lastError();
+        qDebug() << model->lastError();
     }
 
     model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
