@@ -21,8 +21,8 @@ const items_t node_table_items_names[] =
 {
     {"ID",        " integer primary key" },
     {"nodeName",  " varchar NOT NULL UNIQUE"  },
-    {"netName",   " varchar,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" },
-    {"CHECK( nodeName!='' )",""}
+    {"netName",   " varchar NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" },
+    {"CHECK( nodeName!='' )","CONSTRAINT c1 UNIQUE (nodeName,netName)"},
 };
 
 
@@ -46,11 +46,13 @@ const items_t messages_table_items_names[] =
 };
 
 const items_t packet_desc_table[] = {
-    {"packName",   " varchar" },
+    {"packName",   " varchar NOT NULL" },
     {"msgPos",     " integer NOT NULL" },
-    {"msgName",    " varchar " },
+    {"msgName",    " varchar NOT NULL" },
     {"FOREIGN KEY(msgName) REFERENCES Messages ( msgName )", "FOREIGN KEY(packName) REFERENCES Packets ( packName ) "},
-    {"CONSTRAINT uc_PersonID UNIQUE (packName,msgPos,msgName)",""}
+    {"CONSTRAINT c1 UNIQUE (packName,msgPos)","CONSTRAINT c2 UNIQUE (packName,msgName)"},
+  //  {"CONSTRAINT c3 UNIQUE (msgName,msgPos)" ,""}
+
     /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
     // {"CHECK( packName!='')","CHECK(msgPos != 0)"}
 };
