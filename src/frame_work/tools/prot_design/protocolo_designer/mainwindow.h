@@ -42,10 +42,13 @@ private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void tableRowsInserted ( const QModelIndex & parent, int start, int end );
 
+    void on_actionToggleFilter_toggled(bool arg1);
+
 protected:
     SqlDataManager data_manager;
     SqlDataManager::sqlTablesTypes_t m_cur_view_type;
     QString                          m_cur_view_query;
+    QString                          m_filter;
 private:
     Ui::MainWindow *ui;
 };

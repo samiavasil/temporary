@@ -20,6 +20,7 @@ public:
         eNODE,
         ePACKET,
         eMESSAGES,
+        eNETNODES,
         ePACKETDESC,
         eNODEPACKS,
         eENUM_NUMBER

@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableView->addAction(ui->deleteRowAction);
     ui->insertRowAction->setEnabled(1);
     ui->deleteRowAction->setEnabled(1);
+    QAbstractItemDelegate* itemDel = ui->tableView->itemDelegate();
+    ui->tableView->setItemDelegate(new QSqlRelationalDelegate(ui->tableView));
+    delete itemDel;
 }
 
 MainWindow::~MainWindow()
@@ -32,16 +35,21 @@ void MainWindow::on_actionNewProject_triggered()
     if (err.type() != QSqlError::NoError)
         QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
                                                                      "opening the connection: ") + err.text());
-    ui->treeWidget->clear();
+    ui->treeWidget->blockSignals(true);
+    ui->treeWidget->clear();//FIX ME
     //TODO load db
     QTreeWidgetItem* item = new QTreeWidgetItem( QStringList("Networks"), (int)SqlDataManager::eNET );
-
     ui->treeWidget->insertTopLevelItem( 0, item );
-    item = new QTreeWidgetItem( QStringList("Packets"), (int)SqlDataManager::ePACKET );
 
+    item = new QTreeWidgetItem( QStringList("Nodes"), (int)SqlDataManager::eNODE );
     ui->treeWidget->insertTopLevelItem( 1, item );
-    item = new QTreeWidgetItem( QStringList("Messages"), (int)SqlDataManager::eMESSAGES );
+
+    item = new QTreeWidgetItem( QStringList("Packets"), (int)SqlDataManager::ePACKET );
     ui->treeWidget->insertTopLevelItem( 2, item );
+
+    item = new QTreeWidgetItem( QStringList("Messages"), (int)SqlDataManager::eMESSAGES );
+    ui->treeWidget->insertTopLevelItem( 3, item );
+    ui->treeWidget->blockSignals(false);
 }
 
 
@@ -49,6 +57,14 @@ void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, const QString
 {
 
     data_manager.initializeModel( type,q, ui->tableView );
+    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
+    if (!model)
+    {
+        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
+        return;
+    }
+    m_filter = model->filter();
+    on_actionToggleFilter_toggled( ui->actionToggleFilter->isChecked() );
     connect( ui->tableView->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int)),this, SLOT(tableRowsInserted ( const QModelIndex &, int, int)) );
 }
 
@@ -80,13 +96,6 @@ void MainWindow::deleteRow()
 void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
     QTreeWidgetItem* item =  ui->treeWidget->currentItem();
-    /*
-    eNET,
-    eNODE,
-    ePACKET,
-    eMESSAGES,
-    eENUM_NUMBER
-    */
 
     if( item == NULL || item->type() >= SqlDataManager::eENUM_NUMBER )
     {
@@ -172,7 +181,7 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
         //sub_item_name << "Nets";
         update_tree   = true;
         model_column_name = "netName";
-        sub_item_type = SqlDataManager::eNODE;
+        sub_item_type = SqlDataManager::eNETNODES;
         break;
     }
     case SqlDataManager::eNODE    :
@@ -192,12 +201,20 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
     case SqlDataManager::eMESSAGES:
     {
         model_column_name = "msgName";
+        sub_item_type = SqlDataManager::eMESSAGES;
         if( m_cur_view_query.isNull() )
         {
             update_tree   = true;
         }
         break;
     }
+    case SqlDataManager::eNETNODES:
+    {   update_tree   = true;
+        model_column_name = "nodeName";
+        sub_item_type = SqlDataManager::eNODEPACKS;
+        break;
+    }
+
     case SqlDataManager::eNODEPACKS:
     {
         update_tree   = true;
@@ -238,3 +255,21 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
 }
 
 
+
+void MainWindow::on_actionToggleFilter_toggled( bool arg1 )
+{
+    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
+    if (!model)
+    {
+        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
+        return;
+    }
+    if( arg1 )
+    {
+       model->setFilter("");
+    }
+    else
+    {
+       model->setFilter( m_filter );
+    }
+}

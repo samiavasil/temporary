@@ -14,6 +14,7 @@ const items_t net_table_items_names[] =
 {
     {"ID", " integer primary key"},
     {"netName",  " varchar  NOT NULL UNIQUE"},
+    {"netDescription",  " varchar"},
     {"CHECK(netName!='')",""}
 };
 
@@ -21,16 +22,15 @@ const items_t node_table_items_names[] =
 {
     {"ID",        " integer primary key" },
     {"nodeName",  " varchar NOT NULL UNIQUE"  },
-    {"netName",   " varchar NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( netName )" },
-    {"CHECK( nodeName!='' )","CONSTRAINT c1 UNIQUE (nodeName,netName)"},
+    {"nodeDescription",  " varchar"},
+    //{"netName",   " integer NOT NULL,  FOREIGN KEY(netName) REFERENCES Nets ( ID )" },
+    //{"CHECK( nodeName!='' )","CONSTRAINT c1 UNIQUE (nodeName,netName)"},
 };
-
 
 const items_t packets_table_items_names[] = {
     {"ID",         " integer primary key"},
     {"packName",    " varchar NOT NULL UNIQUE" },
-
-    /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
+    {"packetDescription",  " varchar"},
     {"CHECK( packName!='')",""}
 };
 
@@ -41,27 +41,37 @@ const items_t messages_table_items_names[] =
     {"BitLen",       " integer"            },
     {"Type",         " integer"            },
     {"DefaultValue", " integer"            },
+    {"msgDescription",  " varchar"},
     {"CHECK( msgName !='')",""}
-    /*{"packName",     " INTEGER,  FOREIGN KEY(packName) REFERENCES Packets ( ID )" }*/
 };
 
-const items_t packet_desc_table[] = {
-    {"packName",   " varchar NOT NULL" },
-    {"msgPos",     " integer NOT NULL" },
-    {"msgName",    " varchar NOT NULL" },
-    {"FOREIGN KEY(msgName) REFERENCES Messages ( msgName )", "FOREIGN KEY(packName) REFERENCES Packets ( packName ) "},
-    {"CONSTRAINT c1 UNIQUE (packName,msgPos)","CONSTRAINT c2 UNIQUE (packName,msgName)"},
-  //  {"CONSTRAINT c3 UNIQUE (msgName,msgPos)" ,""}
-
-    /*{"nodeName",   " INTEGER NOT NULL,  FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },*/
-    // {"CHECK( packName!='')","CHECK(msgPos != 0)"}
-};
-
-const items_t node_packets_table[] =
+const items_t net_to_node_map_table[] =
 {
-    {"nodeName",  " varchar NOT NULL" },
-    {"packName",  " varchar NOT NULL" },
-    {"FOREIGN KEY(nodeName) REFERENCES Nodes ( nodeName )",  "FOREIGN KEY(packName) REFERENCES Packets ( packName )" },
+    {"ID",        " integer primary key"},
+    {"netName" ,  " integer NOT NULL" },
+    {"nodeName",  " integer NOT NULL" },
+    {"FOREIGN KEY(netName) REFERENCES Nets ( ID )",  "FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },
+};
+
+const items_t packet_to_msg_map_table[] = {
+    {"ID",         " integer primary key"},
+    {"packName",   " integer NOT NULL" },
+    {"msgPos",     " integer NOT NULL" },
+    {"msgName",    " integer NOT NULL" },
+    {"FOREIGN KEY(msgName) REFERENCES Messages ( ID )", "FOREIGN KEY(packName) REFERENCES Packets ( ID ) "},
+    {"CONSTRAINT c1 UNIQUE (packName,msgPos)","CONSTRAINT c2 UNIQUE (packName,msgName)"},
+   // {"CONSTRAINT c3 UNIQUE (msgName,msgPos)" ,""}
+    {"CHECK( packName!='')","CHECK(msgPos >= 0)"}
+};
+
+
+
+const items_t node_to_pack_map_table[] =
+{
+    {"ID",        " integer primary key"},
+    {"nodeName",  " integer NOT NULL" },
+    {"packName",  " integer NOT NULL" },
+    {"FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )",  "FOREIGN KEY(packName) REFERENCES Packets ( ID )" },
 
     {"CHECK( nodeName!='' )",""}
 };
@@ -100,16 +110,20 @@ const table_desc_t tables_descriptors[] =
         GET_ARREA_NUMS( messages_table_items_names )
     },
     {
+        "NetNodes",
+        net_to_node_map_table,
+        GET_ARREA_NUMS(net_to_node_map_table)
+    },
+    {
         "PacketsDesc",
-        packet_desc_table,
-        GET_ARREA_NUMS( packet_desc_table )
+        packet_to_msg_map_table,
+        GET_ARREA_NUMS( packet_to_msg_map_table )
     },
     {
         "NodePacks",
-        node_packets_table,
-        GET_ARREA_NUMS( node_packets_table )
+        node_to_pack_map_table,
+        GET_ARREA_NUMS( node_to_pack_map_table )
     }
-
 };
 
 #define EXEC_QUERY( x,y ) qDebug() << "Execute query " << y;\
@@ -127,25 +141,23 @@ SqlDataManager::SqlDataManager(QObject *parent) :
 QSqlError SqlDataManager::addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port)
 {
-    static int cCount = 0;//DELL ME
 
     QSqlError err;
-    QSqlDatabase db = QSqlDatabase::addDatabase(driver, QString("Browser%1").arg(++cCount));
-    db.setDatabaseName(dbName);
-    db.setHostName(host);
-    db.setPort(port);
-    if (!db.open(user, passwd)) {
-        err = db.lastError();
-        db = QSqlDatabase();
-        QSqlDatabase::removeDatabase(QString("Browser%1").arg(cCount));
+    m_db = QSqlDatabase::addDatabase(driver);
+    m_db.setDatabaseName(dbName);
+    m_db.setHostName(host);
+    m_db.setPort(port);
+    if (!m_db.open(user, passwd)) {
+        err = m_db.lastError();
+        m_db = QSqlDatabase();
         qDebug() << err.databaseText();
     }
     else
     {
-        qDebug() << "New conection to db: " << db;
+        qDebug() << "New conection to m_db: " << m_db;
     }
-    createTables(db);
-    db.close();
+    createTables(m_db);
+   // m_db.close();
     return err;
 }
 
@@ -181,14 +193,12 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 
     EXEC_QUERY( q,"drop table PacketsDesc");
     EXEC_QUERY( q,"drop table NodePacks");
+    EXEC_QUERY( q,"drop table NetNodes");
     EXEC_QUERY( q,"drop table Packets");
     EXEC_QUERY( q,"drop table Messages");
 
     EXEC_QUERY( q,"drop table Nodes");
     EXEC_QUERY( q,"drop table Nets");
-
-
-
 
 
     for( int i=0; i < GET_ARREA_NUMS(tables_descriptors); i++ )
@@ -255,20 +265,7 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 }
 
 
-QSqlDatabase &SqlDataManager::database( const QString& connectionName,bool open  )
-{
-    if( connectionName.isNull() )
-    {
-        m_db = QSqlDatabase::database();
-    }
-    else
-    {
-        m_db = QSqlDatabase::database( connectionName, open );
-    }
-    QSqlQuery q("", m_db);
-    EXEC_QUERY(q,"PRAGMA foreign_keys = ON");
-    return m_db;
-}
+
 
 //TODO fix these to be created automaticaly from structures
 void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, const QString& querry, QTableView *table )
@@ -283,15 +280,15 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
         qDebug() << "Not connected db";
         return;
     }
-    QSqlDatabase& db = database(QSqlDatabase::connectionNames()[QSqlDatabase::connectionNames().count()-1]);
-    QSqlRelationalTableModel* model = new QSqlRelationalTableModel(table, db);
+
+    QSqlRelationalTableModel* model = new QSqlRelationalTableModel(table);
     if( NULL == model && eENUM_NUMBER <= type )
     {
         return;
     }
 
     model->setTable( tables_descriptors[ type ].name );
-    model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+    model->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
     //table->setColumnHidden(0,false);
     switch(type)
     {
@@ -305,10 +302,9 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
     }
     case eNODE    :
     {
-        model->setRelation( 2, QSqlRelation( tables_descriptors[ eNET ].name, "netName", "netName") );
         if( !querry.isNull() )
         {
-            QString str = tr("Nodes.netName = '%1'").arg(querry);
+            QString str = tr("NetNodes.netName == ( select ID from Nets where netName == '%1' ) ").arg(querry);
             qDebug() << str;
             model->setFilter ( str );
         }
@@ -316,36 +312,51 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
     }
     case ePACKET  :
     {
+        if( !querry.isNull() )
+        {
+            model->setFilter ( QString("Packets.packName = '%1'").arg(querry) );
+        }
+        break;
+    }
+    case eNETNODES:
+    {
+        if( !querry.isNull() )
+        {
+            QString str = tr("NetNodes.netName == ( select ID from Nets where netName == '%1' ) ").arg(querry);
+            qDebug() << str;
+            model->setFilter ( str );
+        }
+        model->setRelation( 1, QSqlRelation( "Nets" , "ID", "netName") );
+        model->setRelation( 2, QSqlRelation( "Nodes", "ID", "nodeName") );
         break;
     }
     case eNODEPACKS:
     {
         if( !querry.isNull() )
         {
-            QString str = tr("NodePacks.nodeName = '%1'").arg(querry);
+            QString str = tr("NodePacks.nodeName == ( select ID from Nodes where nodeName == '%1' ) ").arg(querry);
             qDebug() << str;
             model->setFilter ( str );
         }
-        model->setRelation( 0, QSqlRelation( "Nodes", "nodeName", "nodeName") );
-        model->setRelation( 1, QSqlRelation( "Packets", "packName", "packName") );
+        model->setRelation( 1, QSqlRelation( "Nodes", "ID", "nodeName") );
+        model->setRelation( 2, QSqlRelation( "Packets", "ID", "packName") );
         break;
     }
     case ePACKETDESC:
     {
         if( !querry.isNull() )
         {
-            QString str = tr("PacketsDesc.packName = '%1'").arg(querry);
+            QString str = tr("PacketsDesc.packName == ( select ID from Packets where packName == '%1' ) ").arg(querry);
             qDebug() << str;
             model->setFilter ( str );
             //model->setQuery("select packName from PacketsDesc");
         }
-        model->setRelation( 0, QSqlRelation( "Packets", "packName", "packName") );
-        model->setRelation( 2, QSqlRelation( "Messages", "msgName", "msgName") );
+        model->setRelation( 1, QSqlRelation( "Packets", "ID", "packName") );
+        model->setRelation( 3, QSqlRelation( "Messages","ID", "msgName") );
         break;
     }
     case eMESSAGES:
     {
-        //  model->setRelation( 5, QSqlRelation( tables[ePACKET], "ID", "packName") );
         if( !querry.isNull() )
         {
             model->setFilter ( QString("Messages.msgName = '%1'").arg(querry) );
@@ -369,18 +380,65 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
     else
         qDebug() << tr("Query OK, number of affected rows: %1").arg(
                         model->query().numRowsAffected());
-
     delete m;
-    QAbstractItemDelegate* itemDel = table->itemDelegate();
-    table->setItemDelegate(new QSqlRelationalDelegate(table));
-    delete itemDel;
     table->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
 }
 
-
-
 void SqlDataManager::insertRow( QTableView* table)
 {
+#if 1
+    if( !table )
+    {
+        qDebug()<< "Wrong input params: Can't insert row";
+        return;
+    }
+    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(table->model());
+    if (!model)
+    {
+        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
+        return;
+    }
+    QModelIndex insertIndex = table->currentIndex();
+    QSqlRecord newRecord = model->record();
+    int row = insertIndex.row();
+    QString st_name = newRecord.fieldName( 1 );
+    if( row == -1 )
+    {
+       row = 0;
+    }
+    else
+    {
+       row = insertIndex.row();
+    }
+
+    if( 0 < model->rowCount() )
+    {
+      QSqlRecord last_record;
+      last_record = model->record( model->rowCount()-1 );
+      st_name.append( last_record.field(0).value().toString() );
+    }
+
+
+    newRecord.setValue( 1, st_name );
+    newRecord.remove(0);
+    if( model->insertRow(row) )
+    {
+        insertIndex = model->index(row, 1);
+        if( !model->setRecord( row, newRecord ) )
+        {
+            qDebug() << model->lastError();
+        }
+        table->setCurrentIndex(insertIndex);
+        table->edit(insertIndex);
+
+    }
+    else
+    {
+        qDebug() << model->lastError();
+    }
+#else
+   table->setSortingEnabled(false);
+     /*table->blockSignals( true );*/
     if( !table )
     {
         qDebug()<< "Wrong input params: Can't insert row";
@@ -394,16 +452,32 @@ void SqlDataManager::insertRow( QTableView* table)
     }
     QModelIndex insertIndex = table->currentIndex();
     int row = insertIndex.row() == -1 ? 0 : insertIndex.row();
-    if( model->insertRow(row) )
+    //if( model->insertRow(row) )
+    QSqlRecord newRecord = model->record();
+    newRecord.setValue( 1, tr("Name%1").arg(model->rowCount()) );
+    newRecord.remove(0);
+
+    //if( model->insertRecord(row, newRecord) )
+     if( model->insertRow(row) )
     {
-        insertIndex = model->index(row, 0);
+
+        insertIndex = model->index(row, 1);
+
+        if( !model->setRecord( row, newRecord ) )
+        {
+            qDebug() << model->lastError();
+        }
+      //  model->setData( insertIndex, tr("Name%1").arg(model->rowCount()));
         table->setCurrentIndex(insertIndex);
-        table->edit(insertIndex);
+       table->edit(insertIndex);
     }
     else
     {
         qDebug() << model->lastError();
     }
+//  table->blockSignals( false );
+  //table->setSortingEnabled(true);
+#endif
 }
 
 void SqlDataManager::deleteRow( QTableView* table )
@@ -431,6 +505,6 @@ void SqlDataManager::deleteRow( QTableView* table )
         qDebug() << model->lastError();
     }
 
-    model->setEditStrategy(QSqlRelationalTableModel::OnFieldChange);
+    model->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
 
 }
