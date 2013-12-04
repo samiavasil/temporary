@@ -21,3 +21,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     qsqlconnectiondialog.ui
+
+RESOURCES += \
+    resources.qrc

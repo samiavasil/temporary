@@ -43,6 +43,7 @@ private slots:
     void tableRowsInserted ( const QModelIndex & parent, int start, int end );
 
     void on_actionToggleFilter_toggled(bool arg1);
+    void updateTreeSubitems( QTreeWidgetItem *item );
 
 protected:
     SqlDataManager data_manager;
