@@ -261,6 +261,14 @@ int findColumnIndex( QAbstractItemModel * model, const QModelIndex & parent, QSt
 
 void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int end )
 {
+ #if 1
+    QTreeWidgetItem* cur_item =  ui->treeWidget->currentItem();
+    if( cur_item )
+    {
+      updateTreeSubitems( cur_item );
+    }
+#else
+
     SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eMESSAGES;
     QStringList  sub_item_name;
     QString model_column_name;
@@ -352,13 +360,16 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
             }
         }
     }
-
+#endif
 }
 
 
 void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
 {
-#if 0
+#if 1
+    SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eENUM_NUMBER;
+    QString querry;
+    QString field_name;
     if( NULL == item )
     {
         return;
@@ -367,47 +378,47 @@ void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
     {
         case SqlDataManager::eNET     :
         {
-            //sub_item_name << "Nets";
-            update_tree   = true;
-            model_column_name = "netName";
+            field_name = "netName";
+            querry = QString("select %1 from Nets").arg(field_name);
             sub_item_type = SqlDataManager::eNETNODES;
             break;
         }
         case SqlDataManager::eNODE    :
         {
-            update_tree   = true;
-            model_column_name = "nodeName";
+            field_name = "nodeName";
+            querry = QString("select %1 from Nodes ").arg(field_name);
             sub_item_type = SqlDataManager::eNODEPACKS;
             break;
         }
         case SqlDataManager::ePACKET  :
         {
-            update_tree   = true;
-            model_column_name = "packName";
+            field_name = "packName";
+            querry = QString("select %1 from Packets").arg(field_name);
             sub_item_type = SqlDataManager::ePACKETDESC;
             break;
         }
         case SqlDataManager::eMESSAGES:
         {
-            model_column_name = "msgName";
-            sub_item_type = SqlDataManager::eMESSAGES;
-            if( m_cur_view_query.isNull() )
+            if( NULL == item->parent() )
             {
-                update_tree   = true;
+                field_name = "msgName";
+                querry =  QString("select %1 from Messages").arg(field_name);
+                sub_item_type = SqlDataManager::eMESSAGES;
             }
             break;
         }
         case SqlDataManager::eNETNODES:
-        {   update_tree   = true;
-            model_column_name = "nodeName";
+        {
+            field_name = "nodeName";
+            querry = QString("select %1 from NetNodes where netName = %2").arg(field_name).arg( item->text(0) );
             sub_item_type = SqlDataManager::eNODEPACKS;
             break;
         }
 
         case SqlDataManager::eNODEPACKS:
         {
-            update_tree   = true;
-            model_column_name = "packName";
+            field_name = "packName";
+            querry = QString("select %1 from NodePacks where nodeName = %2").arg(field_name).arg( item->text(0) );
             sub_item_type = SqlDataManager::ePACKETDESC;
             break;
         }
@@ -419,6 +430,27 @@ void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
         {
             qDebug() << "File: " << __FILE__ "Line " << __LINE__ << "Wrong table type";
         }
+    }
+
+    if( sub_item_type != SqlDataManager::eENUM_NUMBER )
+    {
+         QTreeWidgetItem* sub_item;
+         QStringList  sub_item_name;
+         QSqlQuery q( querry );
+         qDebug() << "QUERRY: "<< querry;
+         if( q.exec() && q.isActive() )
+         {
+             QSqlRecord record;
+             deleteChildItems( item );
+             while( q.next() )
+             {
+                record = q.record();
+                sub_item_name.clear();
+                sub_item_name << record.field(field_name).value().toString();
+                sub_item = createTreeWidgetItem( sub_item_name, sub_item_type );
+                item->addChild(sub_item);
+             }
+         }
     }
 #endif
 }

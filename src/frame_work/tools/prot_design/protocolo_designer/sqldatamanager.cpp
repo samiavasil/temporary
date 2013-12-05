@@ -66,6 +66,7 @@ const items_t packet_to_msg_map_table[] = {
 
 
 
+
 const items_t node_to_pack_map_table[] =
 {
     {"ID",        " integer primary key"},
