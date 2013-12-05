@@ -10,6 +10,12 @@ QT_FORWARD_DECLARE_CLASS(QSqlError)
  #include <QModelIndex>
 //QT_FORWARD_DECLARE_CLASS(QModelIndex)
 
+typedef struct
+{
+    int coll;
+    QVariant default_value;
+    bool hide;
+}colum_cfg_t;
 
 class SqlDataManager : public QObject
 {
@@ -32,7 +38,7 @@ public:
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port);
     void deleteRow( QTableView* table );
-    void insertRow( QTableView* table);
+    void insertRow( QTableView* table, QList<colum_cfg_t> &c_list);
 protected:
 
     int createTables( QSqlDatabase& db );

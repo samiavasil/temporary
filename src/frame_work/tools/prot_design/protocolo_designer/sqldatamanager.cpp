@@ -271,11 +271,14 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 //TODO fix these to be created automaticaly from structures
 void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, const QString& querry, QTableView *table )
 {
+    QList<int> col_hide;
+    col_hide << 0;
     if( NULL == table )
     {
         qDebug() << "Incorrect input parameters";
         return;
     }
+
     if( 0 >= QSqlDatabase::connectionNames().count() )
     {
         qDebug() << "Not connected db";
@@ -290,15 +293,12 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
 
     model->setTable( tables_descriptors[ type ].name );
     model->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
-    //table->setColumnHidden(0,false);
+
     switch(type)
     {
     case eNET     :
     {
-        //            if( !querry.isNull() )
-        //            {
-        //                    model->setFilter ( tr("Nets.netName = '%1'").arg(querry) );
-        //            }
+
         break;
     }
     case eNODE    :
@@ -327,8 +327,9 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
             qDebug() << str;
             model->setFilter ( str );
         }
-        model->setRelation( 1, QSqlRelation( "Nets" , "ID", "netName") );
+     //   model->setRelation( 1, QSqlRelation( "Nets" , "ID", "netName") );
         model->setRelation( 2, QSqlRelation( "Nodes", "ID", "nodeName") );
+        col_hide << 1;//TODO ADD DEFAULT
         break;
     }
     case eNODEPACKS:
@@ -339,8 +340,9 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
             qDebug() << str;
             model->setFilter ( str );
         }
-        model->setRelation( 1, QSqlRelation( "Nodes", "ID", "nodeName") );
+      //  model->setRelation( 1, QSqlRelation( "Nodes", "ID", "nodeName") );
         model->setRelation( 2, QSqlRelation( "Packets", "ID", "packName") );
+        col_hide << 1;//TODO ADD DEFAULT
         break;
     }
     case ePACKETDESC:
@@ -352,8 +354,9 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
             model->setFilter ( str );
             //model->setQuery("select packName from PacketsDesc");
         }
-        model->setRelation( 1, QSqlRelation( "Packets", "ID", "packName") );
+      //  model->setRelation( 1, QSqlRelation( "Packets", "ID", "packName") );
         model->setRelation( 3, QSqlRelation( "Messages","ID", "msgName") );
+        col_hide << 1;//TODO ADD DEFAULT
         break;
     }
     case eMESSAGES:
@@ -383,11 +386,20 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
                         model->query().numRowsAffected());
     delete m;
     table->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
+
+    for( int i=0; i < model->columnCount(); i++ )
+    {
+      table->setColumnHidden( i, false );
+    }
+
+    for( int i=0; i < col_hide.count(); i++ )
+    {
+      table->hideColumn(col_hide.value(i,-1));
+    }
 }
 
-void SqlDataManager::insertRow( QTableView* table)
+void SqlDataManager::insertRow( QTableView* table, QList<colum_cfg_t>& c_list )
 {
-#if 1
     if( !table )
     {
         qDebug()<< "Wrong input params: Can't insert row";
@@ -420,11 +432,28 @@ void SqlDataManager::insertRow( QTableView* table)
     }
 
 
-    newRecord.setValue( 1, st_name );
+    int insert_id = 1;
+    if( c_list.count() )
+    {
+        colum_cfg_t val = c_list.value(0);
+       qDebug() << newRecord.field(val.coll).value( ).toString();
+       qDebug() << newRecord.field(val.coll).value( ).toInt();
+       qDebug() << newRecord.field(val.coll).value( ).type();
+       qDebug() << newRecord.field(val.coll).isReadOnly();
+       newRecord.setValue(val.coll, val.default_value );
+       qDebug() << newRecord.field(val.coll).value( ).toInt();
+       insert_id = 2;
+    }
+    else
+    {
+        newRecord.setValue( 1, st_name );
+    }
+    /*!!!! First columns in tables are Autoincremented primary keys..
+    To work corectly autoincrementing first column in record shoud be cleared.*/
     newRecord.remove(0);
     if( model->insertRow(row) )
     {
-        insertIndex = model->index(row, 1);
+        insertIndex = model->index( row, insert_id );
         if( !model->setRecord( row, newRecord ) )
         {
             qDebug() << model->lastError();
@@ -437,48 +466,6 @@ void SqlDataManager::insertRow( QTableView* table)
     {
         qDebug() << model->lastError();
     }
-#else
-   table->setSortingEnabled(false);
-     /*table->blockSignals( true );*/
-    if( !table )
-    {
-        qDebug()<< "Wrong input params: Can't insert row";
-        return;
-    }
-    QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(table->model());
-    if (!model)
-    {
-        qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
-        return;
-    }
-    QModelIndex insertIndex = table->currentIndex();
-    int row = insertIndex.row() == -1 ? 0 : insertIndex.row();
-    //if( model->insertRow(row) )
-    QSqlRecord newRecord = model->record();
-    newRecord.setValue( 1, tr("Name%1").arg(model->rowCount()) );
-    newRecord.remove(0);
-
-    //if( model->insertRecord(row, newRecord) )
-     if( model->insertRow(row) )
-    {
-
-        insertIndex = model->index(row, 1);
-
-        if( !model->setRecord( row, newRecord ) )
-        {
-            qDebug() << model->lastError();
-        }
-      //  model->setData( insertIndex, tr("Name%1").arg(model->rowCount()));
-        table->setCurrentIndex(insertIndex);
-       table->edit(insertIndex);
-    }
-    else
-    {
-        qDebug() << model->lastError();
-    }
-//  table->blockSignals( false );
-  //table->setSortingEnabled(true);
-#endif
 }
 
 void SqlDataManager::deleteRow( QTableView* table )

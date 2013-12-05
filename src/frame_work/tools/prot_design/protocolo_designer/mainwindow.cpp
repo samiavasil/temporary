@@ -3,6 +3,7 @@
 #include "qsqlconnectiondialog.h"
 #include<QString>
 #include <QtSql>
+#define ID_TREE_INVALID  (-1)
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),data_manager(this),
@@ -25,12 +26,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QTreeWidgetItem* createTreeWidgetItem( const QStringList& name, SqlDataManager::sqlTablesTypes_t type )
+QTreeWidgetItem* createTreeWidgetItem( const QStringList& name, SqlDataManager::sqlTablesTypes_t type, int sub_item_id = ID_TREE_INVALID )
 {
     QTreeWidgetItem* item = new QTreeWidgetItem( name, (int)type );
-
-    switch( type )
+    if( item )
     {
+        item->setData( 0, Qt::UserRole, sub_item_id );
+        switch( type )
+        {
         case SqlDataManager::eNET     :
         {
             item->setIcon(0,QIcon( "icons/net.png" ));
@@ -71,6 +74,7 @@ QTreeWidgetItem* createTreeWidgetItem( const QStringList& name, SqlDataManager::
         {
             break;
         }
+        }
     }
     return item;
 }
@@ -108,47 +112,47 @@ void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, const QString
 {
     switch( type )
     {
-        case SqlDataManager::eNET     :
-        {
-            ui->labelView->setText("Nets");
-            break;
-        }
-        case SqlDataManager::eNODE    :
-        {
-            ui->labelView->setText("Nodes");
-            break;
-        }
-        case SqlDataManager::ePACKET  :
-        {
-            ui->labelView->setText("Packets");
-            break;
-        }
-        case SqlDataManager::eMESSAGES:
-        {
-            ui->labelView->setText("Messages description");
-            break;
-        }
-        case SqlDataManager::eNETNODES:
-        {
-            ui->labelView->setText("Nodes on Net description");
-            break;
-        }
+    case SqlDataManager::eNET     :
+    {
+        ui->labelView->setText("Nets");
+        break;
+    }
+    case SqlDataManager::eNODE    :
+    {
+        ui->labelView->setText("Nodes");
+        break;
+    }
+    case SqlDataManager::ePACKET  :
+    {
+        ui->labelView->setText("Packets");
+        break;
+    }
+    case SqlDataManager::eMESSAGES:
+    {
+        ui->labelView->setText("Messages description");
+        break;
+    }
+    case SqlDataManager::eNETNODES:
+    {
+        ui->labelView->setText("Nodes on Net description");
+        break;
+    }
 
-        case SqlDataManager::eNODEPACKS:
-        {
-            ui->labelView->setText("Packets in Node description");
-            break;
-        }
-        case SqlDataManager::ePACKETDESC:
-        {
-            ui->labelView->setText("Packets description");
-            break;
-        }
-        default:
-        {
-            ui->labelView->setText("Slect from tree");
-            break;
-        }
+    case SqlDataManager::eNODEPACKS:
+    {
+        ui->labelView->setText("Packets in Node description");
+        break;
+    }
+    case SqlDataManager::ePACKETDESC:
+    {
+        ui->labelView->setText("Packets description");
+        break;
+    }
+    default:
+    {
+        ui->labelView->setText("Slect from tree");
+        break;
+    }
     }
     data_manager.initializeModel( type,q, ui->tableView );
     QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
@@ -177,9 +181,31 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 }
 
 
+
 void MainWindow::insertRow()
 {
-    data_manager.insertRow( ui->tableView );
+    QTreeWidgetItem* cur_item =  ui->treeWidget->currentItem();
+    colum_cfg_t cm;
+    QList< colum_cfg_t > list;
+    /*Fill columns with default values.. set visibilities */
+    switch( cur_item->type() )
+    {
+    case SqlDataManager::ePACKETDESC:
+    case SqlDataManager::eNODEPACKS:
+    case SqlDataManager::eNETNODES:
+    {
+        cm.coll = 1;
+        cm.default_value = cur_item->data( 0, Qt::UserRole).toInt();//cur_item->text(0);
+        cm.hide = 1;
+        list.append(cm);
+        break;
+    }
+    default:{
+        break;
+    }
+
+    }
+    data_manager.insertRow( ui->tableView, list );
 }
 
 void MainWindow::deleteRow()
@@ -208,7 +234,7 @@ void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTre
     {
         for( int i = 0; i < ui->tableView->model()->columnCount(); i++ )
         {
-          ui->tableView->resizeColumnToContents(i);
+            ui->tableView->resizeColumnToContents(i);
         }
     }
     qDebug() << "m_cur_view_type: "<< m_cur_view_type<< " ....... " << "m_cur_view_query: " << m_cur_view_query;
@@ -261,73 +287,75 @@ int findColumnIndex( QAbstractItemModel * model, const QModelIndex & parent, QSt
 
 void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int end )
 {
- #if 1
     QTreeWidgetItem* cur_item =  ui->treeWidget->currentItem();
     if( cur_item )
     {
-      updateTreeSubitems( cur_item );
+        updateTreeSubitems( cur_item );
+
+        for( int i=0; i < cur_item->childCount();i++ )
+        {
+            updateTreeSubitems(cur_item->child(i));
+        }
     }
-#else
+}
 
-    SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eMESSAGES;
-    QStringList  sub_item_name;
-    QString model_column_name;
-    qDebug() << "Inserted rows: " << start << " - " << end;
-    QTreeWidgetItem* cur_item =  ui->treeWidget->currentItem();
-    QAbstractItemModel * model = ui->tableView->model();
-    bool update_tree = false;
-    deleteChildItems( cur_item );
 
-    if( m_cur_view_type != cur_item->type() )
+void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
+{
+#if 1
+    SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eENUM_NUMBER;
+    QString querry;
+    QString field_name;
+    int sub_item_id = ID_TREE_INVALID;
+    if( NULL == item )
     {
-        qDebug() << "Incorect: m_cur_view_type != row_type ";
         return;
     }
-    switch( cur_item->type() )
+    switch( item->type() )
     {
     case SqlDataManager::eNET     :
     {
-        //sub_item_name << "Nets";
-        update_tree   = true;
-        model_column_name = "netName";
+        field_name = "netName";
+        querry = QString("select ID,%1 from Nets").arg(field_name);
         sub_item_type = SqlDataManager::eNETNODES;
         break;
     }
     case SqlDataManager::eNODE    :
     {
-        update_tree   = true;
-        model_column_name = "nodeName";
+        field_name = "nodeName";
+        querry = QString("select ID,%1 from Nodes ").arg(field_name);
         sub_item_type = SqlDataManager::eNODEPACKS;
         break;
     }
     case SqlDataManager::ePACKET  :
     {
-        update_tree   = true;
-        model_column_name = "packName";
+        field_name = "packName";
+        querry = QString("select ID,%1 from Packets").arg(field_name);
         sub_item_type = SqlDataManager::ePACKETDESC;
         break;
     }
     case SqlDataManager::eMESSAGES:
     {
-        model_column_name = "msgName";
-        sub_item_type = SqlDataManager::eMESSAGES;
-        if( m_cur_view_query.isNull() )
+        if( NULL == item->parent() )
         {
-            update_tree   = true;
+            field_name = "msgName";
+            querry =  QString("select ID,%1 from Messages").arg(field_name);
+            sub_item_type = SqlDataManager::eMESSAGES;
         }
         break;
     }
     case SqlDataManager::eNETNODES:
-    {   update_tree   = true;
-        model_column_name = "nodeName";
+    {
+        field_name = "nodeName";
+        querry = QString("select ID,%1 from Nodes where ID in (select %1 from NetNodes where netName in (select ID from Nets where netName == '%2'))").arg(field_name).arg( item->text(0) );
         sub_item_type = SqlDataManager::eNODEPACKS;
         break;
     }
 
     case SqlDataManager::eNODEPACKS:
     {
-        update_tree   = true;
-        model_column_name = "packName";
+        field_name    = "packName";
+        querry        = QString("select ID,%1 from Packets where ID in (select %1 from NodePacks where nodeName in (select ID from Nodes where nodeName == '%2'))").arg(field_name).arg( item->text(0) );
         sub_item_type = SqlDataManager::ePACKETDESC;
         break;
     }
@@ -341,116 +369,29 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
     }
     }
 
-    if( update_tree )
-    {
-        int c_idx = findColumnIndex( model, parent, model_column_name );
-
-        if( 0 <= c_idx )
-        {
-            QTreeWidgetItem* item;
-            QModelIndex id;
-            for( int i = 0; i < model->rowCount(); i++ )
-            {
-                sub_item_name.clear();
-
-                id = model->index( i, c_idx, parent );
-                sub_item_name << id.data().toString();
-                item = createTreeWidgetItem( sub_item_name, sub_item_type );
-                cur_item->addChild(item);
-            }
-        }
-    }
-#endif
-}
-
-
-void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
-{
-#if 1
-    SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eENUM_NUMBER;
-    QString querry;
-    QString field_name;
-    if( NULL == item )
-    {
-        return;
-    }
-    switch( item->type() )
-    {
-        case SqlDataManager::eNET     :
-        {
-            field_name = "netName";
-            querry = QString("select %1 from Nets").arg(field_name);
-            sub_item_type = SqlDataManager::eNETNODES;
-            break;
-        }
-        case SqlDataManager::eNODE    :
-        {
-            field_name = "nodeName";
-            querry = QString("select %1 from Nodes ").arg(field_name);
-            sub_item_type = SqlDataManager::eNODEPACKS;
-            break;
-        }
-        case SqlDataManager::ePACKET  :
-        {
-            field_name = "packName";
-            querry = QString("select %1 from Packets").arg(field_name);
-            sub_item_type = SqlDataManager::ePACKETDESC;
-            break;
-        }
-        case SqlDataManager::eMESSAGES:
-        {
-            if( NULL == item->parent() )
-            {
-                field_name = "msgName";
-                querry =  QString("select %1 from Messages").arg(field_name);
-                sub_item_type = SqlDataManager::eMESSAGES;
-            }
-            break;
-        }
-        case SqlDataManager::eNETNODES:
-        {
-            field_name = "nodeName";
-            querry = QString("select %1 from NetNodes where netName = %2").arg(field_name).arg( item->text(0) );
-            sub_item_type = SqlDataManager::eNODEPACKS;
-            break;
-        }
-
-        case SqlDataManager::eNODEPACKS:
-        {
-            field_name = "packName";
-            querry = QString("select %1 from NodePacks where nodeName = %2").arg(field_name).arg( item->text(0) );
-            sub_item_type = SqlDataManager::ePACKETDESC;
-            break;
-        }
-        case SqlDataManager::ePACKETDESC:
-        {
-            break;
-        }
-        default:
-        {
-            qDebug() << "File: " << __FILE__ "Line " << __LINE__ << "Wrong table type";
-        }
-    }
-
     if( sub_item_type != SqlDataManager::eENUM_NUMBER )
     {
-         QTreeWidgetItem* sub_item;
-         QStringList  sub_item_name;
-         QSqlQuery q( querry );
-         qDebug() << "QUERRY: "<< querry;
-         if( q.exec() && q.isActive() )
-         {
-             QSqlRecord record;
-             deleteChildItems( item );
-             while( q.next() )
-             {
+        QTreeWidgetItem* sub_item;
+        QStringList  sub_item_name;
+        QSqlQuery q( querry );
+        qDebug() << "QUERRY: "<< querry;
+        if( q.exec()  )
+        {
+
+            QSqlRecord record;
+            deleteChildItems( item );
+            while( q.next() )
+            {
                 record = q.record();
                 sub_item_name.clear();
                 sub_item_name << record.field(field_name).value().toString();
-                sub_item = createTreeWidgetItem( sub_item_name, sub_item_type );
+                sub_item_id = record.field("ID").value().toInt();
+                sub_item = createTreeWidgetItem( sub_item_name, sub_item_type, sub_item_id );
                 item->addChild(sub_item);
-             }
-         }
+            }
+            q.finish() ;
+            while( q.isActive() );
+        }
     }
 #endif
 }
