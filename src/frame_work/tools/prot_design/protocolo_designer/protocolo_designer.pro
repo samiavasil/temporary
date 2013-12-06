@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     qsqlconnectiondialog.cpp \
-    sqldatamanager.cpp
+    sqldatamanager.cpp \
+    docwriter.cpp
 
 HEADERS  += mainwindow.h \
     qsqlconnectiondialog.h \
-    sqldatamanager.h
+    sqldatamanager.h \
+    docwriter.h
 
 FORMS    += mainwindow.ui \
     qsqlconnectiondialog.ui
