@@ -75,6 +75,105 @@ void PhoneBillWriter::write(const QString &fileName)
 DocWriter::DocWriter():m_document(new QTextDocument()),
     m_cursor(m_document)
 {
+
+    QFile file( "com_des.html" );
+    if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+    {
+        return;
+    }
+    QTextEdit* textEdit = new QTextEdit();
+    textEdit->setAcceptRichText ( true );
+    textEdit->setAutoFormatting ( QTextEdit::AutoNone );
+    textEdit->setHtml( file.readAll() );
+
+
+    QTextDocument *doc =textEdit->document();
+    QTextCursor cursor(doc);
+    qDebug()<< cursor.atBlockStart() <<textEdit->autoFormatting() << textEdit->acceptRichText() << textEdit->accessibleDescription();
+
+
+    textEdit->show();
+    //
+QTextTable * tb;
+    while( cursor.movePosition(QTextCursor::NextWord ) )
+    {
+        tb = cursor.currentTable();
+        //new_tb = *tb;
+        if( tb )
+        {
+             //cursor = tb->rowEnd( cursor );
+
+            //cursor.movePosition( QTextCursor::NextRow );
+            for( int i=0; i< 56 ;i ++ )
+            {
+
+            }
+            for( int i=0; i< 56 ;i ++ )
+            {
+                tb->appendRows(1);
+cursor.movePosition( QTextCursor::NextRow ) ;
+              /*  if( !cursor.movePosition(QTextCursor::PreviousRow) )
+                {
+                    qDebug()<<"Can't move to Previous row";
+                }*/
+
+                    for( int j=0; j < tb->columns();j++ )
+                    {
+
+                       cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
+                       if( j < tb->columns()-1 )
+                       {
+                           if( !cursor.movePosition( QTextCursor::NextCell ) )
+                           {
+                             qDebug()<<"Can't move to next cell: " << i << "," << j;
+                           }
+                       }
+                    }
+                    //break;
+
+
+
+            }
+            break;
+        }
+
+    }
+    cursor.movePosition(QTextCursor::End );
+    QTextTable* table = cursor.insertTable( 1, tb->columns(), tb->format() );
+    for( int j=0; j < tb->columns();j++ )
+    {
+      table->cellAt(0,j).setFormat( tb->cellAt(0,j).format() );
+    }
+    for( int i=0; i< 5 ;i ++ )
+    {
+        table->appendRows(1);
+        cursor.movePosition( QTextCursor::NextRow ) ;
+      /*  if( !cursor.movePosition(QTextCursor::PreviousRow) )
+        {
+            qDebug()<<"Can't move to Previous row";
+        }*/
+
+            for( int j=0; j < tb->columns();j++ )
+            {
+
+               cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
+               if( j < tb->columns()-1 )
+               {
+                   if( !cursor.movePosition( QTextCursor::NextCell ) )
+                   {
+                     qDebug()<<"Can't move to next cell: " << i << "," << j;
+                   }
+               }
+            }
+            //break;
+
+
+
+    }
+    write( "test."TYPE, textEdit->document() );
+
+
+    return;
     QList<QTextList *> List;
     QTextFrameFormat frame_format;
     QTextCharFormat char_format;
@@ -129,7 +228,7 @@ DocWriter::DocWriter():m_document(new QTextDocument()),
 
 
     }
-    write( "test."TYPE );
+    write( "test."TYPE, m_document );
 }
 
 DocWriter::~DocWriter()
@@ -137,10 +236,10 @@ DocWriter::~DocWriter()
     delete m_document;
 }
 
-void DocWriter::write(const QString &fileName)
+void DocWriter::write(const QString &fileName, QTextDocument *const document)
 {
     QTextDocumentWriter writer(fileName);
     qDebug() << writer.supportedDocumentFormats();
     writer.setFormat(TYPE);
-    writer.write(m_document);
+    writer.write(document);
 }
