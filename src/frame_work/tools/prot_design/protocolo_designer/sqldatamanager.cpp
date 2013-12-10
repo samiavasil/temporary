@@ -36,12 +36,12 @@ const items_t packets_table_items_names[] = {
 
 const items_t messages_table_items_names[] =
 {
-    {"ID",           " integer primary key"},
-    {"msgName",      " varchar NOT NULL UNIQUE" },
-    {"BitLen",       " integer"            },
-    {"Type",         " integer"            },
-    {"DefaultValue", " integer"            },
-    {"msgDescription",  " varchar"},
+    {"ID",            " integer primary key"         },
+    {"msgName",        " varchar NOT NULL UNIQUE"    },
+    {"BitLen",         " integer NOT NULL" },
+    {"Type",           " integer NOT NULL"       },
+    {"DefaultValue",   " integer NOT NULL"       },
+    {"msgDescription", " varchar"},
     {"CHECK( msgName !='')",""}
 };
 
@@ -51,6 +51,7 @@ const items_t net_to_node_map_table[] =
     {"netName" ,  " integer NOT NULL" },
     {"nodeName",  " integer NOT NULL" },
     {"FOREIGN KEY(netName) REFERENCES Nets ( ID )",  "FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )" },
+    {"CONSTRAINT c1 UNIQUE (netName,nodeName)",""},
 };
 
 const items_t packet_to_msg_map_table[] = {
@@ -60,7 +61,6 @@ const items_t packet_to_msg_map_table[] = {
     {"msgName",    " integer NOT NULL" },
     {"FOREIGN KEY(msgName) REFERENCES Messages ( ID )", "FOREIGN KEY(packName) REFERENCES Packets ( ID ) "},
     {"CONSTRAINT c1 UNIQUE (packName,msgPos)","CONSTRAINT c2 UNIQUE (packName,msgName)"},
-   // {"CONSTRAINT c3 UNIQUE (msgName,msgPos)" ,""}
     {"CHECK( packName!='')","CHECK(msgPos >= 0)"}
 };
 
@@ -73,8 +73,7 @@ const items_t node_to_pack_map_table[] =
     {"nodeName",  " integer NOT NULL" },
     {"packName",  " integer NOT NULL" },
     {"FOREIGN KEY(nodeName) REFERENCES Nodes ( ID )",  "FOREIGN KEY(packName) REFERENCES Packets ( ID )" },
-
-    {"CHECK( nodeName!='' )",""}
+    {"CHECK( nodeName!='' )","CONSTRAINT c1 UNIQUE (nodeName,packName)"}
 };
 
 
@@ -133,10 +132,20 @@ const table_desc_t tables_descriptors[] =
     }
 
 
+SqlDataManager* SqlDataManager::m_this;
 
 SqlDataManager::SqlDataManager(QObject *parent) :
     QObject(parent)
 {
+}
+
+SqlDataManager* SqlDataManager::Instance()
+{
+    if( NULL == m_this )
+    {
+        m_this = new SqlDataManager( NULL );
+    }
+    return m_this;
 }
 
 QSqlError SqlDataManager::addConnection(const QString &driver, const QString &dbName, const QString &host,
@@ -398,18 +407,18 @@ void SqlDataManager::initializeModel( SqlDataManager::sqlTablesTypes_t type, con
     }
 }
 
-void SqlDataManager::insertRow( QTableView* table, QList<colum_cfg_t>& c_list )
+int SqlDataManager::insertRow( QTableView* table, QList<colum_cfg_t>& c_list )
 {
     if( !table )
     {
         qDebug()<< "Wrong input params: Can't insert row";
-        return;
+        return -1;
     }
     QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(table->model());
     if (!model)
     {
         qDebug()<< "Error: Can't get QSqlRelationalTableModel for table";
-        return;
+        return -1;
     }
     QModelIndex insertIndex = table->currentIndex();
     QSqlRecord newRecord = model->record();
@@ -464,8 +473,10 @@ void SqlDataManager::insertRow( QTableView* table, QList<colum_cfg_t>& c_list )
     }
     else
     {
+        row = -1;
         qDebug() << model->lastError();
     }
+    return row;
 }
 
 void SqlDataManager::deleteRow( QTableView* table )
@@ -495,4 +506,31 @@ void SqlDataManager::deleteRow( QTableView* table )
 
     model->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
 
+}
+
+
+int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_list, QMap< int, msg_types_t  > & m_list )
+{
+    QSqlQuery q("",m_db);
+    p_list.clear();
+    m_list.clear();
+    EXEC_QUERY(q,QString("select packName from NodePacks where nodeName in (select ID from Nodes where nodeName == '%1')").arg(NodeName) );
+    if( QSqlError::NoError == m_db.lastError().type() )
+    {
+        pack_types_t temp;
+        QSqlRecord record;
+        int id;
+        while( q.next() )
+        {
+            record = q.record();
+            id = record.field("packName").value().toInt();
+            p_list[id] = temp; /*Tem now is empty*/
+            qDebug() << id;
+        }
+        q.finish() ;
+        while( q.isActive() );
+    }
+
+
+    return 0;
 }

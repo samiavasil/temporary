@@ -104,11 +104,8 @@ QTextTable * tb;
              //cursor = tb->rowEnd( cursor );
 
             //cursor.movePosition( QTextCursor::NextRow );
-            for( int i=0; i< 56 ;i ++ )
-            {
 
-            }
-            for( int i=0; i< 56 ;i ++ )
+            for( int i=0; i< 5 ;i ++ )
             {
                 tb->appendRows(1);
 cursor.movePosition( QTextCursor::NextRow ) ;
@@ -171,7 +168,7 @@ cursor.movePosition( QTextCursor::NextRow ) ;
 
     }
     write( "test."TYPE, textEdit->document() );
-
+delete textEdit;
 
     return;
     QList<QTextList *> List;

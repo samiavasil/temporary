@@ -6,8 +6,7 @@
 #define ID_TREE_INVALID  (-1)
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),data_manager(this),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->tableView->addAction(ui->insertRowAction);
@@ -85,7 +84,7 @@ void MainWindow::on_actionNewProject_triggered()
     if (dialog.exec() != QDialog::Accepted)
         return;
 
-    QSqlError err = data_manager.addConnection(dialog.driverName(), dialog.databaseName(), dialog.hostName(),
+    QSqlError err = SqlDataManager::Instance()->addConnection(dialog.driverName(), dialog.databaseName(), dialog.hostName(),
                                                dialog.userName(), dialog.password(), dialog.port());
     if (err.type() != QSqlError::NoError)
         QMessageBox::warning(this, tr("Unable to open database"), tr("An error occurred while "
@@ -154,7 +153,7 @@ void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, const QString
         break;
     }
     }
-    data_manager.initializeModel( type,q, ui->tableView );
+    SqlDataManager::Instance()->initializeModel( type,q, ui->tableView );
     QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
     if (!model)
     {
@@ -205,13 +204,14 @@ void MainWindow::insertRow()
     }
 
     }
-    data_manager.insertRow( ui->tableView, list );
+    int row = SqlDataManager::Instance()->insertRow( ui->tableView, list );
 }
 
 void MainWindow::deleteRow()
 {
-    data_manager.deleteRow( ui->tableView );
+    SqlDataManager::Instance()->deleteRow( ui->tableView );
 }
+#include<QStyledItemDelegate>
 
 void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
@@ -227,8 +227,9 @@ void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTre
     {
         str = item->text(0);
     }
-    showTable( (SqlDataManager::sqlTablesTypes_t)item->type() ,str );
-    m_cur_view_type  = (SqlDataManager::sqlTablesTypes_t)item->type();
+    SqlDataManager::sqlTablesTypes_t type = (SqlDataManager::sqlTablesTypes_t)item->type();
+    showTable( type ,str );
+    m_cur_view_type  = type;
     m_cur_view_query = str;
     if( ui->tableView->model() )
     {
@@ -237,6 +238,7 @@ void MainWindow::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTre
             ui->tableView->resizeColumnToContents(i);
         }
     }
+
     qDebug() << "m_cur_view_type: "<< m_cur_view_type<< " ....... " << "m_cur_view_query: " << m_cur_view_query;
 }
 
@@ -396,9 +398,16 @@ void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
 #endif
 }
 
-
+#include"generator.h"
+#include"output_writer.h"
 void MainWindow::on_actionToggleFilter_toggled( bool arg1 )
 {
+#if 1
+     generator gen;
+     output_writer wr;
+     QString node("Node1");
+     gen.generateNodeData( SqlDataManager::Instance(),node, wr );
+#else
     QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
     if (!model)
     {
@@ -413,4 +422,5 @@ void MainWindow::on_actionToggleFilter_toggled( bool arg1 )
     {
         model->setFilter( m_filter );
     }
+#endif
 }

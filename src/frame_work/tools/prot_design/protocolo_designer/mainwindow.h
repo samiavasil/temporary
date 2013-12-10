@@ -46,7 +46,6 @@ private slots:
     void updateTreeSubitems( QTreeWidgetItem *item );
 
 protected:
-    SqlDataManager data_manager;
     SqlDataManager::sqlTablesTypes_t m_cur_view_type;
     QString                          m_cur_view_query;
     QString                          m_filter;

@@ -14,12 +14,19 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qsqlconnectiondialog.cpp \
     sqldatamanager.cpp \
-    docwriter.cpp
+    docwriter.cpp \
+    generator.cpp \
+    output_writer.cpp \
+    data_manager.cpp
 
 HEADERS  += mainwindow.h \
     qsqlconnectiondialog.h \
     sqldatamanager.h \
-    docwriter.h
+    docwriter.h \
+    generator.h \
+    output_writer.h \
+    prot_types.h \
+    data_manager.h
 
 FORMS    += mainwindow.ui \
     qsqlconnectiondialog.ui

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include "data_manager.h"
 class QTableView;
 
 typedef struct table_desc_ table_desc_t;
@@ -17,9 +18,12 @@ typedef struct
     bool hide;
 }colum_cfg_t;
 
-class SqlDataManager : public QObject
+class SqlDataManager : public QObject , public data_manager
 {
     Q_OBJECT
+protected:
+    explicit SqlDataManager(QObject *parent = 0);
+
 public:
     typedef enum{
         eNET,
@@ -32,13 +36,14 @@ public:
         eENUM_NUMBER
     }sqlTablesTypes_t;
 
-    explicit SqlDataManager(QObject *parent = 0);
+    static SqlDataManager* Instance();
+    int get_data( QString& NodeName, QMap< int, pack_types_t >& p_list, QMap< int, msg_types_t  > & m_list );
     void initializeModel( SqlDataManager::sqlTablesTypes_t type, const QString &querry, QTableView *table );
 
     QSqlError addConnection(const QString &driver, const QString &dbName, const QString &host,
                                         const QString &user, const QString &passwd, int port);
     void deleteRow( QTableView* table );
-    void insertRow( QTableView* table, QList<colum_cfg_t> &c_list);
+    int insertRow( QTableView* table, QList<colum_cfg_t> &c_list);
 protected:
 
     int createTables( QSqlDatabase& db );
@@ -47,6 +52,7 @@ protected:
                                    bool open = true );
 
 protected:
+    static SqlDataManager* m_this;
     QSqlDatabase m_db;
 signals:
     
