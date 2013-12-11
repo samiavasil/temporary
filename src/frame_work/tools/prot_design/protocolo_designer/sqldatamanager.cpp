@@ -514,7 +514,7 @@ int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_li
     int i;
     QString str = tr("select packName from NodePacks where nodeName in (select ID from Nodes where nodeName == '%1')").arg(NodeName);
     QSqlQuery q("",m_db);
-    QList<int> pIDS;
+    QList<int> tempIDS;
     p_list.clear();
     m_list.clear();
     /*Find packets Id in node*/
@@ -525,17 +525,17 @@ int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_li
         while( q.next() )
         {
             record = q.record();
-            pIDS.append( record.field("packName").value().toInt() );
+            tempIDS.append( record.field("packName").value().toInt() );
         }
         q.finish() ;
         while( q.isActive() );
     }
 
     str  = "";
-    for( i = 0; i< pIDS.count();i++)
+    for( i = 0; i< tempIDS.count();i++)
     {
-        str.append(QString("%1").arg(pIDS.value(i)));
-        if( i < pIDS.count() -1 )
+        str.append(QString("%1").arg(tempIDS.value(i)));
+        if( i < tempIDS.count() -1 )
         {
             str.append(",");
         }
@@ -560,31 +560,61 @@ int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_li
         while( q.isActive() );
     }
     /*Get packet messages*/
+    tempIDS.clear();
     EXEC_QUERY(q,QString("select * from PacketsDesc where packName in (%1)").arg(str) );
     if( QSqlError::NoError == m_db.lastError().type() )
     {
-        pack_types_t temp;
         QSqlRecord record;
         int packId;
         msg_pos mIdpos;
+        int mID;
+
         while( q.next() )
         {
-            record = q.record();
-            packId =  record.field("packName").value().toInt();
-            mIdpos.ID = record.field("msgName").value().toInt();
+            record    = q.record();
+            packId    = record.field("packName").value().toInt();
+            mID       = record.field("msgName").value().toInt();
+            mIdpos.ID = mID;
+            tempIDS.append( mID );
             mIdpos.pos = record.field("msgPos").value().toInt();
             p_list[packId].mIDs.append( mIdpos  );
-            qDebug() << "ID= " <<  mIdpos.ID <<"-"<<mIdpos.pos << "  " << p_list[packId].packName <<"  "<<
-                        p_list[packId].packetDescription << "\n";
         }
         q.finish() ;
         while( q.isActive() );
     }
-//    QMapIterator<int, pack_types_t> i(map);
-//    while (i.hasNext()) {
-//        i.next();
-//        cout << i.key() << ": " << i.value() << endl;
-//    }
+
+
+    str  = "";
+    for( i = 0; i< tempIDS.count();i++)
+    {
+        str.append(QString("%1").arg(tempIDS.value(i)));
+        if( i < tempIDS.count() -1 )
+        {
+            str.append(",");
+        }
+    }
+    /*Get messages descriptions*/
+    EXEC_QUERY(q,QString("select * from Messages where ID in (%1)").arg(str) );
+    if( QSqlError::NoError == m_db.lastError().type() )
+    {
+
+        QSqlRecord record;
+        int mId;
+        msg_types_t temp;
+        while( q.next() )
+        {
+            record              = q.record();
+            mId                 = record.field("ID").value().toInt();
+            temp.BitLen         = record.field("BitLen").value().toInt();
+            temp.msgName        = record.field("msgName").value().toString();
+            temp.Type           = record.field("Type").value().toInt();
+            temp.DefaultValue   = record.field("DefaultValue").value().toInt();
+            temp.msgDescription = record.field("msgDescription").value().toString();
+            m_list[mId]         = temp;
+        }
+        q.finish() ;
+        while( q.isActive() );
+    }
 
     return 0;
 }

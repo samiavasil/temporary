@@ -3,7 +3,7 @@
 #include<QString>
 #include<QList>
 
-typedef struct{
+typedef struct alabala{
     QString msgName;
     int     BitLen;
     int     DefaultValue;
