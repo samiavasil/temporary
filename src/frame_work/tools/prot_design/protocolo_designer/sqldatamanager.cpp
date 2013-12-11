@@ -201,14 +201,14 @@ int SqlDataManager::createTables( QSqlDatabase& db )
 
     //TODO DELL ME
 
-    EXEC_QUERY( q,"drop table PacketsDesc");
-    EXEC_QUERY( q,"drop table NodePacks");
-    EXEC_QUERY( q,"drop table NetNodes");
-    EXEC_QUERY( q,"drop table Packets");
-    EXEC_QUERY( q,"drop table Messages");
+//    EXEC_QUERY( q,"drop table PacketsDesc");
+//    EXEC_QUERY( q,"drop table NodePacks");
+//    EXEC_QUERY( q,"drop table NetNodes");
+//    EXEC_QUERY( q,"drop table Packets");
+//    EXEC_QUERY( q,"drop table Messages");
 
-    EXEC_QUERY( q,"drop table Nodes");
-    EXEC_QUERY( q,"drop table Nets");
+//    EXEC_QUERY( q,"drop table Nodes");
+//    EXEC_QUERY( q,"drop table Nets");
 
 
     for( int i=0; i < GET_ARREA_NUMS(tables_descriptors); i++ )
@@ -444,7 +444,7 @@ int SqlDataManager::insertRow( QTableView* table, QList<colum_cfg_t>& c_list )
     int insert_id = 1;
     if( c_list.count() )
     {
-        colum_cfg_t val = c_list.value(0);
+       colum_cfg_t val = c_list.value(0);
        qDebug() << newRecord.field(val.coll).value( ).toString();
        qDebug() << newRecord.field(val.coll).value( ).toInt();
        qDebug() << newRecord.field(val.coll).value( ).type();
@@ -511,10 +511,37 @@ void SqlDataManager::deleteRow( QTableView* table )
 
 int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_list, QMap< int, msg_types_t  > & m_list )
 {
+    int i;
+    QString str = tr("select packName from NodePacks where nodeName in (select ID from Nodes where nodeName == '%1')").arg(NodeName);
     QSqlQuery q("",m_db);
+    QList<int> pIDS;
     p_list.clear();
     m_list.clear();
-    EXEC_QUERY(q,QString("select packName from NodePacks where nodeName in (select ID from Nodes where nodeName == '%1')").arg(NodeName) );
+    /*Find packets Id in node*/
+    EXEC_QUERY(q,str );
+    if( QSqlError::NoError == m_db.lastError().type() )
+    {
+        QSqlRecord record;
+        while( q.next() )
+        {
+            record = q.record();
+            pIDS.append( record.field("packName").value().toInt() );
+        }
+        q.finish() ;
+        while( q.isActive() );
+    }
+
+    str  = "";
+    for( i = 0; i< pIDS.count();i++)
+    {
+        str.append(QString("%1").arg(pIDS.value(i)));
+        if( i < pIDS.count() -1 )
+        {
+            str.append(",");
+        }
+    }
+    /*Get packets description from packet ID*/
+    EXEC_QUERY(q,QString("select * from Packets where ID in (%1)").arg(str) );
     if( QSqlError::NoError == m_db.lastError().type() )
     {
         pack_types_t temp;
@@ -523,14 +550,41 @@ int SqlDataManager::get_data( QString& NodeName, QMap< int, pack_types_t >& p_li
         while( q.next() )
         {
             record = q.record();
-            id = record.field("packName").value().toInt();
-            p_list[id] = temp; /*Tem now is empty*/
-            qDebug() << id;
+            id =  record.field("ID").value().toInt();
+            temp.packName             =  record.field("packName").value().toString();
+            temp.packetDescription    =  record.field("packetDescription").value().toString();
+            p_list[id]                =  temp;
+            //qDebug() << "ID= " <<  p_list[id].mIDs << "  " << p_list[id].packName <<"  "<<  p_list[id].packetDescription << "\n";
         }
         q.finish() ;
         while( q.isActive() );
     }
-
+    /*Get packet messages*/
+    EXEC_QUERY(q,QString("select * from PacketsDesc where packName in (%1)").arg(str) );
+    if( QSqlError::NoError == m_db.lastError().type() )
+    {
+        pack_types_t temp;
+        QSqlRecord record;
+        int packId;
+        msg_pos mIdpos;
+        while( q.next() )
+        {
+            record = q.record();
+            packId =  record.field("packName").value().toInt();
+            mIdpos.ID = record.field("msgName").value().toInt();
+            mIdpos.pos = record.field("msgPos").value().toInt();
+            p_list[packId].mIDs.append( mIdpos  );
+            qDebug() << "ID= " <<  mIdpos.ID <<"-"<<mIdpos.pos << "  " << p_list[packId].packName <<"  "<<
+                        p_list[packId].packetDescription << "\n";
+        }
+        q.finish() ;
+        while( q.isActive() );
+    }
+//    QMapIterator<int, pack_types_t> i(map);
+//    while (i.hasNext()) {
+//        i.next();
+//        cout << i.key() << ": " << i.value() << endl;
+//    }
 
     return 0;
 }

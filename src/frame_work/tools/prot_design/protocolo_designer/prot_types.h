@@ -11,11 +11,16 @@ typedef struct{
     QString msgDescription;
 }msg_types_t;
 
+typedef struct
+{
+    int ID;
+    int pos;
+}msg_pos;
 
 typedef struct{
     QString packName;
     QString packetDescription;
-    QList<int> mIDs;
+    QList<msg_pos> mIDs;
 }pack_types_t;
 
 
