@@ -9,7 +9,7 @@ int output_writer::generate_all( QMap< int, pack_types_t >& pack_list, QMap< int
 {
     qDebug() << "\n\n============================================================================================\n";
     qDebug() << "DUMP ALL NODE MESSAGES:\n";
-    const msg_types_t m;
+
     QList<int> mIDS = msg_list.keys();
     foreach( int id, mIDS )
     {
