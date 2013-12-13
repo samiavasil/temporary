@@ -399,14 +399,17 @@ void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
 }
 
 #include"generator.h"
-#include"output_writer.h"
+#include"docwriter.h"
+
 void MainWindow::on_actionToggleFilter_toggled( bool arg1 )
 {
 #if 1
      generator gen;
-     output_writer wr;
+     DocWriter* wr = new DocWriter();
+
      QString node("Node1");
-     gen.generateNodeData( SqlDataManager::Instance(),node, wr );
+     gen.generateNodeData( SqlDataManager::Instance(),node, wr);
+     delete wr;
 #else
     QSqlRelationalTableModel *model = qobject_cast<QSqlRelationalTableModel *>(ui->tableView->model());
     if (!model)

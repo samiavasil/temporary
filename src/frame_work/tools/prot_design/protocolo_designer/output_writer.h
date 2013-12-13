@@ -11,7 +11,7 @@ class output_writer
 public:
     output_writer();
     //int generate_messages( QList<msg_types_t>& msg_list );
-    int generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list );
+    virtual int generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list );
 
 protected:
 //    virtual int generate_message( msg_types_t msg ) = 0;

@@ -1,74 +1,4 @@
 #include "docwriter.h"
-
-#if 0
-m_cursor.insertText(QString("Phone bill for %1\n").arg(clientName));
-
-QTextTableFormat tableFormat;
-tableFormat.setCellPadding(5);
-tableFormat.setHeaderRowCount(1);
-tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-tableFormat.setWidth(QTextLength(QTextLength::PercentageLength, 100));
-m_cursor.insertTable(1, 3, tableFormat);
-m_cursor.insertText("Date");
-m_cursor.movePosition(QTextCursor::NextCell);
-m_cursor.insertText("Duration (sec)");
-m_cursor.movePosition(QTextCursor::NextCell);
-m_cursor.insertText("Cost");
-}
-
-PhoneBillWriter::~PhoneBillWriter()
-{
-    delete m_document;
-}
-
-void PhoneBillWriter::addPhoneCall(const PhoneBillWriter::PhoneCall &call)
-{
-    QTextTable *table = m_cursor.currentTable();
-    if (! table)
-        return;
-
-    table->appendRows(1); // moves our cursor to the end of the doc...
-    m_cursor.movePosition(QTextCursor::PreviousRow);
-    m_cursor.movePosition(QTextCursor::NextCell);
-    m_cursor.insertText(call.date.toString());
-    m_cursor.movePosition(QTextCursor::NextCell);
-    m_cursor.insertText(QString::number(call.duration));
-    m_cursor.movePosition(QTextCursor::NextCell);
-
-    QChar euro(0x20ac);
-    m_cursor.insertText(QString("%1 %2").arg(euro).arg(call.cost / (double) 100, 0, 'f', 2));
-}
-
-void PhoneBillWriter::addPastUsageGraph(QList<int> values, const QString &subtext)
-{
-    const int columnSize = 10;
-    int width = values.count() * columnSize;
-    int max = 0;
-    foreach (int x, values)
-        max = qMax(max, x);
-    QImage image(width, 100, QImage::Format_Mono);
-    QPainter painter(&image);
-    painter.fillRect(0, 0, image.width(), image.height(), Qt::white); // background
-    for (int index = 0; index < values.count(); ++index) {
-        int height = values[index] * 100 / max; // adjust scale to our 100 pixel tall image
-        painter.fillRect(index * columnSize, image.height() - height, columnSize, height, Qt::black);
-    }
-    painter.end();
-
-    QTextCursor cursor(m_document);
-    cursor.movePosition(QTextCursor::End);
-    cursor.insertText(subtext);
-    cursor.insertBlock();
-    cursor.insertImage(image);
-}
-
-void PhoneBillWriter::write(const QString &fileName)
-{
-    QTextDocumentWriter writer(fileName);
-    writer.write(m_document);
-}
-
-#endif
 #include <QDebug>
 //"odf"
 #define TYPE "html"
@@ -81,55 +11,43 @@ DocWriter::DocWriter():m_document(new QTextDocument()),
     {
         return;
     }
-    QTextEdit* textEdit = new QTextEdit();
+    QTextBrowser* textEdit = new QTextBrowser();
     textEdit->setAcceptRichText ( true );
-    textEdit->setAutoFormatting ( QTextEdit::AutoNone );
+   // textEdit->setAutoFormatting ( QTextEdit::AutoNone );
     textEdit->setHtml( file.readAll() );
-
+   // textEdit->setSource ( QUrl("com_des.html") );
 
     QTextDocument *doc =textEdit->document();
     QTextCursor cursor(doc);
     qDebug()<< cursor.atBlockStart() <<textEdit->autoFormatting() << textEdit->acceptRichText() << textEdit->accessibleDescription();
 
+    textEdit->setLineWrapMode ( QTextBrowser::WidgetWidth );
+textEdit->setLineWrapColumnOrWidth ( 1000 );
 
     textEdit->show();
     //
-QTextTable * tb;
+    QTextTable * tb;
     while( cursor.movePosition(QTextCursor::NextWord ) )
     {
         tb = cursor.currentTable();
-        //new_tb = *tb;
         if( tb )
         {
-             //cursor = tb->rowEnd( cursor );
-
-            //cursor.movePosition( QTextCursor::NextRow );
-
             for( int i=0; i< 5 ;i ++ )
             {
                 tb->appendRows(1);
-cursor.movePosition( QTextCursor::NextRow ) ;
-              /*  if( !cursor.movePosition(QTextCursor::PreviousRow) )
+                cursor.movePosition( QTextCursor::NextRow ) ;
+                for( int j=0; j < tb->columns();j++ )
                 {
-                    qDebug()<<"Can't move to Previous row";
-                }*/
 
-                    for( int j=0; j < tb->columns();j++ )
+                    cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
+                    if( j < tb->columns()-1 )
                     {
-
-                       cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
-                       if( j < tb->columns()-1 )
-                       {
-                           if( !cursor.movePosition( QTextCursor::NextCell ) )
-                           {
-                             qDebug()<<"Can't move to next cell: " << i << "," << j;
-                           }
-                       }
+                        if( !cursor.movePosition( QTextCursor::NextCell ) )
+                        {
+                            qDebug()<<"Can't move to next cell: " << i << "," << j;
+                        }
                     }
-                    //break;
-
-
-
+                }
             }
             break;
         }
@@ -139,36 +57,29 @@ cursor.movePosition( QTextCursor::NextRow ) ;
     QTextTable* table = cursor.insertTable( 1, tb->columns(), tb->format() );
     for( int j=0; j < tb->columns();j++ )
     {
-      table->cellAt(0,j).setFormat( tb->cellAt(0,j).format() );
+        table->cellAt(0,j).setFormat( tb->cellAt(0,j).format() );
     }
     for( int i=0; i< 5 ;i ++ )
     {
         table->appendRows(1);
         cursor.movePosition( QTextCursor::NextRow ) ;
-      /*  if( !cursor.movePosition(QTextCursor::PreviousRow) )
+        for( int j=0; j < tb->columns();j++ )
         {
-            qDebug()<<"Can't move to Previous row";
-        }*/
 
-            for( int j=0; j < tb->columns();j++ )
+            cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
+            if( j < tb->columns()-1 )
             {
-
-               cursor.insertText( QString("i=%1 j=%2").arg(i).arg(j) );
-               if( j < tb->columns()-1 )
-               {
-                   if( !cursor.movePosition( QTextCursor::NextCell ) )
-                   {
-                     qDebug()<<"Can't move to next cell: " << i << "," << j;
-                   }
-               }
+                if( !cursor.movePosition( QTextCursor::NextCell ) )
+                {
+                    qDebug()<<"Can't move to next cell: " << i << "," << j;
+                }
             }
-            //break;
-
-
-
+        }
     }
+
+
     write( "test."TYPE, textEdit->document() );
-delete textEdit;
+      textEdit->show();
 
     return;
     QList<QTextList *> List;
@@ -239,4 +150,9 @@ void DocWriter::write(const QString &fileName, QTextDocument *const document)
     qDebug() << writer.supportedDocumentFormats();
     writer.setFormat(TYPE);
     writer.write(document);
+}
+
+int DocWriter::generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list ){
+         output_writer::generate_all(  pack_list,   msg_list);
+
 }

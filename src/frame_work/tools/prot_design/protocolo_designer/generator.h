@@ -9,7 +9,7 @@ class generator
 public:
     generator();
 
-    int generateNodeData( data_manager *mng, QString &NodeName, output_writer &writer );
+    int generateNodeData( data_manager *mng, QString &NodeName, output_writer *writer );
 };
 
 #endif // GENERATOR_H
