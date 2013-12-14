@@ -59,7 +59,7 @@ class FRAME_WORKSHARED_EXPORT QProtocolPackFactory : public CProtocolPackFactory
 
     virtual int packetPayloadBitLen(const pack_id_t packId, int * payloadLenBits);
 
-    virtual int checkPack+etConsistency(CPacket * packet);
+    virtual int checkPacketConsistency(CPacket * packet);
 
 
   public:

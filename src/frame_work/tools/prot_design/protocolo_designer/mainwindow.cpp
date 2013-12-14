@@ -161,7 +161,7 @@ void MainWindow::showTable( SqlDataManager::sqlTablesTypes_t type, const QString
         return;
     }
     m_filter = model->filter();
-    on_actionToggleFilter_toggled( ui->actionToggleFilter->isChecked() );
+   // on_actionToggleFilter_toggled( ui->actionToggleFilter->isChecked() );
     connect( ui->tableView->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int)),this, SLOT(tableRowsInserted ( const QModelIndex &, int, int)) );
 }
 

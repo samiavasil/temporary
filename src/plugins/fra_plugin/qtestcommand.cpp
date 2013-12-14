@@ -10,11 +10,14 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
+
+
+
 pack_id_t pId[4]={
-    PACK1_ID,
-    PACK2_ID,
-    PACK3_ID,
-    PACK4_ID,
+    AIN_CFG_ID,
+    EN_DREC_ID,
+    DREC_SET_CFG_ID,
+    DREC_SET_FREQ_ID
 };
 
 QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *factory, QObject *parent ):QCommand(parent) {
