@@ -38,11 +38,12 @@ int QtestCommand::handler() {
   int ret =  1;
   CPacket* packet = NULL;
   DEBUG <<   tr("Bliak[%1]").arg(a);
-  if( a >= 1 ){
+  if( a >= 4 ){
       ret =  0;
-      //  DEBUG << "QCommand Finished");
+      DEBUG << "QCommand Finished";
   }
-  else{
+  else
+  {
       if( 1 ){//a == 0 ){
           //DEBUG << "QCommand Execution start");
 

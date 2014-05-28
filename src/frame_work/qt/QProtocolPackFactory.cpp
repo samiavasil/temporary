@@ -24,16 +24,16 @@ QProtocolPackFactory::QProtocolPackFactory(QProtocolDb * pDB, QObject * parent):
 
       u8 data[2];
       data[0]=0xff;
-      data[1]=0xff;
+      data[1]=0x0;
       m_pDB->setMessage(AIN1_ENBLE,data);
-      data[0]=0xff;
-      data[1]=0xff;
+      data[0]=0xf;
+      data[1]=0x0;
       m_pDB->setMessage(AIN2_ENBLE,data);
-      data[0]=0xff;
-      data[1]=0xff;
+      data[0]=0x5;
+      data[1]=0x0;
       m_pDB->setMessage(AIN1_GAIN,data);
-      data[0]=0xff;
-      data[1]=0xff;
+      data[0]=0x5;
+      data[1]=0x0;
       m_pDB->setMessage(AIN2_GAIN,data);
 
 
@@ -61,14 +61,43 @@ QProtocolPackFactory::~QProtocolPackFactory() {
       delete m_pLoader;*/
 }
 
+int bitcmp( u8* src,u8* dest, int bit_num ){
+    int num_bytes        = bit_num/8;
+    int num_in_last_byte = bit_num%8;
+    if( src && dest )
+    {
+        int i=0;
+        for( i=0; i< num_bytes; i++ )
+        {
+            if( src[i] != dest[i] )
+            {
+                return 1;
+            }
+        }
+        if( num_in_last_byte )
+        {
+            u8 mask = BIT_MASK_BEFORE_BIT_U8(num_in_last_byte);
+            if( (src[i]&mask) != (dest[i]&mask) )
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 int QProtocolPackFactory::checkPacketConsistency(CPacket * packet) {
   int ret = WRONG_PARAMS;
-  u8 postfix[BITS_TO_BYTES_CEIL(m_pDB->getProtocolPostFixLenBits())];//todo sometig wrong here...not checked
-  u8 packPostfix[BITS_TO_BYTES_CEIL(m_pDB->getProtocolPostFixLenBits())];
+  u32 postfixSize = BITS_TO_BYTES_CEIL(m_pDB->getProtocolPostFixLenBits());
+  u8 postfix[ postfixSize ];
+  u8 packPostfix[ postfixSize ];
   if( packet ){
+      //TODO - postfix should be fixed (it can be not only simple CRC )
       postfix[0]=calCulateCrc8( packet->data(), packet->packLenBits() - m_pDB->getProtocolPostFixLenBits() );
       ret = getPacketPostFix( packet,packPostfix );
+      if( ( NO_ERR == ret ) && bitcmp( postfix, packPostfix, m_pDB->getProtocolPostFixLenBits() ) ){
+         ret = WRONG_DATA;
+      }
   }
   return ret;
 }
@@ -118,7 +147,7 @@ int QProtocolPackFactory::addPacketPostFix(CPacket * packet) {
   if( packet ){
       u8 postfix[BITS_TO_BYTES_CEIL(m_pDB->getProtocolPostFixLenBits())];
       postfix[0]=calCulateCrc8( packet->data(), packet->packLenBits() - m_pDB->getProtocolPostFixLenBits() );
-      ret = packet->setBits( packet->packLenBits() - m_pDB->getProtocolPostFixLenBits(),m_pDB->getProtocolPostFixLenBits(),postfix );
+      ret = packet->setBits( BITS_TO_BYTES_CEIL(packet->packLenBits() - m_pDB->getProtocolPostFixLenBits())*8,m_pDB->getProtocolPostFixLenBits(),postfix );
   }
   return  ret;
 }
@@ -129,10 +158,10 @@ int QProtocolPackFactory::calCulateCrc8(const u8 * data, int numBits) {
   int i;
   u8 crc = 0;
   for( i=0; i< bytesNum;i++ ){
-      crc |= data[i];
+      crc ^= data[i];
   }
   if( bitsNum ){
-      crc |=  (data[i]&((1<<bitsNum)-1));
+      crc ^=  (data[i]&((1<<bitsNum)-1));
   }
   // ios:hex( crc );
   DEBUG << "CRC=" << std::hex << crc;

@@ -55,10 +55,11 @@ pack_id_t CPacket::packType() {
 }
 
 int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
-  int ret = NO_ERR;                                                                 
+  int ret = NO_ERR;
+
   int byte_offset    = bit_offset/8;                                                
   int offset_in_byte = bit_offset%8;                                                
-  int bytes_num      = BITS_TO_BYTES_CEIL( bit_num);                                
+  int bytes_num      = BITS_TO_BYTES_CEIL( bit_num);
   int i = 0;                                                                        
                                                                                     
   if(  ( 0 > bit_offset )||( 0 > bit_num )||
@@ -68,7 +69,77 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
   {
       return WRONG_PARAMS;
   }
-                                                                                                                                                         
+#if 1
+  int ctr = bit_num;
+  int dest_offset = bit_offset;
+  u16 d_in;
+  int bits_in_d_in;
+
+
+  int bit_remind_src = bit_num%8;
+  int src_start  = (8 -( bit_remind_src ))%8;
+  int src_cur    = src_start;
+  int dest_idx;
+  int need_bits;
+  if( !bit_remind_src ){
+      d_in         = data[0];
+      if( bit_num < 8 )
+      {
+         bits_in_d_in = bit_num;
+         d_in         = data[0]&BIT_MASK_BEFORE_BIT_U8( bit_num );
+      }
+      else
+      {
+         bits_in_d_in = 8;
+      }
+  }
+  else{
+      d_in         = data[0]&BIT_MASK_BEFORE_BIT_U8( bit_remind_src );
+      bits_in_d_in = bit_remind_src;
+  }
+
+  src_cur += bits_in_d_in;
+
+  while( ctr > 0 )
+  {
+      need_bits   = 8 - (dest_offset%8);
+      if( need_bits > ctr )
+      {
+         need_bits = ctr;
+      }
+      //get and set needed bits
+      if( bits_in_d_in < need_bits ){
+          int more_bits =  need_bits - bits_in_d_in;
+          bit_remind_src    = 8 - (src_cur%8);
+          if( bit_remind_src  <  more_bits )
+          {
+             u16 c_d = data[ src_cur/8 ] & MASK_OFF_LEN( 0, bit_remind_src );
+             d_in  |= ( c_d << bits_in_d_in);
+             bits_in_d_in += bit_remind_src;
+             src_cur      += bit_remind_src;
+          }
+          if( !(src_cur%8) )
+          {
+             u16 c_d = data[ src_cur/8 ];
+             d_in  |= ( c_d << bits_in_d_in);
+             bits_in_d_in += 8;
+             src_cur      += 8;
+          }
+      }
+
+      dest_idx = dest_offset/8;
+
+      m_data[ dest_idx ] &= (~MASK_OFF_LEN(  0, need_bits ));
+      m_data[ dest_idx ] |= ( (d_in&BIT_MASK_BEFORE_BIT_U8(need_bits)) << ( 8 - need_bits - (dest_offset%8)));
+
+      d_in = d_in >> need_bits;
+      bits_in_d_in -=     need_bits;
+
+      dest_offset += need_bits;
+      ctr         -= need_bits;
+  }
+
+#else
                                                                                     
   if( 0 != (bit_offset%8) ){                                                        
       if( 0 < bit_num ){                                                            
@@ -126,7 +197,9 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
           m_data[i+byte_offset] |= (data[i]&MASK_OFF_LEN( 0, remainder ));
       }                                                                             
                                                                                     
-  }                                                                                 
+  }
+#endif
+
   return ret;                                                                       
 }
 

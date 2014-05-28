@@ -27,9 +27,24 @@ int QPacketCollector::transmitPacket(CPacket * packet) {
     int ret = WRONG_PARAMS;                                                     
   
     if( packet && isChained() ){
-        m_Protocol->addPacketHeader(packet);
-        m_Protocol->addPacketPostFix(packet);
-        ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
+        ret = m_Protocol->addPacketHeader(packet);
+        if( NO_ERR == ret )
+        {
+           ret = m_Protocol->addPacketPostFix(packet);
+           if( NO_ERR == ret )
+           {
+             ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
+             if( NO_ERR != ret ){
+                 DEBUG << "ERROR: Can't m_PortIo->write";
+             }
+           }
+           else{
+               DEBUG << "ERROR: Can't addPacketPostFix";
+           }
+        }
+        else{
+            DEBUG << "ERROR: Can't addPacketHeader ";
+        }
     }                                                                           
     return ret;                                                                
 }

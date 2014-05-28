@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>454</width>
-    <height>625</height>
+    <width>304</width>
+    <height>425</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,17 +63,17 @@
           <widget class="QDateTimeEdit" name="dateTimeEdit"/>
          </item>
          <item row="2" column="0">
-          <widget class="KSysGuardProcessList" name="ksysguardprocesslist">
+          <widget class="KSysGuardProcessList" name="ksysguardprocesslist" native="true">
            <property name="showTotalsInTree" stdset="0">
             <bool>true</bool>
            </property>
-           <property name="updateIntervalMSecs">
+           <property name="updateIntervalMSecs" stdset="0">
             <number>0</number>
            </property>
-           <property name="killButtonVisible">
+           <property name="killButtonVisible" stdset="0">
             <bool>true</bool>
            </property>
-           <property name="scriptingEnabled">
+           <property name="scriptingEnabled" stdset="0">
             <bool>true</bool>
            </property>
           </widget>
@@ -154,14 +154,14 @@
    <header>kled.h</header>
   </customwidget>
   <customwidget>
-   <class>KSysGuardProcessList</class>
-   <extends></extends>
-   <header>ksysguardprocesslist.h</header>
-  </customwidget>
-  <customwidget>
    <class>DesignerTamplate</class>
    <extends></extends>
    <header>DesignerTamplate.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSysGuardProcessList</class>
+   <extends></extends>
+   <header>ksysguardprocesslist.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

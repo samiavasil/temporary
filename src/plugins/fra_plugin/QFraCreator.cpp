@@ -9,7 +9,7 @@
 #include "qt/QCommandExecutor.h"
 #include "qtestcommand.h"
 #include "qt/QPluginList.h"
-
+#include <unistd.h>
 
 QFraCreator::QFraCreator(QObject *parent):QCreator(parent)
 {

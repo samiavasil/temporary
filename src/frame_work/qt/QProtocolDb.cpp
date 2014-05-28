@@ -65,11 +65,36 @@ int QProtocolDb::getMessage(msg_id_t id, const u8 ** data) {
 int QProtocolDb::setMessage(const msg_id_t msgId, const u8 * data) {
       int ret = NO_ERR;
       if( ( 0 != data ) && ( true == m_msgMap.contains( msgId ) ) ){
-          mempcpy( m_msgMap[msgId].data, data, BITS_TO_BYTES_CEIL( m_msgMap[msgId].bitLen ) );
+#if 0
+          int num_bytes = BITS_TO_BYTES_CEIL( m_msgMap[msgId].bitLen);
+          int last_bit  = m_msgMap[msgId].bitLen%8;
+          mempcpy( m_msgMap[msgId].data, data, num_bytes );
+          if( last_bit )
+          {
+              u8 a = m_msgMap[msgId].data[num_bytes-1];
+              m_msgMap[msgId].data[num_bytes-1] &= MASK_OFF_LEN( 0,last_bit );
+          }
+#else
+          int num_bytes = BITS_TO_BYTES_CEIL( m_msgMap[msgId].bitLen);
+          int last_bit  = m_msgMap[msgId].bitLen%8;
+          if( last_bit ){
+            m_msgMap[msgId].data[0] = data[ num_bytes - 1 ]&BIT_MASK_BEFORE_BIT_U8(last_bit);
+          }
+          else{
+            m_msgMap[msgId].data[0] = data[ num_bytes - 1 ];
+          }
+          for( int i = 1; i < num_bytes  ; i++ ){
+              m_msgMap[msgId].data[i] = data[ ( num_bytes - 1 ) - i ];
+          }
+
+
+
+#endif
       }
       else{
           ret = WRONG_PARAMS;
       }
+
       return ret;
 }
 
@@ -216,12 +241,6 @@ int QProtocolDb::packetPayloadBitLen(const pack_id_t packId, int * payloadLenBit
               else{
                   *payloadLenBits = m_maxPacketSize;
               }
-        //#define ALLIGN_PAYLOAD_TO_BYTE
-#if  defined( ALLIGN_PAYLOAD_TO_BYTE )
-              /*TODO: allign payload to byte for speed (!!! speed if header and postfix are byte alligned )*/
-              *payloadLenBits = BITS_TO_BYTES_CEIL(*payloadLenBits)*8;
-#endif
-
           }
           else{
               *payloadLenBits = 0;
@@ -230,6 +249,12 @@ int QProtocolDb::packetPayloadBitLen(const pack_id_t packId, int * payloadLenBit
               break;
           }
       }
+      /*TODO - can be configure option*/
+      #define ALLIGN_PAYLOAD_TO_BYTE
+      #if  defined( ALLIGN_PAYLOAD_TO_BYTE )
+                    /*TODO: allign payload to byte for speed (!!! speed if header and postfix are byte alligned )*/
+                    *payloadLenBits = BITS_TO_BYTES_CEIL(*payloadLenBits)*8;
+      #endif
       if( *payloadLenBits > m_maxPacketSize){
           DEBUG << "!!!! Packet Size > maxPacketSize for packetId[" << packId << "].";
           *payloadLenBits = 0;

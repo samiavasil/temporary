@@ -36,8 +36,8 @@
 #endif
 
 
-ADD_MESSAGE( AIN1_ENBLE,	  10,"",  1  )
-ADD_MESSAGE( AIN2_ENBLE, 	  11,"",  1  )
+ADD_MESSAGE( AIN1_ENBLE,	  10,"",  8  )
+ADD_MESSAGE( AIN2_ENBLE, 	  11,"",  3  )
 ADD_MESSAGE( AIN1_GAIN, 	  12,"",  4  )
 ADD_MESSAGE( AIN2_GAIN, 	  13,"",  4  )
 ADD_MESSAGE( CURRENT_INPUT,   14,"",  1  )
