@@ -53,9 +53,11 @@ int QtestCommand::handler() {
       if( packet ){
 
           if( m_Col ){
+
               if( 0 < m_Col->transmitPacket( packet ) ){
                   DEBUG << "TRANSMIT PACKET[" << packet->packType() << "] num[" << a << "]";
                   if( packet ){
+                      fprintf( stderr," Transmit Packet[%d]: Data is:\n",packet->packType() );
                       const u8*data = packet->data();
                       for( int i=0;i < packet->packLenBytes();i++ ){
                           fprintf(stderr," %02x",data[i]);

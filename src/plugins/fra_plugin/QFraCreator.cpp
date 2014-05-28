@@ -4,7 +4,7 @@
 #include "QFraIoPortsView.h"
 #include "qt/QPacketCollector.h"
 #include "qt/QPortIO.h"
-#include "qt/QProtocolLoader.h"
+#include "qt/QProtocolDb.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QCommandExecutor.h"
 #include "qtestcommand.h"
@@ -42,10 +42,9 @@ bool QFraCreator::Create( CFrameWork *fW )
                 {
                     obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
 
-                    qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
-
                     if( obj )
                     {
+                       qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
                        const QMetaObject* metaObject = obj->metaObject();
 
                         DEBUG <<"DUMP METHODS:   "<<endl;
@@ -88,14 +87,14 @@ bool QFraCreator::Create( CFrameWork *fW )
             {
                 //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno qfW) za da moje da se trie lesno
 
-                QProtocolLoader     * pLoader = new QProtocolLoader();
-                QProtocolPackFactory* fact    = new QProtocolPackFactory( pLoader, qfW );
+
+                QProtocolPackFactory* fact    = new QProtocolPackFactory( new QProtocolDb(), qfW );
                 QPacketCollector*     colect  = new QPacketCollector( port, fact, qfW );
                 if( port&&colect ){
                     connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
                 }
                 //port->showPortConfiguration( NULL );
-                delete pLoader;
+
                 QCommandExecutor* pExecutor = new QCommandExecutor( qfW );
 
                 if( 0 != pExecutor ){

@@ -51,9 +51,10 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
   return port;                                     
 }
 
+#include"qt/QProtocolDb.h"//TODO
 CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
   DEBUG << "Create Protocol";
-  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolLoader());
+  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolDb());
   if( 0 == protocol ){
       CRITICAL <<  "Can't create QProtocolPackFactory";
   }

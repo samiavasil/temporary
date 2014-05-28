@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>414</width>
-    <height>534</height>
+    <width>454</width>
+    <height>625</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
          <string>Available Plugins</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="5" column="0">
+         <item row="7" column="0">
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
             <widget class="QSplitter" name="splitter">
@@ -50,12 +50,16 @@
                <bool>true</bool>
               </property>
              </widget>
-             <widget class="KLed" name="kled"/>
+             <widget class="KLed" name="kled">
+              <property name="state">
+               <enum>KLed::Off</enum>
+              </property>
+             </widget>
             </widget>
            </item>
           </layout>
          </item>
-         <item row="3" column="0">
+         <item row="5" column="0">
           <widget class="QDateTimeEdit" name="dateTimeEdit"/>
          </item>
          <item row="2" column="0">
@@ -74,7 +78,7 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
+         <item row="6" column="0">
           <widget class="QPushButton" name="pushButton">
            <property name="text">
             <string>StartStop</string>
@@ -93,6 +97,12 @@
             <number>10</number>
            </property>
           </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QSpinBox" name="spinBox_2"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QSpinBox" name="spinBox_3"/>
          </item>
         </layout>
        </widget>
@@ -220,6 +230,38 @@
     <hint type="destinationlabel">
      <x>226</x>
      <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ksysguardprocesslist</sender>
+   <signal>updated()</signal>
+   <receiver>spinBox_3</receiver>
+   <slot>stepUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>306</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>kled</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>420</x>
+     <y>487</y>
     </hint>
    </hints>
   </connection>

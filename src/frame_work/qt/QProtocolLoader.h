@@ -36,6 +36,7 @@ class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
 
     virtual msg_id_t getMsgIdForPack(const pack_id_t packID, int idx);
 
+    virtual const char* getMsgDescription(const msg_id_t id);
 
   protected:
     virtual int getMsgIdLen(const msg_id_t id, int * len);

@@ -1,24 +1,24 @@
 #include "base/CProtocolLoader.h"
-
+#include "base/CProtocolDb.h"
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory) {
-  int errCode = WRONG_PARAMS;                                                                                   
-  if(  protoFactory ){                                                                                          
+int CProtocolLoader::loadProtocolDefinition(CProtocolDb *protDB) {
+int errCode = WRONG_PARAMS;
+  if(   protDB ){
       int MsgCount  = 0;                                                                                        
       int PackCount = 0;                                                                                        
       pack_id_t packID;                                                                                         
       msg_id_t  msgID;                                                                                          
       int msgLen;                                                                                               
       int i,j;                                                                                                  
-      protoFactory->clearProtDefinitions();                                                                     
+       protDB->clearProtDefinitions();
       errCode = readProtocolData();                                                                             
       if( NO_ERR  == errCode ){                                                                                 
                                                                                                                 
           int max_pack_size = getMaxPacketSize( );                                                              
           if( 0 < max_pack_size ){                                                                              
-              protoFactory->setMaxPacketLen( max_pack_size );                                                   
+               protDB->setMaxPacketLen( max_pack_size );
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
@@ -27,7 +27,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           }                                                                                                     
           int lenBits = getHeaderLenBits();                                                                     
           if( 0 < lenBits ){                                                                                    
-              protoFactory->setProtocolHeaderLenBits( lenBits );                                                
+               protDB->setProtocolHeaderLenBits( lenBits );
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
@@ -36,7 +36,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           }                                                                                                     
           lenBits = getPostFixLenBits();                                                                        
           if( 0 <= lenBits ){                                                                                   
-              protoFactory->setProtocolPostFixLenBits( lenBits );                                               
+               protDB->setProtocolPostFixLenBits( lenBits );
           }                                                                                                     
           else{                                                                                                 
               errCode = WRONG_DATA;                                                                             
@@ -49,7 +49,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
               if(  MSG_ID_INVALID != msgID ){                                                                   
                   errCode = getMsgIdLen(msgID,&msgLen);                                                         
                   if( NO_ERR == errCode ){                                                                      
-                      errCode = protoFactory->addMessage( msgID, msgLen );                                      
+                      errCode =  protDB->addMessage( msgID, msgLen );
                       if( NO_ERR != errCode ){                                                                  
                           CRITICAL << "Error[" << errCode << "]:Can't add message ID[" << msgID << "]";
                           return errCode;                                                                       
@@ -72,7 +72,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
           for( i=0; i < PackCount;i++ ){                                                                        
               packID = getPackId(i);                                                                            
               if( PKT_ID_INVALID != packID ){                                                                   
-                  errCode = protoFactory->addPacket( packID );                                                  
+                  errCode =  protDB->addPacket( packID );
                   if( NO_ERR != errCode ){                                                                      
                       CRITICAL << "Error[" << errCode << "]:Can't add packet ID[" << packID << "]";
                       return errCode;                                                                           
@@ -83,7 +83,7 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
                       for( j = 0; j < MsgCount; j++ ){                                                          
                           msgID = getMsgIdForPack( packID, j );                                                 
                           if( MSG_ID_INVALID != msgID ){                                                        
-                              errCode = protoFactory->addMessageToPacket( packID, msgID );                      
+                              errCode =  protDB->addMessageToPacket( packID, msgID );
                               if( NO_ERR != errCode ){                                                          
                                   CRITICAL << "Error[" << errCode << "]:Invalid Message ID[" << msgID << "]";
                                   return errCode;                                                               
@@ -107,7 +107,8 @@ int CProtocolLoader::loadProtocolDefinition(CProtocolPackFactory * protoFactory)
               }                                                                                                 
           }                                                                                                     
       }                                                                                                         
-  }                                                                                                             
+  }
+
   return errCode;                                                                                               
 }
 

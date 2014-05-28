@@ -4,11 +4,13 @@
 
 #include "global.h"
 #include "base/CProtocolPackFactory.h"
+class CProtocolDb;
 
 class CProtocolLoader {
   public:
-    virtual int loadProtocolDefinition(CProtocolPackFactory * protoFactory);
+    virtual int loadProtocolDefinition( CProtocolDb * protDB );
 
+    virtual const char*  getMsgDescription(const msg_id_t id) = 0;
 
   protected:
     virtual int readProtocolData() = 0;
@@ -32,6 +34,8 @@ class CProtocolLoader {
     virtual int getHeaderLenBits() = 0;
 
     virtual int getPostFixLenBits() = 0;
+
+
 
 };
 #endif

@@ -98,9 +98,14 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
                   m_data[i+1+byte_offset] |= shifter;                               
               }                                                                     
           }                                                                         
-          else{                                                                     
-              m_data[byte_offset] &= (BIT_MASK_BEFORE_BIT_U8( offset_in_byte ));    
-              m_data[byte_offset] |= (shifter&0xff);                                
+          else{
+
+//#define MASK_OFF_LEN( offset,len )   ((((1<<len)-1)&0xff) << offset)
+              m_data[byte_offset] &= (~MASK_OFF_LEN( offset_in_byte, bit_num ));
+              m_data[byte_offset] |= (shifter&MASK_OFF_LEN( offset_in_byte, bit_num ));
+//              m_data[byte_offset] &= (BIT_MASK_BEFORE_BIT_U8( offset_in_byte ));
+
+//              m_data[byte_offset] |= (shifter&0xff);
           }                                                                         
       }                                                                             
   }                                                                                 
@@ -114,8 +119,11 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
           m_data[i+byte_offset] = data[i];                                          
       }                                                                             
       else{                                                                         
-          m_data[i+byte_offset] &= BIT_MASK_AFTER_BIT_U8( remainder );              
-          m_data[i+byte_offset] |= ((data[i])&BIT_MASK_BEFORE_BIT_U8( remainder )); 
+    //      m_data[i+byte_offset] &= BIT_MASK_AFTER_BIT_U8( remainder );
+     //     m_data[i+byte_offset] |= ((data[i])&BIT_MASK_BEFORE_BIT_U8( remainder ));
+
+          m_data[i+byte_offset] &= (~MASK_OFF_LEN( 0, remainder ));
+          m_data[i+byte_offset] |= (data[i]&MASK_OFF_LEN( 0, remainder ));
       }                                                                             
                                                                                     
   }                                                                                 

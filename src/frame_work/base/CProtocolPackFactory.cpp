@@ -2,22 +2,24 @@
 #include "base/CProtocolPackFactory.h"
 #include "base/CProtocolLoader.h"
 #include "base/CPacket.h"
+#include "base/CProtocolDb.h"
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
 CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
   pLoader = pLoader;
-  m_hDrLenBits       = 0;    
-  m_postFixLenBits   = 0;    
-  m_maxPacketSize    = 0;    
+}
+
+CProtocolPackFactory::CProtocolPackFactory( CProtocolDb * protDB ):m_pDB( protDB ){
+
 }
 
 int CProtocolPackFactory::attachProtocolLoader(CProtocolLoader * pLoader) {
     int ret = NO_ERR;
-    if(  pLoader ) { 
-       clearProtDefinitions();  
-       pLoader->loadProtocolDefinition(this);   
+    if(  pLoader ) {
+       ret = pLoader->loadProtocolDefinition( m_pDB );
+
     } 
     else{
        ret = WRONG_PARAMS;
@@ -32,15 +34,15 @@ CPacket* CProtocolPackFactory::createPacket(const pack_id_t packId) {
         return packet;                                                                                              
     }                                                                                                               
     int payloadLenBits=0;                                                                                           
-    if( NO_ERR == packetPayloadBitLen(packId, &payloadLenBits )){                                                   
-        packet = new CPacket( packId,payloadLenBits + getProtocolHeaderLenBits() + getProtocolPostFixLenBits() );   
+    if( NO_ERR == m_pDB->packetPayloadBitLen(packId, &payloadLenBits )){
+        packet = new CPacket( packId,payloadLenBits + m_pDB->getProtocolHeaderLenBits() + m_pDB->getProtocolPostFixLenBits() );
         int num;                                                                                                    
-        if( ( NO_ERR == getPacketMessagesNumber( packId,&num ) )&&( 0 < num ) ){                                    
+        if( ( NO_ERR == m_pDB->getPacketMessagesNumber( packId,&num ) )&&( 0 < num ) ){
             msg_id_t msgArr[num];
-            if( NO_ERR == getPacketMessagesId( packId, msgArr, num ) ){                                             
+            if( NO_ERR == m_pDB->getPacketMessagesId( packId, msgArr, num ) ){
                 const u8 *data;                                                                                     
                 for( int i=0; i < num; i++ ){                                                                       
-                    if( NO_ERR != getMessage( msgArr[i], &data ) ){
+                    if( NO_ERR != m_pDB->getMessage( msgArr[i], &data ) ){
                         CRITICAL << "Wrong Message Id[" << msgArr[i] << "] for Packet Id[" << packId << "]";
                         delete packet;
                         packet = NULL;
@@ -88,9 +90,9 @@ int CProtocolPackFactory::setPacketMessage(CPacket * packet, msg_id_t msgId, con
     if( ( NULL == packet )||( NULL == data ) ){                                 
         return ret;
     }                                                                           
-    ret =  getMessageBitOffsetInPack( packet->packType() ,msgId , &offset );    
+    ret =  m_pDB->getMessageBitOffsetInPack( packet->packType() ,msgId , &offset );
     if( NO_ERR == ret ){                                                        
-        ret = getMessageBitLen( msgId, &msgLen );                               
+        ret = m_pDB->getMessageBitLen( msgId, &msgLen );
         if( NO_ERR == ret ){                                                    
             ret = packet->setBits( offset, msgLen, data );                      
         }
@@ -111,9 +113,9 @@ int CProtocolPackFactory::getPacketMessage(CPacket * packet, msg_id_t msgId, u8 
   if( ( NULL == packet )||( NULL == retData ) ){                            
       return WRONG_PARAMS;                                                  
   }                                                                         
-  ret =  getMessageBitOffsetInPack( msgId, packet->packType(), &offset );   
+  ret =  m_pDB->getMessageBitOffsetInPack( msgId, packet->packType(), &offset );
   if( NO_ERR == ret ){                                                      
-      ret = getMessageBitLen( msgId, &msgLen );                             
+      ret = m_pDB->getMessageBitLen( msgId, &msgLen );
       if( NO_ERR == ret ){                                                  
           ret = packet->getBits( offset, msgLen, retData );                 
       }                                                                     
@@ -121,19 +123,11 @@ int CProtocolPackFactory::getPacketMessage(CPacket * packet, msg_id_t msgId, u8 
   return ret;                                                               
 }
 
-int CProtocolPackFactory::getMaxPacketLen() {
-  return m_maxPacketSize;
-}
-
-void CProtocolPackFactory::setMaxPacketLen(int max_size) {
-  m_maxPacketSize = max_size;
-}
-
 int CProtocolPackFactory::getPacketHeader(CPacket * packet, u8 * header) {
   if( ( NULL == packet )||( NULL == header ) ){                         
       return WRONG_PARAMS;                                              
   }                                                                     
-  return packet->getBits( 0, getProtocolHeaderLenBits(), header );      
+  return packet->getBits( 0, m_pDB->getProtocolHeaderLenBits(), header );
 }
 
 int CProtocolPackFactory::getPacketPostFix(CPacket * packet, u8 * retPostFix) {
@@ -142,9 +136,9 @@ int CProtocolPackFactory::getPacketPostFix(CPacket * packet, u8 * retPostFix) {
   if( ( NULL == packet )||( NULL == retPostFix ) ){                            
       return ret;                                                              
   }                                                                            
-  offset = packet->packLenBits() - getProtocolPostFixLenBits();                
-  if( getProtocolHeaderLenBits() < offset ){                                   
-     ret = packet->getBits( offset, getProtocolPostFixLenBits(), retPostFix ); 
+  offset = packet->packLenBits() - m_pDB->getProtocolPostFixLenBits();
+  if( m_pDB->getProtocolHeaderLenBits() < offset ){
+     ret = packet->getBits( offset, m_pDB->getProtocolPostFixLenBits(), retPostFix );
   }                                                                            
   else{                                                                        
      CRITICAL << "Not correct packet semantic";

@@ -59,7 +59,8 @@ int QPacketCollector::collectPacket(CPacket * packet) {
   static int a;                                                                                              
   if( packet ){                                                                                              
       DEBUG << "Append Packet pointer: TODO free pointer after usage  PackId["<< packet->packType()<< "] num " << a;
-      if( 1 ){//packet ){
+      if( packet ){
+          fprintf( stderr," Receive Packet[%d]: Data is:\n",packet->packType() );
           const u8*data = packet->data();
           for( int i=0;i < packet->packLenBytes();i++ ){
               fprintf(stderr," %02x",data[i]);

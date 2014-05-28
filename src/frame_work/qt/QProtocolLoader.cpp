@@ -2,11 +2,11 @@
 #include "qt/QProtocolLoader.h"
 
 
-#define MAX_PACKET_SIZE_BIT        (101)
+#define MAX_PACKET_SIZE_BIT        (101)               /*TODO - move this on config file*/
 #define PROTOCOL_HEADER_SIZE_BIT   ((2+2)*8)
 #define PROTOCOL_POSTFIX_SIZE_BIT  ((1)*8)
 
-struct msg_desc{
+struct msg_s{
     msg_id_t id;
     const char* description;
     int len;
@@ -14,15 +14,15 @@ struct msg_desc{
 
 struct pack_desc{
     pack_id_t id;
-    const msg_id_t *msg_arrea;
+    msg_id_t * const msg_arrea;
     int msg_num;
 };
 
-typedef struct msg_desc  msg_desc_t;
+typedef struct msg_s  msg_t;
 typedef struct pack_desc pack_desc_t;
 
 
-const msg_desc_t msgs[]={
+const msg_t msgs[]={
     #define GEN_MSGS
     #include"ProtoGen.h"
 };
@@ -36,7 +36,7 @@ const pack_desc_t packs[]={
 };
 
 #define PKT_NUM  ((int)(sizeof(packs)/sizeof(pack_desc_t)))
-#define MSGS_NUM ((int)(sizeof(msgs)/sizeof(msg_desc_t)))
+#define MSGS_NUM ((int)(sizeof(msgs)/sizeof(msg_t)))
 
 int QProtocolLoader::readProtocolData() {
   return NO_ERR;
@@ -119,3 +119,12 @@ int QProtocolLoader::getPostFixLenBits() {
   return PROTOCOL_POSTFIX_SIZE_BIT;
 }
 
+const char *QProtocolLoader::getMsgDescription( const msg_id_t id ) {
+    int i;
+   for( i=0; i < MSGS_NUM ;i++ ){
+            if( msgs[i].id == id ){
+               return msgs[i].description;
+            }
+   }
+   return NULL;
+}

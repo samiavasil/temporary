@@ -26,7 +26,7 @@ enum{
 #define BIT_MASK_BEFORE_BIT_U8( x )  (( ( 1 << x ) - 1  )&0xff)
 #define BIT_MASK_AFTER_BIT_U8( x )   ((~BIT_MASK_BEFORE_BIT_U8( x ))&0xff)
 
-#define MASK_OFF_LEN( offset,len )   ((((1<<len)-1)&0xff) >> offset)
+#define MASK_OFF_LEN( offset,len )   ((((1<<len)-1)&0xff) << offset)
 
 /* src_off,dest_off should be 0:7
    bitnum 1:8
