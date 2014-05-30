@@ -6,20 +6,12 @@
 typedef int pack_id_t;
 typedef int msg_id_t;
 
+class CProtocolLoader;
 class CProtocolDb
 {
 public:
     CProtocolDb();
-
-/*
-
-    virtual int setMessage(const msg_id_t msgId, const u8 * data) = 0;
-
-
-
-
-    */
-
+    int loadProtocolDefinition( CProtocolLoader *protLd );
     virtual void clearProtDefinitions() = 0;
 
     virtual int addPacket(const pack_id_t id) = 0;
@@ -62,7 +54,6 @@ protected:
     int m_postFixLenBits;
 
     int m_maxPacketSize;
-
 };
 
 #endif // CPROTOCOLDB_H

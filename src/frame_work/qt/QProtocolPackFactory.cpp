@@ -7,33 +7,71 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QProtocolPackFactory::QProtocolPackFactory(QProtocolDb * pDB, QObject * parent):CProtocolPackFactory(pDB),QObject(parent) {
+//#define TEST_SPEED
+#if defined(TEST_SPEED)
+#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
+#define TEST_NUM 10000000
+void test_bit_set_time(CProtocolDb* m_pDB)
+{
+
+
+
+  time_t now;
+  time_t end_time;
+  double seconds;
+  u8 data[2];
+
+  time(&now);  /* get current time; same as: now = time(NULL)  */
+  for( long long int i=0; i< TEST_NUM; i++ )
+  {
+
+      data[0]=0x12+i;
+      data[1]=0x34;
+      m_pDB->setMessage(AIN1_ENBLE,data);
+      data[0]=0x56;
+      data[1]=0x78+i;
+      m_pDB->setMessage(AIN2_ENBLE,data);
+      data[0]=0x9a+i;
+      data[1]=0xbc;
+      m_pDB->setMessage(AIN1_GAIN,data);
+      data[0] = 0xde + i;
+      data[1]=0x1f;
+      m_pDB->setMessage(AIN2_GAIN,data);
+  }
+
+  time(&end_time);
+  seconds = difftime( end_time, now );
+  fprintf(stderr,"Test Set: Number = %d, Sec = %f  Num/Sec=%f\n",TEST_NUM,seconds, seconds? ((double)TEST_NUM)/seconds:-1 );
+}
+#endif
+
+QProtocolPackFactory::QProtocolPackFactory( QObject * parent ):QObject(parent) {
       DEBUG << "Create QProtocolPackFactory";
-      if(  attachProtocolLoader( new QProtocolLoader() ) ) {
-          DEBUG << "!!!ProtocolLoader isn't attached to ProtocolPackFactory: Use attachProtocolLoader()";
-     //     m_pLoader = NULL;
+      if( NO_ERR == attachProtocolDb( new QProtocolDb() ) ){
+          /*Attach default protocol loader - if you want you can change it with attachProtocol()*/
+          if(  NO_ERR != attachProtocol( new QProtocolLoader() ) ) {
+              CRITICAL << "!!!Default ProtocolLoader can't be attached to ProtocolPackFactory: Use attachProtocol()";
+          }
       }
       else{
-       //   m_pLoader = pLoader;
+          CRITICAL << "!!!Default ProtocolDB can't be attached to ProtocolPackFactory: Use attachProtocol()";
       }
-      //4231 4 7 11 6
       ///TODO: DELLL ME -  This is for test only
-
-
-
-
+#if defined(TEST_SPEED)
+  test_bit_set_time( m_pDB);
+#endif
       u8 data[2];
-      data[0]=0xff;
-      data[1]=0x0;
+      data[0]=0x1;
+      data[1]=0x34;
       m_pDB->setMessage(AIN1_ENBLE,data);
-      data[0]=0xf;
-      data[1]=0x0;
+      data[0]=0x1;
+      data[1]=0xff;
       m_pDB->setMessage(AIN2_ENBLE,data);
-      data[0]=0x5;
-      data[1]=0x0;
+      data[0]=0xff;
+      data[1]=0xbc;
       m_pDB->setMessage(AIN1_GAIN,data);
-      data[0]=0x5;
-      data[1]=0x0;
+      data[0]=0xff;
+      data[1]=0x1f;
       m_pDB->setMessage(AIN2_GAIN,data);
 
 

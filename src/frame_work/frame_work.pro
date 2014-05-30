@@ -46,10 +46,8 @@ SOURCES += \
     qt/QFrameWorkElementsFactory.cpp \
     base/CPortIO.cpp \
     qt/QPluginLoaderExt.cpp \
-    qt/QPluginDescriptor.cpp \
     qt/QPluginList.cpp \
     qt/QPluginObjectsInterface.cpp \
-    base/CControlView.cpp \
     qt/QPortIO.cpp \
     base/CCreator.cpp \
     qt/QCreator.cpp \
@@ -58,7 +56,10 @@ SOURCES += \
     qt/QloggerInterface.cpp \
     qt/QSerialPortIO.cpp \
     base/CProtocolDb.cpp \
-    qt/QProtocolDb.cpp
+    qt/QProtocolDb.cpp \
+    qt/QRegFactory.cpp \
+    base/CRegFactory.cpp \
+    qt/QPluginFabrique.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -80,12 +81,10 @@ HEADERS +=\
     qt/QFrameWorkElementsFactory.h \
     base/CPortIO.h \
     qt/QPluginLoaderExt.h \
-    qt/QPluginDescriptor.h \
     qt/QPluginList.h \
     qt/interfaces.h \
     qt/frame_work_global.h \
     qt/QPluginObjectsInterface.h \
-    base/CControlView.h \
     qt/QPortIO.h \
     base/CCreator.h \
     qt/QCreator.h \
@@ -95,7 +94,10 @@ HEADERS +=\
     base/debug.h \
     qt/QSerialPortIO.h \
     base/CProtocolDb.h \
-    qt/QProtocolDb.h
+    qt/QProtocolDb.h \
+    qt/QRegFactory.h \
+    base/CRegFactory.h \
+    qt/QPluginFabrique.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

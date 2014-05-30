@@ -11,31 +11,34 @@
 #include "qt/QPluginList.h"
 #include <unistd.h>
 
-QFraCreator::QFraCreator(QObject *parent):QCreator(parent)
+QFraCreator::QFraCreator(QObject *parent):QCreator(parent),m_qfW( NULL )
 {
 
 }
 
 QFraCreator::~QFraCreator( )
 {
-
+    if( m_qfW ){
+      m_qfW->deleteLater();
+    }
 }
 #include<QStringList>
  #include <QMetaMethod>
+#include "qt/QProtocolLoader.h"
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
-
+QPluginList::Instance()->exec();
     if( fW )
     {
-        QFraFrameWork* qfW =  dynamic_cast<QFraFrameWork*>(fW);
+        m_qfW =  dynamic_cast<QFraFrameWork*>(fW);
         DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
-        if( qfW )
+        if( m_qfW )
         {
             QPortIO* port = NULL;
             QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
-            QFraIoPortsView* PIOList = new QFraIoPortsView( qfW );
-            qfW->AddWidgetToControlArrea( PIOList );
+            QFraIoPortsView* PIOList = new QFraIoPortsView( m_qfW );
+            m_qfW->AddWidgetToControlArrea( PIOList );
             for( int i = 0; i < list.count(); i++ ){
                 QObject* obj;
                 if(  DATA_OUT == list[i].type() )
@@ -44,7 +47,7 @@ bool QFraCreator::Create( CFrameWork *fW )
 
                     if( obj )
                     {
-                       qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
+                       m_qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
                        const QMetaObject* metaObject = obj->metaObject();
 
                         DEBUG <<"DUMP METHODS:   "<<endl;
@@ -81,34 +84,43 @@ bool QFraCreator::Create( CFrameWork *fW )
             }
 
             port = PIOList->getCurentIO();
-            qfW->show();
+            m_qfW->show();
 
             if( port )
             {
-                //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno qfW) za da moje da se trie lesno
+                //TODO Sloji g wsichjki tia obekti da imat parent Qobject (primerno m_qfW) za da moje da se trie lesno
+//TODO All object  should be created from Factory
 
-
-                QProtocolPackFactory* fact    = new QProtocolPackFactory( new QProtocolDb(), qfW );
-                QPacketCollector*     colect  = new QPacketCollector( port, fact, qfW );
+                QProtocolPackFactory* fact    = new QProtocolPackFactory( m_qfW );
+                fact->attachProtocolDb( new QProtocolDb() );
+                fact->attachProtocol( new QProtocolLoader() );
+                QPacketCollector*     colect  = new QPacketCollector( port, fact, m_qfW );
                 if( port&&colect ){
                     connect( port, SIGNAL(readyReadSignal()),colect,SLOT(receivedBytesSlot()) );
                 }
                 //port->showPortConfiguration( NULL );
 
-                QCommandExecutor* pExecutor = new QCommandExecutor( qfW );
+                QCommandExecutor* pExecutor = new QCommandExecutor( m_qfW );
 
                 if( 0 != pExecutor ){
                     if( NO_ERR != pExecutor->startExecution( true ) ){
                         CRITICAL << "Can't start Executor thread";
                     }
                 }
-                QtestCommand* comm = new QtestCommand( colect, fact, pExecutor);
-                QObject::connect( qfW,SIGNAL(fwDestroy()),pExecutor,SLOT(finish()) ,Qt::DirectConnection );
-                pExecutor->appendCommand(comm);
+                QObject::connect( m_qfW,SIGNAL(fwDestroy()),pExecutor,SLOT(finish()) ,Qt::DirectConnection );
+QtestCommand* comm =NULL;
+                for(int i=0;i<1;i++)
+                {
+                    comm = new QtestCommand( colect, fact, pExecutor);
+
+                    pExecutor->appendCommand(comm);
+                }
+                sleep(1);//pExecutor->appendCommand(comm);
+                pExecutor->pauseExecution(false);
                 /*TODO DELL ME*/
-                sleep(1);
-                // pExecutor->startExecution(true);
-                pExecutor->pauseExecution(false);//DELL ME set to false to run commands
+               // sleep(1);
+               //  pExecutor->startExecution(true);
+               //DELL ME set to false to run commands
 
             }
             bRet = true;

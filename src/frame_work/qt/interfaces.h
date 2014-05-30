@@ -23,7 +23,7 @@ public:
     virtual const char*            version() const        = 0;
     virtual const char*            description() const    = 0;
     virtual const QIcon            icon() const           = 0;
-    virtual       QObject*         createObject( QObject *parent ) = 0;
+    static   QObject*         createObject( QObject *parent );
 
 };
 

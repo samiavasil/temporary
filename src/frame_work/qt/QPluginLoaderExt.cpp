@@ -44,7 +44,7 @@ void QPluginLoaderExt::closeSafety() {
 
 QPluginObjectsInterface* QPluginLoaderExt::instance() {
   QObject *instance = (dynamic_cast<QPluginLoader*>(this))->instance();
-  m_instance = dynamic_cast< QPluginObjectsInterface* >(instance);
+  m_instance = dynamic_cast< QPluginObjectsInterface* >( instance );
   if( m_instance ){
       QMap<QString, QPluginLoaderExt*>::iterator i = m_Ploaders.find ( fileName() );
       while( ( i != m_Ploaders.end() ) && (i.key() == fileName() ) ) {

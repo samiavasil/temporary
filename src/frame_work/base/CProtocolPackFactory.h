@@ -16,11 +16,13 @@ class CPacket;
 
 class CProtocolPackFactory {
   public:
-    CProtocolPackFactory(CProtocolLoader * pLoader);
+    CProtocolPackFactory();
 
-    CProtocolPackFactory(CProtocolDb * protDB);
+    virtual ~CProtocolPackFactory();
 
-    int attachProtocolLoader(CProtocolLoader * pLoader);
+    int attachProtocolDb( CProtocolDb * pDB );
+
+    int attachProtocol( CProtocolLoader * pLoader );
 
     virtual int findPacketStart(const u8 * data, int len) = 0;
 
@@ -56,13 +58,8 @@ class CProtocolPackFactory {
     int getPacketHeader(CPacket * packet, u8 * header);
 
   protected:
-    CProtocolDb* m_pDB;
-
-  public:
-    virtual ~CProtocolPackFactory();
-
-    friend class  CProtocolLoader;
-
+    CProtocolDb*      m_pDB;
+    CProtocolLoader * m_pLoader;
 };
 
 /*inline int CProtocolPackFactory::getProtocolHeaderLenBits() const {

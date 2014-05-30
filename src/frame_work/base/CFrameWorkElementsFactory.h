@@ -6,7 +6,6 @@
 #include "base/CProtocolPackFactory.h"
 #include "base/CCommandExecutor.h"
 #include "base/CPacketCollector.h"
-#include "base/CControlView.h"
 #include "base/CDataPlot.h"
 
 class CFrameWork;
@@ -24,8 +23,6 @@ class CFrameWorkElementsFactory {
 
     virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk) = 0;
 
-    virtual CControlView* createControlView() = 0;
-
     virtual CDataPlot* createDataPlot() = 0;
 
     virtual void deleteExecutor(CCommandExecutor * executor) = 0;
@@ -35,8 +32,6 @@ class CFrameWorkElementsFactory {
     virtual void deletePortIO(CPortIO * port) = 0;
 
     virtual void deleteColector(CPacketCollector * collector) = 0;
-
-    virtual void deleteControlView(CControlView * ctrlView) = 0;
 
     virtual void deleteDataPlot(CDataPlot * dataPlot) = 0;
 

@@ -126,6 +126,7 @@ void MainWindow::on_actionSave_triggered()
           if(fw)
           {
              fw->Create();
+             //fw->setCreator(NULL);
           }
           if( obj->isWidgetType() )
           {

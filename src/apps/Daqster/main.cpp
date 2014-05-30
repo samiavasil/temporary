@@ -165,15 +165,25 @@ DataType obj(DataType::Real,     DataType::I64);
 DataType obj1(DataType::Real,    DataType::I32);
 DataType obj2(DataType::Complex, DataType::I32);
 
+
+#include "qt/QRegFactory.h"
+
+
 int main(int argc, char *argv[])
 {
     msg m;
     qInstallMsgHandler(m.myMessageOutput);
     QApplication a(argc, argv);
     MainWindow w;
-//QDesignerComponents c;
 
 
+    //QDesignerComponents c;
+
+    fact1_t::Registrator<A>  rep( "Alabvala" );
+
+    QSet<QString> outlist;
+    fact1_t::GetRegList(outlist);
+    qDebug()<<outlist;
 
 //if( iface )
 //{

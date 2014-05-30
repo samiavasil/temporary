@@ -4,6 +4,7 @@
 #include"qt/QCreator.h"
 //#include "qt/QFrameWork.h"
 class CFrameWork;
+class QFraFrameWork;
 class QwtPlotItem;
 
 class PLUGIN_EXPORT QFraCreator :  public QCreator
@@ -16,7 +17,7 @@ public:
 public slots:
     virtual void Free();
 protected:
-
+    QFraFrameWork* m_qfW;
 
 };
 

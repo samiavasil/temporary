@@ -28,6 +28,7 @@ void CFrameWork::setCreator(CCreator * creator) {
   if( m_creator )
   {
     m_creator->Free();
+    delete m_creator;
   }
   m_creator = creator;
   Create();

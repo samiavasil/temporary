@@ -2,7 +2,7 @@
 #include "qt/QProtocolLoader.h"
 
 
-#define MAX_PACKET_SIZE_BIT        (101)               /*TODO - move this on config file*/
+#define MAX_PACKET_SIZE_BIT        (1001)               /*TODO - move this on config file*/
 #define PROTOCOL_HEADER_SIZE_BIT   ((2+2)*8)
 #define PROTOCOL_POSTFIX_SIZE_BIT  ((1)*8)
 

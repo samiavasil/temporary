@@ -1,5 +1,5 @@
 #include "PluginDescription.h"
-#include "qt/QPluginDescriptor.h"
+#include "qt/QPluginFabrique.h"
 
 
 PluginDescription::PluginDescription(  InterfaceType_t Type,
@@ -28,10 +28,28 @@ PluginDescription::PluginDescription(const PluginDescription& b)
 PluginDescription::~PluginDescription(){
 
 }
-
-bool  PluginDescription::operator==(const QPluginDescriptor &b)
+/*
+bool  PluginDescription::operator==(const QPluginFabrique &b)
 {
     return ( *this == b.getDescription() );
+}*/
+
+PluginDescription::PlugDiff  PluginDescription::compare( const PluginDescription &b ) const{
+    PlugDiff diff = THE_SAME;
+    if( m_Type != b.m_Type ){
+        diff = TYPE_DIFF;
+    }else if( m_Name.compare(  b.m_Name ) ){
+        diff = NAME_DIFF;
+    }else if( m_Version.compare(  b.m_Version ) ){
+        diff = VERS_DIFF;
+    }else if( m_Location.compare(  b.m_Location ) ){
+        diff = LOC_DIFF;
+    }else if( m_Description.compare(  b.m_Description ) ){
+        diff = DESC_DIFF;
+    }else if( m_Icon.name().compare( b.m_Icon.name() ) ){
+        diff = ICON_DIFF;
+    }
+    return diff;
 }
 
 PluginDescription & PluginDescription::operator=(const PluginDescription &b){
@@ -46,7 +64,7 @@ PluginDescription & PluginDescription::operator=(const PluginDescription &b){
      return *this;
  }
 
-bool  PluginDescription::operator==(const PluginDescription &b){
+bool  PluginDescription::operator==(const PluginDescription &b) const{
 
 return(
        ( m_Type == b.m_Type )&&

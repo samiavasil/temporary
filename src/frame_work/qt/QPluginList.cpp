@@ -5,7 +5,7 @@
 #include "qt/QFrameWork.h"
 
 QPluginList* QPluginList::m_This = NULL;
-QMap< QString, QPluginDescriptor*  > QPluginList::m_PluginList;
+QMap< QString, QPluginFabrique*  > QPluginList::m_PluginList;
 QPluginList* QPluginList::Instance()
 {
     DEBUG  << "INPUT" << m_This;
@@ -35,7 +35,7 @@ QPluginList::QPluginList(QWidget *parent) :
 
 QPluginList::~QPluginList()
 {
-    QMapIterator<QString,QPluginDescriptor* > plugin_list(m_PluginList);
+    QMapIterator<QString,QPluginFabrique* > plugin_list(m_PluginList);
     while ( plugin_list.hasNext() ) {
         plugin_list.next();
         if( plugin_list.value() ){
@@ -55,9 +55,9 @@ void QPluginList::readPluginsDir( ){
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
-            QPluginDescriptor* desc = new QPluginDescriptor(fileName.toUtf8().data());
-            if( 0 != desc ){
-                m_PluginList.insert( fileName, desc );
+            QPluginFabrique* fab = new QPluginFabrique(fileName.toUtf8().data());
+            if( 0 != fab ){
+                m_PluginList.insert( fileName, fab );
             }
         }
     }
@@ -70,10 +70,10 @@ void QPluginList::populatePluginList(){
     ui->availablePlugins->clear();
     ui->availablePlugins->setRowCount(0);
     ui->availablePlugins->setColumnCount(3);
-    QMapIterator<QString,QPluginDescriptor* > plugin_list(m_PluginList);
+    QMapIterator<QString,QPluginFabrique* > plugin_list(m_PluginList);
     while ( plugin_list.hasNext() ) {
         plugin_list.next();
-        QPluginDescriptor* desc = plugin_list.value();
+        QPluginFabrique* desc = plugin_list.value();
         if( desc ){
             DEBUG  <<  desc;
             ui->availablePlugins->insertRow( i );
@@ -140,12 +140,12 @@ QList<PluginDescription> QPluginList::getAllActivePlugins( InterfaceType_t type 
     QList<PluginDescription> plugin_desc;
     reloadPlugins();
     type = type;
-    QList<QPluginDescriptor*> listPl = m_PluginList.values();//TODO FIX ME to type
-    foreach( QPluginDescriptor* pDesc, listPl )
+    QList<QPluginFabrique*> listPl = m_PluginList.values();//TODO FIX ME to type
+    foreach( QPluginFabrique* pFab, listPl )
     {
-        if( pDesc )
+        if( pFab )
         {
-            plugin_desc.append( pDesc->getDescription() );
+            plugin_desc.append( pFab->getDescription() );
         }
     }
 
@@ -157,12 +157,12 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
 {
 
     QObject* object = NULL;
-    QList<QPluginDescriptor*> listPl = m_PluginList.values();//TODO FIX ME to type
-    foreach( QPluginDescriptor* pDesc, listPl )
+    QList<QPluginFabrique*> listPl = m_PluginList.values();//TODO FIX ME to type
+    foreach( QPluginFabrique* pFab, listPl )
     {
-        if(  *pDesc == desc )
+        if(  PluginDescription::THE_SAME == pFab->getDescription( ).compare(desc) )
         {
-            object = pDesc->cretate_plugin_object( desc.type(), parent );
+            object = pFab->cretate_plugin_object( desc.type(), parent );
             if( object )
             {
               break;
@@ -173,7 +173,3 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
     return object;
 }
 
-void TestCalback()
-{
-    DEBUG << "TEST CALLBACK";
-}

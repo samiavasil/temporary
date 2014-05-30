@@ -13,20 +13,15 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-class FRAME_WORKSHARED_EXPORT QPluginDescriptor:public QObject{
+class FRAME_WORKSHARED_EXPORT QPluginFabrique:public QObject{
     Q_OBJECT
 public:
-    explicit QPluginDescriptor( const char *name, QObject* parent = 0 );
-    ~QPluginDescriptor();
+    explicit QPluginFabrique( const char *name, QObject* parent = 0 );
+    ~QPluginFabrique();
 
     QObject* cretate_plugin_object( InterfaceType_t pl_type, QObject *parent = 0 );
 
-
-    bool operator==(const PluginDescription &b){
-       return  this->m_PluginDecription == b;
-    }
-
-    const PluginDescription& getDescription( ) const
+    const PluginDescription getDescription( ) const
     {
         return m_PluginDecription;
     }
@@ -53,7 +48,7 @@ public:
         DEBUG <<  this;
     }
 public slots:
-    void loaderDestroyed(QObject* obj);
+    void allObjectsDestoyed(QObject* obj);
 
 protected:
     void    read_plugin_description();
@@ -68,6 +63,6 @@ protected:
 };
 
 
-void operator<<(  QDebug  Ostr, const QPluginDescriptor* in);
+void operator<<(  QDebug  Ostr, const QPluginFabrique* in);
 
 #endif // PLUGIN_DESCRIPTOR_H

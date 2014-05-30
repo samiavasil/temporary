@@ -10,7 +10,6 @@
 #include "base/CCommandExecutor.h"
 #include "base/CPacketCollector.h"
 #include "base/CFrameWork.h"
-#include "base/CControlView.h"
 #include "base/CDataPlot.h"
 
 
@@ -54,7 +53,7 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
 #include"qt/QProtocolDb.h"//TODO
 CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
   DEBUG << "Create Protocol";
-  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolDb());
+  CProtocolPackFactory* protocol = new QProtocolPackFactory();
   if( 0 == protocol ){
       CRITICAL <<  "Can't create QProtocolPackFactory";
   }

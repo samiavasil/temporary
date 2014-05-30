@@ -7,24 +7,40 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-CProtocolPackFactory::CProtocolPackFactory(CProtocolLoader * pLoader) {
-  pLoader = pLoader;
+CProtocolPackFactory::CProtocolPackFactory( ) {
 }
 
-CProtocolPackFactory::CProtocolPackFactory( CProtocolDb * protDB ):m_pDB( protDB ){
-
+CProtocolPackFactory::~CProtocolPackFactory(){
+    if( m_pDB ){
+        delete m_pDB;
+    }
 }
 
-int CProtocolPackFactory::attachProtocolLoader(CProtocolLoader * pLoader) {
-    int ret = NO_ERR;
-    if(  pLoader ) {
-       ret = pLoader->loadProtocolDefinition( m_pDB );
+int CProtocolPackFactory::attachProtocolDb( CProtocolDb * pDB ) {
+    int ret = WRONG_PARAMS;
+    if( pDB ){
+        if( m_pDB ){
+            delete m_pDB;
+        }
+        m_pDB  = pDB;
+        ret = NO_ERR;
+        if(  m_pLoader ){
+           ret = m_pDB->loadProtocolDefinition( m_pLoader );
+        }
+    }
+    return ret;
+}
 
-    } 
-    else{
-       ret = WRONG_PARAMS;
-   }
-   return ret;
+int CProtocolPackFactory::attachProtocol(CProtocolLoader * pLoader) {
+    int ret = WRONG_PARAMS;
+    if( pLoader ){
+        if( m_pLoader ){
+            delete m_pLoader;
+        }
+        m_pLoader = pLoader;
+        ret = m_pDB->loadProtocolDefinition( m_pLoader );
+    }
+    return ret;
 }
 
 CPacket* CProtocolPackFactory::createPacket(const pack_id_t packId) {
@@ -145,8 +161,5 @@ int CProtocolPackFactory::getPacketPostFix(CPacket * packet, u8 * retPostFix) {
      ret = WRONG_DATA;                                                         
   }                                                                            
   return ret;                                                                  
-}
-
-CProtocolPackFactory::~CProtocolPackFactory() {
 }
 

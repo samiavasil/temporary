@@ -1,8 +1,8 @@
 #include  <iostream>
-#include "qt/QPluginDescriptor.h"
+#include "qt/QPluginFabrique.h"
 #include"qt/QFrameWork.h"
 
-void operator<<(  QDebug Ostr, const QPluginDescriptor* in){
+void operator<<(  QDebug Ostr, const QPluginFabrique* in){
     Ostr <<"===plugin_descriptor:=================================================================\n"
         <<"File Name:   "<<  in->getDescription().location()   << "\n"
        <<"Category:    "<< in->getDescription().category()    << "\n"
@@ -14,7 +14,7 @@ void operator<<(  QDebug Ostr, const QPluginDescriptor* in){
     <<"===end plugin_descriptor:=============================================================\n";
 }
 
-QPluginDescriptor::QPluginDescriptor( const char *name, QObject *parent ):
+QPluginFabrique::QPluginFabrique( const char *name, QObject *parent ):
     QObject( parent ), m_PluginDecription(UNDEFINED,name)
 {
     state        = 0;
@@ -25,7 +25,7 @@ QPluginDescriptor::QPluginDescriptor( const char *name, QObject *parent ):
 
 }
 
-QPluginDescriptor::~QPluginDescriptor(){
+QPluginFabrique::~QPluginFabrique(){
     m_enabled = false;
     if( m_loader ){
         m_loader->deleteLater();
@@ -33,7 +33,7 @@ QPluginDescriptor::~QPluginDescriptor(){
     DEBUG  << "Destroy plugin_descriptor:\n" << this;
 }
 
-QPluginObjectsInterface* QPluginDescriptor::cast_to_plugin_interface( QObject* object ){
+QPluginObjectsInterface* QPluginFabrique::cast_to_plugin_interface( QObject* object ){
     QPluginObjectsInterface* plugin = NULL;
     if( object ){
         plugin =  qobject_cast< QPluginObjectsInterface* >(object);
@@ -41,26 +41,26 @@ QPluginObjectsInterface* QPluginDescriptor::cast_to_plugin_interface( QObject* o
     return plugin;
 }
 
-void QPluginDescriptor::read_plugin_description( ){
+void QPluginFabrique::read_plugin_description( ){
 
-    QPluginObjectsInterface* plugin;
+    QPluginObjectsInterface* pluginObj;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_PluginDecription.location() );
     DEBUG <<m_PluginDecription.location();
     if( 0 != loader ){
         loader->load();
-        plugin =  loader->instance();
-        if( plugin ){
+        pluginObj =  loader->instance();
+        if( pluginObj ){
             m_PluginDecription = PluginDescription(
-                                        plugin->type(),
+                                        pluginObj->type(),
                                         m_PluginDecription.location(),
-                                        plugin->name(),
-                                        plugin->category(),
-                                        plugin->version(),
-                                        plugin->description(),
-                                        plugin->icon()
+                                        pluginObj->name(),
+                                        pluginObj->category(),
+                                        pluginObj->version(),
+                                        pluginObj->description(),
+                                        pluginObj->icon()
                                     );
 
-            delete plugin;
+            delete pluginObj;
         }
         else{
             DEBUG <<"Can't load object from file " << loader->fileName().toUtf8().constData();
@@ -73,7 +73,7 @@ void QPluginDescriptor::read_plugin_description( ){
     }
 }
 
-QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t pl_type, QObject* parent  ){
+QObject* QPluginFabrique::cretate_plugin_object( InterfaceType_t pl_type, QObject* parent  ){
     QObject* object = 0;
 
     if( !m_enabled ){
@@ -94,12 +94,12 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t pl_type, QObj
         }
         if( loader ){
             loader->load();
-            QPluginObjectsInterface* fW =  loader->instance();
-            if( fW ){
-                object =  fW->createObject( parent );
+            QPluginObjectsInterface* ObjInt =  loader->instance();
+            if( ObjInt ){
+                object =  ObjInt->createObject( parent );
                 if( 0 != object ){
                     m_loader = loader;
-                    connect( m_loader, SIGNAL( allObjectsDestroyed( QObject* ) ), this, SLOT( loaderDestroyed( QObject* ) ),Qt::DirectConnection );
+                    connect( m_loader, SIGNAL( allObjectsDestroyed( QObject* ) ), this, SLOT( allObjectsDestoyed( QObject* ) ),Qt::DirectConnection );
                 }
                 else{
                     loader->deleteLater();
@@ -116,7 +116,7 @@ QObject* QPluginDescriptor::cretate_plugin_object( InterfaceType_t pl_type, QObj
     return object;
 }
 
-void QPluginDescriptor::loaderDestroyed( QObject* obj ){
+void QPluginFabrique::allObjectsDestoyed( QObject* obj ){
     if( m_loader == dynamic_cast<QPluginLoaderExt*>(obj)   ){
         m_loader->deleteLater();
         m_loader  = NULL;

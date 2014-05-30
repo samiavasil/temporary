@@ -19,7 +19,7 @@ enum{
 };
 
 class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
-  public:
+  protected:
     virtual int readProtocolData();
 
     virtual int getMsgCount();
@@ -38,7 +38,6 @@ class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
 
     virtual const char* getMsgDescription(const msg_id_t id);
 
-  protected:
     virtual int getMsgIdLen(const msg_id_t id, int * len);
 
     virtual int getHeaderLenBits();

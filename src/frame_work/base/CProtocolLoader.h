@@ -7,12 +7,8 @@
 class CProtocolDb;
 
 class CProtocolLoader {
-  public:
-    virtual int loadProtocolDefinition( CProtocolDb * protDB );
+    protected:
 
-    virtual const char*  getMsgDescription(const msg_id_t id) = 0;
-
-  protected:
     virtual int readProtocolData() = 0;
 
     virtual int getMsgCount() = 0;
@@ -27,6 +23,8 @@ class CProtocolLoader {
 
     virtual int getMsgsCountForPack(const pack_id_t packID) = 0;
 
+    virtual const char*  getMsgDescription(const msg_id_t id) = 0;
+
     virtual int getMsgIdLen(const msg_id_t id, int * len) = 0;
 
     virtual msg_id_t getMsgIdForPack(const pack_id_t packID, int idx) = 0;
@@ -35,7 +33,8 @@ class CProtocolLoader {
 
     virtual int getPostFixLenBits() = 0;
 
-
+    friend class  CProtocolDb;
 
 };
 #endif
+

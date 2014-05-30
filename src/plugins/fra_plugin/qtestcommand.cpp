@@ -31,14 +31,25 @@ QtestCommand::~QtestCommand() {
   DEBUG << "QtestCommand Deleted";
 }
 
+
+#include "qt/QRegFactory.h"
+
 /**
  * Command handler
  */
 int QtestCommand::handler() {
   int ret =  1;
+ fact1_t::Registrator<A>  rep( tr("Blqk %1").arg(rand()) );
+
+  QSet<QString> outlist;
+  fact1_t::GetRegList(outlist);
+  qDebug()<<outlist;
+
+
+
   CPacket* packet = NULL;
   DEBUG <<   tr("Bliak[%1]").arg(a);
-  if( a >= 4 ){
+  if( a >= 1 ){
       ret =  0;
       DEBUG << "QCommand Finished";
   }

@@ -6,10 +6,20 @@
 #include<QString>
 #include<QIcon>
 
-class QPluginDescriptor;
+class QPluginFabrique;
 
 class PluginDescription{
 public:
+   typedef enum{
+     THE_SAME     = 0x0,
+     TYPE_DIFF    = 0x1,
+     NAME_DIFF    = 0x2,
+     VERS_DIFF    = 0x4,
+     LOC_DIFF     = 0x8,
+     DESC_DIFF    = 0x10,
+     ICON_DIFF    = 0x11
+   }PlugDiff;
+
    PluginDescription(const PluginDescription& b);
 
    PluginDescription(  InterfaceType_t  Type        = UNDEFINED,
@@ -23,11 +33,13 @@ public:
 
    ~PluginDescription();
 
-   bool operator==(const QPluginDescriptor &b);
+ //  bool operator==(const QPluginFabrique &b);
 
    PluginDescription & operator=(const PluginDescription &b);
 
-   bool  operator==(const PluginDescription &b);
+   bool  operator==(const PluginDescription &b) const;
+
+   PluginDescription::PlugDiff  compare( const PluginDescription &b ) const;
 
    InterfaceType_t type() const;
    const QString&  name() const;
