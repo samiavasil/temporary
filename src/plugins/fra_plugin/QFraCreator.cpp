@@ -28,16 +28,17 @@ QFraCreator::~QFraCreator( )
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
-QPluginList::Instance()->exec();
+      QPluginList::Instance()->exec();
     if( fW )
     {
         m_qfW =  dynamic_cast<QFraFrameWork*>(fW);
         DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
         if( m_qfW )
         {
+            QWidget* fw_win = m_qfW->getFrameWorkWindow();
             QPortIO* port = NULL;
             QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
-            QFraIoPortsView* PIOList = new QFraIoPortsView( m_qfW );
+            QFraIoPortsView* PIOList = new QFraIoPortsView( fw_win );
             m_qfW->AddWidgetToControlArrea( PIOList );
             for( int i = 0; i < list.count(); i++ ){
                 QObject* obj;
@@ -84,7 +85,9 @@ QPluginList::Instance()->exec();
             }
 
             port = PIOList->getCurentIO();
-            m_qfW->show();
+            if( fw_win ){
+               fw_win->show();
+            }
 
             if( port )
             {

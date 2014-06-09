@@ -1,5 +1,4 @@
 #include "PluginDescription.h"
-#include "qt/QPluginFabrique.h"
 
 
 PluginDescription::PluginDescription(  InterfaceType_t Type,

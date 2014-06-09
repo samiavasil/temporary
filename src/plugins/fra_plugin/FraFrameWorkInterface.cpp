@@ -30,13 +30,8 @@ FraFrameWorkInterface::~FraFrameWorkInterface(  )
 // can unload plugin wthout crashes*/
 //QFraFrameWork* FraFrameWorkInterface::getFrameWork( QWidget* parent )
 QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
-    QWidget* parent_widget = 0;
-    if( parent && parent->isWidgetType() ){
-        parent_widget = dynamic_cast<QWidget *> (parent);
-    }
     //return dynamic_cast<QObject *> ( new QFraFrameWork( new QFraFrameWorkElementsFactory(), parent_widget ) );
-    QFraCreator* c   = new QFraCreator();
-    QFraFrameWork*fw = new QFraFrameWork( c ,  parent_widget );
+    QFraFrameWork*fw = new QFraFrameWork( new QFraCreator() ,  parent );
 
     enableLog( bla );
     Log( tr( "TestLogging Enble[%1]" ).arg(bla) );

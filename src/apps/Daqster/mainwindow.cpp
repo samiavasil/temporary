@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_QuitOnClose, true );
     setCentralWidget(ui->mdiArea);
     addAction(ui->actionNew);
     addAction(ui->actionSave);
@@ -27,7 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    if( ui ){
+        delete ui;
+    }
 }
 
 
@@ -119,7 +122,7 @@ void MainWindow::on_actionSave_triggered()
         if( FRAME_WORK == list[i].type() )
         {
           QObject* obj;
-          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+          obj = QPluginList::Instance()->cretate_plugin_object( list[i] , this );
           if( !obj )
               continue;
           QFrameWork* fw = dynamic_cast<QFrameWork*>(obj);
@@ -128,14 +131,32 @@ void MainWindow::on_actionSave_triggered()
              fw->Create();
              //fw->setCreator(NULL);
           }
-          if( obj->isWidgetType() )
+          QWidget* wd =  fw->getFrameWorkWindow();
+          static int b;
+          if( wd && (b%2) )
           {
-              QWidget* wd = (QWidget*)obj;
               ui->mdiArea->addSubWindow(wd);
               wd->show();//DELL ME
           }
+          b++;
         }
 
     }
 
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+        /*if (maybeSave()) {
+            writeSettings();
+            event->accept();
+        } else {
+            event->ignore();
+        }*/
+    if( 1 ){//TODO
+        event->accept();
+        foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+          widget->close();
+        }
+    }
 }

@@ -1,13 +1,42 @@
 #include "QFraFrameWork.h"
 #include <ui_qfra_frame_work_view.h>
+#include<qevent.h>
 #include<QComboBox>
 #include<QToolBar>
 #include<QVBoxLayout>
 
-QFraFrameWork::QFraFrameWork(QCreator * creator  , QWidget * parent ):
+QFwWidget::QFwWidget( QWidget *parent, Qt::WindowFlags f ):QWidget( parent,f ){
+
+}
+
+QFwWidget::~QFwWidget(){
+
+}
+
+void QFwWidget::closeEvent(QCloseEvent *event)
+{
+        /*if (maybeSave()) {
+            writeSettings();
+            event->accept();
+        } else {
+            event->ignore();
+        }*/
+    if( event ){//TODO
+        event->accept();
+        deleteLater();
+        emit destroyFW();
+    }
+}
+
+QFraFrameWork::QFraFrameWork(QCreator * creator  , QObject *parent ):
     QFrameWork( creator , parent ),ui(new Ui::QFraFrameWorkView)
 {
-    ui->setupUi(this);
+    //if( parent && parent->isWidgetType() ){
+      //  m_FwWin.setParent( dynamic_cast<QWidget*>(parent) );
+    //}
+    m_FwWin = new QFwWidget();
+    this->setParent( m_FwWin );
+    ui->setupUi(m_FwWin);
     QToolBar* tool  = new QToolBar( NULL );
     QComboBox* combo = new QComboBox(tool);
     //QVBoxLayout * lay = new QVBoxLayout();
@@ -22,14 +51,16 @@ QFraFrameWork::QFraFrameWork(QCreator * creator  , QWidget * parent ):
     //ui->PlotWidgetMDI->setTabShape( QTabWidget::Triangular );
     ui->PlotWidgetMDI->setTabsClosable( true );
     ui->PlotWidgetMDI->setTabsMovable( true );
-   // ui->PlotWidgetMDI->setDocumentMode( true );
-//ui->PlotWidgetMDI->addSubWindow(tool,Qt::Tool);
-    //ui->PlotWidgetMDI->addWidget(tool);
+
     QObject::connect(combo, SIGNAL(currentIndexChanged(int)) , this, SLOT(on_mdi_change_view_mode(int)));
+    QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
 }
 
 QFraFrameWork::~QFraFrameWork(){
-
+    if( m_FwWin ){
+    //    m_FwWin->deleteLater();
+        m_FwWin = NULL;
+    }
 }
 
 void QFraFrameWork::on_mdi_change_view_mode(int id )
@@ -91,3 +122,6 @@ void QFraFrameWork::on_StartButton_clicked()
      list[i]->setProperty( "TestPropety", b );
 }
 
+QWidget* QFraFrameWork::getFrameWorkWindow(){
+    return m_FwWin;
+}

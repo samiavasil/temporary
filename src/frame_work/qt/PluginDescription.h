@@ -6,8 +6,6 @@
 #include<QString>
 #include<QIcon>
 
-class QPluginFabrique;
-
 class PluginDescription{
 public:
    typedef enum{
@@ -32,8 +30,6 @@ public:
                      );
 
    ~PluginDescription();
-
- //  bool operator==(const QPluginFabrique &b);
 
    PluginDescription & operator=(const PluginDescription &b);
 
