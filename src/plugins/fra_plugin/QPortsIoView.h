@@ -6,25 +6,29 @@
 #include "qt/QPluginFabrique.h"
 
 namespace Ui {
-class QfraIoPortsView;
+class QPortsIoView;
 }
 
 class QPortIO;
-class QFraIoPortsView : public QWidget
+class QPortsIoView : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit QFraIoPortsView(QWidget *parent = 0);
-    ~QFraIoPortsView();
+    explicit QPortsIoView(QWidget *parent = 0);
+    ~QPortsIoView();
     QPortIO* getCurentIO(  );
-    void addToList( PluginDescription desc );
+
+protected:
+    void addToList( PluginDescription& desc );
+public slots:
+    void reloadPIOlist();
 private slots:
     void on_IoList_currentRowChanged(int currentRow);
 
 private:
-    Ui::QfraIoPortsView *ui;
-    QList< PluginDescription* > mIoPorts;
+    Ui::QPortsIoView *ui;
+    QList< PluginDescription > mIoPorts;
     QPortIO* mCurrentIo;
 };
 

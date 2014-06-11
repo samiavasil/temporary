@@ -37,7 +37,7 @@ protected:
 
 
 signals:
-    void reload();
+    void pluginsUpdate();
 public slots:
     void reloadPlugins( );
 protected slots:

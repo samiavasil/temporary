@@ -73,7 +73,7 @@ void QPluginFabrique::read_plugin_description( ){
     }
 }
 
-QObject* QPluginFabrique::cretate_plugin_object( InterfaceType_t pl_type, QObject* parent  ){
+QObject* QPluginFabrique::cretate_plugin_object( QObject* parent  ){
     QObject* object = 0;
 
     if( !m_enabled ){
@@ -84,32 +84,31 @@ QObject* QPluginFabrique::cretate_plugin_object( InterfaceType_t pl_type, QObjec
         DEBUG  << "plugin_descriptor: empty file location";
         return object;
     }
-    if( pl_type == m_PluginDecription.type() ){
-        QPluginLoaderExt* loader;
-        if( m_loader ){
-            loader = m_loader;
-        }
-        else{
-            loader = new QPluginLoaderExt( m_PluginDecription.location() );
-        }
-        if( loader ){
-            loader->load();
-            QPluginObjectsInterface* ObjInt =  loader->instance();
-            if( ObjInt ){
-                object =  ObjInt->createObject( parent );
-                if( 0 != object ){
-                    m_loader = loader;
-                    connect( m_loader, SIGNAL( allObjectsDestroyed( QObject* ) ), this, SLOT( allObjectsDestoyed( QObject* ) ),Qt::DirectConnection );
-                }
-                else{
-                    loader->deleteLater();
-                }
+    QPluginLoaderExt* loader;
+    if( m_loader ){
+        loader = m_loader;
+    }
+    else{
+        loader = new QPluginLoaderExt( m_PluginDecription.location() );
+    }
+    if( loader ){
+        loader->load();
+        QPluginObjectsInterface* ObjInt =  loader->instance();
+        if( ObjInt ){
+            object =  ObjInt->createObject( parent );
+            if( 0 != object ){
+                m_loader = loader;
+                connect( m_loader, SIGNAL( allObjectsDestroyed( QObject* ) ), this, SLOT( allObjectsDestoyed( QObject* ) ),Qt::DirectConnection );
             }
             else{
                 loader->deleteLater();
             }
         }
+        else{
+            loader->deleteLater();
+        }
     }
+
     if( 0 == object ){
         DEBUG  << "\nCan't create obect from plugin file: " << m_PluginDecription.location();
     }

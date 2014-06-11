@@ -28,9 +28,8 @@ QPluginList::QPluginList(QWidget *parent) :
     ui->availablePlugins->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->availablePlugins,SIGNAL(itemChanged(QTableWidgetItem*) ),this, SLOT(listSelectionChanged(QTableWidgetItem*)));
-    connect(this,SIGNAL(reload()) ,this, SLOT(reloadPlugins()));
     connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
-    emit reload();
+    reloadPlugins();
 }
 
 QPluginList::~QPluginList()
@@ -113,6 +112,7 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
                 m_PluginList[item_location->text()]->enable( false );
             }
         }
+        emit pluginsUpdate();
     }
 }
 
@@ -121,6 +121,7 @@ void QPluginList::reloadPlugins( ){
     ui->availablePlugins->blockSignals(true);
     readPluginsDir();
     ui->availablePlugins->blockSignals(false);
+    emit pluginsUpdate();
 }
 
 
@@ -138,15 +139,16 @@ void QPluginList::on_cancelButton_clicked()
 
 QList<PluginDescription> QPluginList::getAllActivePlugins( InterfaceType_t type ){
     QList<PluginDescription> plugin_desc;
-    reloadPlugins();
-    type = type;
-    QList<QPluginFabrique*> listPl = m_PluginList.values();//TODO FIX ME to type
+    PluginDescription desc;
+    QList<QPluginFabrique*> listPl = m_PluginList.values();
     foreach( QPluginFabrique* pFab, listPl )
     {
-        if( pFab )
-        {
+      if( pFab->is_enabled() ){
+        desc = pFab->getDescription().type();
+        if( UNDEFINED <= type || type == desc.type() ){
             plugin_desc.append( pFab->getDescription() );
         }
+      }
     }
 
     return plugin_desc;
@@ -157,12 +159,12 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
 {
 
     QObject* object = NULL;
-    QList<QPluginFabrique*> listPl = m_PluginList.values();//TODO FIX ME to type
+    QList<QPluginFabrique*> listPl = m_PluginList.values();
     foreach( QPluginFabrique* pFab, listPl )
     {
-        if(  PluginDescription::THE_SAME == pFab->getDescription( ).compare(desc) )
+        if(   pFab->is_enabled() && desc == pFab->getDescription() )
         {
-            object = pFab->cretate_plugin_object( desc.type(), parent );
+            object = pFab->cretate_plugin_object( parent );
             if( object )
             {
               break;

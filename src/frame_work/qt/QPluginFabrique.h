@@ -19,7 +19,7 @@ public:
     explicit QPluginFabrique( const char *name, QObject* parent = 0 );
     ~QPluginFabrique();
 
-    QObject* cretate_plugin_object( InterfaceType_t pl_type, QObject *parent = 0 );
+    QObject* cretate_plugin_object( QObject *parent = 0 );
 
     const PluginDescription getDescription( ) const
     {

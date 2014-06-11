@@ -1,7 +1,7 @@
 #include "base/global.h"
 #include "QFraCreator.h"
 #include "QFraFrameWork.h"
-#include "QFraIoPortsView.h"
+#include "QPortsIoView.h"
 #include "qt/QPacketCollector.h"
 #include "qt/QPortIO.h"
 #include "qt/QProtocolDb.h"
@@ -23,8 +23,43 @@ QFraCreator::~QFraCreator( )
     }
 }
 #include<QStringList>
- #include <QMetaMethod>
+#include <QMetaMethod>
 #include "qt/QProtocolLoader.h"
+
+#define TEST_META_METHODS_DUMP
+#if defined( TEST_META_METHODS_DUMP ) /*TODO: move from here*/
+void dump_qobject_meta( QObject* obj ){
+
+    if( !obj ) return;
+
+    const QMetaObject* metaObject = obj->metaObject();
+    DEBUG <<"DUMP METHODS:   "<<endl;
+    for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+    {
+        DEBUG <<   QString("QFraFrameWork[%1]").arg(random());
+        DEBUG <<"   "<<QString::fromLatin1(metaObject->method(i).signature());
+        if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
+        {
+            DEBUG << ":  Method Not signal";
+        }
+        else
+        {
+            DEBUG << ":  Its a signal";
+            if( metaObject->checkConnectArgs ( "testSlot()", metaObject->method(i).signature() ) )
+            {
+                 DEBUG  << "==> Compatible with slot testSlot";
+            }
+            else
+            {
+                DEBUG  << "==> Not Compatible with slot testSlot";
+            }
+        }
+        DEBUG << endl;
+    }
+}
+#endif
+
+
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
@@ -37,52 +72,26 @@ bool QFraCreator::Create( CFrameWork *fW )
         {
             QWidget* fw_win = m_qfW->getFrameWorkWindow();
             QPortIO* port = NULL;
-            QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( UNDEFINED );
-            QFraIoPortsView* PIOList = new QFraIoPortsView( fw_win );
-            m_qfW->AddWidgetToControlArrea( PIOList );
-            for( int i = 0; i < list.count(); i++ ){
-                QObject* obj;
-                if(  DATA_OUT == list[i].type() )
-                {
-                    obj = QPluginList::Instance()->cretate_plugin_object( list[i] , NULL );
+            QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( DATA_OUT );
 
+            foreach( PluginDescription desc,list ){
+                if(  DATA_OUT == desc.type() )
+                {
+                    QObject* obj;
+                    obj = QPluginList::Instance()->cretate_plugin_object( desc , NULL );
                     if( obj )
                     {
-                       m_qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
-                       const QMetaObject* metaObject = obj->metaObject();
-
-                        DEBUG <<"DUMP METHODS:   "<<endl;
-                        for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-                        {
-                            DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
-                            DEBUG <<"   "<<QString::fromLatin1(metaObject->method(i).signature());
-                            if( -1 == metaObject->indexOfSignal( metaObject->method(i).signature() ) )
-                            {
-                                DEBUG << ":  Method Not signal";
-                            }
-                            else
-                            {
-                                DEBUG << ":  Its a signal";
-                                if( metaObject->checkConnectArgs ( "testSlot()", metaObject->method(i).signature() ) )
-                                {
-                                     DEBUG  << "==> Compatible with slot testSlot";
-                                }
-                                else
-                                {
-                                    DEBUG  << "==> Not Compatible with slot testSlot";
-                                }
-                            }
-
-                            DEBUG << endl;
-                            //testSlot
-                        }
+                        m_qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
                     }
-                }
-                if(  PORT_IO == list[i].type() )
-                {
-                     PIOList->addToList( list[i] );
+#if defined( TEST_META_METHODS_DUMP ) /*TODO: move from here*/
+                    dump_qobject_meta( obj );
+#endif
                 }
             }
+
+            QPortsIoView* PIOList = new QPortsIoView( fw_win );
+
+            m_qfW->AddWidgetToControlArrea( PIOList );
 
             port = PIOList->getCurentIO();
             if( fw_win ){
