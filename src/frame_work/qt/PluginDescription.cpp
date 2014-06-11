@@ -27,11 +27,11 @@ PluginDescription::PluginDescription(const PluginDescription& b)
 PluginDescription::~PluginDescription(){
 
 }
-/*
-bool  PluginDescription::operator==(const QPluginFabrique &b)
+
+bool  PluginDescription::IsEmpty()
 {
-    return ( *this == b.getDescription() );
-}*/
+    return ( *this == PluginDescription() );
+}
 
 PluginDescription::PlugDiff  PluginDescription::compare( const PluginDescription &b ) const{
     PlugDiff diff = THE_SAME;

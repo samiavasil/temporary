@@ -20,7 +20,7 @@ public:
 
    PluginDescription(const PluginDescription& b);
 
-   PluginDescription(  InterfaceType_t  Type        = UNDEFINED,
+   PluginDescription(  InterfaceType_t  Type         = UNDEFINED,
                         QString          Location    = "",
                         QString          Name        = "" ,
                         QString          Category    = "",
@@ -36,6 +36,8 @@ public:
    bool  operator==(const PluginDescription &b) const;
 
    PluginDescription::PlugDiff  compare( const PluginDescription &b ) const;
+
+   bool IsEmpty();
 
    InterfaceType_t type() const;
    const QString&  name() const;

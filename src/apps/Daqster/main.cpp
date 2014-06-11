@@ -167,7 +167,7 @@ DataType obj2(DataType::Complex, DataType::I32);
 
 
 #include "qt/QRegFactory.h"
-
+#include "qt/QPluginListWidged.h"
 
 int main(int argc, char *argv[])
 {
@@ -176,6 +176,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
+    QPluginListWidged vv;
+    vv.show();
 
     //QDesignerComponents c;
 

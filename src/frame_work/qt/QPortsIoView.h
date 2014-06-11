@@ -1,5 +1,5 @@
-#ifndef QFRAIOPORTSVIEW_H
-#define QFRAIOPORTSVIEW_H
+#ifndef QPORTSIOVIEW_H
+#define QPORTSIOVIEW_H
 
 #include <QWidget>
 #include <QList>
