@@ -9,24 +9,27 @@
 class PluginDescription{
 public:
    typedef enum{
-     THE_SAME     = 0x0,
-     TYPE_DIFF    = 0x1,
-     NAME_DIFF    = 0x2,
-     VERS_DIFF    = 0x4,
-     LOC_DIFF     = 0x8,
-     DESC_DIFF    = 0x10,
-     ICON_DIFF    = 0x11
+     THE_SAME       = 0,
+     TYPE_DIFF      = 1 << 0,
+     LOC_DIFF       = 1 << 1,
+     NAME_DIFF      = 1 << 2,
+     CATEGORY_DIFF  = 1 << 3,
+     VERS_DIFF      = 1 << 4,
+     DESC_DIFF      = 1 << 5,
+     ICON_DIFF      = 1 << 6,
+     ENABLE_DIFF    = 1 << 7
    }PlugDiff;
 
    PluginDescription(const PluginDescription& b);
 
-   PluginDescription(  InterfaceType_t  Type         = UNDEFINED,
-                        QString          Location    = "",
-                        QString          Name        = "" ,
-                        QString          Category    = "",
-                        QString          Version     = "",
-                        QString          Description = "",
-                        QIcon            Icon        = QIcon()
+   PluginDescription(   const InterfaceType_t&  Type       = UNDEFINED,
+                        const QString&         Location    = QString(),
+                        const QString&         Name        = QString(),
+                        const QString&         Category    = QString(),
+                        const QString&         Version     = QString(),
+                        const QString&         Description = QString(),
+                        QIcon                  Icon        = QIcon(),
+                        int                    enabled     = -1
                      );
 
    ~PluginDescription();
@@ -35,7 +38,9 @@ public:
 
    bool  operator==(const PluginDescription &b) const;
 
-   PluginDescription::PlugDiff  compare( const PluginDescription &b ) const;
+   unsigned int compare( const PluginDescription &b ) const;
+
+   bool         compare_by_valid_fields( const PluginDescription &b ) const;
 
    bool IsEmpty();
 
@@ -46,6 +51,9 @@ public:
    const QString&  description() const;
    const QString&  location() const;
    const QIcon     icon() const;
+   bool            is_enabled() const;
+
+   void            enable( bool enbl);
 
 protected:
     InterfaceType_t  m_Type;
@@ -55,6 +63,7 @@ protected:
     QString          m_Version;
     QString          m_Description;
     QIcon            m_Icon;
+    int              m_Enabled;
 };
 
 #endif // PLUGINDESCRIPTION_H

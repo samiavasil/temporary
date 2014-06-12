@@ -72,7 +72,8 @@ bool QFraCreator::Create( CFrameWork *fW )
         {
             QWidget* fw_win = m_qfW->getFrameWorkWindow();
             QPortIO* port = NULL;
-            QList<PluginDescription> list = QPluginList::Instance()->getAllActivePlugins( DATA_OUT );
+            //QpluginFilter filter( UNDEFINED );
+            QList<PluginDescription> list = QPluginList::Instance()->getAllPlugins( QpluginFilter( DATA_OUT ) );
 
             foreach( PluginDescription desc,list ){
                 if(  DATA_OUT == desc.type() )
@@ -127,7 +128,7 @@ QtestCommand* comm =NULL;
 
                     pExecutor->appendCommand(comm);
                 }
-                sleep(1);//pExecutor->appendCommand(comm);
+               // sleep(1);//pExecutor->appendCommand(comm);
                 pExecutor->pauseExecution(false);
                 /*TODO DELL ME*/
                // sleep(1);

@@ -25,15 +25,5 @@ class CFrameWorkElementsFactory {
 
     virtual CDataPlot* createDataPlot() = 0;
 
-    virtual void deleteExecutor(CCommandExecutor * executor) = 0;
-
-    virtual void deleteProtocol(CProtocolPackFactory * protocol) = 0;
-
-    virtual void deletePortIO(CPortIO * port) = 0;
-
-    virtual void deleteColector(CPacketCollector * collector) = 0;
-
-    virtual void deleteDataPlot(CDataPlot * dataPlot) = 0;
-
 };
 #endif

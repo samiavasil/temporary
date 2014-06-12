@@ -72,7 +72,8 @@ QPortIO* QPortsIoView::getCurentIO(  )
 }
 
 void QPortsIoView::reloadPIOlist(){
-    QList<PluginDescription>  list = QPluginList::Instance()->getAllActivePlugins( PORT_IO );
+
+    QList<PluginDescription>  list = QPluginList::Instance()->getAllPlugins( QpluginFilter( PORT_IO ) );
     mIoPorts.clear();
     ui->IoList->clear();
     mCurrentIo->deleteLater();

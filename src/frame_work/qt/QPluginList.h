@@ -8,6 +8,8 @@
 #include "QPluginLoaderExt.h"
 #include <QTableWidgetItem>
 #include "qt/QPluginFabrique.h"
+#include "qt/QpluginFilter.h"
+
 #include "interfaces.h"
 namespace Ui {
 class PluginList;
@@ -25,7 +27,7 @@ public:
     ~QPluginList();
     static QPluginList* Instance();
 
-    QList<PluginDescription> getAllActivePlugins( InterfaceType_t type );
+    QList<PluginDescription> getAllPlugins( const QpluginFilter &filter );
     QObject* cretate_plugin_object( PluginDescription &desc , QObject *parent = 0 );
 private slots:
     void on_okButton_clicked();

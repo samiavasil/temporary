@@ -137,17 +137,13 @@ void QPluginList::on_cancelButton_clicked()
     setResult( Rejected );
 }
 
-QList<PluginDescription> QPluginList::getAllActivePlugins( InterfaceType_t type ){
+QList<PluginDescription> QPluginList::getAllPlugins( const QpluginFilter &filter ){
     QList<PluginDescription> plugin_desc;
-    PluginDescription desc;
     QList<QPluginFabrique*> listPl = m_PluginList.values();
     foreach( QPluginFabrique* pFab, listPl )
     {
-      if( pFab->is_enabled() ){
-        desc = pFab->getDescription().type();
-        if( UNDEFINED <= type || type == desc.type() ){
+      if( pFab && filter.filtered( *pFab ) ){
             plugin_desc.append( pFab->getDescription() );
-        }
       }
     }
 

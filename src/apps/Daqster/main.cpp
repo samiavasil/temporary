@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    QPluginListWidged vv;
+    QPluginListWidged vv( NULL, QpluginFilter( /*PORT_IO */) );
     vv.show();
 
     //QDesignerComponents c;

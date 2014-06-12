@@ -18,15 +18,13 @@ QPluginFabrique::QPluginFabrique( const char *name, QObject *parent ):
     QObject( parent ), m_PluginDecription(UNDEFINED,name)
 {
     state        = 0;
-    m_enabled    = true;
     m_loader     = 0;
-
     read_plugin_description();
 
 }
 
 QPluginFabrique::~QPluginFabrique(){
-    m_enabled = false;
+    m_PluginDecription.enable( false );
     if( m_loader ){
         m_loader->deleteLater();
     }
@@ -76,7 +74,7 @@ void QPluginFabrique::read_plugin_description( ){
 QObject* QPluginFabrique::cretate_plugin_object( QObject* parent  ){
     QObject* object = 0;
 
-    if( !m_enabled ){
+    if( !is_enabled() ){
         DEBUG  << "plugin_disabled: can't create object";
         return object;
     }
@@ -121,4 +119,27 @@ void QPluginFabrique::allObjectsDestoyed( QObject* obj ){
         m_loader  = NULL;
         state = 0;
     }
+}
+
+void  QPluginFabrique::enable( bool enbl){
+    m_PluginDecription.enable( enbl );
+    while( state == 3 ){
+        QMessageBox msgBox;
+        msgBox.setText("Wait For Someting");
+        msgBox.exec();
+    }
+    if( !enbl ){
+        if( m_loader ){
+            m_loader->closeSafety();
+            state     = 3;
+        }
+    }
+    else{
+        DEBUG << "!!!!!CREATE OBJECT \n";
+    }
+    DEBUG <<  this;
+}
+
+bool  QPluginFabrique::is_enabled() const{
+    return m_PluginDecription.is_enabled();
 }

@@ -7,7 +7,9 @@
 class CProtocolDb;
 
 class CProtocolLoader {
-    protected:
+public:
+     virtual ~CProtocolLoader(){}
+protected:
 
     virtual int readProtocolData() = 0;
 

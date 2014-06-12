@@ -61,7 +61,8 @@ SOURCES += \
     base/CRegFactory.cpp \
     qt/QPluginFabrique.cpp \
     qt/QPortsIoView.cpp \
-    qt/QPluginListWidged.cpp
+    qt/QPluginListWidged.cpp \
+    qt/QpluginFilter.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -101,7 +102,8 @@ HEADERS +=\
     base/CRegFactory.h \
     qt/QPluginFabrique.h \
     qt/QPortsIoView.h \
-    qt/QPluginListWidged.h
+    qt/QPluginListWidged.h \
+    qt/QpluginFilter.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

@@ -26,27 +26,10 @@ public:
         return m_PluginDecription;
     }
 
-    bool         is_enabled() const{
-        return m_enabled;
-    }
-    void  enable( bool enbl){
-        m_enabled = enbl;
-        while( state == 3 ){
-            QMessageBox msgBox;
-            msgBox.setText("Wait For Someting");
-            msgBox.exec();
-        }
-        if( !m_enabled ){
-            if( m_loader ){
-                m_loader->closeSafety();
-                state     = 3;
-            }
-        }
-        else{
-            DEBUG << "!!!!!CREATE OBJECT \n";
-        }
-        DEBUG <<  this;
-    }
+    bool         is_enabled() const;
+
+    void  enable( bool enbl);
+
 public slots:
     void allObjectsDestoyed(QObject* obj);
 
@@ -58,7 +41,6 @@ protected:
     QMutex            m_Lock;
     QPluginLoaderExt* m_loader;
     PluginDescription m_PluginDecription;
-    bool              m_enabled;
     int               state;
 };
 

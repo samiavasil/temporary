@@ -7,7 +7,7 @@ class CPacket {
   public:
     CPacket(const pack_id_t packType, int packLenBit);
 
-    ~CPacket();
+    virtual ~CPacket();
 
     virtual int setData(const u8 * data);
 

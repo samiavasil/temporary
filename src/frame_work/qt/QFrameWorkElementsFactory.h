@@ -36,17 +36,5 @@ class QFrameWorkElementsFactory : public CFrameWorkElementsFactory {
 
     virtual CDataPlot* createDataPlot();
 
-    virtual void deleteExecutor(CCommandExecutor * executor);
-
-    virtual void deleteProtocol(CProtocolPackFactory * protocol);
-
-    virtual void deletePortIO(CPortIO * port);
-
-    virtual void deleteColector(CPacketCollector * collector);
-
-    virtual void deleteControlView(CControlView * ctrlView);
-
-    virtual void deleteDataPlot(CDataPlot * dataPlot);
-
 };
 #endif

@@ -11,6 +11,7 @@ class CProtocolDb
 {
 public:
     CProtocolDb();
+    virtual ~CProtocolDb(){}
     int loadProtocolDefinition( CProtocolLoader *protLd );
     virtual void clearProtDefinitions() = 0;
 
