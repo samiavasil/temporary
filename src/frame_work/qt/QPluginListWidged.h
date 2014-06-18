@@ -12,6 +12,10 @@ class QPluginListWidged : public QTableWidget
     Q_OBJECT
     
 public:
+    typedef enum{
+       LIS
+    }cfg_type_t;
+
     explicit QPluginListWidged( QWidget *parent = 0, const QpluginFilter& filter = QpluginFilter() );
     ~QPluginListWidged();
     PluginDescription getSelectedPlugin();

@@ -1,16 +1,16 @@
-#include "qt/QPluginList.h"
-#include "ui_pluginlist.h"
-#include "interfaces.h"
 #include <QDir>
+#include <QDialog>
+#include "interfaces.h"
+#include "qt/QPluginList.h"
 #include "qt/QFrameWork.h"
+#include "qt/QPluginListWidged.h"
+#include "ui_pluginlist.h"
 
 QPluginList* QPluginList::m_This = NULL;
 QMap< QString, QPluginFabrique*  > QPluginList::m_PluginList;
-QPluginList* QPluginList::Instance()
-{
+QPluginList* QPluginList::Instance(){
     DEBUG  << "INPUT" << m_This;
-        if( NULL == m_This )
-        {
+        if( NULL == m_This ){
             m_This = new QPluginList();
         }
 
@@ -18,10 +18,29 @@ QPluginList* QPluginList::Instance()
     return m_This;
 }
 
-QPluginList::QPluginList(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::PluginList)
+
+QList<PluginDescription> QPluginList::configurePlugins( const QpluginFilter &filter ){
+    if( m_This ){
+        QDialog dlg;
+
+        Ui::PluginList *ui = new Ui::PluginList;
+        ui->setupUi( &dlg );
+        QPluginListWidged plw( ui->splitter, filter );
+        ui->splitter->insertWidget(0,&plw);
+        connect(ui->reloadButton,SIGNAL(clicked()) ,m_This, SLOT(reloadPlugins()));
+        connect( &plw ,SIGNAL(enablePlugin(PluginDescription,bool)) ,m_This, SLOT(pluginEnable(PluginDescription,bool)));
+        m_This->reloadPlugins();
+        dlg.exec();
+        return QList<PluginDescription>();//FIX ME;
+    }
+    else{
+        return QList<PluginDescription>();
+    }
+}
+
+QPluginList::QPluginList(QObject *parent):QObject(parent)
 {
+    /*
     ui->setupUi(this);
 
     //populatePluginList();
@@ -29,6 +48,7 @@ QPluginList::QPluginList(QWidget *parent) :
     ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->availablePlugins,SIGNAL(itemChanged(QTableWidgetItem*) ),this, SLOT(listSelectionChanged(QTableWidgetItem*)));
     connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
+    */
     reloadPlugins();
 }
 
@@ -42,7 +62,6 @@ QPluginList::~QPluginList()
         }
     }
     m_PluginList.clear();
-    delete ui;
     m_This = NULL;
 }
 
@@ -50,56 +69,42 @@ QPluginList::~QPluginList()
 void QPluginList::readPluginsDir( ){
     QDir pluginsDir(qApp->applicationDirPath());
     pluginsDir.cd("plugins");
-
+    readDisabledPlugins();
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
             QPluginFabrique* fab = new QPluginFabrique(fileName.toUtf8().data());
             if( 0 != fab ){
+                fab->enable( !is_plugin_disabled( fab->getDescription().name() ) );
                 m_PluginList.insert( fileName, fab );
             }
         }
     }
-    populatePluginList();
 }
 
-#define LOCATION_COLUMN 2
-void QPluginList::populatePluginList(){
-    int i =0;
-    ui->availablePlugins->clear();
-    ui->availablePlugins->setRowCount(0);
-    ui->availablePlugins->setColumnCount(3);
-    QMapIterator<QString,QPluginFabrique* > plugin_list(m_PluginList);
-    while ( plugin_list.hasNext() ) {
-        plugin_list.next();
-        QPluginFabrique* desc = plugin_list.value();
-        if( desc ){
-            DEBUG  <<  desc;
-            ui->availablePlugins->insertRow( i );
-            QTableWidgetItem *item = new QTableWidgetItem( desc->getDescription().name() );
-            if( !desc->getDescription().icon().isNull() ){
-                QIcon icon = desc->getDescription().icon();
-                item->setIcon( icon );
-            }
-            item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            ui->availablePlugins->setItem( i, 0, item );
 
-            item = new QTableWidgetItem(desc->getDescription().category());
-            item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            ui->availablePlugins->setItem( i, 1, item );
+void QPluginList::readDisabledPlugins( ){
+   //TODO: reading from some configuration DB
 
-            item = new QTableWidgetItem( desc->getDescription().location() );
-            item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
-            item->setCheckState ( Qt::Checked );
-            ui->availablePlugins->setItem( i, LOCATION_COLUMN, item );
-            i++;
-        }
+}
+
+bool QPluginList::is_plugin_disabled( const QString& name ){
+    return false;
+}
+
+void QPluginList::pluginEnable( PluginDescription desc, bool enble ){
+   //TODO: writing to some configuration DB
+    QPluginFabrique* fab = m_PluginList.value( desc.location(), NULL );
+    if( fab ){
+        fab->enable( enble );
+        emit pluginsUpdate();
     }
 }
 
 void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
 
-    int row = ui->availablePlugins->row(item);
+    /*
+     int row = ui->availablePlugins->row(item);
     QTableWidgetItem* item_location = ui->availablePlugins->item( row, LOCATION_COLUMN );
     if( item_location && m_PluginList.contains( item_location->text() ) ){
         if(  Qt::Checked == item_location->checkState() ){
@@ -114,27 +119,26 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
         }
         emit pluginsUpdate();
     }
+    */
 }
 
 void QPluginList::reloadPlugins( ){
     DEBUG << "Reload List";
-    ui->availablePlugins->blockSignals(true);
     readPluginsDir();
-    ui->availablePlugins->blockSignals(false);
-    emit pluginsUpdate();
+//    emit pluginsUpdate();
 }
 
 
 void QPluginList::on_okButton_clicked()
 {
-    close();
-    setResult( Accepted );
+    //close();
+    //setResult( Accepted );
 }
 
 void QPluginList::on_cancelButton_clicked()
 {
-    close();
-    setResult( Rejected );
+    //close();
+    //setResult( Rejected );
 }
 
 QList<PluginDescription> QPluginList::getAllPlugins( const QpluginFilter &filter ){
@@ -158,7 +162,7 @@ QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *
     QList<QPluginFabrique*> listPl = m_PluginList.values();
     foreach( QPluginFabrique* pFab, listPl )
     {
-        if(   pFab->is_enabled() && desc == pFab->getDescription() )
+        if(  desc == pFab->getDescription() )
         {
             object = pFab->cretate_plugin_object( parent );
             if( object )

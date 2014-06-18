@@ -3,14 +3,16 @@
 #include "ui_QPortsIoView.h"
 #include "qt/QPortIO.h"
 #include "qt/QPluginList.h"
+#include "qt/QPluginListWidged.h"
 
-QPortsIoView::QPortsIoView(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::QPortsIoView)
+QPortsIoView::QPortsIoView(QWidget *parent) : QWidget(parent), ui( new Ui::QPortsIoView )
 {
+    QPluginListWidged* wd = new QPluginListWidged( this,PORT_IO  );
     mCurrentIo = NULL;
     ui->setupUi(this);
+    ui->splitter->insertWidget( 0, wd );
     connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,this, SLOT(reloadPIOlist()) );
+    connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,wd, SLOT(reloadPLuginList()) );
     reloadPIOlist();
 }
 
@@ -48,12 +50,13 @@ void QPortsIoView::addToList( PluginDescription& desc )
             mCurrentIo = dynamic_cast<QPortIO*>(QPluginList::Instance()->cretate_plugin_object( desc, this ));
             if( NULL != mCurrentIo )
             {
+
                 mCurrentIo->showPortConfiguration( ui->ioCtrlWidget );
                 ui->IoList->setCurrentRow(0);
              }
             else
             {
-                int idx = ui->IoList->count()-1;
+                int idx = ui->IoList->count() - 1;
                 QListWidgetItem* ds = ui->IoList->takeItem( idx );
                 if( ds )
                 {
@@ -79,7 +82,9 @@ void QPortsIoView::reloadPIOlist(){
     mCurrentIo->deleteLater();
 
     foreach( PluginDescription desc, list ){
-        addToList( desc );
+        if( desc.is_enabled() ){
+            addToList( desc );
+        }
     }
 }
 

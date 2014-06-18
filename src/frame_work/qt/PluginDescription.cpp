@@ -37,30 +37,30 @@ bool  PluginDescription::IsEmpty()
 
 /*Return vaue with PlugDiff bitmask */
 unsigned int  PluginDescription::compare( const PluginDescription &b ) const{
-    unsigned int diff = THE_SAME;
+    unsigned int diff = NOTHING_OPT;
     if(  m_Type != b.m_Type ){
-        diff |= TYPE_DIFF;
+        diff |= TYPE_OPT;
     }
     if( m_Location.compare(  b.m_Location ) ){
-        diff |= LOC_DIFF;
+        diff |= LOCATION_OPT;
     }
     if( m_Name.compare(  b.m_Name ) ){
-        diff |= NAME_DIFF;
+        diff |= NAME_OPT;
     }
     if( m_Category.compare(  b.m_Category ) ){
-        diff |= CATEGORY_DIFF;
+        diff |= CATEGORY_OPT;
     }
     if( m_Version.compare(  b.m_Version ) ){
-        diff |= VERS_DIFF;
+        diff |= VERSION_OPT;
     }
     if( m_Description.compare(  b.m_Description ) ){
-        diff |= DESC_DIFF;
+        diff |= DESCRIPTION_OPT;
     }
     if( m_Icon.name().compare( b.m_Icon.name() ) ){
-        diff |= ICON_DIFF;
+        diff |= ICON_OPT;
     }
     if( m_Enabled !=  b.m_Enabled ){
-        diff |= ENABLE_DIFF;
+        diff |= ENABLE_OPT;
     }
     return diff;
 }

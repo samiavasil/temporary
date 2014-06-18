@@ -4,14 +4,16 @@
 #include<QHeaderView>
 
 #define LOCATION_COLUMN 2
-QPluginListWidged::QPluginListWidged(QWidget *parent, const QpluginFilter &filter) :QTableWidget(parent),m_Filter(filter)
+QPluginListWidged::QPluginListWidged( QWidget *parent, const QpluginFilter &filter ):QTableWidget(parent),m_Filter(filter)
 
 {
     setColumnCount(3);
-    connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,this, SLOT(reloadPLuginList()) );
+    //TODO: connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,this, SLOT(reloadPLuginList()) );
     connect(this,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(OnitemChanged(QTableWidgetItem*)) );
     connect(this,SIGNAL(enablePlugin(PluginDescription,bool)),this,SLOT(enPlugin(PluginDescription,bool)) );
     horizontalHeader()->setResizeMode( QHeaderView::Stretch );
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
     reloadPLuginList();
 }
 
@@ -43,7 +45,12 @@ void QPluginListWidged::reloadPLuginList(){
 
        item = new QTableWidgetItem( desc.location() );
        item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
-       item->setCheckState ( Qt::Checked );
+       if( desc.is_enabled()  ){
+         item->setCheckState ( Qt::Checked );
+       }
+       else{
+         item->setCheckState ( Qt::Unchecked );
+       }
        setItem( count, LOCATION_COLUMN, item );
 
        m_Plugins.append(desc);

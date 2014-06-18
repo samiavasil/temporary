@@ -74,7 +74,8 @@ void MainWindow::mouseMoveEvent( QMouseEvent * event ){
 
 void MainWindow::on_actionNew_triggered()
 {
-    if( QDialog::Accepted == QPluginList::Instance()->exec() )
+    QPluginList::Instance()->configurePlugins();
+   // if( QDialog::Accepted == QPluginList::Instance()->exec() )
     {
         //DEBUG("%d", pList.exec());
     }

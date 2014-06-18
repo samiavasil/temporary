@@ -9,15 +9,15 @@
 class PluginDescription{
 public:
    typedef enum{
-     THE_SAME       = 0,
-     TYPE_DIFF      = 1 << 0,
-     LOC_DIFF       = 1 << 1,
-     NAME_DIFF      = 1 << 2,
-     CATEGORY_DIFF  = 1 << 3,
-     VERS_DIFF      = 1 << 4,
-     DESC_DIFF      = 1 << 5,
-     ICON_DIFF      = 1 << 6,
-     ENABLE_DIFF    = 1 << 7
+     NOTHING_OPT       = 0,
+     TYPE_OPT          = 1 << 0,
+     LOCATION_OPT      = 1 << 1,
+     NAME_OPT          = 1 << 2,
+     CATEGORY_OPT      = 1 << 3,
+     VERSION_OPT       = 1 << 4,
+     DESCRIPTION_OPT   = 1 << 5,
+     ICON_OPT          = 1 << 6,
+     ENABLE_OPT        = 1 << 7
    }PlugDiff;
 
    PluginDescription(const PluginDescription& b);

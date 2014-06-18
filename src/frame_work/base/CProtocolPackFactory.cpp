@@ -8,6 +8,8 @@
 #include "base/debug.h"
 
 CProtocolPackFactory::CProtocolPackFactory( ) {
+    m_pDB = NULL;
+    m_pLoader = NULL;
 }
 
 CProtocolPackFactory::~CProtocolPackFactory(){

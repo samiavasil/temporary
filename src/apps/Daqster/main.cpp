@@ -177,6 +177,7 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     QPluginListWidged vv( NULL, QpluginFilter( /*PORT_IO */) );
+    QObject::connect(QPluginList::Instance(),SIGNAL(pluginsUpdate()),&vv,SLOT(reloadPLuginList()));
     vv.show();
 
     //QDesignerComponents c;
