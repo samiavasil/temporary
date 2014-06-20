@@ -32,18 +32,21 @@ SOURCES  += \
     qtestcommand.cpp \
     FraFrameWorkInterface.cpp \
     QFraCreator.cpp \
-    QFraFrameWork.cpp
+    QFraFrameWork.cpp \
+    QPortsIoView.cpp
 
 HEADERS += \
     qtestcommand.h \
     FraFrameWorkInterface.h \
     QFraCreator.h \
     QFraFrameWork.h \
+    QPortsIoView.h \
     QPortsIoView.h
 
 
 FORMS += \
-    qfra_frame_work_view.ui
+    qfra_frame_work_view.ui \
+    QPortsIoView.ui
 
 RESOURCES += \
     proba.qrc

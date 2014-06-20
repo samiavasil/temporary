@@ -1,7 +1,7 @@
 #include "base/global.h"
 #include "QFraCreator.h"
 #include "QFraFrameWork.h"
-#include "qt/QPortsIoView.h"
+#include "QPortsIoView.h"
 #include "qt/QPacketCollector.h"
 #include "qt/QPortIO.h"
 #include "qt/QProtocolDb.h"
@@ -63,7 +63,7 @@ void dump_qobject_meta( QObject* obj ){
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
-      QPluginList::Instance()->exec();
+      QPluginList::configurePlugins( );
     if( fW )
     {
         m_qfW =  dynamic_cast<QFraFrameWork*>(fW);

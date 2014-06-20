@@ -60,9 +60,9 @@ SOURCES += \
     qt/QRegFactory.cpp \
     base/CRegFactory.cpp \
     qt/QPluginFabrique.cpp \
-    qt/QPortsIoView.cpp \
-    qt/QPluginListWidged.cpp \
-    qt/QpluginFilter.cpp
+    qt/QpluginFilter.cpp \
+    qt/QPluginViewProperty.cpp \
+    qt/QPluginListWidget.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -101,9 +101,9 @@ HEADERS +=\
     qt/QRegFactory.h \
     base/CRegFactory.h \
     qt/QPluginFabrique.h \
-    qt/QPortsIoView.h \
-    qt/QPluginListWidged.h \
-    qt/QpluginFilter.h
+    qt/QpluginFilter.h \
+    qt/QPluginViewProperty.h \
+    qt/QPluginListWidget.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -127,4 +127,4 @@ unix:!symbian {
 FORMS += \
     qt/pluginlist.ui \
     qt/serial_port.ui \
-    qt/QPortsIoView.ui
+    qt/QPluginViewProperty.ui

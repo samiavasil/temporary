@@ -28,7 +28,7 @@ public:
     static QList<PluginDescription> configurePlugins( const QpluginFilter &filter = QpluginFilter() );
 
     QList<PluginDescription> getAllPlugins( const QpluginFilter &filter );
-    QObject* cretate_plugin_object( PluginDescription &desc , QObject *parent = 0 );
+    QObject* cretate_plugin_object( const PluginDescription &desc , QObject *parent = 0 );
 private slots:
     void on_okButton_clicked();
     void on_cancelButton_clicked();

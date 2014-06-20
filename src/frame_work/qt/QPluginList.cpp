@@ -3,7 +3,7 @@
 #include "interfaces.h"
 #include "qt/QPluginList.h"
 #include "qt/QFrameWork.h"
-#include "qt/QPluginListWidged.h"
+#include "qt/QPluginListWidget.h"
 #include "ui_pluginlist.h"
 
 QPluginList* QPluginList::m_This = NULL;
@@ -22,16 +22,17 @@ QPluginList* QPluginList::Instance(){
 QList<PluginDescription> QPluginList::configurePlugins( const QpluginFilter &filter ){
     if( m_This ){
         QDialog dlg;
-
+        cfgViewTypeT viewType;
         Ui::PluginList *ui = new Ui::PluginList;
         ui->setupUi( &dlg );
-        QPluginListWidged plw( ui->splitter, filter );
+        viewType.enable(1).name(1).category(1).location(1);
+        QPluginListWidget plw( ui->splitter, filter, viewType );
         ui->splitter->insertWidget(0,&plw);
         connect(ui->reloadButton,SIGNAL(clicked()) ,m_This, SLOT(reloadPlugins()));
         connect( &plw ,SIGNAL(enablePlugin(PluginDescription,bool)) ,m_This, SLOT(pluginEnable(PluginDescription,bool)));
         m_This->reloadPlugins();
         dlg.exec();
-        return QList<PluginDescription>();//FIX ME;
+        return plw.getPluginList();
     }
     else{
         return QList<PluginDescription>();
@@ -125,7 +126,7 @@ void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
 void QPluginList::reloadPlugins( ){
     DEBUG << "Reload List";
     readPluginsDir();
-//    emit pluginsUpdate();
+   // emit pluginsUpdate();
 }
 
 
@@ -155,7 +156,7 @@ QList<PluginDescription> QPluginList::getAllPlugins( const QpluginFilter &filter
 }
 
 
-QObject* QPluginList::cretate_plugin_object( PluginDescription &desc , QObject *parent )
+QObject* QPluginList::cretate_plugin_object( const PluginDescription &desc , QObject *parent )
 {
 
     QObject* object = NULL;

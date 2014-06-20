@@ -167,7 +167,7 @@ DataType obj2(DataType::Complex, DataType::I32);
 
 
 #include "qt/QRegFactory.h"
-#include "qt/QPluginListWidged.h"
+#include "qt/QPluginListWidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -176,17 +176,17 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    QPluginListWidged vv( NULL, QpluginFilter( /*PORT_IO */) );
+    QPluginListWidget vv( NULL, QpluginFilter( /*PORT_IO */) );
     QObject::connect(QPluginList::Instance(),SIGNAL(pluginsUpdate()),&vv,SLOT(reloadPLuginList()));
     vv.show();
 
     //QDesignerComponents c;
-
+/*
     fact1_t::Registrator<A>  rep( "Alabvala" );
 
     QSet<QString> outlist;
     fact1_t::GetRegList(outlist);
-    qDebug()<<outlist;
+    qDebug()<<outlist;*/
 
 //if( iface )
 //{

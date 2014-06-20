@@ -165,6 +165,7 @@ void QSerialPortIO::showPortConfiguration(QWidget * parent) {
 
 void QSerialPortIO::initUi() {
     int i;
+    bool cmp = false;
     QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
     foreach (QextPortInfo info, ports) {
         DEBUG << "port name:"       << info.portName;
@@ -174,36 +175,119 @@ void QSerialPortIO::initUi() {
         DEBUG << "vendor ID:"       << info.vendorID;
         DEBUG << "product ID:"      << info.productID;
         ui->portCombo->addItem( info.physName );
-        //ui->queryModeCombo->setItemData();
+        if( !m_Serial.portName().compare( info.physName ) ){
+            cmp = true;
+            ui->portCombo->setCurrentIndex( ui->portCombo->count() - 1 );
+        }
     }
+    if( !cmp ){
+        if( ui->portCombo->count() ){
+            ui->portCombo->setCurrentIndex( 0 );
+            m_Serial.setPortName( ports[0].physName );
+        }
+    }
+
+
+    cmp = false;
     for( i = 0; i < (int)(sizeof(supportedBaudRateType)/sizeof(supportedBaudRateType[0])) ;i++ ){
         ui->baudRateCombo->addItem( supportedBaudRateType[i].name );
         ui->baudRateCombo->setItemData( i,  supportedBaudRateType[i].value );
+        if( m_Serial.baudRate() == supportedBaudRateType[i].value ){
+            cmp = true;
+            qDebug() << "Baud Rate: "<< m_Serial.baudRate();
+            ui->baudRateCombo->setCurrentIndex( ui->baudRateCombo->count() - 1 );
+        }
+    }
+    if( !cmp ){
+        if( ui->baudRateCombo->count() ){
+            ui->baudRateCombo->setCurrentIndex( 0 );
+            m_Serial.setBaudRate( supportedBaudRateType[0].value );
+        }
     }
 
+    cmp = false;
     for( i = 0; i < (int)(sizeof(dataBitsArrea)/sizeof(dataBitsArrea[0])) ;i++ ){
         ui->dataBitsCombo->addItem( dataBitsArrea[i].name );
         ui->dataBitsCombo->setItemData( i,  dataBitsArrea[i].value );
+        if( m_Serial.dataBits() == dataBitsArrea[i].value ){
+            cmp = true;
+            qDebug() << "dataBits: "<< m_Serial.dataBits();
+            ui->dataBitsCombo->setCurrentIndex( ui->dataBitsCombo->count() - 1 );
+        }
+    }
+    if( !cmp ){
+        if( ui->dataBitsCombo->count() ){
+            ui->dataBitsCombo->setCurrentIndex( 0 );
+            m_Serial.setDataBits( dataBitsArrea[0].value );
+        }
     }
 
+    cmp = false;
     for( i=0; i < (int)(sizeof(stopBitsArrea)/sizeof(stopBitsArrea[0])) ;i++ ){
         ui->stopBitsCombo->addItem( stopBitsArrea[i].name );
         ui->stopBitsCombo->setItemData(  i, stopBitsArrea[i].value );
+        if( m_Serial.stopBits() == stopBitsArrea[i].value ){
+            cmp = true;
+            qDebug() << "dataBits: "<< m_Serial.stopBits();
+            ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
+        }
+    }
+    if( !cmp ){
+        if( ui->stopBitsCombo->count() ){
+            ui->stopBitsCombo->setCurrentIndex( 0 );
+            m_Serial.setStopBits( stopBitsArrea[0].value );
+        }
     }
 
+    cmp = false;
     for( i=0; i < (int)(sizeof(flowTypeArrea)/sizeof(flowTypeArrea[0])) ;i++ ){
         ui->flowControlCombo->addItem( flowTypeArrea[i].name );
         ui->flowControlCombo->setItemData(  i, flowTypeArrea[i].value );
+        if( m_Serial.flowControl() == flowTypeArrea[i].value ){
+            cmp = true;
+            qDebug() << "FlowControl: "<< m_Serial.flowControl();
+            ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
+        }
+    }
+    if( !cmp ){
+        if( ui->flowControlCombo->count() ){
+            ui->flowControlCombo->setCurrentIndex( 0 );
+            m_Serial.setFlowControl( flowTypeArrea[0].value );
+        }
     }
 
+    cmp = false;
     for( i=0; i < (int)(sizeof(parityArrea)/sizeof(parityArrea[0])) ;i++ ){
         ui->parityCombo->addItem( parityArrea[i].name );
         ui->parityCombo->setItemData( i, parityArrea[i].value );
+        if( m_Serial.parity() == parityArrea[i].value ){
+            cmp = true;
+            qDebug() << "parity: "<< m_Serial.parity();
+            ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
+        }
     }
+    if( !cmp ){
+        if( ui->parityCombo->count() ){
+            ui->parityCombo->setCurrentIndex( 0 );
+            m_Serial.setParity( parityArrea[0].value );
+        }
+    }
+
 
     for( i=0; i < (int)(sizeof(queryModeArrea)/sizeof(queryModeArrea[0])) ;i++ ){
         ui->queryModeCombo->addItem( queryModeArrea[i].name );
         ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
+        if( m_Serial.queryMode() == queryModeArrea[i].value ){
+            cmp = true;
+            qDebug() << "queryMode: "<< m_Serial.queryMode();
+            ui->queryModeCombo->setCurrentIndex( ui->queryModeCombo->count() - 1 );
+        }
+    }
+    if( !cmp ){
+        if( ui->queryModeCombo->count() ){
+            ui->queryModeCombo->setCurrentIndex( 0 );
+            m_Serial.setQueryMode( queryModeArrea[0].value );
+        }
     }
 
     connect( ui->portCombo,        SIGNAL(activated(QString)), this, SLOT( setPortName(const QString )));

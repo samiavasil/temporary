@@ -19,7 +19,6 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QListWidget" name="IoList"/>
      <widget class="QWidget" name="ioCtrlWidget" native="true"/>
     </widget>
    </item>

@@ -19,12 +19,8 @@ public:
     ~QPortsIoView();
     QPortIO* getCurentIO(  );
 
-protected:
-    void addToList( PluginDescription& desc );
-public slots:
-    void reloadPIOlist();
 private slots:
-    void on_IoList_currentRowChanged(int currentRow);
+    void selectedPluginChanged( const PluginDescription &desc );
 
 private:
     Ui::QPortsIoView *ui;
