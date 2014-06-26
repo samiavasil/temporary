@@ -116,7 +116,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
     QStringList  labels;
     m_ConnToCheck = 0;
     setColumnCount( 7 );
-    setSortingEnabled(true);
+    setSortingEnabled(false);
     connect(this,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(OnitemChanged(QTableWidgetItem*)) );
     connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );
 
@@ -134,8 +134,13 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
 
 void QPluginListWidget::currentChanged(const QModelIndex &current, const QModelIndex &previous){
     QTableWidget::currentChanged( current, previous );
-    if( current.row() != previous.row() ){
-       emit selectedPluginChanged(  m_Plugins.value( current.row(), PluginDescription() ) );
+    QTableWidgetItem* it = item(current.row(),ENABLE_COLUMN);
+    if( it && current.row() != previous.row() )
+    {
+       int idx = it->data(Qt::DisplayRole).toInt();
+       if( idx >= 0 && idx < m_Plugins.count() ){
+           emit selectedPluginChanged(  m_Plugins.value( idx, PluginDescription() ) );
+       }
     }
 }
 
@@ -147,7 +152,17 @@ QPluginListWidget::~QPluginListWidget()
 
 void QPluginListWidget::reloadPLuginList(){
 
-    m_Plugins = QPluginList::Instance()->getAllPlugins( QpluginFilter( m_Filter ) );
+
+    int itemSel = -1;
+    qDebug()<<  " currentRow() 1 >> " << currentRow() << " Name" <<  m_Plugins.value(currentRow()).name() ;
+ PluginDescription curSelPlugin = m_Plugins.value(currentRow(),PluginDescription());
+
+    setSortingEnabled(false);
+
+
+    m_Plugins.clear();
+
+    QList< PluginDescription >plugins   = QPluginList::Instance()->getAllPlugins( QpluginFilter( m_Filter ) );
     blockSignals( true );
     model()->removeRows(0, rowCount());
     RightVisibleCol = 0;
@@ -159,8 +174,8 @@ void QPluginListWidget::reloadPLuginList(){
     showCol( VERSION_COLUMN    , m_ViewType.version());
     showCol( ENABLE_COLUMN     , m_ViewType.enable());
     horizontalHeader()->setResizeMode(RightVisibleCol, QHeaderView::Stretch );
-
-    foreach( PluginDescription desc, m_Plugins ){
+    int i = 0;
+    foreach( PluginDescription desc, plugins ){
 
        if( !( m_ViewType.hideDisabled() && !desc.is_enabled() ) ){
            int count = rowCount();
@@ -208,13 +223,39 @@ void QPluginListWidget::reloadPLuginList(){
            else{
              item->setCheckState ( Qt::Unchecked );
            }
-
+           item->setData(Qt::DisplayRole, i );
            setItem( count, ENABLE_COLUMN, item );
+           if( curSelPlugin == desc ){
+               itemSel = i;
+           }
            m_Plugins.append(desc);
+           i++;
        }
      }
-    blockSignals( false );
-    emit selectedPluginChanged(  m_Plugins.value( currentRow(), PluginDescription() ) );
+
+    qDebug()<<  " currentRow() 2 >> " <<currentRow() << " Name" <<  m_Plugins.value(currentRow()).name() ;
+
+
+
+//setSortingEnabled(true);
+
+blockSignals( false );
+if( itemSel >= 0 ) {
+     QTableWidgetItem *itm = NULL;
+     for( i=0;i<rowCount();i++ ){
+        itm = item(i, ENABLE_COLUMN );
+        if( itm ){
+            if( itm->data(Qt::DisplayRole).toInt() == itemSel ){
+              selectRow( itm->row() );
+               break;
+            }
+        }
+     }
+ }
+qDebug()<<  " currentRow() 3 >> " <<currentRow()  << " Name" <<  m_Plugins.value(currentRow()).name();
+  //  emit selectedPluginChanged(  m_Plugins.value( currentRow(), PluginDescription() ) );
+
+
 }
 
 PluginDescription  QPluginListWidget::getSelectedPlugin(){
@@ -230,6 +271,7 @@ void QPluginListWidget::OnitemChanged( QTableWidgetItem* item ){
       int r = row( item  );
       int c =column( item  );
       if( r != -1  && c == ENABLE_COLUMN ){
+          r = item->data(Qt::DisplayRole).toInt();
           emit enablePlugin( m_Plugins.value( r, PluginDescription() ), Qt::Checked == item->checkState() );
       }
   }
@@ -241,7 +283,7 @@ void QPluginListWidget::setFilter( const QpluginFilter& filter ){
 }
 
 void QPluginListWidget::updateVisibility(){
-///TODO
+ reloadPLuginList();
 }
 
 void QPluginListWidget::addContextMenu(){
@@ -260,7 +302,7 @@ void QPluginListWidget::ShowContextMenu( const QPoint& pos ){
     connect( action, SIGNAL(triggered()), this,SLOT(ShowProperties()) );
     myMenu.addAction( action );
     myMenu.exec( globalPos );
-     reloadPLuginList();
+
 }
 
 void QPluginListWidget::ShowProperties( ){
