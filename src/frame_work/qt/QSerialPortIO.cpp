@@ -194,7 +194,7 @@ void QSerialPortIO::initUi() {
         ui->baudRateCombo->setItemData( i,  supportedBaudRateType[i].value );
         if( m_Serial.baudRate() == supportedBaudRateType[i].value ){
             cmp = true;
-            qDebug() << "Baud Rate: "<< m_Serial.baudRate();
+            DEBUG << "Baud Rate: "<< m_Serial.baudRate();
             ui->baudRateCombo->setCurrentIndex( ui->baudRateCombo->count() - 1 );
         }
     }
@@ -211,7 +211,7 @@ void QSerialPortIO::initUi() {
         ui->dataBitsCombo->setItemData( i,  dataBitsArrea[i].value );
         if( m_Serial.dataBits() == dataBitsArrea[i].value ){
             cmp = true;
-            qDebug() << "dataBits: "<< m_Serial.dataBits();
+            DEBUG << "dataBits: "<< m_Serial.dataBits();
             ui->dataBitsCombo->setCurrentIndex( ui->dataBitsCombo->count() - 1 );
         }
     }
@@ -228,7 +228,7 @@ void QSerialPortIO::initUi() {
         ui->stopBitsCombo->setItemData(  i, stopBitsArrea[i].value );
         if( m_Serial.stopBits() == stopBitsArrea[i].value ){
             cmp = true;
-            qDebug() << "dataBits: "<< m_Serial.stopBits();
+            DEBUG << "dataBits: "<< m_Serial.stopBits();
             ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
         }
     }
@@ -245,7 +245,7 @@ void QSerialPortIO::initUi() {
         ui->flowControlCombo->setItemData(  i, flowTypeArrea[i].value );
         if( m_Serial.flowControl() == flowTypeArrea[i].value ){
             cmp = true;
-            qDebug() << "FlowControl: "<< m_Serial.flowControl();
+            DEBUG << "FlowControl: "<< m_Serial.flowControl();
             ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
         }
     }
@@ -262,7 +262,7 @@ void QSerialPortIO::initUi() {
         ui->parityCombo->setItemData( i, parityArrea[i].value );
         if( m_Serial.parity() == parityArrea[i].value ){
             cmp = true;
-            qDebug() << "parity: "<< m_Serial.parity();
+            DEBUG << "parity: "<< m_Serial.parity();
             ui->stopBitsCombo->setCurrentIndex( ui->stopBitsCombo->count() - 1 );
         }
     }
@@ -279,7 +279,7 @@ void QSerialPortIO::initUi() {
         ui->queryModeCombo->setItemData( i, queryModeArrea[i].value );
         if( m_Serial.queryMode() == queryModeArrea[i].value ){
             cmp = true;
-            qDebug() << "queryMode: "<< m_Serial.queryMode();
+            DEBUG << "queryMode: "<< m_Serial.queryMode();
             ui->queryModeCombo->setCurrentIndex( ui->queryModeCombo->count() - 1 );
         }
     }

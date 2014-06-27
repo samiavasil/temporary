@@ -1,14 +1,15 @@
-
 #include "qt/QPortIO.h"
-#include<QDebug>
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
 QPortIO::QPortIO(QObject * parent) :QObject(parent){
     m_PioWidget = NULL;
-    qDebug()<<"Create QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this;
+    DEBUG<<"Create QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this;
 }
 
 QPortIO::~QPortIO()
 {
-    qDebug()<<"Destroy QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this;
+    DEBUG<<"Destroy QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this;
     if( m_PioWidget )
     {
         delete m_PioWidget;
@@ -16,6 +17,6 @@ QPortIO::~QPortIO()
     }
     else
     {
-        qDebug()<<" No m_PioWidget QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this ;
+        DEBUG<<" No m_PioWidget QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this ;
     }
 }

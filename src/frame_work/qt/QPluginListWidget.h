@@ -79,6 +79,7 @@ protected slots:
 signals:
     void enablePlugin( PluginDescription, bool );
     void selectedPluginChanged( const PluginDescription& );
+    void rereadPLuginList();
 private:
     QList< PluginDescription > m_Plugins;
     QpluginFilter m_Filter;

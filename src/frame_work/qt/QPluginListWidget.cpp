@@ -4,6 +4,8 @@
 #include "qt/QPluginViewProperty.h"
 #include<QHeaderView>
 #include<QMenu>
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
 
 #define ENABLE_COLUMN      (0)
 #define NAME_COLUMN        (1)
@@ -14,34 +16,34 @@
 #define VERSION_COLUMN     (6)
 
 const char* col_name[7]={
-   "ENABLE",
-   "NAME",
-   "CATEGORY",
-   "TYPE",
-   "LOCATION",
-   "DESCRIPTION",
-   "VERSION",
+    "ENABLE",
+    "NAME",
+    "CATEGORY",
+    "TYPE",
+    "LOCATION",
+    "DESCRIPTION",
+    "VERSION",
 };
 
 cfgViewTypeT::cfgViewTypeT(){
-   cfg.value        = 0;
-   name(true);
+    cfg.value        = 0;
+    name(true);
 }
 
 cfgViewTypeT& cfgViewTypeT::operator= ( const cfgViewTypeT& in ){
-   bool hideDisabled    = cfg.bit.hideDisabled;
-   cfg.value            = in.cfg.value;
-   cfg.bit.hideDisabled = hideDisabled;
-   return *this;
+    bool hideDisabled    = cfg.bit.hideDisabled;
+    cfg.value            = in.cfg.value;
+    cfg.bit.hideDisabled = hideDisabled;
+    return *this;
 }
 
 cfgViewTypeT& cfgViewTypeT::type(bool in){
-   cfg.bit.type = in;
-   return *this;
+    cfg.bit.type = in;
+    return *this;
 }
 cfgViewTypeT& cfgViewTypeT::location(bool in){
-   cfg.bit.location = in;
-   return *this;
+    cfg.bit.location = in;
+    return *this;
 }
 cfgViewTypeT& cfgViewTypeT::name(bool in){
     cfg.bit.name = in;
@@ -60,12 +62,12 @@ cfgViewTypeT& cfgViewTypeT::description(bool in){
     return *this;
 }
 cfgViewTypeT& cfgViewTypeT::icon(bool in){
-   cfg.bit.icon = in;
-   return *this;
+    cfg.bit.icon = in;
+    return *this;
 }
 cfgViewTypeT& cfgViewTypeT::enable(bool in){
-   cfg.bit.enable = in;
-   return *this;
+    cfg.bit.enable = in;
+    return *this;
 }
 
 cfgViewTypeT& cfgViewTypeT::hideDisabled(bool in){
@@ -74,43 +76,43 @@ cfgViewTypeT& cfgViewTypeT::hideDisabled(bool in){
 }
 
 bool cfgViewTypeT::type() const{
-   return cfg.bit.type;
+    return cfg.bit.type;
 }
 
 bool cfgViewTypeT::location() const{
-   return cfg.bit.location;
+    return cfg.bit.location;
 }
 
 bool cfgViewTypeT::name() const{
-   return cfg.bit.name;
+    return cfg.bit.name;
 }
 
 bool cfgViewTypeT::category() const{
-   return cfg.bit.category;
+    return cfg.bit.category;
 }
 
 bool cfgViewTypeT::version() const{
-   return cfg.bit.version;
+    return cfg.bit.version;
 }
 
 bool cfgViewTypeT::description() const{
-   return cfg.bit.description;
+    return cfg.bit.description;
 }
 
 bool cfgViewTypeT::icon()  const{
-   return cfg.bit.icon;
+    return cfg.bit.icon;
 }
 bool cfgViewTypeT::enable()const{
-   return cfg.bit.enable;
+    return cfg.bit.enable;
 }
 
 bool cfgViewTypeT::hideDisabled() const{
-   return cfg.bit.hideDisabled;
+    return cfg.bit.hideDisabled;
 }
 
 
 QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filter, const cfgViewTypeT& viewType  ):
-                                      QTableWidget(parent),m_Filter(filter),m_ViewType(viewType)
+    QTableWidget(parent),m_Filter(filter),m_ViewType(viewType)
 
 {
     QStringList  labels;
@@ -119,7 +121,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
     setSortingEnabled(false);
     connect(this,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(OnitemChanged(QTableWidgetItem*)) );
     connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );
-
+    connect(this,SIGNAL( rereadPLuginList()),this,SLOT(reloadPLuginList()),Qt::QueuedConnection );
     for( int i=0; i<7; i++ ){
         labels.append(col_name[i]);
     }
@@ -127,7 +129,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     addContextMenu();
-    reloadPLuginList();
+    emit rereadPLuginList();
 
 }
 
@@ -137,10 +139,10 @@ void QPluginListWidget::currentChanged(const QModelIndex &current, const QModelI
     QTableWidgetItem* it = item(current.row(),ENABLE_COLUMN);
     if( it && current.row() != previous.row() )
     {
-       int idx = it->data(Qt::DisplayRole).toInt();
-       if( idx >= 0 && idx < m_Plugins.count() ){
-           emit selectedPluginChanged(  m_Plugins.value( idx, PluginDescription() ) );
-       }
+        int idx = it->data(Qt::UserRole).toInt();
+        if( idx >= 0 && idx < m_Plugins.count() ){
+            emit selectedPluginChanged(  m_Plugins.value( idx, PluginDescription() ) );
+        }
     }
 }
 
@@ -154,12 +156,14 @@ void QPluginListWidget::reloadPLuginList(){
 
 
     int itemSel = -1;
-    qDebug()<<  " currentRow() 1 >> " << currentRow() << " Name" <<  m_Plugins.value(currentRow()).name() ;
- PluginDescription curSelPlugin = m_Plugins.value(currentRow(),PluginDescription());
-
+    int i = 0;
+    bool oldSelection = false;
+    QTableWidgetItem *it = item(currentRow(),ENABLE_COLUMN);
+    PluginDescription curSelPlugin;
+    if( it ){
+        curSelPlugin = m_Plugins.value( it->data(Qt::UserRole).toInt(), PluginDescription() );
+    }
     setSortingEnabled(false);
-
-
     m_Plugins.clear();
 
     QList< PluginDescription >plugins   = QPluginList::Instance()->getAllPlugins( QpluginFilter( m_Filter ) );
@@ -174,92 +178,80 @@ void QPluginListWidget::reloadPLuginList(){
     showCol( VERSION_COLUMN    , m_ViewType.version());
     showCol( ENABLE_COLUMN     , m_ViewType.enable());
     horizontalHeader()->setResizeMode(RightVisibleCol, QHeaderView::Stretch );
-    int i = 0;
+
     foreach( PluginDescription desc, plugins ){
 
-       if( !( m_ViewType.hideDisabled() && !desc.is_enabled() ) ){
-           int count = rowCount();
-           insertRow( count );
-           QTableWidgetItem *item = new QTableWidgetItem( desc.name() );
-           if( m_ViewType.icon() && !desc.icon().isNull() ){
-               QIcon icon = desc.icon();
-               item->setIcon( icon );
-           }
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, NAME_COLUMN, item );
-
-           item = new QTableWidgetItem(desc.category());
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, CATEGORY_COLUMN, item );
-
-           item = new QTableWidgetItem( QString("%1").arg(desc.type()) );
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, TYPE_COLUMN, item );
-
-           item = new QTableWidgetItem( desc.location() );
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, LOCATION_COLUMN, item );
-
-           item = new QTableWidgetItem(desc.description());
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, DESCRIPTION_COLUMN, item );
-
-           item = new QTableWidgetItem(desc.version());
-           item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-           setItem( count, VERSION_COLUMN, item );
-
-           item = new QTableWidgetItem();
-
-           if( m_ConnToCheck > 0 ){
-              item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
-           }
-           else{
-              item->setFlags(Qt::ItemIsUserCheckable);
-           }
-
-           if( desc.is_enabled() ){
-             item->setCheckState ( Qt::Checked );
-           }
-           else{
-             item->setCheckState ( Qt::Unchecked );
-           }
-           item->setData(Qt::DisplayRole, i );
-           setItem( count, ENABLE_COLUMN, item );
-           if( curSelPlugin == desc ){
-               itemSel = i;
-           }
-           m_Plugins.append(desc);
-           i++;
-       }
-     }
-
-    qDebug()<<  " currentRow() 2 >> " <<currentRow() << " Name" <<  m_Plugins.value(currentRow()).name() ;
-
-
-
-//setSortingEnabled(true);
-
-blockSignals( false );
-if( itemSel >= 0 ) {
-     QTableWidgetItem *itm = NULL;
-     for( i=0;i<rowCount();i++ ){
-        itm = item(i, ENABLE_COLUMN );
-        if( itm ){
-            if( itm->data(Qt::DisplayRole).toInt() == itemSel ){
-              selectRow( itm->row() );
-               break;
+        if( !( m_ViewType.hideDisabled() && !desc.is_enabled() ) ){
+            int count = rowCount();
+            insertRow( count );
+            it = new QTableWidgetItem( desc.name() );
+            if( m_ViewType.icon() && !desc.icon().isNull() ){
+                QIcon icon = desc.icon();
+                it->setIcon( icon );
             }
-        }
-     }
- }
-qDebug()<<  " currentRow() 3 >> " <<currentRow()  << " Name" <<  m_Plugins.value(currentRow()).name();
-  //  emit selectedPluginChanged(  m_Plugins.value( currentRow(), PluginDescription() ) );
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, NAME_COLUMN, it );
 
+            it = new QTableWidgetItem(desc.category());
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, CATEGORY_COLUMN, it );
+
+            it = new QTableWidgetItem( QString("%1").arg(desc.type()) );
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, TYPE_COLUMN, it );
+
+            it = new QTableWidgetItem( desc.location() );
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, LOCATION_COLUMN, it );
+
+            it = new QTableWidgetItem(desc.description());
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, DESCRIPTION_COLUMN, it );
+
+            it = new QTableWidgetItem(desc.version());
+            it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+            setItem( count, VERSION_COLUMN, it );
+
+            it = new QTableWidgetItem();
+
+            if( m_ConnToCheck > 0 ){
+                it->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsUserCheckable);
+            }
+            else{
+                it->setFlags(Qt::ItemIsUserCheckable);
+            }
+
+            if( desc.is_enabled() ){
+                it->setCheckState ( Qt::Checked );
+            }
+            else{
+                it->setCheckState ( Qt::Unchecked );
+            }
+            it->setData(Qt::UserRole, i );
+            setItem( count, ENABLE_COLUMN, it );
+            if( curSelPlugin == desc ){
+                itemSel = i;
+                selectRow( i );
+                oldSelection = true;
+            }
+            m_Plugins.append(desc);
+            DEBUG<<  i <<  m_Plugins.value( i ).name() ;
+            i++;
+        }
+    }
+    setSortingEnabled(true);
+    blockSignals( false );
+
+    if( !oldSelection ){
+        selectRow( 0 );
+        DEBUG<< "New Selection " << m_Plugins.value( currentRow(), PluginDescription() ).name();
+        emit selectedPluginChanged(  m_Plugins.value( currentRow(), PluginDescription() ) );
+    }
 
 }
 
 PluginDescription  QPluginListWidget::getSelectedPlugin(){
-   return m_Plugins.value( currentRow(), PluginDescription() );
+    return m_Plugins.value( currentRow(), PluginDescription() );
 }
 
 const QList< PluginDescription >& QPluginListWidget::getPluginList(){
@@ -267,14 +259,14 @@ const QList< PluginDescription >& QPluginListWidget::getPluginList(){
 }
 
 void QPluginListWidget::OnitemChanged( QTableWidgetItem* item ){
-  if( item ){
-      int r = row( item  );
-      int c =column( item  );
-      if( r != -1  && c == ENABLE_COLUMN ){
-          r = item->data(Qt::DisplayRole).toInt();
-          emit enablePlugin( m_Plugins.value( r, PluginDescription() ), Qt::Checked == item->checkState() );
-      }
-  }
+    if( item ){
+        int r = row( item  );
+        int c =column( item  );
+        if( r != -1  && c == ENABLE_COLUMN ){
+            r = item->data(Qt::UserRole).toInt();
+            emit enablePlugin( m_Plugins.value( r, PluginDescription() ), Qt::Checked == item->checkState() );
+        }
+    }
 }
 
 void QPluginListWidget::setFilter( const QpluginFilter& filter ){
@@ -283,13 +275,13 @@ void QPluginListWidget::setFilter( const QpluginFilter& filter ){
 }
 
 void QPluginListWidget::updateVisibility(){
- reloadPLuginList();
+    reloadPLuginList();
 }
 
 void QPluginListWidget::addContextMenu(){
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(ShowContextMenu(const QPoint&)));
+            this, SLOT(ShowContextMenu(const QPoint&)));
 }
 
 void QPluginListWidget::ShowContextMenu( const QPoint& pos ){
@@ -314,14 +306,14 @@ void QPluginListWidget::ShowProperties( ){
 
 void QPluginListWidget::showCol( int col, bool show ){
     if( show ){
-       showColumn( col );
-       horizontalHeader()->setResizeMode( col, QHeaderView::Interactive );
-       if( col > RightVisibleCol ){
-           RightVisibleCol = col;
-       }
+        showColumn( col );
+        horizontalHeader()->setResizeMode( col, QHeaderView::Interactive );
+        if( col > RightVisibleCol ){
+            RightVisibleCol = col;
+        }
     }
     else{
-       hideColumn( col );
+        hideColumn( col );
     }
 }
 
