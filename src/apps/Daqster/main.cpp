@@ -167,7 +167,7 @@ DataType obj2(DataType::Complex, DataType::I32);
 
 
 #include "qt/QRegFactory.h"
-#include "qt/QPluginListWidget.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -176,9 +176,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    QPluginListWidget vv( NULL, QpluginFilter( /*PORT_IO */) );
-    QObject::connect(QPluginList::Instance(),SIGNAL(pluginsUpdate()),&vv,SLOT(reloadPLuginList()));
-    vv.show();
+    //QObject::connect(QPluginList::Instance(),SIGNAL(pluginsUpdate()),&vv,SLOT(reloadPLuginList()));
 
     //QDesignerComponents c;
 /*

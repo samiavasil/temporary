@@ -39,11 +39,13 @@ protected:
     void readDisabledPlugins( );
 signals:
     void pluginsUpdate();
+    void setDescription( const QString &text );
 public slots:
+
     void pluginEnable( PluginDescription desc, bool enble );
     void reloadPlugins( );
 protected slots:
-    void listSelectionChanged(QTableWidgetItem *item);
+    void listSelectionChanged(const PluginDescription &desc);
 
 
 protected:

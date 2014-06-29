@@ -129,6 +129,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     addContextMenu();
+
     emit rereadPLuginList();
 
 }
@@ -272,6 +273,19 @@ void QPluginListWidget::OnitemChanged( QTableWidgetItem* item ){
 void QPluginListWidget::setFilter( const QpluginFilter& filter ){
     m_Filter = filter;
     reloadPLuginList();
+}
+
+void QPluginListWidget::setViewType( const cfgViewTypeT& viewType ){
+    m_ViewType = viewType;
+    reloadPLuginList();
+}
+
+const QpluginFilter& QPluginListWidget::filter(){
+    return m_Filter;
+}
+
+const cfgViewTypeT&  QPluginListWidget::viewType(){
+    return m_ViewType;
 }
 
 void QPluginListWidget::updateVisibility(){

@@ -3,12 +3,13 @@
 #include"qt/QFrameWork.h"
 #include<QWidget>
 
+#include<QMainWindow>
 
 namespace Ui {
 class QFraFrameWorkView;
 }
 
-class QFwWidget: public QWidget{
+class QFwWidget: public QMainWindow{
     Q_OBJECT
 public:
     explicit QFwWidget( QWidget *parent = 0, Qt::WindowFlags f = 0 );
@@ -32,10 +33,12 @@ private slots:
     void on_StartButton_clicked();
     void on_mdi_change_view_mode(int);
     void on_detach_MDI_window(bool togg);
+    void newView();
+    void dbg(QObject* obj);
 private:
     Ui::QFraFrameWorkView* ui;
-    QList<QObject*> listWin;
+    QList<QObject*> nonAutoCleanList;
 protected:
-     QWidget* m_FwWin;
+     QMainWindow* m_FwWin;
 };
 #endif // QFRAFRAMEWORK_H

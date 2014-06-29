@@ -30,6 +30,9 @@ QList<PluginDescription> QPluginList::configurePlugins( const QpluginFilter &fil
         ui->splitter->insertWidget(0,&plw);
         connect(ui->reloadButton,SIGNAL(clicked()) ,m_This, SLOT(reloadPlugins()));
         connect( &plw ,SIGNAL(enablePlugin(PluginDescription,bool)) ,m_This, SLOT(pluginEnable(PluginDescription,bool)));
+        connect( &plw ,SIGNAL(selectedPluginChanged(PluginDescription)) ,m_This, SLOT(listSelectionChanged(PluginDescription)));
+        connect( m_This ,SIGNAL(setDescription(QString)) ,ui->pluginDescription, SLOT(setPlainText(QString)));
+
         m_This->reloadPlugins();
         dlg.exec();
         return plw.getPluginList();
@@ -41,15 +44,6 @@ QList<PluginDescription> QPluginList::configurePlugins( const QpluginFilter &fil
 
 QPluginList::QPluginList(QObject *parent):QObject(parent)
 {
-    /*
-    ui->setupUi(this);
-
-    //populatePluginList();
-    ui->availablePlugins->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->availablePlugins->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->availablePlugins,SIGNAL(itemChanged(QTableWidgetItem*) ),this, SLOT(listSelectionChanged(QTableWidgetItem*)));
-    connect(ui->reloadButton,SIGNAL(clicked()) ,this, SLOT(reloadPlugins()));
-    */
     reloadPlugins();
 }
 
@@ -102,25 +96,8 @@ void QPluginList::pluginEnable( PluginDescription desc, bool enble ){
     }
 }
 
-void QPluginList::listSelectionChanged( QTableWidgetItem* item ){
-
-    /*
-     int row = ui->availablePlugins->row(item);
-    QTableWidgetItem* item_location = ui->availablePlugins->item( row, LOCATION_COLUMN );
-    if( item_location && m_PluginList.contains( item_location->text() ) ){
-        if(  Qt::Checked == item_location->checkState() ){
-            if( !m_PluginList[item_location->text()]->is_enabled() ){
-                m_PluginList[item_location->text()]->enable( true );
-            }
-        }
-        else{
-            if( m_PluginList[item_location->text()]->is_enabled() ){
-                m_PluginList[item_location->text()]->enable( false );
-            }
-        }
-        emit pluginsUpdate();
-    }
-    */
+void QPluginList::listSelectionChanged(  const PluginDescription &desc  ){
+   emit setDescription(desc.description());
 }
 
 void QPluginList::reloadPlugins( ){

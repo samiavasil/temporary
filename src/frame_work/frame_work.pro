@@ -62,7 +62,8 @@ SOURCES += \
     qt/QPluginFabrique.cpp \
     qt/QpluginFilter.cpp \
     qt/QPluginViewProperty.cpp \
-    qt/QPluginListWidget.cpp
+    qt/QPluginListWidget.cpp \
+    qt/QPluginSelectionView.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -103,7 +104,8 @@ HEADERS +=\
     qt/QPluginFabrique.h \
     qt/QpluginFilter.h \
     qt/QPluginViewProperty.h \
-    qt/QPluginListWidget.h
+    qt/QPluginListWidget.h \
+    qt/QPluginSelectionView.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -127,4 +129,5 @@ unix:!symbian {
 FORMS += \
     qt/pluginlist.ui \
     qt/serial_port.ui \
-    qt/QPluginViewProperty.ui
+    qt/QPluginViewProperty.ui \
+    qt/QPluginSelectionView.ui

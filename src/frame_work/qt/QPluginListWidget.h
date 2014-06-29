@@ -62,6 +62,9 @@ public:
     PluginDescription getSelectedPlugin();
     const QList< PluginDescription >& getPluginList();
     void setFilter( const QpluginFilter& filter );
+    void setViewType( const cfgViewTypeT& viewType );
+    const QpluginFilter& filter();
+    const cfgViewTypeT&  viewType();
 
 protected:
     void addToList( PluginDescription& desc );

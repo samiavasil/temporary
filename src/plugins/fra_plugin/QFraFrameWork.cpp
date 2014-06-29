@@ -4,8 +4,12 @@
 #include<QComboBox>
 #include<QToolBar>
 #include<QVBoxLayout>
+#include <QMdiSubWindow>
 
-QFwWidget::QFwWidget( QWidget *parent, Qt::WindowFlags f ):QWidget( parent,f ){
+//#define ENABLE_VERBOSE_DUMP
+#include "base/debug.h"
+
+QFwWidget::QFwWidget( QWidget *parent, Qt::WindowFlags f ):QMainWindow( parent,f ){
 
 }
 
@@ -31,40 +35,54 @@ void QFwWidget::closeEvent(QCloseEvent *event)
 QFraFrameWork::QFraFrameWork(QCreator * creator  , QObject *parent ):
     QFrameWork( creator , parent ),ui(new Ui::QFraFrameWorkView)
 {
-    //if( parent && parent->isWidgetType() ){
-      //  m_FwWin.setParent( dynamic_cast<QWidget*>(parent) );
-    //}
+
+ //   QVBoxLayout *layout = new QVBoxLayout;
     m_FwWin = new QFwWidget();
-    this->setParent( m_FwWin );
-    ui->setupUi(m_FwWin);
-    QToolBar* tool  = new QToolBar( NULL );
+
+    QToolBar* tool  = new QToolBar( m_FwWin );
     QComboBox* combo = new QComboBox(tool);
+    QWidget*w = new QWidget(m_FwWin);
+
+
+    ui->setupUi(w);
+
+    m_FwWin->setCentralWidget(w);
+    tool->setMovable(1);
+    tool->setFloatable(1);
     //QVBoxLayout * lay = new QVBoxLayout();
-    tool->setAllowedAreas( Qt::AllToolBarAreas );
+    tool->setAllowedAreas( Qt::TopToolBarArea | Qt::BottomToolBarArea );
     tool->setPalette(QPalette(QColor(99,99,99)));
     combo->addItem("QMdiArea::SubWindowView");
     combo->addItem("QMdiArea::TabbedView");
+    QAction *actionView;
+    actionView = new QAction(QIcon(QString::fromUtf8(":/fra/icons/FrameWork.png")),"AddView", this);
+    connect(actionView, SIGNAL(triggered()), this, SLOT(newView()));
+    tool->addAction( actionView );
+
+
+    tool->addSeparator();
     tool->addWidget( combo );
     tool->setFloatable( true );
     tool->setMovable( true );
-    ui->plotLayout->insertWidget( 0, tool );
-    //ui->PlotWidgetMDI->setTabShape( QTabWidget::Triangular );
+    m_FwWin->addToolBar(Qt::TopToolBarArea, tool);
     ui->PlotWidgetMDI->setTabsClosable( true );
     ui->PlotWidgetMDI->setTabsMovable( true );
 
     QObject::connect(combo, SIGNAL(currentIndexChanged(int)) , this, SLOT(on_mdi_change_view_mode(int)));
     QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
+
 }
 
 QFraFrameWork::~QFraFrameWork(){
     if( m_FwWin ){
-    //    m_FwWin->deleteLater();
         m_FwWin = NULL;
     }
-    foreach (QObject* win, listWin) {
-        if(win){
-            if( win->parent() ){
-               win->parent()->deleteLater();
+    foreach (QObject* obj, nonAutoCleanList) {
+        if( obj ){
+            QString b = obj->property( "WinType").toString();
+            if( !b.compare("FlyingWindow") ){
+                delete obj;
+                nonAutoCleanList.removeAll(obj);
             }
         }
     }
@@ -76,7 +94,7 @@ void QFraFrameWork::on_mdi_change_view_mode(int id )
     ui->PlotWidgetMDI->setTabPosition( QTabWidget::South );
 }
 
-#include <QMdiSubWindow>
+
 void QFraFrameWork::on_detach_MDI_window( bool togg )
 {
     QAction*act = dynamic_cast<QAction* >( QObject::sender() );
@@ -89,18 +107,26 @@ void QFraFrameWork::on_detach_MDI_window( bool togg )
             {
                 ui->PlotWidgetMDI->removeSubWindow( win );
                 Q_ASSERT( win->parent() == NULL );
+                win->setProperty( "WinType", QString("FlyingWindow") );
+                nonAutoCleanList.append(win);
+                DEBUG<< "Append: "<< win;
+                connect(win,SIGNAL(destroyed(QObject*)),this,SLOT(dbg(QObject*)));
+
             }
             else
             {
                 Q_ASSERT( win->parent() == NULL );
                 ui->PlotWidgetMDI->addSubWindow( win );
+                nonAutoCleanList.removeAll(win);
             }
             win->adjustSize();
             win->setVisible(true);
         }
     }
 }
-
+void QFraFrameWork::dbg(QObject* obj){
+    DEBUG<<"Destroy: " << obj;
+}
 
 
 void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
@@ -114,7 +140,7 @@ void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
     mdi_win->setContextMenuPolicy ( Qt::ActionsContextMenu );
     QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(on_detach_MDI_window(bool)) );
     mdi_win->adjustSize();
-    listWin.append(widget);
+
 }
 
 void QFraFrameWork::AddWidgetToControlArrea ( QWidget* widget ){
@@ -125,10 +151,21 @@ void QFraFrameWork::on_StartButton_clicked()
 {
     static bool b;
     b=!b;
-    for( int i = 0; i< listWin.count(); i++ )//TODO DELL ME
-     listWin[i]->setProperty( "TestPropety", b );
+    for( int i = 0; i< nonAutoCleanList.count(); i++ )//TODO DELL ME
+     nonAutoCleanList[i]->setProperty( "TestPropety", b );
 }
 
 QWidget* QFraFrameWork::getFrameWorkWindow(){
     return m_FwWin;
+}
+
+#include "qt/QPluginSelectionView.h"
+void QFraFrameWork::newView(){
+
+    cfgViewTypeT view;
+    view.hideDisabled(true).name(true).icon(true);
+    QDialog dlg;
+    QPluginSelectionView* vv = new QPluginSelectionView( &dlg, QpluginFilter(DATA_OUT), view );
+    dlg.exec();
+//QWidget
 }

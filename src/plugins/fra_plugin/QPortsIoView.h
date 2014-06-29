@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QList>
-#include "qt/QPluginFabrique.h"
+#include "qt/PluginDescription.h"
 
 namespace Ui {
 class QPortsIoView;
