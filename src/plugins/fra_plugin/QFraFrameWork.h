@@ -34,7 +34,7 @@ private slots:
     void on_detach_MDI_window(bool togg);
 private:
     Ui::QFraFrameWorkView* ui;
-    QList<QObject*> list;
+    QList<QObject*> listWin;
 protected:
      QWidget* m_FwWin;
 };

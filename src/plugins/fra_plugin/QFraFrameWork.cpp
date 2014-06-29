@@ -61,6 +61,13 @@ QFraFrameWork::~QFraFrameWork(){
     //    m_FwWin->deleteLater();
         m_FwWin = NULL;
     }
+    foreach (QObject* win, listWin) {
+        if(win){
+            if( win->parent() ){
+               win->parent()->deleteLater();
+            }
+        }
+    }
 }
 
 void QFraFrameWork::on_mdi_change_view_mode(int id )
@@ -107,7 +114,7 @@ void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
     mdi_win->setContextMenuPolicy ( Qt::ActionsContextMenu );
     QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(on_detach_MDI_window(bool)) );
     mdi_win->adjustSize();
-    list.append(widget);
+    listWin.append(widget);
 }
 
 void QFraFrameWork::AddWidgetToControlArrea ( QWidget* widget ){
@@ -118,8 +125,8 @@ void QFraFrameWork::on_StartButton_clicked()
 {
     static bool b;
     b=!b;
-    for( int i = 0; i< list.count(); i++ )//TODO DELL ME
-     list[i]->setProperty( "TestPropety", b );
+    for( int i = 0; i< listWin.count(); i++ )//TODO DELL ME
+     listWin[i]->setProperty( "TestPropety", b );
 }
 
 QWidget* QFraFrameWork::getFrameWorkWindow(){
