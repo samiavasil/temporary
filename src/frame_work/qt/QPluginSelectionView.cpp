@@ -5,17 +5,17 @@
 
 QPluginSelectionView::QPluginSelectionView(QWidget *parent, const QpluginFilter &filter, const cfgViewTypeT &viewType) :
     QWidget(parent),
-    ui(new Ui::QPluginSelectionView)
+    ui(new Ui::QPluginSelectionView),m_wd(this, filter, viewType)
 {
     ui->setupUi(this);
-    QPluginListWidget* wd = new QPluginListWidget( this, filter, viewType );
 
-
-    ui->verticalLayout->insertWidget( 0, wd );
+    ui->verticalLayout->insertWidget( 0, &m_wd );
     adjustSize();
 
-    connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,wd, SLOT(reloadPLuginList()) ) ;
-    connect( wd,SIGNAL(selectedPluginChanged(PluginDescription)),this, SLOT(selectedPluginChanged(PluginDescription)) );
+    connect( QPluginList::Instance(),SIGNAL(pluginsUpdate()) ,&m_wd, SLOT(reloadPLuginList()) ) ;
+    connect( &m_wd,SIGNAL(selectedPluginChanged(PluginDescription)),this, SLOT(selectedPluginChanged(PluginDescription)) );
+    connect(ui->Ok,SIGNAL(clicked()),this,SIGNAL(ok_selected()));
+    connect(ui->Cancel,SIGNAL(clicked()),this,SIGNAL(cancel_selected()));
 }
 
 QPluginSelectionView::~QPluginSelectionView()
@@ -26,4 +26,8 @@ QPluginSelectionView::~QPluginSelectionView()
 
 void QPluginSelectionView::selectedPluginChanged(const PluginDescription& desc){
     ui->textEdit->setText( desc.description() );//TODO fill more
+}
+
+const PluginDescription QPluginSelectionView::getSelectedPlugin(){
+    return m_wd.getSelectedPlugin();
 }

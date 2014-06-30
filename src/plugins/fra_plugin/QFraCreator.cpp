@@ -75,29 +75,37 @@ bool QFraCreator::Create( CFrameWork *fW )
             //QpluginFilter filter( UNDEFINED );
             QList<PluginDescription> list = QPluginList::Instance()->getAllPlugins( QpluginFilter( DATA_OUT ) );
 
+#if 1
             foreach( PluginDescription desc,list ){
                 if(  DATA_OUT == desc.type() )
-                {
-                    QObject* obj;
-                    obj = QPluginList::Instance()->cretate_plugin_object( desc , NULL );
-                    if( obj )
-                    {
-                        m_qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
-                    }
+                {QObject* obj;
+                    for( int i=0;i<0;i++){
+
+
+                        obj = QPluginList::Instance()->cretate_plugin_object( desc , m_qfW );
+                        if( obj )
+                        {
+                            m_qfW->AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
+                        }
 #if defined( TEST_META_METHODS_DUMP ) /*TODO: move from here*/
-                    dump_qobject_meta( obj );
+                                dump_qobject_meta( obj );
 #endif
+                    }
+
                 }
             }
+#endif
+
+         if( fw_win ){
+            fw_win->show();
+         }
 
             QPortsIoView* PIOList = new QPortsIoView( fw_win );
 
             m_qfW->AddWidgetToControlArrea( PIOList );
 
-            port = PIOList->getCurentIO();
-            if( fw_win ){
-               fw_win->show();
-            }
+             port = PIOList->getCurentIO();
+
 
             if( port )
             {

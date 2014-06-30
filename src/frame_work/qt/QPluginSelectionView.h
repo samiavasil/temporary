@@ -17,10 +17,16 @@ public:
     explicit QPluginSelectionView(QWidget *parent = 0, const QpluginFilter& filter = QpluginFilter(),
                                   const cfgViewTypeT& viewType = cfgViewTypeT()  );
     ~QPluginSelectionView();
+    const PluginDescription getSelectedPlugin();
 protected slots:
     void selectedPluginChanged(const PluginDescription &desc);
 private:
     Ui::QPluginSelectionView *ui;
+signals:
+    void ok_selected();
+    void cancel_selected();
+protected:
+    QPluginListWidget m_wd;
 };
 
 #endif // QPLUGINVIEW_H

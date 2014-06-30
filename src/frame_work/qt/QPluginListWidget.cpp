@@ -252,7 +252,8 @@ void QPluginListWidget::reloadPLuginList(){
 }
 
 PluginDescription  QPluginListWidget::getSelectedPlugin(){
-    return m_Plugins.value( currentRow(), PluginDescription() );
+    int row = currentRow();
+    return m_Plugins.value( row , PluginDescription() );
 }
 
 const QList< PluginDescription >& QPluginListWidget::getPluginList(){

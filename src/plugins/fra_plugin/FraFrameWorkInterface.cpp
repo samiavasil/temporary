@@ -36,6 +36,7 @@ QObject*  FraFrameWorkInterface::allocateObject( QObject* parent ){
     enableLog( bla );
     Log( tr( "TestLogging Enble[%1]" ).arg(bla) );
     bla = !bla;
+
     return fw;
 }
 Q_EXPORT_PLUGIN2(FraPlugin, FraFrameWorkInterface)

@@ -34,7 +34,7 @@ QObject*  DataPlotWorkInterface::allocateObject( QObject* parent ){
     QWidget * obj = new QDataPlot(parent_widget);
     obj->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
                                                     widget-a pri closeEvent*/
-
+    obj->setWindowTitle( name() );
 /*
     obj->setProperty( "TestPropety", 0 );
     PropertyChangedFilter*  Filter = new PropertyChangedFilter( obj );

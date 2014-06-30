@@ -35,6 +35,8 @@ QObject*  QhexEditInterface::allocateObject( QObject* parent ){
     for( int i=0 ; i< 10000;i++ )
         byte.append(qrand());
     obj->setData( byte );
+    obj->setWindowTitle( name() );
+    obj->setObjectName( name() );
     obj->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
                                                     widget-a pri closeEvent*/
     return obj;

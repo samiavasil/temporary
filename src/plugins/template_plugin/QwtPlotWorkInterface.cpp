@@ -30,8 +30,10 @@ QObject*  QwtPlotWorkInterface::allocateObject( QObject* parent ){
         parent_widget = dynamic_cast<QWidget *> (parent);
     }
     QWidget * obj = new QwtPlot(parent_widget);
+    obj->setWindowTitle( name() );
     obj->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
                                                     widget-a pri closeEvent*/
+    obj->setObjectName( name() );
     return obj;
 }
 Q_EXPORT_PLUGIN2(QwtPlotPlugin, QwtPlotWorkInterface)

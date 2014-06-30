@@ -6,6 +6,7 @@
 #include<QVBoxLayout>
 #include <QMdiSubWindow>
 
+#include "qt/QPluginList.h"
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
@@ -131,6 +132,7 @@ void QFraFrameWork::dbg(QObject* obj){
 
 void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
 {
+
     QMdiSubWindow * mdi_win =  ui->PlotWidgetMDI->addSubWindow( widget );
     QAction* act = new QAction("Tuk she ti go tura", mdi_win );
     act->setCheckable(true);
@@ -139,8 +141,8 @@ void QFraFrameWork::AddWidgetToDataViewArrea( QWidget* widget )
     mdi_win->insertAction(0 , act );
     mdi_win->setContextMenuPolicy ( Qt::ActionsContextMenu );
     QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(on_detach_MDI_window(bool)) );
-    mdi_win->adjustSize();
-
+  //  mdi_win->adjustSize();
+mdi_win->show();
 }
 
 void QFraFrameWork::AddWidgetToControlArrea ( QWidget* widget ){
@@ -166,6 +168,16 @@ void QFraFrameWork::newView(){
     view.hideDisabled(true).name(true).icon(true);
     QDialog dlg;
     QPluginSelectionView* vv = new QPluginSelectionView( &dlg, QpluginFilter(DATA_OUT), view );
-    dlg.exec();
-//QWidget
+    connect( vv, SIGNAL(ok_selected()),&dlg, SLOT(accept()) );
+    connect( vv, SIGNAL(cancel_selected()),&dlg, SLOT(reject()) );
+    if( QDialog::Accepted == dlg.exec() ){
+        PluginDescription des ( vv->getSelectedPlugin() );
+        QObject* obj = QPluginList::Instance()->cretate_plugin_object( des , NULL );
+        if( obj )
+        {
+            //dynamic_cast<QWidget*>(obj)->show();
+           AddWidgetToDataViewArrea( dynamic_cast<QWidget*>(obj) );
+        }
+    }
+
 }
