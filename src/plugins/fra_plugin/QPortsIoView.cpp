@@ -5,6 +5,7 @@
 #include "qt/QPluginList.h"
 #include "qt/QPluginListWidget.h"
 
+
 QPortsIoView::QPortsIoView(QWidget *parent) : QWidget(parent), ui( new Ui::QPortsIoView )
 {
     cfgViewTypeT view;

@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QFraDevice</class>
+ <widget class="QWidget" name="QFraDevice">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>350</width>
+    <height>603</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QTabWidget" name="SystemTab">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::East</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="icon">
+          <iconset>
+           <normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Design, Art, and Editing/Move Row Down/32 Bit Alpha png/Move Row Down 48 h p.png</normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Design, Art, and Editing/Move Row Down/32 Bit Alpha png/Move Row Down 48 h p.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Messages</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QListWidget" name="ListTerminal">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>Process window - displey current progress and  Protocol messagges</string>
+              </property>
+              <property name="statusTip">
+               <string>Process window - displey current progress and  Protocol messagges</string>
+              </property>
+              <property name="whatsThis">
+               <string>Process window - displey current progress and  Protocol messagges</string>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ClearLogButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Clear Log</string>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff/>
+               </iconset>
+              </property>
+              <property name="default">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="icon">
+          <iconset>
+           <normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Charts and Reports/Line Graph/32 Bit Alpha png/Line Graph 48 n p.png</normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Charts and Reports/Line Graph/32 Bit Alpha png/Line Graph 48 n p.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Tools</string>
+         </attribute>
+         <widget class="QPushButton" name="ZviewButton">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>83</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string comment="Click to run Zview"/>
+          </property>
+          <property name="statusTip">
+           <string>Click to run Zview</string>
+          </property>
+          <property name="text">
+           <string>Zview</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Charts and Reports/Line Graph/32 Bit Alpha png/Line Graph 48 n p.png</normaloff>:/new/prefix1/icons/Glyph Lab Sample Set/Charts and Reports/Line Graph/32 Bit Alpha png/Line Graph 48 n p.png</iconset>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::North</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="ControlTab">
+         <attribute name="icon">
+          <iconset>
+           <normaloff>icons/computer-32.png</normaloff>icons/computer-32.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Control</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="ctrlgridLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Start frequency</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Stop frequency</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="StopFreqComboBox">
+              <property name="toolTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="statusTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="whatsThis">
+               <string>Select frequency range</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Hz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>KHz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>MHz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="StartFreqComboBox">
+              <property name="toolTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="statusTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="whatsThis">
+               <string>Select frequency range</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Hz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>KHz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>MHz</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Number of points</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QDoubleSpinBox" name="NumPointsSpinBox">
+              <property name="toolTip">
+               <string>Select Step frequency</string>
+              </property>
+              <property name="statusTip">
+               <string>Select Step frequency</string>
+              </property>
+              <property name="whatsThis">
+               <string>Select Step frequency</string>
+              </property>
+              <property name="maximum">
+               <double>25000000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>100.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Time Delay</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QSpinBox" name="TimeDelaySpinBox_2">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Out Current</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QComboBox" name="CurrentComboBox">
+              <property name="toolTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="statusTip">
+               <string>Select frequency range</string>
+              </property>
+              <property name="whatsThis">
+               <string>Select frequency range</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>mA</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mA</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mA</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../data_plot_plugin/proba.qrc">
+                 <normaloff>:/new/prefix1/icons/radiobutton_on.png</normaloff>:/new/prefix1/icons/radiobutton_on.png</iconset>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Scale Settings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QRadioButton" name="LinearButton">
+              <property name="text">
+               <string>Linear</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QRadioButton" name="LogaritmicButton">
+              <property name="text">
+               <string>Logaritmic</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QDoubleSpinBox" name="StartFreqSpinBox">
+                <property name="toolTip">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="statusTip">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="decimals">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <double>25000000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>2000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="loadStartFreq">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="1">
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QDoubleSpinBox" name="StopFreqSpinBox">
+                <property name="toolTip">
+                 <string>Select Stop frequency</string>
+                </property>
+                <property name="statusTip">
+                 <string>Select Stop frequency</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Select Stop frequency</string>
+                </property>
+                <property name="maximum">
+                 <double>25000000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>100.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>20000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="loadStopFreq">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="5" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QDoubleSpinBox" name="CurrentSpinBox">
+                <property name="toolTip">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="statusTip">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Select Start frequency</string>
+                </property>
+                <property name="decimals">
+                 <number>2</number>
+                </property>
+                <property name="minimum">
+                 <double>0.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>100.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.390625000000000</double>
+                </property>
+                <property name="value">
+                 <double>80.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="loadCurrent">
+                <property name="text">
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>Device</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QSplitter" name="splitter_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <widget class="QGroupBox" name="DevIoGrBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="title">
+              <string>Select Io Port</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="QSplitter" name="splitter_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QWidget" name="layoutWidget1">
+                 <layout class="QVBoxLayout" name="PortIoConfig">
+                  <property name="spacing">
+                   <number>6</number>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="SettingsTab">
+         <attribute name="icon">
+          <iconset>
+           <normaloff>icons/toolbutton.png</normaloff>icons/toolbutton.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Settings</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QGroupBox" name="groupBox_4">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Windows styles</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_2">
+               <property name="horizontalSpacing">
+                <number>6</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>6</number>
+               </property>
+               <property name="margin">
+                <number>9</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QComboBox" name="ChangeStyleCombo">
+                 <item>
+                  <property name="text">
+                   <string>CDE Style</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Cleanlooks Style</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Common Style</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>MotifStyle</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Plastique Style</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>WindowsXP Style</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Debg Settings</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout">
+               <property name="horizontalSpacing">
+                <number>6</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>6</number>
+               </property>
+               <property name="margin">
+                <number>9</number>
+               </property>
+               <item row="0" column="0">
+                <layout class="QVBoxLayout" name="_39">
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QCheckBox" name="DbgIoChkBox">
+                   <property name="text">
+                    <string>I/O Debugging </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="DbgProtChkBox">
+                   <property name="text">
+                    <string>Protocol Debugging </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="DbgPackChkBox">
+                   <property name="text">
+                    <string>Packets Debugging </string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <property name="margin">
+         <number>9</number>
+        </property>
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="_43">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Measurment</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="_44">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLCDNumber" name="lcdNumber">
+              <property name="contextMenuPolicy">
+               <enum>Qt::DefaultContextMenu</enum>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>1</number>
+              </property>
+              <property name="midLineWidth">
+               <number>0</number>
+              </property>
+              <property name="numDigits">
+               <number>9</number>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="StartButton">
+              <property name="toolTip">
+               <string>Push to start measurnment</string>
+              </property>
+              <property name="statusTip">
+               <string>Push to start measurnment</string>
+              </property>
+              <property name="whatsThis">
+               <string>Push to start measurnment</string>
+              </property>
+              <property name="text">
+               <string>Start Measurment</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../data_plot_plugin/proba.qrc">
+                <normaloff>:/new/prefix1/icons/services.png</normaloff>:/new/prefix1/icons/services.png</iconset>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../data_plot_plugin/proba.qrc"/>
+ </resources>
+ <connections/>
+</ui>

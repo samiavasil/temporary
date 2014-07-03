@@ -16,6 +16,9 @@ CProtocolPackFactory::~CProtocolPackFactory(){
     if( m_pDB ){
         delete m_pDB;
     }
+    if( m_pLoader ){
+        delete m_pLoader;
+    }
 }
 
 int CProtocolPackFactory::attachProtocolDb( CProtocolDb * pDB ) {

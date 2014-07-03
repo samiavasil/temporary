@@ -30,7 +30,6 @@ public:
     void AddWidgetToControlArrea ( QWidget* widget );
     virtual QWidget* getFrameWorkWindow();
 private slots:
-    void on_StartButton_clicked();
     void on_mdi_change_view_mode(int);
     void on_detach_MDI_window(bool togg);
     void newView();
