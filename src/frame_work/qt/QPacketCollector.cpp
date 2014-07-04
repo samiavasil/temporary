@@ -3,11 +3,12 @@
 #include "base/CPacket.h"
 #include "base/CProtocolPackFactory.h"
 
-//#define ENABLE_VERBOSE_DUMP
+#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
 
-QPacketCollector::QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent):QObject(parent),CPacketCollector( port,protocol ) {
+QPacketCollector::QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent):
+    QObject(parent),CPacketCollector( port,protocol ),m_Mutex(QMutex::Recursive) {
   DEBUG << "Create QPacketCollector";
 }
 

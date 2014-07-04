@@ -25,6 +25,15 @@ bool CPacketCollector::isChained() {
   return m_PortIo && m_Protocol;
 }
 
+int CPacketCollector::setProtocolFactory( CProtocolPackFactory * protocol ){
+    m_Protocol = protocol;
+}
+
+int CPacketCollector::setPort( CPortIO * port ){
+    m_PortIo = port;
+}
+
+
 int CPacketCollector::receiveBytes() {
       int ret   = NO_ERR;                                                                                            
       int iteration;                                                                                                 

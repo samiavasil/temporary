@@ -7,7 +7,7 @@
 #include<stdio.h>
 #include"qt/QPacketCollector.h"
 
-//#define ENABLE_VERBOSE_DUMP
+#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
 
@@ -20,9 +20,12 @@ pack_id_t pId[4]={
     DREC_SET_FREQ_ID
 };
 
-QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *factory, QObject *parent ):QCommand(parent) {
+#include "qt/QRegFactory.h"
+#include "qt/QCommandExecutor.h"
+QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *factory, QObject *par ):QCommand(par) {
     m_Col     = colector;
     m_Factory = factory;
+    exec = dynamic_cast<QCommandExecutor*>(par);
     a=0;
     DEBUG << "QtestCommand Created";
 }
@@ -32,26 +35,33 @@ QtestCommand::~QtestCommand() {
 }
 
 
-#include "qt/QRegFactory.h"
-
 /**
  * Command handler
  */
 int QtestCommand::handler() {
   int ret =  1;
- fact1_t::Registrator<A>  rep( tr("Blqk %1").arg(rand()) );
+
+#if 0 //TODO - DELL ME
+  fact1_t::Registrator<A>  rep( tr("Blqk %1").arg(rand()) );
 
   QSet<QString> outlist;
   fact1_t::GetRegList(outlist);
   qDebug()<<outlist;
-
+#endif
 
 
   CPacket* packet = NULL;
   DEBUG <<   tr("Bliak[%1]").arg(a);
   if( a >= 1 ){
+      a = 0;
       ret =  0;
-      DEBUG << "QCommand Finished";
+      DEBUG << "QCommand Finished=====================================";
+#if 0
+      if(exec)
+      exec->appendCommand(new QtestCommand( m_Col, m_Factory, exec));
+      else
+          DEBUG << "CAN'T APPEND COMMMANNDDDD";
+#endif
   }
   else
   {

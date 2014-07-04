@@ -23,6 +23,9 @@ class CPacketCollector {
 
     virtual int receiveBytes();
 
+    virtual int setProtocolFactory( CProtocolPackFactory * protocol );
+
+    virtual int setPort( CPortIO * port );
 
   protected:
     virtual int appendReceivedBytes(const u8 * data, const int64 len) = 0;

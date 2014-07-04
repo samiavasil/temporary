@@ -7,6 +7,10 @@ namespace Ui {
 class QFraDevice;
 }
 class QPortsIoView;
+class QProtocolPackFactory;
+class QCommandExecutor;
+class QPacketCollector;
+
 class QFraDevice : public QWidget
 {
     Q_OBJECT
@@ -16,9 +20,13 @@ public:
     ~QFraDevice();
 
 private slots:
-    void on_StartButton_clicked(bool clicked);
+    void onStartButtonclicked(bool clicked);
 protected:
     QPortsIoView* m_PIOList;
+    QProtocolPackFactory* m_packetFactory;
+    QCommandExecutor*     m_Executor;
+    QPacketCollector*     m_packetCollector;
+
 private:
     Ui::QFraDevice *ui;
 };

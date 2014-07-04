@@ -64,7 +64,7 @@ CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
   DEBUG << "Create Command Executor";
   QCommandExecutor* exec = new QCommandExecutor(NULL);     
   if( 0 != exec ){                                         
-      if( NO_ERR != exec->startExecution( true ) ){        
+      if( NO_ERR != exec->startExecution() ){
           CRITICAL <<  "Can't start Executor thread";
       }                                                    
   }                                                        

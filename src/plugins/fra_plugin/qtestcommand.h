@@ -6,7 +6,7 @@
 class QFrameWork;
 class QPacketCollector;
 class QProtocolPackFactory;
-
+class QCommandExecutor;
 class QtestCommand : public QCommand
 {
     Q_OBJECT
@@ -20,6 +20,7 @@ protected:
     virtual int handler();
     QPacketCollector*     m_Col;
     QProtocolPackFactory* m_Factory;
+    QCommandExecutor* exec;
     int a;
 };
 

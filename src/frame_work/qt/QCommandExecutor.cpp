@@ -5,20 +5,19 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QCommandExecutor::QCommandExecutor(QObject * parent) :QThread(parent){
+QCommandExecutor::QCommandExecutor(QObject * parent) :QThread(parent),m_mutex(QMutex::Recursive){
   m_timer = NULL;
 }
 
 QCommandExecutor::~QCommandExecutor() {
   int ret = NO_ERR;                                              
   DEBUG << "Destroy Command Executor";
-  ret = startExecution( false );                                 
-  if( NO_ERR == ret){                                            
-      if( false == wait( 1000 ) ){                               
-          ret = SOME_ERROR;                                      
-      }                                                          
-  }                                                              
-  if( NO_ERR != ret ){                                           
+
+  if( 0 == isRunning() ){
+       ret = stopExecution();
+  }
+
+  if( NO_ERR != ret ){
      DEBUG << " Can't terminate Command Executor thread corectly";
   }                                                              
   if( m_timer ){
@@ -29,7 +28,7 @@ QCommandExecutor::~QCommandExecutor() {
 /**
  * Append new command to queue.
  */
-int QCommandExecutor::appendCommand(CCommand * command) {
+int QCommandExecutor::appendCommand_internal(CCommand * command) {
   int ret = NO_ERR;                                     
   if( command ){                                        
       QCommand* qcomm = (QCommand *)command;            
@@ -62,7 +61,7 @@ int QCommandExecutor::removeCommand(int comm) {
 /**
  * Flush all commands from Queue
  */
-void QCommandExecutor::flushCommands() {
+void QCommandExecutor::flushCommands_internal() {
   QCommand * comm;                 
   while( 0 < m_commands.count() ){ 
       comm = m_commands.takeAt(0); 
@@ -75,19 +74,12 @@ void QCommandExecutor::flushCommands() {
 /**
  * Pause execution of loaded in queue commands 
  */
-int QCommandExecutor::pauseExecution(bool pause) {
+int QCommandExecutor::pauseExecution() {
   int ret = NO_ERR;                                  
   lockObject();                                      
   if( true == isRunning() ){                         
       if( m_timer ){                                 
-          if( true == pause ){
-              DEBUG << "Pause Commands Execution loop";
               emit stopTimer();
-          }                                          
-          else{
-              DEBUG << "Run Command Execution loop";
-              emit runTimer(m_CommandLoopTime);
-          }                                          
       }                                              
       else{                                          
           ret = NULL_POINTER;                        
@@ -102,32 +94,58 @@ int QCommandExecutor::pauseExecution(bool pause) {
 }
 
 /**
+ * Contiinue execution of loaded in queue commands after pause
+ */
+int QCommandExecutor::continueExecution(){
+    int ret = NO_ERR;
+    lockObject();
+    if( true == isRunning() ){
+        if( m_timer ){
+                DEBUG << "Run Command Execution loop";
+                emit runTimer(m_CommandLoopTime);
+        }
+        else{
+            ret = NULL_POINTER;
+        }
+    }
+    else{
+        /*Thread isn't running*/
+        ret = SOME_ERROR;
+    }
+    unlockObject();
+    return ret;
+}
+
+/**
  * Start commands execution - run thread  and timer. Comands are exectuted repeatedly with timer.
  */
-int QCommandExecutor::startExecution(bool starting) {
-  if( true == starting ){     
-      if( 0 == isRunning() ){ 
-          start();            
-      }                       
-  }                           
-  else{                       
-      exit(0);                
-  }                                               
+int QCommandExecutor::startExecution() {
+
+  if( 0 == isRunning() ){
+       start();
+  }
   return NO_ERR;
 }
 
-void QCommandExecutor::finish() {
+/**
+ * Finish commands execution and free all - normall finish.
+ */
+int QCommandExecutor::stopExecution() {
   
-      startExecution( false );
+      int rt = NO_ERR;
+      pauseExecution();
+      exit(0);
       DEBUG << "FINISH!!!! QCommandExecutor";
       if( false == wait( 10000 ) ){
-         DEBUG << "FINISH!!!! Not Finished QCommandExecutor";
+         DEBUG << "FINISH!!!! Not Finished QCommandExecutor!! Try to terminate??";
+         terminate();//TODO ????? this no goood ???
+         rt = SOME_ERROR;
       }
       else
       {
           DEBUG << "FINISH!!!! FINISHED QCommandExecutor";
       }
-
+      return rt;
 }
 
 int QCommandExecutor::executeCommand(int comm_num) {
@@ -157,9 +175,10 @@ void QCommandExecutor::startTimer() {
 void QCommandExecutor::run() {
     int retCode = NO_ERR;
     DEBUG << "Run Command Executor thread";
-    lockObject();                                               
+   // lockObject();
     retCode = initTimer();
-    unlockObject();                                             
+  //  unlockObject();
+    emit initReady();
     retCode = exec();                                           
     DEBUG << "Exit Command Executor Thread with code: " << retCode;
 }

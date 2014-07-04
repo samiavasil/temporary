@@ -13,25 +13,49 @@ class CCommandExecutor {
     /**
      * Append new command to queue.
      */
-    virtual int appendCommand(CCommand * command) = 0;
-
-    virtual int removeCommand(int comm) = 0;
+    virtual int appendCommand(CCommand * command) {
+       int ret;
+       lockObject();
+       ret = appendCommand_internal(command);
+       unlockObject();
+       return ret;
+    }
 
     /**
      * Flush all commands from Queue
      */
-    virtual void flushCommands() = 0;
+    virtual void flushCommands(){
+        lockObject();
+        flushCommands_internal();
+        unlockObject();
+    }
+
+    virtual int getCommNum() {
+        int count;
+        lockObject();
+        count = getCommNum_internal();
+        unlockObject();
+        return count;
+    }
 
     /**
      * Pause execution of loaded in queue commands 
      */
-    virtual int pauseExecution(bool pause) = 0;
+    virtual int pauseExecution() = 0;
+    /**
+     * Contiinue execution of loaded in queue commands after pause
+     */
+    virtual int continueExecution() = 0;
 
     /**
-     * Start commands execution - run thread  and timer. Comands are exectuted repeatedly with timer.
+     * Start commands execution
      */
-    virtual int startExecution(bool starting) = 0;
+    virtual int startExecution() = 0;
 
+    /**
+     * Stop commands execution
+     */
+    virtual int stopExecution() = 0;
 
   protected:
     virtual void startTimer() = 0;
@@ -42,10 +66,16 @@ class CCommandExecutor {
     inline virtual void timerHandlerExecuteAllCommands();
 
     virtual int executeCommand(int comm_num) = 0;
-
+    virtual int  removeCommand(int comm)     = 0;
+    /**
+     * Append new command to queue.
+     */
+    virtual int  appendCommand_internal(CCommand * command) = 0;
+    virtual void flushCommands_internal()                   = 0;
+    virtual int  getCommNum_internal()                      = 0;
 
   public:
-    virtual int getCommNum() = 0;
+
 
     /**
      * Set command loop time
