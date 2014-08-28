@@ -28,9 +28,10 @@ QFraDevice::QFraDevice(QWidget *parent) :
     m_packetFactory->attachProtocol( new QProtocolLoader() );
     m_packetCollector  = new QPacketCollector( NULL, m_packetFactory, this );
 
-    QObject::connect( this,SIGNAL(destroyed()),m_Executor,SLOT(finish()) ,Qt::DirectConnection );
+
     m_Executor = new QCommandExecutor( this );
     if( 0 != m_Executor ){
+        QObject::connect( this,SIGNAL(destroyed()),m_Executor,SLOT(finish()) ,Qt::DirectConnection );
         if( NO_ERR != m_Executor->startExecution() ){
             CRITICAL << "Can't start Executor thread";
         }
