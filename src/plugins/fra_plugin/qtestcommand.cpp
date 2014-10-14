@@ -69,6 +69,7 @@ int QtestCommand::handler() {
           //DEBUG << "QCommand Execution start");
 
           if( m_Factory ){
+              a = 0;
               packet = m_Factory->createPacket( pId[a%4] );
           }
       }

@@ -1,4 +1,4 @@
-#include "QFraDevice.h"
+#include "QFraDeviceUI.h"
 #include "ui_QFraDevice.h"
 #include "QPortsIoView.h"
 #include "qt/QPortIO.h"
@@ -13,7 +13,7 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QFraDevice::QFraDevice(QWidget *parent) :
+QFraDeviceUI::QFraDeviceUI(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QFraDevice)
 {
@@ -24,8 +24,8 @@ QFraDevice::QFraDevice(QWidget *parent) :
 
 
     m_packetFactory    = new QProtocolPackFactory( this );
-    m_packetFactory->attachProtocolDb( new QProtocolDb() );
-    m_packetFactory->attachProtocol( new QProtocolLoader() );
+  //  m_packetFactory->attachProtocolDb( new QProtocolDb() );
+    //m_packetFactory->attachProtocol( new QProtocolLoader() );
     m_packetCollector  = new QPacketCollector( NULL, m_packetFactory, this );
 
 
@@ -40,14 +40,14 @@ QFraDevice::QFraDevice(QWidget *parent) :
     setWindowTitle( tr("Fra Device") );
 }
 
-QFraDevice::~QFraDevice()
+QFraDeviceUI::~QFraDeviceUI()
 {
     delete ui;
 }
 
 
 
-void QFraDevice::onStartButtonclicked( bool clicked )
+void QFraDeviceUI::onStartButtonclicked( bool clicked )
 {
     QPortIO* port = NULL;
     port = m_PIOList->getCurentIO();

@@ -35,7 +35,6 @@
 #define ADD_MESSAGE_TO_PACKET(a)
 #endif
 
-
 ADD_MESSAGE( AIN1_ENBLE,	  10,"",  1  )
 ADD_MESSAGE( AIN2_ENBLE, 	  11,"",  1  )
 ADD_MESSAGE( AIN1_GAIN, 	  12,"",  8  )

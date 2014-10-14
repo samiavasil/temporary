@@ -61,17 +61,17 @@ QProtocolPackFactory::QProtocolPackFactory( QObject * parent ):QObject(parent) {
   test_bit_set_time( m_pDB);
 #endif
       u8 data[2];
-      data[0]=0x1;
-      data[1]=0x34;
+      data[0]=0x0;
+      data[1]=0;
       m_pDB->setMessage(AIN1_ENBLE,data);
-      data[0]=0x1;
-      data[1]=0xff;
+      data[0]=0;
+      data[1]=0;
       m_pDB->setMessage(AIN2_ENBLE,data);
-      data[0]=0xff;
-      data[1]=0xbc;
+      data[0]=0;
+      data[1]=0;
       m_pDB->setMessage(AIN1_GAIN,data);
       data[0]=0xff;
-      data[1]=0x1f;
+      data[1]=0x0;
       m_pDB->setMessage(AIN2_GAIN,data);
 
 

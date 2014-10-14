@@ -52,7 +52,7 @@ void dump_qobject_meta( QObject* obj ){
 }
 #endif
 
-#include "QFraDevice.h"
+#include "QFraDeviceUI.h"
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
@@ -67,15 +67,14 @@ bool QFraCreator::Create( CFrameWork *fW )
 
             //QpluginFilter filter( UNDEFINED );
             QList<PluginDescription> list = QPluginList::Instance()->getAllPlugins( QpluginFilter( DATA_OUT ) );
-            QFraDevice* fra_dev = new QFraDevice(fw_win);
+            QFraDeviceUI* fra_dev = new QFraDeviceUI(fw_win);
             m_qfW->AddWidgetToControlArrea(fra_dev);
 
-#if 1
+#if 0
             foreach( PluginDescription desc,list ){
-                if(  DATA_OUT == desc.type() )
                 {
                     QObject* obj;
-                    for( int i=0;i<0;i++){
+                    for( int i=0;i<10;i++){
 
 
                         obj = QPluginList::Instance()->cretate_plugin_object( desc , m_qfW );
@@ -88,7 +87,6 @@ bool QFraCreator::Create( CFrameWork *fW )
 #endif
                     }
 
-                }
             }
 #endif
 

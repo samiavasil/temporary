@@ -11,13 +11,13 @@ class QProtocolPackFactory;
 class QCommandExecutor;
 class QPacketCollector;
 
-class QFraDevice : public QWidget
+class QFraDeviceUI : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit QFraDevice(QWidget *parent = 0);
-    ~QFraDevice();
+    explicit QFraDeviceUI(QWidget *parent = 0);
+    ~QFraDeviceUI();
 
 private slots:
     void onStartButtonclicked(bool clicked);

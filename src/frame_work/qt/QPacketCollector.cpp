@@ -35,9 +35,7 @@ int QPacketCollector::transmitPacket(CPacket * packet) {
            if( NO_ERR == ret )
            {
              ret = m_PortIo->write((const char *) packet->data(),packet->packLenBytes());
-             if( NO_ERR != ret ){
-                 DEBUG << "ERROR: Can't m_PortIo->write";
-             }
+             DEBUG << "m_PortIo->write "<< ret << " bytes number.";
            }
            else{
                DEBUG << "ERROR: Can't addPacketPostFix";
