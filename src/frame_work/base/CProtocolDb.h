@@ -10,10 +10,10 @@ class CProtocolLoader;
 class CProtocolDb
 {
 public:
-    CProtocolDb();
+
     virtual ~CProtocolDb(){}
-    int loadProtocolDefinition( CProtocolLoader *protLd );
-    virtual void clearProtDefinitions() = 0;
+
+    int loadProtocolDefinition( CProtocolLoader &protLd );
 
     virtual int addPacket(const pack_id_t id) = 0;
 
@@ -48,6 +48,9 @@ public:
     virtual void setMaxPacketLen(int max_size);
 
     int getMaxPacketLen();
+
+protected:
+    virtual void clearProtDefinitions() = 0;
 
 protected:
     int m_hDrLenBits;

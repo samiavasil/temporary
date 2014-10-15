@@ -13,6 +13,7 @@ typedef quint64  u64;
 
 enum{
 	NO_ERR,
+    INIT_ERROR,
     WRONG_PARAMS,
     WRONG_DATA,
     NULL_POINTER,

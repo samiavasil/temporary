@@ -11,13 +11,13 @@
 #include <QObject>
 
 
-class QProtocolLoader;
+
 class CPacket;
 class CProtocolDb;
 
 class FRAME_WORKSHARED_EXPORT QProtocolPackFactory : public CProtocolPackFactory, public QObject {
   public:
-    QProtocolPackFactory(  QObject * parent = 0);
+    QProtocolPackFactory(  CProtocolDb* protDb , QObject * parent = 0);
 
     virtual ~QProtocolPackFactory();
 

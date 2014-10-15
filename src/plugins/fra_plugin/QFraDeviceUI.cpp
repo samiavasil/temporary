@@ -22,10 +22,27 @@ QFraDeviceUI::QFraDeviceUI(QWidget *parent) :
     ui->PortIoConfig->addWidget(m_PIOList);
     QObject::connect(ui->StartButton, SIGNAL(clicked(bool)) , this, SLOT(onStartButtonclicked(bool)));
 
+    QProtocolLoader Loader;
+    QProtocolDb* pDb = new QProtocolDb();
+    pDb->loadProtocolDefinition(Loader);
 
-    m_packetFactory    = new QProtocolPackFactory( this );
-  //  m_packetFactory->attachProtocolDb( new QProtocolDb() );
-    //m_packetFactory->attachProtocol( new QProtocolLoader() );
+
+/**/
+
+u8 data[2];
+data[0]=0x1;
+data[1]=0x34;
+pDb->setMessage(AIN1_ENBLE,data);
+data[0]=0x1;
+data[1]=0xff;
+pDb->setMessage(AIN2_ENBLE,data);
+data[0]=0xff;
+data[1]=0xbc;
+pDb->setMessage(AIN1_GAIN,data);
+data[0]=0xff;
+data[1]=0x1f;
+pDb->setMessage(AIN2_GAIN,data);
+    m_packetFactory    = new QProtocolPackFactory( pDb, this );
     m_packetCollector  = new QPacketCollector( NULL, m_packetFactory, this );
 
 

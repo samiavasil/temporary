@@ -3,11 +3,6 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QProtocolDb::QProtocolDb()
-{
-
-}
-
 void QProtocolDb::clearProtDefinitions() {
       m_packMap.clear();
       QMapIterator<msg_id_t , msg_desc_t> i(m_msgMap);

@@ -10,19 +10,16 @@
 #define  PKT_ID_INVALID     ((pack_id_t)(  (  (1<<(PACK_ID_TYPE_BIT_SIZE-1) ) -  ((unsigned int) 1) )|(PACK_ID_TYPE_BIT_SIZE-1) ))
 #define  MSG_ID_INVALID     ((msg_id_t)(  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - ((unsigned int) 1)  )|(MSG_ID_TYPE_BIT_SIZE-1)   ))
 
-class CProtocolLoader;
 class CPacket;
 
 
 class CProtocolPackFactory {
   public:
-    CProtocolPackFactory();
+    CProtocolPackFactory( CProtocolDb* protDb = NULL );
 
     virtual ~CProtocolPackFactory();
 
-    int attachProtocolDb( CProtocolDb * pDB );
-
-    int attachProtocol( CProtocolLoader * pLoader );
+    int attachProtocolDb(  CProtocolDb * pDB );
 
     virtual int findPacketStart(const u8 * data, int len) = 0;
 
@@ -59,7 +56,6 @@ class CProtocolPackFactory {
 
   protected:
     CProtocolDb*      m_pDB;
-    CProtocolLoader * m_pLoader;
 };
 
 /*inline int CProtocolPackFactory::getProtocolHeaderLenBits() const {

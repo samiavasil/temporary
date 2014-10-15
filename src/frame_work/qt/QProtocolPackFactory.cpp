@@ -1,6 +1,5 @@
 
 #include "qt/QProtocolPackFactory.h"
-#include "qt/QProtocolLoader.h"
 #include "qt/QProtocolDb.h"
 #include "base/CPacket.h"
 
@@ -45,34 +44,23 @@ void test_bit_set_time(CProtocolDb* m_pDB)
 }
 #endif
 
-QProtocolPackFactory::QProtocolPackFactory( QObject * parent ):QObject(parent) {
+QProtocolPackFactory::QProtocolPackFactory( CProtocolDb *protDb, QObject * parent  ):CProtocolPackFactory(protDb),QObject(parent) {
       DEBUG << "Create QProtocolPackFactory";
-      if( NO_ERR == attachProtocolDb( new QProtocolDb() ) ){
-          /*Attach default protocol loader - if you want you can change it with attachProtocol()*/
+      /*   if( NO_ERR == attachProtocolDb( new QProtocolDb() ) ){
+         Attach default protocol loader - if you want you can change it with attachProtocol()
           if(  NO_ERR != attachProtocol( new QProtocolLoader() ) ) {
               CRITICAL << "!!!Default ProtocolLoader can't be attached to ProtocolPackFactory: Use attachProtocol()";
           }
       }
       else{
+
           CRITICAL << "!!!Default ProtocolDB can't be attached to ProtocolPackFactory: Use attachProtocol()";
-      }
+      }*/
       ///TODO: DELLL ME -  This is for test only
 #if defined(TEST_SPEED)
   test_bit_set_time( m_pDB);
 #endif
-      u8 data[2];
-      data[0]=0x0;
-      data[1]=0;
-      m_pDB->setMessage(AIN1_ENBLE,data);
-      data[0]=0;
-      data[1]=0;
-      m_pDB->setMessage(AIN2_ENBLE,data);
-      data[0]=0;
-      data[1]=0;
-      m_pDB->setMessage(AIN1_GAIN,data);
-      data[0]=0xff;
-      data[1]=0x0;
-      m_pDB->setMessage(AIN2_GAIN,data);
+
 
 
 #ifdef DUMP_PROTOCOL_LOAD
@@ -95,8 +83,6 @@ QProtocolPackFactory::QProtocolPackFactory( QObject * parent ):QObject(parent) {
 }
 
 QProtocolPackFactory::~QProtocolPackFactory() {
-    /*if( m_pLoader )
-      delete m_pLoader;*/
 }
 
 int bitcmp( u8* src,u8* dest, int bit_num ){

@@ -1,23 +1,21 @@
 
 #include "base/CProtocolPackFactory.h"
-#include "base/CProtocolLoader.h"
 #include "base/CPacket.h"
 #include "base/CProtocolDb.h"
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-CProtocolPackFactory::CProtocolPackFactory( ) {
+CProtocolPackFactory::CProtocolPackFactory(CProtocolDb *protDb ) {
     m_pDB = NULL;
-    m_pLoader = NULL;
+    if( NO_ERR != attachProtocolDb( protDb ) ){
+        CRITICAL << "!!!Default ProtocolDB can't be attached to ProtocolPackFactory: Use attachProtocol()";
+    }
 }
 
 CProtocolPackFactory::~CProtocolPackFactory(){
     if( m_pDB ){
         delete m_pDB;
-    }
-    if( m_pLoader ){
-        delete m_pLoader;
     }
 }
 
@@ -29,21 +27,6 @@ int CProtocolPackFactory::attachProtocolDb( CProtocolDb * pDB ) {
         }
         m_pDB  = pDB;
         ret = NO_ERR;
-        if(  m_pLoader ){
-           ret = m_pDB->loadProtocolDefinition( m_pLoader );
-        }
-    }
-    return ret;
-}
-
-int CProtocolPackFactory::attachProtocol(CProtocolLoader * pLoader) {
-    int ret = WRONG_PARAMS;
-    if( pLoader ){
-        if( m_pLoader ){
-            delete m_pLoader;
-        }
-        m_pLoader = pLoader;
-        ret = m_pDB->loadProtocolDefinition( m_pLoader );
     }
     return ret;
 }

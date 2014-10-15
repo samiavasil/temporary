@@ -1,6 +1,7 @@
 #ifndef QPROTOCOLDB_H
 #define QPROTOCOLDB_H
 #include"base/CProtocolDb.h"
+#include"base/CProtocolLoader.h"
 #include <QList>
 #include <QMap>
 #include <QObject>
@@ -15,10 +16,6 @@
 class QProtocolDb : public CProtocolDb
 {
 public:
-    QProtocolDb();
-
-    virtual void clearProtDefinitions();
-
     virtual int addPacket(const pack_id_t id);
 
     virtual int isTherePacketId(const pack_id_t id);
@@ -40,7 +37,8 @@ public:
     virtual int packetPayloadBitLen(const pack_id_t packId, int * payloadLenBits);
 
     virtual int setMessage(const msg_id_t msgId, const u8 * data);
-
+protected:
+    virtual void clearProtDefinitions();
 protected:
 typedef struct{
     msg_id_t  msgID;
