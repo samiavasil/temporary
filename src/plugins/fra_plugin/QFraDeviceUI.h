@@ -2,6 +2,7 @@
 #define QFRADEVICE_H
 
 #include <QWidget>
+#include"FraDevice.h"
 
 namespace Ui {
 class QFraDevice;
@@ -18,7 +19,8 @@ class QFraDeviceUI : public QWidget
 public:
     explicit QFraDeviceUI(QWidget *parent = 0);
     ~QFraDeviceUI();
-
+protected:
+    int getMeasurementParams( MeasurementConfig &params );
 private slots:
     void onStartButtonclicked(bool clicked);
 protected:

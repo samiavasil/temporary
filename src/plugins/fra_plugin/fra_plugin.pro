@@ -34,7 +34,8 @@ SOURCES  += \
     QFraCreator.cpp \
     QFraFrameWork.cpp \
     QPortsIoView.cpp \
-    QFraDeviceUI.cpp
+    QFraDeviceUI.cpp \
+    FraDevice.cpp
 
 HEADERS += \
     qtestcommand.h \
@@ -43,7 +44,8 @@ HEADERS += \
     QFraFrameWork.h \
     QPortsIoView.h \
     QPortsIoView.h \
-    QFraDeviceUI.h
+    QFraDeviceUI.h \
+    FraDevice.h
 
 
 FORMS += \

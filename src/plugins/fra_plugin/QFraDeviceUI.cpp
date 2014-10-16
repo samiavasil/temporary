@@ -13,11 +13,58 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
+
+struct combo_item{
+   const char* name;
+   double value;
+};
+
+
+/*
+TODO: This can be moved on some configuration type file and read from there.
+Not constantly defined as in this keys.
+*/
+static const struct combo_item freqItems[] = {
+    { "Hz" , 1.0 },
+    { "KHz", 1000.0 },
+    { "MHz", 1000000.0 },
+};
+
+static const struct combo_item currentItems[] = {
+    { "uA", 1e-6 },
+    { "mA", 1e-3 },
+    { "A" , 1.0  },
+};
+
+static void initCombo( QComboBox * combo,const combo_item* items, int num )
+{
+    if( combo && items)
+    {
+        int i;
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/new/prefix1/icons/radiobutton_on.png"), QSize(), QIcon::Normal, QIcon::Off);
+
+        combo->clear();
+        for( i = 0; i < num; i++ ){
+            combo->addItem( icon, QString(QString::fromUtf8(items[i].name)) );
+            combo->setItemData( i, QVariant(items[i].value));
+        }
+    }
+}
+
 QFraDeviceUI::QFraDeviceUI(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QFraDevice)
 {
+
     ui->setupUi(this);
+
+
+
+    initCombo( ui->StartFreqComboBox, freqItems   , sizeof( freqItems )/sizeof( freqItems[0] ) );
+    initCombo( ui->StopFreqComboBox , freqItems   , sizeof( freqItems )/sizeof( freqItems[0] ) );
+    initCombo( ui->CurrentComboBox  , currentItems, sizeof( currentItems )/sizeof( currentItems[0] ) );
+
     m_PIOList = new QPortsIoView( this );
     ui->PortIoConfig->addWidget(m_PIOList);
     QObject::connect(ui->StartButton, SIGNAL(clicked(bool)) , this, SLOT(onStartButtonclicked(bool)));
@@ -64,9 +111,38 @@ QFraDeviceUI::~QFraDeviceUI()
 
 
 
+
+#define getComboScalleFactor( combo )   combo?( combo->itemData( combo->currentIndex() ).toDouble() ):(0.0)
+
+int QFraDeviceUI::getMeasurementParams( MeasurementConfig &params )
+{
+    double val;
+    val = getComboScalleFactor( ui->StartFreqComboBox );
+    val = val*ui->StartFreqSpinBox->value();
+    params.SetStartFrequencyUi( val );
+
+    val = getComboScalleFactor( ui->StopFreqComboBox );
+    val = val*ui->StopFreqSpinBox->value();
+    params.SetStopFrequencyUi( val );
+
+    val = getComboScalleFactor( ui->CurrentComboBox );
+    val = val*ui->CurrentSpinBox->value();
+    params.SetOutputCurrentUi( val );
+
+    params.SetNumberOfPoints( ui->NumPointsSpinBox->value() );
+    params.SetDelayMsec( ui->TimeDelaySpinBox->value() );
+    params.SetScaleType( ui->LinearButton->isChecked() ? MeasurementConfig::E_LINEAR: MeasurementConfig::E_LOGARITMIC );
+
+    params.DumpConfig();
+    return 0;
+}
+
 void QFraDeviceUI::onStartButtonclicked( bool clicked )
 {
+    MeasurementConfig params;
     QPortIO* port = NULL;
+    getMeasurementParams( params );
+    return ;
     port = m_PIOList->getCurentIO();
     if( port )
     {
