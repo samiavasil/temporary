@@ -39,6 +39,9 @@ class CProtocolPackFactory {
     int  getProtocolHeaderLenBits() const{
        return m_pDB->getProtocolHeaderLenBits();
     }
+    CProtocolDb* getProtocolDb(){
+        return m_pDB;
+    }
 
   protected:
 

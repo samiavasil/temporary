@@ -1,4 +1,4 @@
-#include"FraDevice.h"
+#include"FraMeasurementConfig.h"
 #include <string.h>
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
@@ -9,7 +9,7 @@ struct FraMeasurment_t{
    double   OutputCurrent;
    u32      NumberOfPoints;
    u32      TimeDelayMsec;
-   MeasurementConfig::eScale_t ScaleType;
+   FraMeasurementConfig::eScale_t ScaleType;
 };
 
 
@@ -18,73 +18,77 @@ typedef struct {
    double    OutputCurrentScale;
 } FraScales_t;
 
-MeasurementConfig::MeasurementConfig(){
+FraMeasurementConfig::FraMeasurementConfig(){
     m_Cfg = new FraMeasurment_t;
     memset( m_Cfg, 0, sizeof(m_Cfg[0]) );
 }
 
-MeasurementConfig::~MeasurementConfig(){
+FraMeasurementConfig::~FraMeasurementConfig(){
     delete m_Cfg;
 }
 
 
-double   MeasurementConfig::GetStartFrequencyUi(){
+double   FraMeasurementConfig::GetStartFrequencyUi(){
     return m_Cfg->StartFrequency;
 }
 
 
-void     MeasurementConfig::SetStartFrequencyUi( double& val ){
+void     FraMeasurementConfig::SetStartFrequencyUi( double& val ){
     m_Cfg->StartFrequency = val;
 }
 
 
-double   MeasurementConfig::GetStopFrequencyUi(){
+double   FraMeasurementConfig::GetStopFrequencyUi(){
     return m_Cfg->StopFrequency;
 }
 
 
-void     MeasurementConfig::SetStopFrequencyUi( double& val ){
+void     FraMeasurementConfig::SetStopFrequencyUi( double& val ){
     m_Cfg->StopFrequency = val;
 }
 
 
-double   MeasurementConfig::GetOutputCurrentUi(){
+double   FraMeasurementConfig::GetOutputCurrentUi(){
     return m_Cfg->OutputCurrent;
 }
 
 
-void     MeasurementConfig::SetOutputCurrentUi( double& val ){
+void     FraMeasurementConfig::SetOutputCurrentUi( double& val ){
     m_Cfg->OutputCurrent = val;
 }
 
 
-void     MeasurementConfig::SetNumberOfPoints( u32 num ){
+void     FraMeasurementConfig::SetNumberOfPoints( u32 num ){
     m_Cfg->NumberOfPoints = num;
 }
 
 
-u32      MeasurementConfig::GetNumberOfPoints(  ){
+u32      FraMeasurementConfig::GetNumberOfPoints(  ){
     return m_Cfg->NumberOfPoints;
 }
 
 
-void     MeasurementConfig::SetDelayMsec( u32 msec ){
+void     FraMeasurementConfig::SetDelayMsec( u32 msec ){
       m_Cfg->TimeDelayMsec = msec;
 }
 
 
-u32      MeasurementConfig::GetDelayMsec(  ){
+u32      FraMeasurementConfig::GetDelayMsec(  ){
     return m_Cfg->TimeDelayMsec;
 }
 
 
-void     MeasurementConfig::SetScaleType(  MeasurementConfig::eScale_t type ){
+void     FraMeasurementConfig::SetScaleType(  FraMeasurementConfig::eScale_t type ){
     m_Cfg->ScaleType = type;
 }
 
 
-MeasurementConfig::eScale_t MeasurementConfig::GetScaleType(  ){
+FraMeasurementConfig::eScale_t FraMeasurementConfig::GetScaleType(  ){
     return m_Cfg->ScaleType;
+}
+
+FraMeasurementConfig& FraMeasurementConfig::operator = (FraMeasurementConfig& obj){
+    *(this->m_Cfg) = *(obj.m_Cfg);
 }
 
 QDebug operator<<(  QDebug Ostr, const struct FraMeasurment_t* Cfg ){
@@ -94,10 +98,11 @@ QDebug operator<<(  QDebug Ostr, const struct FraMeasurment_t* Cfg ){
     Ostr << "\t" << "OutputCurrent : " << Cfg->OutputCurrent   << endl;
     Ostr << "\t" << "ScaleType     : " << Cfg->ScaleType       << endl;
     Ostr << "\t" << "NumberOfPoints: " << Cfg->NumberOfPoints  << endl;
+    Ostr << "\t" << "TimeDelayMsec: "  << Cfg->TimeDelayMsec   << endl;
     return Ostr;
 }
 
-void MeasurementConfig::DumpConfig()
+void FraMeasurementConfig::DumpConfig()
 {
     qDebug() <<  m_Cfg;
 }

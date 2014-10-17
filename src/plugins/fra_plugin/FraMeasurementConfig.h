@@ -1,18 +1,18 @@
-#ifndef FRADEVICE_H
-#define FRADEVICE_H
+#ifndef FRAMEASURMENT_CONFIG_H
+#define FRAMEASURMENT_CONFIG_H
 #include "base/global.h"
 
 
 
-class MeasurementConfig{
+class FraMeasurementConfig{
 public:
     typedef enum{
         E_LINEAR,
         E_LOGARITMIC
     }eScale_t;
 public:
-    MeasurementConfig();
-    ~MeasurementConfig();
+    FraMeasurementConfig();
+    ~FraMeasurementConfig();
     double   GetStartFrequencyUi();
     void     SetStartFrequencyUi( double& val );
     double   GetStopFrequencyUi();
@@ -23,10 +23,10 @@ public:
     u32      GetNumberOfPoints(  );
     void     SetDelayMsec( u32 msec );
     u32      GetDelayMsec(  );
-    void     SetScaleType(  MeasurementConfig::eScale_t type );
+    void     SetScaleType(  FraMeasurementConfig::eScale_t type );
     eScale_t GetScaleType(  );
     void     DumpConfig();
-//friend QDebug& operator << (QDebug& deb , const struct FraMeasurment_t& cfg);
+    FraMeasurementConfig& operator = (FraMeasurementConfig& obj);
 protected:
     struct FraMeasurment_t* m_Cfg;
 };

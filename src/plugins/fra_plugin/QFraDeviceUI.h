@@ -2,7 +2,7 @@
 #define QFRADEVICE_H
 
 #include <QWidget>
-#include"FraDevice.h"
+#include"QFraMeasurementContext.h"
 
 namespace Ui {
 class QFraDevice;
@@ -20,15 +20,15 @@ public:
     explicit QFraDeviceUI(QWidget *parent = 0);
     ~QFraDeviceUI();
 protected:
-    int getMeasurementParams( MeasurementConfig &params );
+    int getMeasurementParams( FraMeasurementConfig &params );
 private slots:
     void onStartButtonclicked(bool clicked);
 protected:
     QPortsIoView* m_PIOList;
-    QProtocolPackFactory* m_packetFactory;
-    QCommandExecutor*     m_Executor;
-    QPacketCollector*     m_packetCollector;
-
+    QProtocolPackFactory*  m_packetFactory;
+    QCommandExecutor*      m_Executor;
+    QPacketCollector*      m_packetCollector;
+    QFraMeasurementContext mes_ctx;
 private:
     Ui::QFraDevice *ui;
 };

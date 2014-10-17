@@ -35,7 +35,9 @@ SOURCES  += \
     QFraFrameWork.cpp \
     QPortsIoView.cpp \
     QFraDeviceUI.cpp \
-    FraDevice.cpp
+    QFraMeasureCommand.cpp \
+    QFraMeasurementContext.cpp \
+    FraMeasurementConfig.cpp
 
 HEADERS += \
     qtestcommand.h \
@@ -45,7 +47,9 @@ HEADERS += \
     QPortsIoView.h \
     QPortsIoView.h \
     QFraDeviceUI.h \
-    FraDevice.h
+    QFraMeasureCommand.h \
+    QFraMeasurementContext.h \
+    FraMeasurementConfig.h
 
 
 FORMS += \

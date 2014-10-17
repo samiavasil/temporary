@@ -20,7 +20,6 @@ pack_id_t pId[4]={
     DREC_SET_FREQ_ID
 };
 
-#include "qt/QRegFactory.h"
 #include "qt/QCommandExecutor.h"
 QtestCommand::QtestCommand( QPacketCollector* colector, QProtocolPackFactory *factory, QObject *par ):QCommand(par) {
     m_Col     = colector;
