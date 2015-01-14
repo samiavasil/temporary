@@ -20,10 +20,15 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT+=designer
+}
+else{
 CONFIG      += designer
+}
+LIBS += -L../../../bin/libs  -L../../../bin/extlibs -lframe_work -lqwt
 
-LIBS += -L../../../bin/libs  -lframe_work -lQtDesignerComponents -lQtDesigner
-
+#TODO: check is this need need -lQtDesignerComponents -lQtDesigner
 
 
 RESOURCES += \

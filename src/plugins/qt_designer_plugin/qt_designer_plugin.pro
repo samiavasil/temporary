@@ -24,10 +24,16 @@ LIBS        += -L$${EXT_LIBS_DIR} -L$${LIBS_DIR}
 
 
 TEMPLATE     = lib
-CONFIG += uitools
-CONFIG      += plugin
-CONFIG      += designer
 
+CONFIG      += plugin
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT+=designer
+QT+=uitools
+}
+else{
+CONFIG      += designer
+CONFIG += uitools
+}
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 LIBS        += -lframe_work -lQtDesignerComponents -lQtDesigner
 

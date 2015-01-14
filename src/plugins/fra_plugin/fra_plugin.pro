@@ -60,5 +60,8 @@ FORMS += \
 RESOURCES += \
     proba.qrc
 
+OTHER_FILES += \
+    FraFrameWorkInterface.json
+
 
 

@@ -8,7 +8,11 @@ QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( p
 
 void QloggerInterface_private::Log( const QString& data )
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     WARNING << "        LogHop: " <<  data.toAscii().constData();
+#else
+    WARNING << "        LogHop: " <<  data.toLatin1().constData();
+#endif
     emit LogOutput( data );
 }
 
@@ -42,7 +46,11 @@ void QloggerInterface::Log( const QString &data )
 {
     if( m_enLog )
     {
-        WARNING << "LogFrom[" << m_Id << "]: " << data.toAscii().constData();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    WARNING << "LogFrom[" << m_Id << "]: " << data.toAscii().constData();
+#else
+    WARNING << "LogFrom[" << m_Id << "]: " << data.constData();
+#endif
         getObject()->Log( data );
     }
     else

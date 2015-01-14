@@ -178,8 +178,11 @@ void QPluginListWidget::reloadPLuginList(){
     showCol( DESCRIPTION_COLUMN, m_ViewType.description());
     showCol( VERSION_COLUMN    , m_ViewType.version());
     showCol( ENABLE_COLUMN     , m_ViewType.enable());
-    horizontalHeader()->setResizeMode(RightVisibleCol, QHeaderView::Stretch );
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        horizontalHeader()->setResizeMode( col, QHeaderView::Stretch );
+#else
+        horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#endif
     foreach( PluginDescription desc, plugins ){
 
         if( !( m_ViewType.hideDisabled() && !desc.is_enabled() ) ){
@@ -322,7 +325,11 @@ void QPluginListWidget::ShowProperties( ){
 void QPluginListWidget::showCol( int col, bool show ){
     if( show ){
         showColumn( col );
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         horizontalHeader()->setResizeMode( col, QHeaderView::Interactive );
+#else
+        horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+#endif
         if( col > RightVisibleCol ){
             RightVisibleCol = col;
         }
@@ -332,11 +339,23 @@ void QPluginListWidget::showCol( int col, bool show ){
     }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 void QPluginListWidget::connectNotify ( const char * signal ){
     const char* ptr = SIGNAL(enablePlugin(PluginDescription,bool));
     if( !strcmp( signal, ptr )  ){
+        m_ConnToCheck = 100;     
+        QObject::connectNotify (signal);
+        reloadPLuginList();
+    }
+}
+#else
+    #include <QMetaMethod>
+void QPluginListWidget::connectNotify (const QMetaMethod & signal){
+   // const char* ptr = SIGNAL(enablePlugin(PluginDescription,bool));
+    if( signal == QMetaMethod::fromSignal(&QPluginListWidget::enablePlugin)  ){
         m_ConnToCheck = 100;
         QObject::connectNotify (signal);
         reloadPLuginList();
     }
 }
+#endif

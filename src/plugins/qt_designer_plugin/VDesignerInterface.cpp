@@ -33,16 +33,12 @@ VDesignerInterface::~VDesignerInterface(  )
 // can unload plugin wthout crashes*/
 //QFrameWork* VDesignerInterface::getFrameWork( QWidget* parent )
 QObject*  VDesignerInterface::allocateObject( QObject* parent ){
-    QWidget* parent_widget = 0;
-    if( parent && parent->isWidgetType() ){
-        parent_widget = dynamic_cast<QWidget *> (parent);
-    }
-    DesignerCreator* c = new DesignerCreator();
-    DesignerFrameWork*fw = new DesignerFrameWork( c,  parent_widget );
-    fw->setAttribute(Qt::WA_DeleteOnClose, true); /*Wajno - tova kazwa da se wika delete na
-                                                    widget-a pri closeEvent*/
+    DesignerFrameWork*fw = new DesignerFrameWork(  new DesignerCreator(),  parent);
+
     return fw;
 
 }
 }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(VDesignerPlugin, Plugins::VDesignerInterface )
+#endif

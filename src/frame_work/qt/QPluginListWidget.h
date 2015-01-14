@@ -71,7 +71,11 @@ protected:
     void showCol( int col, bool show);
     void addContextMenu();
     void updateVisibility();
-    void connectNotify ( const char * signal );
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+void connectNotify ( const char * signal );
+#else
+void connectNotify (const QMetaMethod & signal);
+#endif
 public slots:
     void reloadPLuginList();
     void ShowContextMenu(const QPoint& pos);

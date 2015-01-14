@@ -9,10 +9,13 @@ class   DesignerFrameWork:public QFrameWork
 {
     Q_OBJECT
 public:
-    explicit DesignerFrameWork(QCreator * creator = 0, QWidget * parent = 0);
+    explicit DesignerFrameWork(QCreator * creator = 0, QObject *  parent = 0);
     virtual ~DesignerFrameWork();
     virtual void AddWidgetToControlArrea ( QWidget* widget );
     virtual void AddWidgetToDataViewArrea( QWidget* widget );
+    QWidget* getFrameWorkWindow(){
+        return NULL;
+    }
 
 
 };

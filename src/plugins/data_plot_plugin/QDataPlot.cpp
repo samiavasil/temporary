@@ -22,7 +22,7 @@
 #include <qwt/qwt_painter.h>
 #include <qwt/qwt_plot_layout.h>
 #include <qwt/qwt_legend.h>
-#include <qwt/qwt_legend_item.h>
+// #include <qwt/qwt_legend_item.h>
 #include <qwt/qwt_plot_magnifier.h>
 #include<qwt/qwt_plot_renderer.h>
 #include "CurveConfigurationMenu.h"
@@ -49,7 +49,7 @@ protected:
                 QwtPlotCurve* curve =  (QwtPlotCurve*)( act.value(i)->data().toULongLong() );
                 if( curve ){
                     rect = actionGeometry( act.at(i) );
-                    curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
+//TODO:FIX ME                    curve->drawLegendIdentifier(&painter,QRectF(rect.width()/2,rect.y()+(rect.height()/4),rect.width()/8,rect.height()/2) );
 
                 }
             }
@@ -121,7 +121,7 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                         }
                     }
 
-                    ((QPoint*)(&(mouseEvent->pos())))->setY(y);
+//TODO:FIX ME                    ((QPoint*)(&(mouseEvent->pos())))->setY(y);
 
                     if( x < curve->sample( 0 ).x() ){
                         x = xMap.transform( curve->sample( 0 ).x() );
@@ -133,7 +133,7 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                         x = xMap.transform( x );
                     }
 
-                    ((QPoint*)(&(mouseEvent->pos())))->setX(x);
+//TODO:FIX ME                    ((QPoint*)(&(mouseEvent->pos())))->setX(x);
                 }
                 // standard event processing
                 return obj->eventFilter(obj, mouseEvent);
@@ -162,9 +162,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
     ui->setupUi(this);
 
 
-    ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
-    ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
-    ui->PlotQwt->canvas()->setLineWidth ( 1 );
+//TODO:FIX ME    ui->PlotQwt->canvas()->setPaintAttribute( QwtPlotCanvas::BackingStore, false );
+//TODO:FIX ME    ui->PlotQwt->canvas()->setFrameStyle ( QFrame::Box | QFrame::Plain );
+//TODO:FIX ME    ui->PlotQwt->canvas()->setLineWidth ( 1 );
     ui->PlotQwt->setAutoReplot ( false );
 
     ui->PlotQwt->enableAxis ( QwtPlot::yRight, true );
@@ -205,8 +205,8 @@ QDataPlot::QDataPlot(QWidget *parent) :
 
     m_Grid = new QwtPlotGrid;
     m_Grid->enableXMin ( true );
-    m_Grid->setMajPen ( QPen ( Qt::green, 0, Qt::DotLine ) );
-    m_Grid->setMinPen ( QPen ( Qt::gray , 0, Qt::DotLine ) );
+//TODO:FIX ME    m_Grid->setMajPen ( QPen ( Qt::green, 0, Qt::DotLine ) );
+//TODO:FIX ME    m_Grid->setMinPen ( QPen ( Qt::gray , 0, Qt::DotLine ) );
     m_Grid->enableX ( false );
     m_Grid->enableY ( false );
     m_Grid->attach ( ui->PlotQwt );
@@ -613,7 +613,7 @@ void QDataPlot::on_actionShowLegend_toggled(bool arg1)
 
     if( arg1 ){
         QwtLegend* legend = new QwtLegend();
-        legend->setItemMode( QwtLegend::ClickableItem );
+//TODO:FIX ME        legend->setItemMode( QwtLegend::ClickableItem );
         legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
         ui->PlotQwt->insertLegend( legend );
     }

@@ -9,6 +9,9 @@ TEMPLATE = lib
 
 CONFIG += static
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+  QT+=widgets
+}
 INCLUDEPATH += $$PWD
 DEFINES     += QHEDIT_LIB_LIBRARY
 

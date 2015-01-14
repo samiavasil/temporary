@@ -2,7 +2,10 @@
 
 #include "qhexedit_p.h"
 #include "commands.h"
-
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include<QApplication>
+#include<QClipboard>
+#endif
 const int HEXCHARS_IN_LINE = 47;
 const int GAP_ADR_HEX = 10;
 const int GAP_HEX_ASCII = 16;
@@ -437,7 +440,11 @@ void QHexEditPrivate::keyPressEvent(QKeyEvent *event)
 if (!_readOnly)
 {
     /* Hex input */
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         int key = int(event->text()[0].toAscii());
+#else
+        int key = int(event->text()[0].toLatin1());
+#endif
         if ((key>='0' && key<='9') || (key>='a' && key <= 'f'))
         {
             if (getSelectionBegin() != getSelectionEnd())

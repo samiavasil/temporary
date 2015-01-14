@@ -24,7 +24,7 @@ QFraCreator::~QFraCreator( )
 void dump_qobject_meta( QObject* obj ){
 
     if( !obj ) return;
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     const QMetaObject* metaObject = obj->metaObject();
     DEBUG <<"DUMP METHODS:   "<<endl;
     for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
@@ -49,6 +49,7 @@ void dump_qobject_meta( QObject* obj ){
         }
         DEBUG << endl;
     }
+#endif
 }
 #endif
 

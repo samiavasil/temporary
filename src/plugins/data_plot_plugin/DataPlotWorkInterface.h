@@ -9,7 +9,10 @@
 
 class PLUGIN_EXPORT DataPlotWorkInterface:  public QPluginObjectsInterface
 {
-
+    Q_OBJECT
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    Q_PLUGIN_METADATA(IID "vvv.moita.frame_work.QPluginObjectsInterface/1.0" FILE "DataPlotWorkInterface.json")
+#endif
     Q_INTERFACES(QPluginObjectsInterface)
 public:
     DataPlotWorkInterface( QObject* parent = 0);

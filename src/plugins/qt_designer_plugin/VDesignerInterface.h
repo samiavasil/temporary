@@ -14,6 +14,9 @@ namespace Plugins
 class PLUGIN_EXPORT VDesignerInterface:  public QPluginObjectsInterface
 {
     Q_OBJECT
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    Q_PLUGIN_METADATA(IID "vvv.moita.frame_work.QPluginObjectsInterface/1.0" FILE "VDesignerInterface.json")
+#endif
     Q_INTERFACES(QPluginObjectsInterface)
 public:
     VDesignerInterface( QObject* parent = 0);

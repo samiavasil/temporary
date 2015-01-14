@@ -41,4 +41,6 @@ QObject*  QhexEditInterface::allocateObject( QObject* parent ){
                                                     widget-a pri closeEvent*/
     return obj;
 }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(pnp_hexeditplugin, QhexEditInterface)
+#endif

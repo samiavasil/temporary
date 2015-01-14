@@ -89,6 +89,7 @@ FraMeasurementConfig::eScale_t FraMeasurementConfig::GetScaleType(  ){
 
 FraMeasurementConfig& FraMeasurementConfig::operator = (FraMeasurementConfig& obj){
     *(this->m_Cfg) = *(obj.m_Cfg);
+    return *this;
 }
 
 QDebug operator<<(  QDebug Ostr, const struct FraMeasurment_t* Cfg ){

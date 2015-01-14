@@ -25,6 +25,10 @@ DEFINES     += BUILD_AVAILABLE_PLUGIN
 LIBS        += -lframe_work -lqwt
 TARGET   = DataPlotPlugin
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT += printsupport
+}
+
 SOURCES += \
     DataPlotWorkInterface.cpp \
     QwtPlotExt.cpp \

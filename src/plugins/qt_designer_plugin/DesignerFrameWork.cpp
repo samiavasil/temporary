@@ -4,7 +4,7 @@
 
 #include "base/CCreator.h"
 
-DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QWidget * parent ):
+DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QObject *parent ):
     QFrameWork( creator , parent )
 {
 

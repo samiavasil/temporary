@@ -43,4 +43,7 @@ QObject*  DataPlotWorkInterface::allocateObject( QObject* parent ){
 */
     return obj;
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(pnp_dataplotplugin, DataPlotWorkInterface)
+#endif

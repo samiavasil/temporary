@@ -22,7 +22,7 @@ TEMPLATE     = lib
 CONFIG      += plugin
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 
-LIBS        += -lframe_work -lqwt
+LIBS        += -lframe_work
 TARGET   = QSerialPortPlugin
 
 SOURCES += \
@@ -32,10 +32,11 @@ HEADERS += \
     QSerialPortWorkInterface.h
 
 
-#LIBS += -L../../  -lfra
-
 FORMS +=
 
 RESOURCES +=
+
+OTHER_FILES += \
+    QSerialPortPlugin.json
 
 
