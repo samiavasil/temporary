@@ -4,11 +4,24 @@
 
 #include "frame_work_global.h"
 #include "base/CFrameWork.h"
+#include<QMainWindow>
 #include <QList>
 #include <QObject>
 
 class QCreator;
 class QWidget;
+
+
+class QFwWidget: public QMainWindow{
+    Q_OBJECT
+public:
+    explicit QFwWidget( QWidget *parent = 0, Qt::WindowFlags f = 0 );
+    virtual ~QFwWidget();
+    void     closeEvent(QCloseEvent *event);
+
+signals:
+    void destroyFW();
+};
 
 class FRAME_WORKSHARED_EXPORT QFrameWork : public QObject, public CFrameWork {
 Q_OBJECT
@@ -25,6 +38,9 @@ Q_OBJECT
     virtual QWidget* getFrameWorkWindow(  ) = 0;
 signals:
     void fwDestroy();
+
+protected:
+     QMainWindow* m_FwWin;
 
 };
 #endif

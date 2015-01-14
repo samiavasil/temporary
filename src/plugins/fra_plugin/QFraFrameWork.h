@@ -3,22 +3,13 @@
 #include"qt/QFrameWork.h"
 #include<QWidget>
 
-#include<QMainWindow>
+
 
 namespace Ui {
 class QFraFrameWorkView;
 }
 
-class QFwWidget: public QMainWindow{
-    Q_OBJECT
-public:
-    explicit QFwWidget( QWidget *parent = 0, Qt::WindowFlags f = 0 );
-    virtual ~QFwWidget();
-    void     closeEvent(QCloseEvent *event);
 
-signals:
-    void destroyFW();
-};
 
 class QFraFrameWork:public QFrameWork
 {
@@ -37,7 +28,6 @@ private slots:
 private:
     Ui::QFraFrameWorkView* ui;
     QList<QObject*> nonAutoCleanList;
-protected:
-     QMainWindow* m_FwWin;
+
 };
 #endif // QFRAFRAMEWORK_H

@@ -1,6 +1,5 @@
 #include "QFraFrameWork.h"
 #include <ui_qfra_frame_work_view.h>
-#include<qevent.h>
 #include<QComboBox>
 #include<QToolBar>
 #include<QVBoxLayout>
@@ -10,35 +9,12 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QFwWidget::QFwWidget( QWidget *parent, Qt::WindowFlags f ):QMainWindow( parent,f ){
-    
-}
-
-QFwWidget::~QFwWidget(){
-    
-}
-
-void QFwWidget::closeEvent(QCloseEvent *event)
-{
-    /*if (maybeSave()) {
-            writeSettings();
-            event->accept();
-        } else {
-            event->ignore();
-        }*/
-    if( event ){//TODO
-        event->accept();
-        deleteLater();
-        emit destroyFW();
-    }
-}
-
 QFraFrameWork::QFraFrameWork(QCreator * creator  , QObject *parent ):
     QFrameWork( creator , parent ),ui(new Ui::QFraFrameWorkView)
 {
     
     //   QVBoxLayout *layout = new QVBoxLayout;
-    m_FwWin = new QFwWidget();
+
     
     QToolBar* tool  = new QToolBar( m_FwWin );
     QComboBox* combo = new QComboBox(tool);
@@ -82,14 +58,12 @@ QFraFrameWork::QFraFrameWork(QCreator * creator  , QObject *parent ):
                                       theSlot)){
         QObject::connect(combo, SIGNAL(currentIndexChanged(int)) , this, SLOT(on_mdi_change_view_mode(int)));
     }
-    QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
+
 
 }
 
 QFraFrameWork::~QFraFrameWork(){
-    if( m_FwWin ){
-        m_FwWin = NULL;
-    }
+
     foreach (QObject* obj, nonAutoCleanList) {
         if( obj ){
             QString b = obj->property( "WinType").toString();
