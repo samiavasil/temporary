@@ -35,7 +35,7 @@ Q_OBJECT
 
     virtual void AddWidgetToControlArrea ( QWidget* widget ) = 0;
     virtual void AddWidgetToDataViewArrea( QWidget* widget ) = 0;
-    virtual QWidget* getFrameWorkWindow(){
+    virtual QMainWindow* getFrameWorkWindow(){
         return m_FwWin;
     }
 signals:

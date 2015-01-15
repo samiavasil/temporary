@@ -24,7 +24,7 @@
 #include "base/debug.h"
 
 #include<QDesignerIntegration>
- #include "internals/pluginmanager_p.h"
+#include "internals/pluginmanager_p.h" //QDesignerPluginManager
 class PyNotoIntegration: public QDesignerIntegration
 {
 public:
@@ -37,17 +37,17 @@ PyNotoIntegration::PyNotoIntegration(QDesignerFormEditorInterface *core, QObject
 {
 
     // setSlotNavigationEnabled(true);   TODO WHAT ????
-    setFeatures( SlotNavigationFeature );
+    setFeatures( 0 );
 
 }
 
 PyNotoIntegration::~PyNotoIntegration()
 {
 
-//    delete core()->widgetBox();
-//    delete core()->objectInspector();
-//    delete core()->propertyEditor();
-//    delete core()->actionEditor();
+    //    delete core()->widgetBox();
+    //    delete core()->objectInspector();
+    //    delete core()->propertyEditor();
+    //    delete core()->actionEditor();
 }
 
 DesignerCreator:: DesignerCreator( QObject * parent ):QCreator(parent),ui(new Ui::Designer)
@@ -57,16 +57,17 @@ DesignerCreator:: DesignerCreator( QObject * parent ):QCreator(parent),ui(new Ui
 
 DesignerCreator::~DesignerCreator( )
 {
-//    _designer->core()->widgetBox()->deleteLater();
-//    _designer->core()->objectInspector()->deleteLater();
-//    _designer->core()->propertyEditor()->deleteLater();
-//    _designer->core()->actionEditor()->deleteLater();
-delete ui;
-//    delete _designer;
-//    delete _menu;
-//    delete form;
+    //    _designer->core()->widgetBox()->deleteLater();
+    //    _designer->core()->objectInspector()->deleteLater();
+    //    _designer->core()->propertyEditor()->deleteLater();
+    //    _designer->core()->actionEditor()->deleteLater();
+    delete ui;
+    //    delete _designer;
+    //    delete _menu;
+    //    delete form;
 }
 
+#include <QGridLayout>
 
 bool DesignerCreator::Create( CFrameWork *fW )
 {
@@ -74,25 +75,25 @@ bool DesignerCreator::Create( CFrameWork *fW )
     {
         DesignerFrameWork* qfW =  dynamic_cast<DesignerFrameWork*>(fW);
 
-        QWidget* wid =   new QWidget( qfW->getFrameWorkWindow() );
-        if( qfW->getFrameWorkWindow() ){
-            qfW->getFrameWorkWindow()->show();
-        }
+        QWidget* wid =  new QWidget( qfW->getFrameWorkWindow() );
+
+
+        /*Add plugins path*/
+        QStringList mm = QCoreApplication::libraryPaths();
+        mm.append("./plugins");
+        QCoreApplication::setLibraryPaths( mm );
+
         ui->setupUi( wid );
         if( qfW )
         {
-            QDesignerFormEditorInterface *iface = QDesignerComponents::createFormEditor( wid->parent() );
+            QDesignerFormEditorInterface *iface = QDesignerComponents::createFormEditor( wid );
 
             //    QObject* obj = wid->parentWidget();
             _menu = QDesignerComponents::createTaskMenu(iface, wid );
-
-            QStringList m = iface->pluginManager()->pluginPaths();
-            m.append("./plugins/designer");
-            iface->pluginManager()->setPluginPaths( m );
             QDesignerComponents::initializePlugins( iface );
             QDesignerComponents::initializeResources();
-//_menu->deleteLater();
-          //      wid->layout()->setMenuBar((QWidget*)_menu);
+            //_menu->deleteLater();
+            //      wid->layout()->setMenuBar((QWidget*)_menu);
 
             iface->setTopLevel(wid);
             iface->setWidgetBox(QDesignerComponents::createWidgetBox(iface, wid));
@@ -119,35 +120,44 @@ bool DesignerCreator::Create( CFrameWork *fW )
 
                     QString actionText = fep->action()->text();
                     if (actionText == "Edit Tab Order")
-                       QAction * _editTabAction = fep->action();
+                        QAction * _editTabAction = fep->action();
 
                     if (actionText == "Edit Buddies")
-                       QAction * _editBuddies = fep->action();
+                        QAction * _editBuddies = fep->action();
                 }
             }
 
             QWidget * widgetBox = _designer->core()->widgetBox();
             //QDesignerWidgetBoxInterface *widgetBox = QDesignerComponents::createWidgetBox(iface, 0);
-            ui->layout->addWidget( widgetBox, ui->layout->count()/3,ui->layout->count()%3   );
+            ui->widgetsLayout->addWidget( widgetBox  );
 
             QWidget * widgetObjectInspector = qobject_cast<QDesignerObjectInspectorInterface *>(_designer->core()->objectInspector());
-            ui->layout->addWidget( widgetObjectInspector, ui->layout->count()/3,ui->layout->count()%3   );
+            ui->objectsLayout->addWidget( widgetObjectInspector  );
 
             QWidget * widgetPropertyEditor = qobject_cast<QDesignerPropertyEditorInterface * >(_designer->core()->propertyEditor());
-            ui->layout->addWidget( widgetPropertyEditor, ui->layout->count()/3,ui->layout->count()%3   );
+            ui->propertyLayout->addWidget( widgetPropertyEditor );
 
             QWidget *signalSlotEditor = QDesignerComponents::createSignalSlotEditor(iface, wid);
-            ui->layout->addWidget( signalSlotEditor, ui->layout->count()/3,ui->layout->count()%3   );
+            ui->signalslotsLayout->addWidget( signalSlotEditor );
 
             QDesignerActionEditorInterface * actionEditor = _designer->core()->actionEditor();
-            ui->layout->addWidget( (QWidget*)actionEditor, ui->layout->count()/3,ui->layout->count()%3   );
+            ui->actionLayout->addWidget( (QWidget*)actionEditor   );
 
 
 
             form = iface->formWindowManager()->createFormWindow(wid, Qt::Widget );
-            ui->layout->addWidget( form, ui->layout->count()/3,ui->layout->count()%3   );
+            form->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            //  ui->scrollArea->setBackgroundRole(QPalette::Shadow);
+            ui->scrollArea->setWidgetResizable(true);
+            ui->scrollArea->setWidget( form   );
+            ui->scrollArea->setAlignment( Qt::AlignHCenter| Qt::AlignVCenter);
+            QSize size = ui->scrollArea->size();
+            size.setWidth(size.width()/2);
+            size.setHeight(size.height()/2);
+            ui->scrollArea->setWidgetResizable(true);
+            form->resize(size);
 
-form->setFileName("./plugins/test/Appearance.ui");
+            form->setFileName("./plugins/test/Appearance.ui");
             QFile f(form->fileName());
             f.open(QIODevice::ReadOnly | QIODevice::Text);
             form->setContents(f.readAll());
@@ -155,19 +165,24 @@ form->setFileName("./plugins/test/Appearance.ui");
 
             //form->addResourceFile("/home/vasil/tmp/test.qrc");
 
-           // form->setMainContainer(new QWidget(wid));
+            // form->setMainContainer(new QWidget(wid));
 
             form->setGrid(QPoint(10,10));
             //form->setFileName("/home/vasil/tmp/Appearance.ui");
             form->show();
-iface->formWindowManager()->setActiveFormWindow(form);
+            iface->formWindowManager()->setActiveFormWindow(form);
             form->setCurrentTool(0);
-            QPushButton* saveBtn = new QPushButton(qfW->getFrameWorkWindow());
-            connect(saveBtn,SIGNAL(clicked()),this,SLOT(save()));
-            qfW->AddWidgetToControlArrea( saveBtn );
-            qfW->AddWidgetToControlArrea( wid );
 
-           // qfW->AddWidgetToControlArrea(loadUiFile());
+            connect(ui->runButton,SIGNAL(clicked()),this,SLOT(save()));
+            //   qfW->AddWidgetToControlArrea( saveBtn );
+            //qfW->AddWidgetToControlArrea( wid );
+            //          grid->addWidget(saveBtn,0,0,1,1);
+
+            //grid->addWidget(wid,0,1,1,1);
+
+            qfW->getFrameWorkWindow()->setCentralWidget(wid);
+            wid->show();
+            // qfW->AddWidgetToControlArrea(loadUiFile());
 
 
         }

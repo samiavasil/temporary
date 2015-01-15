@@ -188,6 +188,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
+    /*Add plugins path*/
+    QStringList mm = QCoreApplication::libraryPaths();
+    mm.append("./plugins");
+    QCoreApplication::setLibraryPaths( mm );
     //QObject::connect(QPluginList::Instance(),SIGNAL(pluginsUpdate()),&vv,SLOT(reloadPLuginList()));
 
     //QDesignerComponents c;

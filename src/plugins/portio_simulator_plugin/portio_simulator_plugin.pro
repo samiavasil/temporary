@@ -43,4 +43,7 @@ FORMS += \
 
 RESOURCES +=
 
+OTHER_FILES += \
+    PortIoSimulatorInterface.json
+
 

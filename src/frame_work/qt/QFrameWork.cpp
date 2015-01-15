@@ -31,6 +31,7 @@ QFrameWork::QFrameWork(QCreator * creator, QObject * parent):QObject(parent),CFr
   DEBUG << "Create QFrameWork";
    m_FwWin = new QFwWidget();
    QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
+   m_FwWin->show();
 }
 
 QFrameWork::~QFrameWork() {
