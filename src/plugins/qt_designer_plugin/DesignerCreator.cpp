@@ -14,16 +14,18 @@
 #include<QAction>
 #include<QLayout>
 #include<QPushButton>
-#include "internals/qdesigner_integration_p.h"
+/*#include "internals/qdesigner_integration_p.h"
 #include "internals/pluginmanager_p.h"
-#include "internals/formwindowbase_p.h"
+#include "internals/formwindowbase_p.h"*/
 #include <QMainWindow>
 #include "ui_desinger.h"
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-class PyNotoIntegration: public qdesigner_internal::QDesignerIntegration
+#include<QDesignerIntegration>
+ #include "internals/pluginmanager_p.h"
+class PyNotoIntegration: public QDesignerIntegration
 {
 public:
     PyNotoIntegration(QDesignerFormEditorInterface *core, QObject *parent = 0);
@@ -31,10 +33,12 @@ public:
 };
 
 PyNotoIntegration::PyNotoIntegration(QDesignerFormEditorInterface *core, QObject *parent  ):
-    qdesigner_internal::QDesignerIntegration(core, parent)
+    QDesignerIntegration(core, parent)
 {
 
-    setSlotNavigationEnabled(true);
+    // setSlotNavigationEnabled(true);   TODO WHAT ????
+    setFeatures( SlotNavigationFeature );
+
 }
 
 PyNotoIntegration::~PyNotoIntegration()
@@ -70,7 +74,10 @@ bool DesignerCreator::Create( CFrameWork *fW )
     {
         DesignerFrameWork* qfW =  dynamic_cast<DesignerFrameWork*>(fW);
 
-        QWidget* wid =   new QWidget( qfW );
+        QWidget* wid =   new QWidget( qfW->getFrameWorkWindow() );
+        if( qfW->getFrameWorkWindow() ){
+            qfW->getFrameWorkWindow()->show();
+        }
         ui->setupUi( wid );
         if( qfW )
         {
@@ -98,10 +105,11 @@ bool DesignerCreator::Create( CFrameWork *fW )
             iface->setActionEditor(QDesignerComponents::createActionEditor(iface, wid));
 
 
-            _designer = new /*PyNotoIntegration*/qdesigner_internal::QDesignerIntegration(iface, wid);
+            _designer = new  PyNotoIntegration (iface, wid);
+
             iface->setIntegration(_designer);
 
-            qdesigner_internal::QDesignerIntegration::initializePlugins( iface );
+            QDesignerIntegration::initializePlugins( iface );
 
             QDesignerFormEditorPluginInterface *fep;
             foreach (QObject *plugin, QPluginLoader::staticInstances()) {
@@ -154,7 +162,7 @@ form->setFileName("./plugins/test/Appearance.ui");
             form->show();
 iface->formWindowManager()->setActiveFormWindow(form);
             form->setCurrentTool(0);
-            QPushButton* saveBtn = new QPushButton(qfW);
+            QPushButton* saveBtn = new QPushButton(qfW->getFrameWorkWindow());
             connect(saveBtn,SIGNAL(clicked()),this,SLOT(save()));
             qfW->AddWidgetToControlArrea( saveBtn );
             qfW->AddWidgetToControlArrea( wid );
@@ -188,7 +196,7 @@ void DesignerCreator::save()
     QString fname( form->fileName() );
     QFile file( fname );
     file.open( QFile::WriteOnly );
-    file.write(form->contents().toAscii());
+    file.write(form->contents().toLatin1());
     file.close();
 
     loadUiFile( NULL,fname)->show();

@@ -13,11 +13,6 @@ public:
     virtual ~DesignerFrameWork();
     virtual void AddWidgetToControlArrea ( QWidget* widget );
     virtual void AddWidgetToDataViewArrea( QWidget* widget );
-    QWidget* getFrameWorkWindow(){
-        return NULL;
-    }
-
-
 };
 
 #endif // VDESIGNERUI_H

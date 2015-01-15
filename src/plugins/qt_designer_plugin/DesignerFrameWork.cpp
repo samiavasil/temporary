@@ -9,6 +9,7 @@ DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QObject *parent ):
 {
 
     //setAttribute(Qt::WA_DeleteOnClose, true);
+
 }
 
 DesignerFrameWork::~DesignerFrameWork()
@@ -19,13 +20,11 @@ DesignerFrameWork::~DesignerFrameWork()
 
 void DesignerFrameWork::AddWidgetToControlArrea ( QWidget* widget )
 {
-    if( NULL == this->layout() )
-    {
-        setLayout( new QGridLayout(this) );
-    }
+    m_FwWin->setLayout( new QGridLayout( m_FwWin ) );
+
     if( widget )
     {
-        layout()->addWidget( widget );
+        m_FwWin->layout()->addWidget( widget );
     }
 }
 

@@ -19,7 +19,14 @@ UI_DIR       = $$PWD/Build
 LIBS        += -L$${EXT_LIBS_DIR} -L$${LIBS_DIR}
 
 TEMPLATE     = lib
-CONFIG      += designer plugin
+CONFIG      +=  plugin
+greaterThan(QT_MAJOR_VERSION, 4) {
+  QT+= widgets designer
+}
+else{
+  CONFIG      += designer
+}
+
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 
 LIBS        += -lframe_work -lqwt
@@ -39,5 +46,8 @@ HEADERS += \
 FORMS +=
 
 RESOURCES +=
+
+OTHER_FILES += \
+    DesignerTamplatePlugin.json
 
 

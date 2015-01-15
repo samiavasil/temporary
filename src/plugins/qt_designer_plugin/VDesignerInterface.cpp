@@ -33,7 +33,7 @@ VDesignerInterface::~VDesignerInterface(  )
 // can unload plugin wthout crashes*/
 //QFrameWork* VDesignerInterface::getFrameWork( QWidget* parent )
 QObject*  VDesignerInterface::allocateObject( QObject* parent ){
-    DesignerFrameWork*fw = new DesignerFrameWork(  new DesignerCreator(),  parent);
+    DesignerFrameWork*fw = new DesignerFrameWork(  new DesignerCreator(),  NULL);
 
     return fw;
 

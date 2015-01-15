@@ -35,7 +35,8 @@ CONFIG      += designer
 CONFIG += uitools
 }
 DEFINES     += BUILD_AVAILABLE_PLUGIN
-LIBS        += -lframe_work -lQtDesignerComponents -lQtDesigner
+LIBS        += -lframe_work -lQt5DesignerComponents
+#-lQt5DesignerComponents -lQt5Designer
 
 TARGET   = VDesignerPlugin
 

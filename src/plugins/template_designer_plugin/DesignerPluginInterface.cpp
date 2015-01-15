@@ -85,6 +85,6 @@ QString DesignerTamplatePlugin::includeFile() const
 {
     return "DesignerTamplate.h";
 }
-
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(DesignerTamplateExample, DesignerTamplatePlugin)
+#endif

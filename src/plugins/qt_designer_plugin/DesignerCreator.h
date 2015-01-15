@@ -5,9 +5,7 @@
 #include"qt/QCreator.h"
 
 class CFrameWork;
-namespace qdesigner_internal {
-    class QDesignerIntegration;
-}
+class QDesignerIntegration;
 
 namespace Ui {
 class Designer;
@@ -29,7 +27,7 @@ public slots:
     virtual void Free();
     virtual void save();
 private:
-       qdesigner_internal::QDesignerIntegration * _designer;
+       QDesignerIntegration * _designer;
        QObject * _menu;
        QDesignerFormWindowInterface*  form;
        Ui::Designer   *ui;
