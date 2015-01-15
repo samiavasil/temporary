@@ -22,11 +22,12 @@ HEADERS  += mainwindow.h
 
 greaterThan(QT_MAJOR_VERSION, 4) {
 QT+=designer
+QT+=uitools
 }
 else{
 CONFIG      += designer
 }
-LIBS += -L../../../bin/libs  -L../../../bin/extlibs -lframe_work -lqwt
+LIBS += -L../../../bin/libs  -L../../../bin/extlibs -lframe_work -lqwt  -lQt5DesignerComponents
 
 #TODO: check is this need need -lQtDesignerComponents -lQtDesigner
 

@@ -57,4 +57,7 @@ RESOURCES += \
     proba.qrc \
     proba.qrc
 
+OTHER_FILES += \
+    DataPlotWorkInterface.json
+
 

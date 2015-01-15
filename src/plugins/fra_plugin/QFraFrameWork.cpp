@@ -140,11 +140,6 @@ void QFraFrameWork::AddWidgetToControlArrea ( QWidget* widget ){
 
 
 
-QWidget* QFraFrameWork::getFrameWorkWindow(){
-    return m_FwWin;
-}
-
-
 #include "qt/QPluginSelectionView.h"
 void QFraFrameWork::newView(){
     

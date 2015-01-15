@@ -38,4 +38,7 @@ FORMS +=
 
 RESOURCES +=
 
+OTHER_FILES += \
+    QhexEditInterface.json
+
 
