@@ -8,7 +8,6 @@ TARGET = frame_work
 TEMPLATE = lib
 INCLUDEPATH += ../include/extlibs
 DEFINES += FRAME_WORK_LIBRARY
-
 OBJECTS_DIR  = $$PWD/Build
 MOC_DIR      = $$PWD/Build
 RCC_DIR      = $$PWD/Build

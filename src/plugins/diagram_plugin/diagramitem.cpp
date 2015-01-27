@@ -41,14 +41,19 @@
 **
 ****************************************************************************/
 
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 #include "diagramitem.h"
 
 //! [0]
 DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsPolygonItem(parent, scene)
+    : QGraphicsPolygonItem(parent)
 {
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
@@ -87,7 +92,7 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
 
 DiagramItem::DiagramItem(QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsPolygonItem(parent, scene)
+    : QGraphicsPolygonItem(parent)
 {
     myDiagramType = None;
     myContextMenu = contextMenu;
@@ -97,7 +102,7 @@ DiagramItem::DiagramItem(QMenu *contextMenu,
 }
 //! [0]
 DiagramItem::DiagramItem(const DiagramItem& diagram):
-    QGraphicsPolygonItem(diagram.parentItem(),diagram.scene())
+    QGraphicsPolygonItem(diagram.parentItem())
 {
     //QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));
 	// copy from general GraphcsItem

@@ -40,9 +40,16 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
-#include <QLabel>
+#else
+#include <QtWidgets>
+#include <QPrinter>
+#include <QPrintDialog>
+#endif
+
+//#include <QLabel>
 #include <iostream>
 
 #include "DiagMainWindow.h"
@@ -54,6 +61,7 @@
 #include "diagramscene.h"
 #include "diagramtextitem.h"
 
+
 const int InsertTextButton = 10;
 const int InsertDrawItemButton = 64;
 const int InsertVDrawItemButton = 1<<7;
@@ -63,6 +71,7 @@ const int InsertVDrawItemButton = 1<<7;
 //! [0]
 DiagMainWindow::DiagMainWindow()
 {
+
     createActions();
     createToolBox();
     createMenus();
@@ -101,11 +110,13 @@ DiagMainWindow::DiagMainWindow()
     widget->setLayout(layout);
 
     setCentralWidget(widget);
+
     setWindowTitle(tr("QDiagram"));
 
     myFileName.clear();
 
     myShowGrid=false;
+    show();
 }
 //! [0]
 
@@ -435,7 +446,8 @@ void DiagMainWindow::textColorChanged()
     textAction = qobject_cast<QAction *>(sender());
     fontColorToolButton->setIcon(createColorToolButtonIcon(
                 ":/images/textpointer.png",
-                qVariantValue<QColor>(textAction->data())));
+                textAction->data().value<QColor>())
+                                 );
     textButtonTriggered();
 }
 //! [12]
@@ -446,7 +458,7 @@ void DiagMainWindow::itemColorChanged()
     fillAction = qobject_cast<QAction *>(sender());
     fillColorToolButton->setIcon(createColorToolButtonIcon(
                  ":/images/floodfill.png",
-                 qVariantValue<QColor>(fillAction->data())));
+                 fillAction->data().value<QColor>()) );
     fillButtonTriggered();
 }
 //! [13]
@@ -457,7 +469,7 @@ void DiagMainWindow::lineColorChanged()
     lineAction = qobject_cast<QAction *>(sender());
     lineColorToolButton->setIcon(createColorToolButtonIcon(
                  ":/images/linecolor.png",
-                 qVariantValue<QColor>(lineAction->data())));
+                 lineAction->data().value<QColor>()) );
     lineButtonTriggered();
 }
 //! [14]
@@ -465,21 +477,21 @@ void DiagMainWindow::lineColorChanged()
 //! [15]
 void DiagMainWindow::textButtonTriggered()
 {
-    scene->setTextColor(qVariantValue<QColor>(textAction->data()));
+    scene->setTextColor(textAction->data().value<QColor>());
 }
 //! [15]
 
 //! [16]
 void DiagMainWindow::fillButtonTriggered()
 {
-    scene->setItemColor(qVariantValue<QColor>(fillAction->data()));
+    scene->setItemColor(fillAction->data().value<QColor>());
 }
 //! [16]
 
 //! [17]
 void DiagMainWindow::lineButtonTriggered()
 {
-    scene->setLineColor(qVariantValue<QColor>(lineAction->data()));
+    scene->setLineColor( lineAction->data().value<QColor>() );
 }
 //! [17]
 
@@ -1200,14 +1212,14 @@ QIcon DiagMainWindow::createArrowIcon(const int i)
 
 void DiagMainWindow::lineArrowButtonTriggered()
 {
-    scene->setArrow(qVariantValue<int>(arrowAction->data()));
+    scene->setArrow( arrowAction->data().value<int>() );
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
 }
 
 void DiagMainWindow::lineArrowChanged()
 {
     arrowAction = qobject_cast<QAction *>(sender());
-    linePointerButton->setIcon(createArrowIcon(qVariantValue<int>(arrowAction->data())));
+    linePointerButton->setIcon(createArrowIcon(arrowAction->data().value<int>()) );
     lineArrowButtonTriggered();
 }
 

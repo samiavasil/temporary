@@ -40,8 +40,13 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
+
 #include <iostream>
 
 #include "diagrampathitem.h"
@@ -94,7 +99,7 @@ DiagramPathItem::DiagramPathItem(QMenu *contextMenu,
 }
 //! [0]
 DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram):
-    QGraphicsPathItem(diagram.parentItem(),diagram.scene())
+    QGraphicsPathItem(diagram.parentItem())
 {
 
 

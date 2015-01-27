@@ -40,8 +40,13 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
+
 #include <iostream>
 
 #include "vdiagramdrawitem.h"
@@ -192,7 +197,7 @@ QPolygonF VDiagramDrawItem::createPath()
         break;
     default:
         break;
-        polygon = 0;
+        polygon = QPolygonF();
     }
     return polygon;
 }

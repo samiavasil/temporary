@@ -41,7 +41,11 @@
 **
 ****************************************************************************/
 #include "base/global.h"
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 #include <iostream>
 #include "diagramscene.h"
 
@@ -298,12 +302,18 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         switch (myMode) {
         case InsertItem:
             if (insertedItem != 0){
-                insertedItem->rotate(90);
+              //  QTransform trans=insertedItem->transform();
+                //insertedItem->setTransform(trans*QTransform().rotate(90),true);
+#warning FIXXXXXXXXXXMEEEEEEEEE
+    //            insertedItem->rotate(90);
             }
             break;
         case InsertVItem:
             if (insertedVItem != 0){
-                insertedVItem->rotate(90);
+                //QTransform trans=insertedVItem->transform();
+                //insertedVItem->setTransform(trans*QTransform().rotate(90),true);
+#warning FIXXXXXXXXXXMEEEEEEEEE
+     //          insertedVItem->rotate(90);
             }
             break;
 

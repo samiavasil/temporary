@@ -22,9 +22,16 @@ LIBS        += -L$${EXT_LIBS_DIR} -L$${LIBS_DIR}
 
 TEMPLATE     = lib
 CONFIG      += plugin
+
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT += printsupport
+}
+
+
 DEFINES     += BUILD_AVAILABLE_PLUGIN
 
-LIBS        += -lframe_work -lqwt
+LIBS        += -lframe_work
 TARGET   = QDiagramPlugin
 
 
@@ -59,6 +66,9 @@ FORMS +=
 
 RESOURCES += \
     qdiagram.qrc
+
+OTHER_FILES += \
+    QDiagramPluginInterface.json
 
 
 

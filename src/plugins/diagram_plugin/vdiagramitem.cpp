@@ -40,8 +40,12 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 #include "vdiagramitem.h"
 #include "diagramscene.h"
@@ -51,7 +55,7 @@
 //! [0]
 VDiagramItem::VDiagramItem(VDiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsPolygonItem(parent, scene)
+    : QGraphicsPolygonItem(parent)
 {
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
@@ -89,7 +93,7 @@ VDiagramItem::VDiagramItem(VDiagramType diagramType, QMenu *contextMenu,
 
 VDiagramItem::VDiagramItem(QMenu *contextMenu,
              QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsPolygonItem(parent, scene)
+    : QGraphicsPolygonItem(parent)
 {
     myDiagramType = None;
     myContextMenu = contextMenu;
@@ -100,7 +104,7 @@ VDiagramItem::VDiagramItem(QMenu *contextMenu,
 
 //! [0]
 VDiagramItem::VDiagramItem(const VDiagramItem& diagram)
-    : QGraphicsPolygonItem(diagram.parentItem(),diagram.scene())
+    : QGraphicsPolygonItem(diagram.parentItem())
 {
 
     //QGraphicsPolygonItem(static_cast<QGraphicsPolygonItem>(diagram));

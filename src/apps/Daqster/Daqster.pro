@@ -4,7 +4,6 @@
 #
 #-------------------------------------------------
 QT       += core gui
-
 OBJECTS_DIR  = $$PWD/Build
 MOC_DIR      = $$PWD/Build
 RCC_DIR      = $$PWD/Build

@@ -40,16 +40,20 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 
 #include "diagramtextitem.h"
 #include "diagramscene.h"
 #include <iostream>
-
+#include <QGraphicsSceneMouseEvent>
 //! [0]
 DiagramTextItem::DiagramTextItem(QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsTextItem(parent, scene)
+    : QGraphicsTextItem(parent)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -58,7 +62,7 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent, QGraphicsScene *scene)
 }
 //! [0]
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
-     : QGraphicsTextItem(textItem.parentItem(),textItem.scene())
+     : QGraphicsTextItem(textItem.parentItem())
 {
 	//QGraphicsTextItem();
 	setFont(textItem.font());

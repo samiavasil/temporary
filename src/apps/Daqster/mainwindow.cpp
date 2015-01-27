@@ -131,15 +131,16 @@ void MainWindow::on_actionSave_triggered()
           {
              fw->Create();
              //fw->setCreator(NULL);
+             QWidget* wd =  fw->getFrameWorkWindow();
+             static int b;
+             if( wd && (b%2) )
+             {
+                 ui->mdiArea->addSubWindow(wd);
+                 wd->show();//DELL ME
+             }
+             b++;
           }
-          QWidget* wd =  fw->getFrameWorkWindow();
-          static int b;
-          if( wd && (b%2) )
-          {
-              ui->mdiArea->addSubWindow(wd);
-              wd->show();//DELL ME
-          }
-          b++;
+
         }
 
     }
