@@ -41,7 +41,12 @@
 
 #include "connectionwidget.h"
 
+#include<QtGlobal>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 #include <QtSql>
 
 ConnectionWidget::ConnectionWidget(QWidget *parent)
@@ -51,7 +56,11 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
     tree = new QTreeWidget(this);
     tree->setObjectName(QLatin1String("tree"));
     tree->setHeaderLabels(QStringList(tr("database")));
-    tree->header()->setResizeMode(QHeaderView::Stretch);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+         tree->header()->setResizeMode( col, QHeaderView::Stretch );
+#else
+         tree->header()->setSectionResizeMode(QHeaderView::Stretch);
+#endif
     QAction *refreshAction = new QAction(tr("Refresh"), tree);
     metaDataAction = new QAction(tr("Show Schema"), tree);
     connect(refreshAction, SIGNAL(triggered()), SLOT(refresh()));

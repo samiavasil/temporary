@@ -12,6 +12,11 @@ build_all:!build_pass {
     CONFIG += release
 }
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QT += widgets
+}
+
+
 # install
 target.path = $$[QT_INSTALL_DEMOS]/sqlbrowser
 sources.files = $$SOURCES $$HEADERS $$FORMS *.pro

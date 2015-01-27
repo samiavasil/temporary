@@ -1,5 +1,6 @@
 #include "docwriter.h"
 #include <QDebug>
+#include <QTextBrowser>
 //"odf"
 #define TYPE "html"
 DocWriter::DocWriter():m_document(new QTextDocument()),
