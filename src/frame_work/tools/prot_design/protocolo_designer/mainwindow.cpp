@@ -35,38 +35,38 @@ QTreeWidgetItem* createTreeWidgetItem( const QStringList& name, SqlDataManager::
         {
         case SqlDataManager::eNET     :
         {
-            item->setIcon(0,QIcon( "icons/net.png" ));
+            item->setIcon(0,QIcon( ":/icons/net.png" ));
             break;
         }
         case SqlDataManager::eNODE    :
         {
-            item->setIcon(0,QIcon( "icons/node.png" ));
+            item->setIcon(0,QIcon( ":/icons/node.png" ));
             break;
         }
         case SqlDataManager::ePACKET  :
         {
-            item->setIcon(0,QIcon( "icons/packet.png" ));
+            item->setIcon(0,QIcon( ":/icons/packet.png" ));
             break;
         }
         case SqlDataManager::eMESSAGES:
         {
-            item->setIcon(0,QIcon( "icons/message.png" ));
+            item->setIcon(0,QIcon( ":/icons/message.png" ));
             break;
         }
         case SqlDataManager::eNETNODES:
         {
-            item->setIcon(0,QIcon( "icons/net.png" ));
+            item->setIcon(0,QIcon( ":/icons/net.png" ));
             break;
         }
 
         case SqlDataManager::eNODEPACKS:
         {
-            item->setIcon(0,QIcon( "icons/node.png" ));
+            item->setIcon(0,QIcon( ":/icons/node.png" ));
             break;
         }
         case SqlDataManager::ePACKETDESC:
         {
-            item->setIcon(0,QIcon( "icons/packet.png" ));
+            item->setIcon(0,QIcon( ":/icons/packet.png" ));
             break;
         }
         default:
