@@ -4,7 +4,7 @@
 #include "global.h"
 class CCommand;
 
-class CCommandExecutor {
+class FRAME_WORKSHARED_EXPORT CCommandExecutor {
   public:
     CCommandExecutor();
 

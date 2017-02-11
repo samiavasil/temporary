@@ -63,7 +63,7 @@ void QDbg::log(QString Bla)
 {
     if( m_Enable )
     {
-        DEBUG  << tr("QDbg%1 [%2]: %3").arg((unsigned int)this).arg(m_Local).arg( Bla );
+        DEBUG  << tr("QDbg%1 [%2]: %3").arg("(unsigned int)this Fix me!!").arg(m_Local).arg( Bla );
     }
 }
 

@@ -2,7 +2,7 @@
 #define _QPROTOCOLLOADER_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include "base/CProtocolLoader.h"
 
 enum{

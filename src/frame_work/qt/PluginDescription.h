@@ -6,7 +6,7 @@
 #include<QString>
 #include<QIcon>
 
-class PluginDescription{
+class FRAME_WORKSHARED_EXPORT PluginDescription{
 public:
    typedef enum{
      NOTHING_OPT       = 0,

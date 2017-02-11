@@ -2,7 +2,7 @@
 #define _QFRAMEWORK_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include "base/CFrameWork.h"
 #include<QMainWindow>
 #include <QList>

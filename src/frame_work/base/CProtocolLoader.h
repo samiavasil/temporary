@@ -6,7 +6,7 @@
 #include "base/CProtocolPackFactory.h"
 class CProtocolDb;
 
-class CProtocolLoader {
+class FRAME_WORKSHARED_EXPORT CProtocolLoader {
 public:
      virtual ~CProtocolLoader(){}
 protected:

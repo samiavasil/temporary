@@ -5,9 +5,10 @@
 #include <QTableWidget>
 #include "qt/QPluginFabrique.h"
 #include "qt/QpluginFilter.h"
+#include"base/global.h"
 
 #define ADD_BIT(x)  unsigned int x :1;
-class cfgViewTypeT{
+class FRAME_WORKSHARED_EXPORT cfgViewTypeT{
 public:
 
     cfgViewTypeT();
@@ -51,7 +52,7 @@ protected:
 };
 
 class QPortIO;
-class QPluginListWidget : public QTableWidget
+class FRAME_WORKSHARED_EXPORT QPluginListWidget : public QTableWidget
 {
     Q_OBJECT
     

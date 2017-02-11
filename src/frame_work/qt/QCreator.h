@@ -2,7 +2,7 @@
 #define _QCREATOR_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include <QObject>
 
 #include "base/CCreator.h"

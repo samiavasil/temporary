@@ -3,7 +3,7 @@
 
 
 #include "global.h"
-class CCommand {
+class FRAME_WORKSHARED_EXPORT CCommand {
   public:
     virtual ~CCommand();
 

@@ -1,6 +1,6 @@
 #ifndef PLUGIN_DESCRIPTOR_H
 #define PLUGIN_DESCRIPTOR_H
-#include "frame_work_global.h"
+#include "base/global.h"
 #include "base/global.h"
 #include "QPluginLoaderExt.h"
 #include "qt/PluginDescription.h"

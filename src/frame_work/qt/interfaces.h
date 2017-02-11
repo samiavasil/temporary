@@ -9,6 +9,7 @@
 typedef enum{
   FRAME_WORK,
   PORT_IO,
+  FILTER_IO,
   DATA_OUT,
   UNDEFINED
 }InterfaceType_t;

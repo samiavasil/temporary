@@ -1,6 +1,6 @@
 #ifndef QLOGGERINTERFACE_H
 #define QLOGGERINTERFACE_H
-#include "frame_work_global.h"
+#include "base/global.h"
 #include<QMultiMap>
 #include <QObject>
 
@@ -43,7 +43,7 @@ protected:
     friend class LogerTree;
 };
 
-class LogerTree
+class Q_DECL_EXPORT LogerTree
 {
 public:
     static   LogerTree* instance();

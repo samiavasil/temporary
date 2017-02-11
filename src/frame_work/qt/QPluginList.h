@@ -1,7 +1,7 @@
 #ifndef PLUGINLIST_H
 #define PLUGINLIST_H
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include <QString>
 #include <QMap>
 #include "QPluginLoaderExt.h"

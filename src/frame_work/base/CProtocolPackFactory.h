@@ -13,7 +13,7 @@
 class CPacket;
 
 
-class CProtocolPackFactory {
+class FRAME_WORKSHARED_EXPORT CProtocolPackFactory {
   public:
     CProtocolPackFactory( CProtocolDb* protDb = NULL );
 

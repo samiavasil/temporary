@@ -2,7 +2,7 @@
 #define _QPACKETCOLLECTOR_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include <QObject>
 
 #include "base/CPacketCollector.h"

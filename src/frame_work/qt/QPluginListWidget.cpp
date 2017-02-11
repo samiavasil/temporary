@@ -120,7 +120,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filt
     setColumnCount( 7 );
     setSortingEnabled(false);
     connect(this,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(OnitemChanged(QTableWidgetItem*)) );
-    connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );
+   // connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );//TODO: 
     connect(this,SIGNAL( rereadPLuginList()),this,SLOT(reloadPLuginList()),Qt::QueuedConnection );
     for( int i=0; i<7; i++ ){
         labels.append(col_name[i]);

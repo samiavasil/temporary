@@ -4,10 +4,11 @@
 #include <map>
 #include <set>
 #include <string>
+#include "global.h"
 
 // Abstract factory from template, register classes at runtime.
 template <typename T>
-class CRegFactory
+class FRAME_WORKSHARED_EXPORT CRegFactory
 {
 public:
     typedef T* (*CreateFunc)();

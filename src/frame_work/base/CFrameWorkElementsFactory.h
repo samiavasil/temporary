@@ -13,7 +13,7 @@ class CFrameWork;
 /**
  *  
  */
-class CFrameWorkElementsFactory {
+class FRAME_WORKSHARED_EXPORT CFrameWorkElementsFactory {
   public:
     virtual CPortIO* createPortIO(const CPortIO::portIo_type type) = 0;
 

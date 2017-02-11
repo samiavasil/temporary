@@ -2,7 +2,7 @@
 #define _QCOMMANDEXECUTOR_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include <QThread>
 
 #include "base/CCommandExecutor.h"

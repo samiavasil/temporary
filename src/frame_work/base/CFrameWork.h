@@ -8,7 +8,7 @@ class CCreator;
 /**
  * Frame Work class. Contain referenses to all framework object primitives.
  */
-class CFrameWork {
+class FRAME_WORKSHARED_EXPORT CFrameWork {
   public:
     CFrameWork(CCreator * creator = 0);
 

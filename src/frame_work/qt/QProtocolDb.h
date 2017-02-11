@@ -13,7 +13,7 @@
 #define  MSG_ID_INVALID     ((msg_id_t)(  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - ((unsigned int) 1)  )|(MSG_ID_TYPE_BIT_SIZE-1)   ))
 
 
-class QProtocolDb : public CProtocolDb
+class FRAME_WORKSHARED_EXPORT QProtocolDb : public CProtocolDb
 {
 public:
     virtual int addPacket(const pack_id_t id);

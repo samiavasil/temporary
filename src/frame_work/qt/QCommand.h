@@ -2,7 +2,7 @@
 #define _QCOMMAND_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include "base/CCommand.h"
 #include <QObject>
 

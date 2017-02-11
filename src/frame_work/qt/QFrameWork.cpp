@@ -37,7 +37,7 @@ QFrameWork::QFrameWork(QCreator * creator, QObject * parent):QObject(parent),CFr
 QFrameWork::~QFrameWork() {
   DEBUG << "Destroy QFrameWork";
   if( m_FwWin ){
-    //  m_FwWin->deleteLater();//Deletedin close event see gore
+    //  m_FwWin->deleteLater();//TODO: Check this - Deletedin close event see gore
       m_FwWin = NULL;
   }
   emit fwDestroy();

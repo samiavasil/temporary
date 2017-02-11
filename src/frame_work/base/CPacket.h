@@ -3,7 +3,7 @@
 
 #include "global.h"
 #include"base/CProtocolPackFactory.h"
-class CPacket {
+class Q_DECL_EXPORT CPacket {
   public:
     CPacket(const pack_id_t packType, int packLenBit);
 

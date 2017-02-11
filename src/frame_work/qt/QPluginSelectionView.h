@@ -9,7 +9,7 @@ namespace Ui {
 class QPluginSelectionView;
 }
 
-class QPluginSelectionView : public QWidget
+class FRAME_WORKSHARED_EXPORT QPluginSelectionView : public QWidget
 {
     Q_OBJECT
 

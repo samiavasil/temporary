@@ -11,6 +11,13 @@ typedef quint16  u16;
 typedef quint32  u32;
 typedef quint64  u64;
 
+
+#if defined(FRAME_WORK_LIBRARY)
+#  define FRAME_WORKSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define FRAME_WORKSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
 enum{
 	NO_ERR,
     INIT_ERROR,

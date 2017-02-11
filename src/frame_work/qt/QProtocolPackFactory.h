@@ -2,7 +2,7 @@
 #define _QPROTOCOLPACKFACTORY_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include "base/CProtocolPackFactory.h"
 #include <QList>
 

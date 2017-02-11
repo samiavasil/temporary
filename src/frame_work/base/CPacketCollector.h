@@ -7,7 +7,7 @@ class CPacket;
 class CProtocolPackFactory;
 class CPortIO;
 
-class CPacketCollector {
+class FRAME_WORKSHARED_EXPORT CPacketCollector {
   public:
     explicit CPacketCollector(CPortIO * port, CProtocolPackFactory * protocol);
 

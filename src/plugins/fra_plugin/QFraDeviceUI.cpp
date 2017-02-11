@@ -91,7 +91,7 @@ pDb->setMessage(AIN2_GAIN,data);
     m_packetCollector  = new QPacketCollector( NULL, m_packetFactory, this );
     m_Executor = new QCommandExecutor( this );
     if( 0 != m_Executor ){
-        QObject::connect( this,SIGNAL(destroyed()),m_Executor,SLOT(finish()) ,Qt::DirectConnection );
+      //  QObject::connect( this,SIGNAL(destroyed()),m_Executor,SLOT(deleteLater()) ,Qt::DirectConnection );//TODO check/fix
         if( NO_ERR != m_Executor->startExecution() ){
             CRITICAL << "Can't start Executor thread";
         }
@@ -102,6 +102,7 @@ pDb->setMessage(AIN2_GAIN,data);
 
 QFraDeviceUI::~QFraDeviceUI()
 {
+    m_Executor->stopExecution();
     delete ui;
 }
 
@@ -180,6 +181,6 @@ return; //TODO: DELL ALL
             }
         }
     }
-    DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
+    DEBUG <<   tr("QFraFrameWork[%1]").arg(qrand());
 
 }

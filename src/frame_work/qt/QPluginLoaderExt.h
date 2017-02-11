@@ -1,6 +1,6 @@
 #ifndef _QPLUGINLOADEREXT_H
 #define _QPLUGINLOADEREXT_H
-#include "frame_work_global.h"
+#include "base/global.h"
 
 #include <QPluginLoader>
 

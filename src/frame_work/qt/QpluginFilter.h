@@ -4,7 +4,7 @@
 #include "qt/PluginDescription.h"
 #include "qt/QPluginFabrique.h"
 
-class QpluginFilter
+class Q_DECL_EXPORT QpluginFilter
 {
 public:
     QpluginFilter( );

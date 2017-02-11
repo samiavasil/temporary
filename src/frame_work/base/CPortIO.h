@@ -3,7 +3,7 @@
 
 
 #include "global.h"
-class CPortIO {
+class FRAME_WORKSHARED_EXPORT CPortIO {
 public:
 typedef enum{       
   SIMULATOR_IO ,    

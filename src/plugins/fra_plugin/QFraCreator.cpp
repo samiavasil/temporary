@@ -57,11 +57,11 @@ void dump_qobject_meta( QObject* obj ){
 bool QFraCreator::Create( CFrameWork *fW )
 {
     bool bRet = false;
-    QPluginList::configurePlugins( );
+ //   QPluginList::configurePlugins( );
     if( fW )
     {
         m_qfW =  dynamic_cast<QFraFrameWork*>(fW);
-        DEBUG <<   tr("QFraFrameWork[%1]").arg(random());
+        DEBUG <<   tr("QFraFrameWork[%1]").arg(qrand());
         if( m_qfW )
         {
             QWidget* fw_win = m_qfW->getFrameWorkWindow();

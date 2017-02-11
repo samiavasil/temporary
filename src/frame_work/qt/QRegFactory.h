@@ -6,7 +6,7 @@
 #include <QString>
 #include <QDebug>
 
-#include "frame_work_global.h"
+#include "base/global.h"
 
 // Abstract factory from template, register classes at runtime.
 
@@ -79,7 +79,7 @@ protected:
    static int count;
    int im;
 };
-int A::count;
+int  A::count;
 
  typedef QRegFactory<A> fact1_t;
 

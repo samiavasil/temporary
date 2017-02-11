@@ -9,8 +9,8 @@
 
 #include "qt/QPortIO.h"
 
-class FRAME_WORKSHARED_EXPORT QPortIOSimulator : public QPortIO {
-Q_OBJECT
+class PLUGIN_EXPORT QPortIOSimulator : public QPortIO {
+    Q_OBJECT
 
   public:
     QPortIOSimulator(QObject * parent = 0);

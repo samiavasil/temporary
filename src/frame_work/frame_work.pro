@@ -4,7 +4,24 @@
 #
 #-------------------------------------------------
 DESTDIR = ../../bin/libs
+#CONFIG += debug_and_release
 TARGET = frame_work
+#win32|mac:!wince*:!win32-msvc:!macx-xcode:CONFIG += debug_and_release build_all
+win32 {
+    # On Windows you can't mix release and debug libraries.
+    # The designer is built in release mode. If you like to use it
+    # you need a release version. For your own application development you
+    # might need a debug version.
+    # Enable debug_and_release + build_all if you want to build both.
+
+    CONFIG           += debug_and_release
+    CONFIG           += build_all
+    CONFIG(debug, debug|release) {
+        TARGET = $${TARGET}d
+    }
+}
+
+
 TEMPLATE = lib
 INCLUDEPATH += ../include/extlibs
 DEFINES += FRAME_WORK_LIBRARY
@@ -89,7 +106,6 @@ HEADERS +=\
     qt/QPluginLoaderExt.h \
     qt/QPluginList.h \
     qt/interfaces.h \
-    qt/frame_work_global.h \
     qt/QPluginObjectsInterface.h \
     qt/QPortIO.h \
     base/CCreator.h \

@@ -1,10 +1,10 @@
 #ifndef _CCREATOR_H
 #define _CCREATOR_H
 
-
+#include "global.h"
 class CFrameWork;
 
-class CCreator {
+class FRAME_WORKSHARED_EXPORT CCreator {
   public:
     virtual ~CCreator();
 

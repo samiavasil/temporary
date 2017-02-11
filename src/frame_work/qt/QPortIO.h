@@ -2,7 +2,7 @@
 #define _QPORTIO_H
 
 
-#include "frame_work_global.h"
+#include "base/global.h"
 #include <QWidget>
 #include<QPointer>
 #include "base/CPortIO.h"
