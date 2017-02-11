@@ -4,9 +4,10 @@ output_writer::output_writer()
 {
 }
 
-
-int output_writer::generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list )
+int output_writer::build_doc(const ComMatrix &matrix )
 {
+    const QMap< int, pack_types_t >& pack_list = matrix.packetsList();
+    const QMap< int, msg_types_t  >& msg_list  = matrix.msgList();
     qDebug() << "\n\n============================================================================================\n";
     qDebug() << "DUMP ALL NODE MESSAGES:\n";
 

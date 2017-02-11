@@ -262,7 +262,7 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
 {
     //Debug
 #ifdef DEBUG
-    std::cout << "textItem:" << int(textItem) << std::endl;
+    std::cout << "textItem:" << textItem << std::endl;
     if(textItem){
         std::cout << "Focus ?:" << textItem->hasFocus() << std::endl;
     }

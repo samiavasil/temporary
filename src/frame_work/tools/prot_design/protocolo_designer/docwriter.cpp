@@ -17,13 +17,25 @@ DocWriter::~DocWriter()
 void DocWriter::write(const QString &fileName, QTextDocument *const document)
 {
     QTextDocumentWriter writer(fileName);
-    qDebug() << writer.supportedDocumentFormats();
-    writer.setFormat(TYPE);
-    writer.write(document);
+
+    QBuffer*  buffer = new QBuffer();
+
+    QTextDocumentWriter writer_str( buffer, TYPE );
+
+    writer_str.write(document);
+
+    if( buffer->open(QBuffer::ReadWrite) )
+    {
+        document->setHtml(  buffer->readAll() );
+        writer.setFormat(TYPE);
+        writer.write(document);
+    }
+
 }
 
 typedef enum
 {
+    NEXT_BLOCK,
     NEXT_TABLE,
     NEXT_LIST
 } move_type_t;
@@ -84,191 +96,146 @@ int move_cursor_to_next( QTextCursor& cursor, move_type_t type )
     return ret;
 }
 
-int DocWriter::generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list ){
-    // output_writer::generate_all(  pack_list,   msg_list);
 
-    int ret = 0;
-    QFile file( "com_des.html" );
-    if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) )
+void DocWriter::addTitleToDocument( QTextCursor* cursor, const QString &title )
+{
+    QTextBlockFormat blockFormat;
+    blockFormat.setAlignment(Qt::AlignHCenter);
+    blockFormat.setTopMargin(0);
+    cursor->insertBlock(blockFormat);
+    QTextCharFormat charFormat;
+    charFormat.setFont(QFont("Helvetica", 24, QFont::Bold));
+    cursor->insertText(title, charFormat);
+    cursor->movePosition(QTextCursor::End);
+}
+
+#if 0
+void DocWriter::populateTableCell(QTextTableCell tableCell, const OnePage &thePage, int index)
+{
+    QTextBlockFormat blockFormat;
+    blockFormat.setAlignment(Qt::AlignHCenter);
+    QTextCursor cursor = tableCell.firstCursorPosition();
+    cursor.insertBlock(blockFormat);
+    cursor.insertImage(thePage.filenames.at(index));
+    blockFormat.setTopMargin(30);
+    cursor.insertBlock(blockFormat);
+    QTextCharFormat charFormat;
+    charFormat.setFont(QFont("Helvetica", 18));
+    cursor.insertText(thePage.captions.at(index), charFormat);
+}
+#endif
+
+
+void DocWriter::addTableToDocument( QTextCursor* cursor, const QList< QPair<QString,QList<QString>> >& pairs )
+{
+    if( cursor && pairs.count() > 0)
     {
-        return -1;
-    }
-    QTextBrowser* textEdit = new QTextBrowser();
-    QTextDocument *in_doc  = new QTextDocument();;
-    QTextDocument *out_doc = new QTextDocument(textEdit);
-
-    in_doc->setHtml( file.readAll() );
-    //out_doc->setDocumentLayout(in_doc->documentLayout());
-    QTextCursor   in_cursor(in_doc);
-    QTextCursor   out_cursor(out_doc);
-    QTextList *   listRimsko = NULL;
-    QTextList *   list_arab  = NULL;
-    QTextTable *  msg_tb     = NULL;
-    QTextTable *  pack1_tb     = NULL;
-    QTextTable *  pack2_tb     = NULL;
-
-
-    textEdit->setDocument( out_doc );
-    textEdit->show();
-    QTextBlockFormat def_bformat  = in_cursor.block().blockFormat();
-    QTextCharFormat  def_chformat = in_cursor.block().charFormat();
-
-    if( move_cursor_to_next( in_cursor , NEXT_LIST ) )
-    {
-        listRimsko = in_cursor.currentList();
-        if( NULL == listRimsko )
+        QTextDocument listDocumment;
+        QTextCursor listCursor(&listDocumment);
+        QTextFrame* MainFrame = listCursor.currentFrame();
+        QTextFrameFormat format;
+        format.setTopMargin( 20 );
+        format.setLeftMargin( 100 );//TODO!!!
+        listCursor.insertFrame(format);
+        QTextTableFormat tableFormat;
+        tableFormat.setBackground(QColor("#ffe0e0"));
+        QVector<QTextLength> constraints;
+        int per = (100 - 40)/pairs.count();
+        for( int i=0; i < pairs.count();i++ )
         {
-            ret = -1;
-            goto ERR;
+            if( i < pairs.count() - 1 )
+            {
+                constraints << QTextLength(QTextLength::PercentageLength, per);
+            }
+            else
+            {
+                constraints << QTextLength(QTextLength::PercentageLength, 40);
+            }
         }
-        qDebug()<< "List Rimski: " << in_cursor.block().text();
-
-        if( move_cursor_to_next( in_cursor , NEXT_LIST ) )
-        {
-            list_arab = in_cursor.currentList();
-            if( NULL == list_arab )
-            {
-                ret = -1;
-                goto ERR;
-            }
-            qDebug()<< "List Arabski: " << in_cursor.block().text();
-            if( move_cursor_to_next( in_cursor , NEXT_TABLE ) )
-            {
-                msg_tb   = in_cursor.currentTable();
-                if( NULL == msg_tb )
+        tableFormat.setColumnWidthConstraints(constraints);
+        QTextTable *table = listCursor.insertTable( pairs[0].second.count() + 1, pairs.count(), tableFormat );
+        QTextTableCell cell;
+        QTextCursor cellCursor;
+        for (int column = 0; column < table->columns(); ++column) {
+            for (int row = 0; row < table->rows(); ++row) {
+                cell = table->cellAt( row, column );
+                cellCursor = cell.firstCursorPosition();
+                if( row == 0 )
                 {
-                    ret = -1;
-                    goto ERR;
-                }
-                qDebug()<< "TABLE MESSAGES: " << in_cursor.block().text();
-                if( move_cursor_to_next( in_cursor , NEXT_TABLE ) )
-                {
-                    pack1_tb   = in_cursor.currentTable();
-                    if( NULL == pack1_tb )
-                    {
-                        ret = -1;
-                        goto ERR;
-                    }
-                    qDebug()<< "TABLE PACK1: " << in_cursor.block().text();
-                    if( move_cursor_to_next( in_cursor , NEXT_TABLE ) )
-                    {
-                        pack2_tb   = in_cursor.currentTable();
-                        if( NULL == pack2_tb )
-                        {
-                            ret = -1;
-                            goto ERR;
-                        }
-                        qDebug()<< "TABLE PACK2: " << in_cursor.block().text();
-
-                    }
-                }
-            }
-
-            QTextTable * tb;
-            QMapIterator< int, msg_types_t > it(msg_list);
-            QTextList *   t_list_arab;
-
-            QTextTableFormat table_format;
-            table_format.setCellPadding (5);
-
-            QVector <QTextLength> col_widths;
-            for (int i = 0; i < msg_tb->columns(); ++i)
-                col_widths << QTextLength (QTextLength::PercentageLength, 100.0 / msg_tb->columns());
-
-            table_format.setColumnWidthConstraints (col_widths);
-
-            for( int i=0; i< msg_list.count() ;i ++ )
-            {
-                it.next();
-                if(  i == 0 )
-                {
-                    out_cursor.insertList( list_arab->format() );
-                    t_list_arab = out_cursor.currentList();
-                    if( NULL == t_list_arab )
-                    {
-                        ret =-1;
-                        goto ERR;
-                    }
-
+                    QTextCharFormat fm = cell.format();
+                    fm.setBackground(QColor("#e0e0e0"));
+                    cell.setFormat(fm);
+                    cellCursor.insertText( pairs[column].first );//TODO , charFormat);
                 }
                 else
                 {
-                    t_list_arab->add(out_cursor.block());
+                    cellCursor.insertText( pairs[column].second[row-1] );//TODO , charFormat);
                 }
-                out_cursor.setBlockFormat(list_arab->item(0).blockFormat());
-                out_cursor.setCharFormat(list_arab->item(0).charFormat());
-                out_cursor.setBlockCharFormat(list_arab->item(0).charFormat());
-                out_cursor.insertText( "Message Name " + it.value().msgName );
-
-
-                out_cursor.insertBlock();
-                out_cursor.setBlockFormat( def_bformat );
-                out_cursor.setBlockCharFormat( def_chformat );
-                out_cursor.setCharFormat( def_chformat );
-
-                if( out_cursor.insertTable( msg_tb->rows(), msg_tb->columns(), table_format ) )
-                {
-                    tb   = out_cursor.currentTable();
-                    tb->setFormat ( msg_tb->format() );
-
-                    for( int j=0; j < tb->columns();j++ )
-                    {
-                        for( int k=0; k < tb->rows();k++ )
-                        {
-                            tb->cellAt(k,j).setFormat( msg_tb->cellAt(k,j).format() );
-                            if( k == 0 )
-                            {
-                                tb->cellAt(k,j).firstCursorPosition().insertText( msg_tb->cellAt(k,j).firstCursorPosition().block().text() );
-                            }
-                        }
-                    }
-
-                    out_cursor.movePosition( QTextCursor::NextRow );
-                    out_cursor.insertText(  it.value().msgName );
-                    if(!out_cursor.movePosition( QTextCursor::NextCell ))
-                    {
-                        qDebug()<<"Can't move to next cell: " << i << "," << 1;
-                    }
-                    out_cursor.insertText(  QString("%1").arg(it.value().BitLen) );
-                    if(!out_cursor.movePosition( QTextCursor::NextCell ))
-                    {
-                        qDebug()<<"Can't move to next cell: " << i << "," << 2;
-                    }
-                    out_cursor.insertText(  QString("%1").arg(it.value().Type) );
-                    if(!out_cursor.movePosition( QTextCursor::NextCell ))
-                    {
-                        qDebug()<<"Can't move to next cell: " << i << "," << 2;
-                    }
-                    out_cursor.insertText(  QString("%1").arg(it.value().DefaultValue) );
-
-                    if(!out_cursor.movePosition( QTextCursor::NextCell ))
-                    {
-                        qDebug()<<"Can't move to next cell: " << i << "," << 2;
-                    }
-                    out_cursor.insertText(  it.value().msgDescription );
-                    //
-                    //                    out_cursor.insertText( "\n\n\n" );
-
-
-                    if( !it.hasNext() )
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        out_cursor.movePosition( QTextCursor::NextBlock );
-                        out_cursor.setBlockFormat( def_bformat );
-                        out_cursor.setBlockCharFormat( def_chformat );
-                        out_cursor.setCharFormat( def_chformat );
-                        out_cursor.insertText( "\n\n" );
-                    }
-                }
-            }
-              write( "test."TYPE, out_doc );
             }
         }
-        //out_doc->deleteLater();
-ERR:
-        in_doc->deleteLater();
-        return ret;
+        listCursor = MainFrame->lastCursorPosition();
+        cursor->insertFragment(QTextDocumentFragment(&listDocumment));
+    }
+}
+
+void DocWriter::addMessagesToDocument( QTextCursor* cursor, const ComMatrix &matrix )
+{
+    QList< QPair<QString,QList<QString>> > pairs;
+    if( matrix.getMsgPairs( pairs ) )
+    {
+        addTableToDocument( cursor, pairs );
+    }
+}
+
+void DocWriter::addPacketsToDocument( QTextCursor* cursor, const ComMatrix &matrix )
+{
+    QList< QPair<QString,QList<QString>> > pairs;
+    foreach( auto pkgId, matrix.packetsList().keys() ) {
+        if( matrix.getPkgPairs( pkgId, pairs ) )
+        {
+            addTableToDocument( cursor, pairs );
+        }
+        pairs.clear();
+    }
+    cursor->movePosition(QTextCursor::End);
+}
+
+void DocWriter::addItemsToDocument( QTextCursor* cursor, const ComMatrix &matrix )
+{
+    QTextBlockFormat blockFormat;
+    blockFormat.setAlignment(Qt::AlignLeft);
+    QTextCharFormat charFormat;
+    charFormat.setFont( cursor->document()->defaultFont() );
+
+    cursor->insertBlock( blockFormat );
+    QTextList* list =  cursor->insertList( QTextListFormat::ListUpperRoman );
+    cursor->insertText(QString("Messages"), charFormat );
+    addMessagesToDocument( cursor, matrix );
+    cursor->insertBlock(blockFormat);
+    list->add(cursor->block());
+    cursor->insertText(QString("Packets"));
+    addPacketsToDocument( cursor, matrix );
+}
+
+void DocWriter::populateDocument( QTextDocument *  document,const QString& title, const ComMatrix &matrix )
+{
+    document->setDefaultFont(QFont("Times", 15));
+    QTextCursor cursor(document);
+    addTitleToDocument( &cursor, title );
+    addItemsToDocument( &cursor, matrix );
+}
+
+
+int DocWriter::build_doc(const ComMatrix &matrix )
+{
+    QTextDocument *document  = new QTextDocument();
+    if( document )
+    {
+        QTextBrowser* textEdit = new QTextBrowser();//QTextEdit
+        populateDocument( document,"COMMUNICTAION MATRIX", matrix );
+        textEdit->resize(1000,800);
+        textEdit->setDocument( document );
+        textEdit->show();
+        //   document->deleteLater();
+    }
 }

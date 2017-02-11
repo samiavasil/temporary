@@ -94,15 +94,19 @@ void MainWindow::on_actionNewProject_triggered()
     //TODO load db
     QTreeWidgetItem* item = createTreeWidgetItem( QStringList("Networks"), SqlDataManager::eNET );
     ui->treeWidget->insertTopLevelItem( 0, item );
+    updateTreeSubitems(  item );
 
     item = createTreeWidgetItem( QStringList("Nodes"),    SqlDataManager::eNODE );
     ui->treeWidget->insertTopLevelItem( 1, item );
+    updateTreeSubitems(  item );
 
     item = createTreeWidgetItem( QStringList("Packets"),  SqlDataManager::ePACKET );
     ui->treeWidget->insertTopLevelItem( 2, item );
+    updateTreeSubitems(  item );
 
     item = createTreeWidgetItem( QStringList("Messages"), SqlDataManager::eMESSAGES );
     ui->treeWidget->insertTopLevelItem( 3, item );
+    updateTreeSubitems(  item );
     ui->treeWidget->blockSignals(false);
 }
 
@@ -293,16 +297,23 @@ void MainWindow::tableRowsInserted ( const QModelIndex & parent, int start, int 
     if( cur_item )
     {
         updateTreeSubitems( cur_item );
+    }
+}
 
-        for( int i=0; i < cur_item->childCount();i++ )
+void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
+{
+    if( item )
+    {
+        updateSubitems( item );
+
+        for( int i=0; i < item->childCount();i++ )
         {
-            updateTreeSubitems(cur_item->child(i));
+            updateTreeSubitems(item->child(i));
         }
     }
 }
 
-
-void MainWindow::updateTreeSubitems( QTreeWidgetItem* item )
+void MainWindow::updateSubitems( QTreeWidgetItem* item )
 {
 #if 1
     SqlDataManager::sqlTablesTypes_t sub_item_type = SqlDataManager::eENUM_NUMBER;

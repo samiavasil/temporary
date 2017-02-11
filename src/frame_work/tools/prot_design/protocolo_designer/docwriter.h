@@ -9,7 +9,14 @@ public:
     DocWriter();
     ~DocWriter();
     void write(const QString &fileName, QTextDocument * const document );
-    virtual int generate_all( QMap< int, pack_types_t >& pack_list, QMap< int, msg_types_t  > & msg_list );
+    int build_doc(const ComMatrix &matrix);
+protected:
+    void populateDocument(QTextDocument *document, const QString &title, const ComMatrix &matrix);
+    void addMessagesToDocument(QTextCursor *cursor, const ComMatrix &matrix);
+    void addPacketsToDocument(QTextCursor *cursor, const ComMatrix &matrix);
+    void addTitleToDocument(QTextCursor *cursor, const QString &title);
+    void addItemsToDocument(QTextCursor *cursor, const ComMatrix &matrix);
+    void addTableToDocument(QTextCursor *cursor, const QList<QPair<QString, QList<QString> > > &pairs);
 private:
     QTextDocument * const m_document;
     QTextCursor m_cursor;

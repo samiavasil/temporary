@@ -51,6 +51,7 @@ protected:
     QString                          m_filter;
 private:
     Ui::MainWindow *ui;
+    void updateSubitems(QTreeWidgetItem *item);
 };
 
 #endif // MAINWINDOW_H
