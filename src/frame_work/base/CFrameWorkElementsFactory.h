@@ -12,18 +12,23 @@ class CFrameWork;
 
 /**
  *  
- */
+ */// class template with a template template parameter V
+
+
+template<template<typename> class ElementsList,class Element>
 class FRAME_WORKSHARED_EXPORT CFrameWorkElementsFactory {
   public:
-    virtual CPortIO* createPortIO(const CPortIO::portIo_type type) = 0;
+    virtual CPortIO* createPortIO(const Element& type) = 0;
 
-    virtual CProtocolPackFactory* createProtocol() = 0;
+    virtual CProtocolPackFactory* createProtocol(const Element& type) = 0;
 
-    virtual CCommandExecutor* createCommandExecutor() = 0;
+    virtual CCommandExecutor* createCommandExecutor(const Element& type) = 0;
 
-    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk) = 0;
+    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk, const Element& type) = 0;
 
-    virtual CDataPlot* createDataPlot() = 0;
+    virtual CDataPlot* createDataPlot(const Element& type) = 0;
+
+    virtual const ElementsList<Element>& returnElementsTypes() = 0;
 
 };
 #endif

@@ -17,15 +17,15 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QFrameWorkElementsFactory::QFrameWorkElementsFactory() {
+template<typename Element> QFrameWorkElementsFactory<Element>::QFrameWorkElementsFactory() {
   DEBUG << "Create QFrameWorkElementsFactory";
 }
 
-QFrameWorkElementsFactory::~QFrameWorkElementsFactory() {
+template<typename Element> QFrameWorkElementsFactory<Element>::~QFrameWorkElementsFactory() {
   DEBUG << "Destroy QFrameWorkElementsFactory";
 }
 
-CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type) {
+template<typename Element> CPortIO* QFrameWorkElementsFactory<Element>::createPortIO(const Element &type) {
   CPortIO* port = NULL;                            
   DEBUG << "Create PortIo";
   switch( type ) {                                 
@@ -52,7 +52,7 @@ CPortIO* QFrameWorkElementsFactory::createPortIO(const CPortIO::portIo_type type
 
 #include"qt/QProtocolDb.h"//TODO
 #include"qt/QProtocolLoader.h"//TODO
-CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
+template<typename Element> CProtocolPackFactory* QFrameWorkElementsFactory<Element>::createProtocol(const Element &type) {
   DEBUG << "Create Protocol";
   CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolDb());//TODO FIX ME
   if( 0 == protocol ){
@@ -61,7 +61,7 @@ CProtocolPackFactory* QFrameWorkElementsFactory::createProtocol() {
   return protocol;
 }
 
-CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
+template<typename Element> CCommandExecutor* QFrameWorkElementsFactory<Element>::createCommandExecutor(const Element &type) {
   DEBUG << "Create Command Executor";
   QCommandExecutor* exec = new QCommandExecutor(NULL);     
   if( 0 != exec ){                                         
@@ -72,7 +72,7 @@ CCommandExecutor* QFrameWorkElementsFactory::createCommandExecutor() {
   return ( exec );                                         
 }
 
-CPacketCollector* QFrameWorkElementsFactory::createPacketCollector( CFrameWork * cFwk ) {
+template<typename Element> CPacketCollector* QFrameWorkElementsFactory<Element>::createPacketCollector( CFrameWork * cFwk,const Element& type ) {
     DEBUG << "Create Packet Collector";
     QPacketCollector* coll = NULL;//TODO= new QPacketCollector(cFwk)
     if( 0 == coll ){                                 
@@ -81,12 +81,12 @@ CPacketCollector* QFrameWorkElementsFactory::createPacketCollector( CFrameWork *
     return ( coll ); 
 }
 
-CControlView* QFrameWorkElementsFactory::createControlView() {
+template<typename Element> CControlView* QFrameWorkElementsFactory<Element>::createControlView(const Element& type) {
   DEBUG << "Create Control View";
   return NULL;                 
 }
 
-CDataPlot* QFrameWorkElementsFactory::createDataPlot() {
+template<typename Element> CDataPlot* QFrameWorkElementsFactory<Element>::createDataPlot(const Element& type) {
   DEBUG << "Create Data Plot";
    return NULL;
 }
