@@ -59,7 +59,7 @@ protected:
 
 bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
-    DEBUG <<   tr("Bliak[%1]").arg(random());
+    DEBUG <<   tr("Bliak[%1]").arg(qrand());
     QwtPlotCurve* curve   = m_Plot->m_CurCurve;
     QwtPlot*      plotQwt = m_Plot->ui->PlotQwt;
     if(  obj == m_Plot->ui->PlotQwt->canvas() )
@@ -73,7 +73,8 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
         }
 
         if ( event->type() == QEvent::MouseButtonRelease ) {
-            if(  !m_Plot->m_Zoomer[0]->isEnabled() ){
+            if(  !m_Plot->m_Zoomer[0]->isEnabled() )
+            {
                 QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
                 if( Qt::RightButton == mouseEvent->button() ){
                     emit showPopupMenu( mouseEvent->globalPos() );
@@ -86,7 +87,7 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
             if ( event->type() == QEvent::MouseMove ) {
                 QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
                 if( curve  && m_Plot->isEnabledSnapPickerToCurve() ){
-
+#if 0  /*Snap to Linear interpolation betwen samples*/
                     int size = curve->dataSize();
                     QPointF data,data1;// = curve->sample(idx);
                     const QwtScaleMap yMap = plotQwt->canvasMap( curve->yAxis() );
@@ -120,9 +121,6 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                             }
                         }
                     }
-
-//TODO:FIX ME                    ((QPoint*)(&(mouseEvent->pos())))->setY(y);
-
                     if( x < curve->sample( 0 ).x() ){
                         x = xMap.transform( curve->sample( 0 ).x() );
                     }
@@ -133,10 +131,22 @@ bool CanvasEventFilter::eventFilter(QObject *obj, QEvent *event)
                         x = xMap.transform( x );
                     }
 
-//TODO:FIX ME                    ((QPoint*)(&(mouseEvent->pos())))->setX(x);
+                    ((QPointF*)(&(mouseEvent->localPos())))->setX(x);
+                    ((QPointF*)(&(mouseEvent->localPos())))->setY(y);
+#else
+                    /*Snap to data samples*/
+                    const QwtScaleMap yMap = plotQwt->canvasMap( curve->yAxis() );
+                    const QwtScaleMap xMap = plotQwt->canvasMap( curve->xAxis() );
+                    int id = curve->closestPoint(mouseEvent->pos());
+                    QPointF p = curve->sample( id );
+                    ((QPointF*)(&(mouseEvent->localPos())))->setX(  xMap.transform(p.x()) );
+                    ((QPointF*)(&(mouseEvent->localPos())))->setY( yMap.transform(p.y()) );
+#endif
+
                 }
+
                 // standard event processing
-                return obj->eventFilter(obj, mouseEvent);
+                return obj->eventFilter(obj, event );
             }
 
         }
@@ -229,7 +239,9 @@ QDataPlot::QDataPlot(QWidget *parent) :
     m_Zoomer[1] = new QwtPlotZoomer( QwtPlot::xTop, QwtPlot::yLeft, ui->PlotQwt->canvas() );
     m_Zoomer[1]->setEnabled( false );
 
-
+#if 0
+    m_picker = NULL;
+#else
     m_picker = new QwtPlotPicker ( QwtPlot::xBottom, QwtPlot::yLeft,
                                    QwtPlotPicker::CrossRubberBand,   QwtPicker::AlwaysOn,
                                    ui->PlotQwt->canvas() );
@@ -237,8 +249,11 @@ QDataPlot::QDataPlot(QWidget *parent) :
     m_picker->setRubberBand ( QwtPicker::CrossRubberBand );
     m_picker->setStateMachine(new QwtPickerTrackerMachine());
     m_picker->setRubberBandPen ( QColor ( Qt::green ) );
-    m_picker->setTrackerPen ( QColor ( Qt::red ) );
+    m_picker->setTrackerPen ( QColor ( Qt::blue ) );
     m_picker->setResizeMode(  QwtPicker::KeepSize );
+
+
+#endif
     m_CanvasEventFilter  = new CanvasEventFilter( this  );
 
     on_actionActionEnablePicker_triggered( false );
@@ -253,7 +268,7 @@ QDataPlot::QDataPlot(QWidget *parent) :
     addLine( QDataPlot::TopRightAxes   );
     addLine( QDataPlot::BottomLeftAxes );
     addLine( QDataPlot::TopRightAxes   );
-    connect( ui->PlotQwt, SIGNAL( legendClicked(QwtPlotItem*)),this, SLOT(legendClicked(QwtPlotItem*) ) );
+
     m_Zoomer[0]->setZoomBase( false );
 
     QwtPlotMagnifier* Magnif = new QwtPlotMagnifier ( ui->PlotQwt->canvas() );
@@ -275,8 +290,6 @@ QDataPlot::~QDataPlot()
         delete m_Grid;
     }
 }
-
-
 
 
 QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
@@ -337,7 +350,7 @@ QDataPlot::lineId_t QDataPlot::addLine( QDataPlot::Axes axes,
             y[i] = 400*sin(((6.28*i)/100) + phase );
             //DEBUG << "sin(%d)=%f",i,z[i]);
         }
-        curve->setSamples( x,y,100 );
+        curve->setSamples( x,y,100);
         ////////////DELL ME
 
         m_CurveMap.insert( m_NextId, curve );
@@ -457,23 +470,35 @@ void QDataPlot::on_actionRectangle_Zoom_toggled(bool arg1)
     }
 }
 
-void QDataPlot::legendClicked( QwtPlotItem* item ){
-    QwtPlotCurve* curve = dynamic_cast<QwtPlotCurve*>(item);
-    if( curve ){
-        curve->setVisible(!curve->isVisible());
-        if( curve == m_CurCurve ){
-            setCurrentCurve(findFirstVisibleCurve());
+void QDataPlot::legendChecked( const QVariant &itemInfo,bool checked, int idx/*QwtPlotItem* item*/ ){
+    QwtPlotItem *item = ui->PlotQwt->infoToItem(itemInfo);
+    if( item )
+    {
+        QwtPlotCurve* curve = dynamic_cast<QwtPlotCurve*>(item);
+        if( curve ){
+            curve->setVisible( checked );
+            if( curve == m_CurCurve ){
+                setCurrentCurve(findFirstVisibleCurve());
+            }
         }
+        item->plot()->replot();
     }
-    item->plot()->replot();
 }
 
 void QDataPlot::on_actionActionEnablePicker_triggered( bool checked )
 {
     if( m_picker ){
         m_picker->setEnabled(checked);
+        if( checked )
+        {
+            ui->PlotQwt->canvas()->installEventFilter( m_CanvasEventFilter );
+        }
+        else
+        {
+            ui->PlotQwt->canvas()->removeEventFilter( m_CanvasEventFilter );
+        }
     }
-    ui->PlotQwt->canvas()->installEventFilter( m_CanvasEventFilter );
+
 }
 
 void QDataPlot::enableSnapPickerToCurve( bool enble ){
@@ -492,8 +517,11 @@ int QDataPlot::setCurrentCurve( QwtPlotCurve *curve ){
     {
         if ( ( *it == curve ) && ( (*it)->rtti() == QwtPlotItem::Rtti_PlotCurve ) ){
             m_CurCurve = curve;
-            m_picker->setRubberBandPen ( curve->pen().color() );
-            m_picker->setTrackerPen ( curve->pen().color() );
+            if( m_picker )
+            {
+                m_picker->setRubberBandPen ( curve->pen().color() );
+                m_picker->setTrackerPen ( curve->pen().color() );
+            }
             ret = 0;
             break;
         }
@@ -613,9 +641,13 @@ void QDataPlot::on_actionShowLegend_toggled(bool arg1)
 
     if( arg1 ){
         QwtLegend* legend = new QwtLegend();
-//TODO:FIX ME        legend->setItemMode( QwtLegend::ClickableItem );
-        legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
-        ui->PlotQwt->insertLegend( legend );
+        if( legend )
+        {
+            legend->setDefaultItemMode( QwtLegendData::Checkable );
+            legend->setToolTip("Left Button   - Show/Hide line\nRight Button - Line Options");
+            ui->PlotQwt->insertLegend( legend );
+            connect( legend, SIGNAL( checked(QVariant,bool,int)),this, SLOT(legendChecked(QVariant,bool,int) ) );
+        }
     }
     else{
         ui->PlotQwt->insertLegend( NULL );

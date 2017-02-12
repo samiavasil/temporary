@@ -82,7 +82,8 @@ SOURCES += \
     qt/QpluginFilter.cpp \
     qt/QPluginViewProperty.cpp \
     qt/QPluginListWidget.cpp \
-    qt/QPluginSelectionView.cpp
+    qt/QPluginSelectionView.cpp \
+    base/CDataPlot.cpp
 
 HEADERS +=\
     base/CCommand.h \

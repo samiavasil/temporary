@@ -11,7 +11,7 @@
 
 class QwtPlotGrid;
 class QwtPlotZoomer;
-
+class QwtPlotMarker;
 #define INVAL_LINE_ID ( (QDataPlot::lineId_t)(-1) )
 class CanvasEventFilter;
 
@@ -95,9 +95,10 @@ protected slots:
     void  showPopupMenu(const QPoint &pos );
     void  showLinesConfigurationDialog( );
     void selectCurveActionSlot( );
-    void legendClicked(QwtPlotItem* item);
+    void legendChecked(const QVariant &itemInfo, bool checked, int idx);
 private:
     Ui::QDataPlot *ui;
+
 };
 
 class CanvasEventFilter : public QObject
