@@ -3,6 +3,7 @@
 
 //#define FULL_DUMP
 //#define FULL_VERBOSE_DUMP
+#define ENABLE_DUMP
 #if 1
 #include  <QDebug>
 #include  <QtGlobal>

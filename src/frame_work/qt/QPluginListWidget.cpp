@@ -111,7 +111,7 @@ bool cfgViewTypeT::hideDisabled() const{
 }
 
 
-QPluginListWidget::QPluginListWidget( QWidget *parent, const QpluginFilter &filter, const cfgViewTypeT& viewType  ):
+QPluginListWidget::QPluginListWidget( QWidget *parent, const QPluginFilter &filter, const cfgViewTypeT& viewType  ):
     QTableWidget(parent),m_Filter(filter),m_ViewType(viewType)
 
 {
@@ -167,7 +167,7 @@ void QPluginListWidget::reloadPLuginList(){
     setSortingEnabled(false);
     m_Plugins.clear();
 
-    QList< PluginDescription >plugins   = QPluginList::Instance()->getAllPlugins( QpluginFilter( m_Filter ) );
+    QList< PluginDescription >plugins   = QPluginList::Instance()->getAllPlugins( QPluginFilter( m_Filter ) );
     blockSignals( true );
     model()->removeRows(0, rowCount());
     RightVisibleCol = 0;
@@ -274,7 +274,7 @@ void QPluginListWidget::OnitemChanged( QTableWidgetItem* item ){
     }
 }
 
-void QPluginListWidget::setFilter( const QpluginFilter& filter ){
+void QPluginListWidget::setFilter( const QPluginFilter& filter ){
     m_Filter = filter;
     reloadPLuginList();
 }
@@ -284,7 +284,7 @@ void QPluginListWidget::setViewType( const cfgViewTypeT& viewType ){
     reloadPLuginList();
 }
 
-const QpluginFilter& QPluginListWidget::filter(){
+const QPluginFilter& QPluginListWidget::filter(){
     return m_Filter;
 }
 

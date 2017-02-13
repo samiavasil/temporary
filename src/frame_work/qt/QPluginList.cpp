@@ -7,7 +7,7 @@
 #include "ui_pluginlist.h"
 
 QPluginList* QPluginList::m_This = NULL;
-QMap< QString, QPluginFabrique*  > QPluginList::m_PluginList;
+QMap< QString, QPluginFactory*  > QPluginList::m_PluginList;
 QPluginList* QPluginList::Instance(){
     DEBUG  << "INPUT" << m_This;
         if( NULL == m_This ){
@@ -19,7 +19,7 @@ QPluginList* QPluginList::Instance(){
 }
 
 
-QList<PluginDescription> QPluginList::configurePlugins( const QpluginFilter &filter ){
+QList<PluginDescription> QPluginList::configurePlugins( const QPluginFilter &filter ){
     if( m_This ){
         QDialog dlg;
         cfgViewTypeT viewType;
@@ -49,7 +49,7 @@ QPluginList::QPluginList(QObject *parent):QObject(parent)
 
 QPluginList::~QPluginList()
 {
-    QMapIterator<QString,QPluginFabrique* > plugin_list(m_PluginList);
+    QMapIterator<QString,QPluginFactory* > plugin_list(m_PluginList);
     while ( plugin_list.hasNext() ) {
         plugin_list.next();
         if( plugin_list.value() ){
@@ -68,7 +68,7 @@ void QPluginList::readPluginsDir( ){
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         fileName = pluginsDir.absoluteFilePath(fileName);
         if(  false == m_PluginList.contains( fileName ) ){
-            QPluginFabrique* fab = new QPluginFabrique(fileName.toUtf8().data());
+            QPluginFactory* fab = new QPluginFactory(fileName.toUtf8().data());
             if( 0 != fab ){
                 fab->enable( !is_plugin_disabled( fab->getDescription().name() ) );
                 m_PluginList.insert( fileName, fab );
@@ -89,7 +89,7 @@ bool QPluginList::is_plugin_disabled( const QString& name ){
 
 void QPluginList::pluginEnable( PluginDescription desc, bool enble ){
    //TODO: writing to some configuration DB
-    QPluginFabrique* fab = m_PluginList.value( desc.location(), NULL );
+    QPluginFactory* fab = m_PluginList.value( desc.location(), NULL );
     if( fab ){
         fab->enable( enble );
         emit pluginsUpdate();
@@ -119,10 +119,10 @@ void QPluginList::on_cancelButton_clicked()
     //setResult( Rejected );
 }
 
-QList<PluginDescription> QPluginList::getAllPlugins( const QpluginFilter &filter ){
+QList<PluginDescription> QPluginList::getAllPlugins( const QPluginFilter &filter ){
     QList<PluginDescription> plugin_desc;
-    QList<QPluginFabrique*> listPl = m_PluginList.values();
-    foreach( QPluginFabrique* pFab, listPl )
+    QList<QPluginFactory*> listPl = m_PluginList.values();
+    foreach( QPluginFactory* pFab, listPl )
     {
       if( pFab && filter.filtered( *pFab ) ){
             plugin_desc.append( pFab->getDescription() );
@@ -137,8 +137,8 @@ QObject* QPluginList::cretate_plugin_object( const PluginDescription &desc , QOb
 {
 
     QObject* object = NULL;
-    QList<QPluginFabrique*> listPl = m_PluginList.values();
-    foreach( QPluginFabrique* pFab, listPl )
+    QList<QPluginFactory*> listPl = m_PluginList.values();
+    foreach( QPluginFactory* pFab, listPl )
     {
         if(  desc == pFab->getDescription() )
         {

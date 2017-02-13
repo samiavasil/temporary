@@ -67,7 +67,7 @@ bool QFraCreator::Create( CFrameWork *fW )
             QWidget* fw_win = m_qfW->getFrameWorkWindow();
 
             //QpluginFilter filter( UNDEFINED );
-            QList<PluginDescription> list = QPluginList::Instance()->getAllPlugins( QpluginFilter( DATA_OUT ) );
+            QList<PluginDescription> list = QPluginList::Instance()->getAllPlugins( QPluginFilter( DATA_OUT ) );
             QFraDeviceUI* fra_dev = new QFraDeviceUI(fw_win);
             m_qfW->AddWidgetToControlArrea(fra_dev);
 

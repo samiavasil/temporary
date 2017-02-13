@@ -78,12 +78,12 @@ SOURCES += \
     qt/QProtocolDb.cpp \
     qt/QRegFactory.cpp \
     base/CRegFactory.cpp \
-    qt/QPluginFabrique.cpp \
-    qt/QpluginFilter.cpp \
     qt/QPluginViewProperty.cpp \
     qt/QPluginListWidget.cpp \
     qt/QPluginSelectionView.cpp \
-    base/CDataPlot.cpp
+    base/CDataPlot.cpp \
+    qt/QPluginFactory.cpp \
+    qt/QPluginFilter.cpp
 
 HEADERS +=\
     base/CCommand.h \
@@ -113,18 +113,18 @@ HEADERS +=\
     qt/QCreator.h \
     qt/PluginDescription.h \
     qt/qdbg.h \
-    qt/QloggerInterface.h \
     base/debug.h \
     qt/QSerialPortIO.h \
     base/CProtocolDb.h \
     qt/QProtocolDb.h \
     qt/QRegFactory.h \
     base/CRegFactory.h \
-    qt/QPluginFabrique.h \
-    qt/QpluginFilter.h \
     qt/QPluginViewProperty.h \
     qt/QPluginListWidget.h \
-    qt/QPluginSelectionView.h
+    qt/QPluginSelectionView.h \
+    qt/QPluginFactory.h \
+    qt/QPluginFilter.h \
+    qt/QLoggerInterface.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

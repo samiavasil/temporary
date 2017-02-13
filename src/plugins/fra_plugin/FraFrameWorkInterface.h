@@ -6,9 +6,9 @@
 #include "qt/QPluginObjectsInterface.h"
 
 #define FRA_VERSION    "V0.0"
-#include "qt/QloggerInterface.h"
+#include "qt/QLoggerInterface.h"
 
-class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface, public QloggerInterface
+class PLUGIN_EXPORT FraFrameWorkInterface:  public QPluginObjectsInterface, public QLoggerInterface
 {
     Q_OBJECT
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

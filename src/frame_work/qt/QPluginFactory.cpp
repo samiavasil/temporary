@@ -1,8 +1,8 @@
 #include  <iostream>
-#include "qt/QPluginFabrique.h"
+#include "qt/QPluginFactory.h"
 #include"qt/QFrameWork.h"
 
-void operator<<(  QDebug Ostr, const QPluginFabrique* in){
+void operator<<(  QDebug Ostr, const QPluginFactory* in){
     Ostr <<"===plugin_descriptor:=================================================================\n"
         <<"File Name:   "<<  in->getDescription().location()   << "\n"
        <<"Category:    "<< in->getDescription().category()    << "\n"
@@ -14,7 +14,7 @@ void operator<<(  QDebug Ostr, const QPluginFabrique* in){
     <<"===end plugin_descriptor:=============================================================\n";
 }
 
-QPluginFabrique::QPluginFabrique( const char *name, QObject *parent ):
+QPluginFactory::QPluginFactory( const char *name, QObject *parent ):
     QObject( parent ), m_PluginDecription(UNDEFINED,name)
 {
     state        = 0;
@@ -23,7 +23,7 @@ QPluginFabrique::QPluginFabrique( const char *name, QObject *parent ):
 
 }
 
-QPluginFabrique::~QPluginFabrique(){
+QPluginFactory::~QPluginFactory(){
     m_PluginDecription.enable( false );
     if( m_loader ){
         m_loader->deleteLater();
@@ -31,7 +31,7 @@ QPluginFabrique::~QPluginFabrique(){
     DEBUG  << "Destroy plugin_descriptor:\n" << this;
 }
 
-QPluginObjectsInterface* QPluginFabrique::cast_to_plugin_interface( QObject* object ){
+QPluginObjectsInterface* QPluginFactory::cast_to_plugin_interface( QObject* object ){
     QPluginObjectsInterface* plugin = NULL;
     if( object ){
         plugin =  qobject_cast< QPluginObjectsInterface* >(object);
@@ -39,7 +39,7 @@ QPluginObjectsInterface* QPluginFabrique::cast_to_plugin_interface( QObject* obj
     return plugin;
 }
 
-void QPluginFabrique::read_plugin_description( ){
+void QPluginFactory::read_plugin_description( ){
 
     QPluginObjectsInterface* pluginObj;
     QPluginLoaderExt* loader = new QPluginLoaderExt( m_PluginDecription.location() );
@@ -71,7 +71,7 @@ void QPluginFabrique::read_plugin_description( ){
     }
 }
 
-QObject* QPluginFabrique::cretate_plugin_object( QObject* parent  ){
+QObject* QPluginFactory::cretate_plugin_object( QObject* parent  ){
     QObject* object = 0;
 
     if( !is_enabled() ){
@@ -113,7 +113,7 @@ QObject* QPluginFabrique::cretate_plugin_object( QObject* parent  ){
     return object;
 }
 
-void QPluginFabrique::allObjectsDestoyed( QObject* obj ){
+void QPluginFactory::allObjectsDestoyed( QObject* obj ){
     if( m_loader == dynamic_cast<QPluginLoaderExt*>(obj)   ){
         m_loader->deleteLater();
         m_loader  = NULL;
@@ -121,7 +121,7 @@ void QPluginFabrique::allObjectsDestoyed( QObject* obj ){
     }
 }
 
-void  QPluginFabrique::enable( bool enbl){
+void  QPluginFactory::enable( bool enbl){
     m_PluginDecription.enable( enbl );
     while( state == 3 ){
         QMessageBox msgBox;
@@ -140,6 +140,6 @@ void  QPluginFabrique::enable( bool enbl){
     DEBUG <<  this;
 }
 
-bool  QPluginFabrique::is_enabled() const{
+bool  QPluginFactory::is_enabled() const{
     return m_PluginDecription.is_enabled();
 }

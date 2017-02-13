@@ -1,5 +1,5 @@
 #include "base/debug.h"
-#include "QloggerInterface.h"
+#include "QLoggerInterface.h"
 
 QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( parent )
 {
@@ -16,14 +16,14 @@ void QloggerInterface_private::Log( const QString& data )
     emit LogOutput( data );
 }
 
-QloggerInterface::QloggerInterface( QloggerInterface::LogId_t id  ):m_Id( id ),m_enLog(true)
+QLoggerInterface::QLoggerInterface( QLoggerInterface::LogId_t id  ):m_Id( id ),m_enLog(true)
 {
     m_Object = new QloggerInterface_private( NULL );
     LogerTree::instance()->addToLoggerList( this );
     enableLog( m_enLog );
 }
 
-QloggerInterface::~QloggerInterface()
+QLoggerInterface::~QLoggerInterface()
 {
     LogerTree::instance()->removeFromLoggerList( this );
     if( m_Object )
@@ -32,17 +32,17 @@ QloggerInterface::~QloggerInterface()
     }
 }
 
-QloggerInterface::LogId_t QloggerInterface::getId()
+QLoggerInterface::LogId_t QLoggerInterface::getId()
 {
     return m_Id;
 }
 
-void QloggerInterface::setId( QloggerInterface::LogId_t id)
+void QLoggerInterface::setId( QLoggerInterface::LogId_t id)
 {
     m_Id = id;
 }
 
-void QloggerInterface::Log( const QString &data )
+void QLoggerInterface::Log( const QString &data )
 {
     if( m_enLog )
     {
@@ -59,33 +59,33 @@ void QloggerInterface::Log( const QString &data )
     }
 }
 
-void QloggerInterface::enableLog( bool enb )
+void QLoggerInterface::enableLog( bool enb )
 {
    m_enLog = enb;
    getObject()->blockSignals( (!m_enLog) );
 }
 
-QloggerInterface_private *QloggerInterface::getObject()
+QloggerInterface_private *QLoggerInterface::getObject()
 {
     return m_Object;//TODO - fix me
 }
 
-bool LogerTree::connect( QloggerInterface* Logg, QloggerInterface* destLogg ){
+bool LogerTree::connect( QLoggerInterface* Logg, QLoggerInterface* destLogg ){
     QObject::connect( Logg->getObject(),SIGNAL(LogOutput(const QString&)), destLogg->getObject(), SLOT(Log( const QString&)) );
     return true;//TODO - fix me
 }
 
-bool LogerTree::disconnect( QloggerInterface* Logg, QloggerInterface* destLogg ){
+bool LogerTree::disconnect( QLoggerInterface* Logg, QLoggerInterface* destLogg ){
     QObject::disconnect( Logg->getObject(),SIGNAL(LogOutput(const QString&)), destLogg->getObject(), SLOT(Log(const QString&)) );
     return true;
 }
 
-bool LogerTree::isLoggerConected( QloggerInterface* Logg, QloggerInterface::LogId_t dest_logger ){
+bool LogerTree::isLoggerConected( QLoggerInterface* Logg, QLoggerInterface::LogId_t dest_logger ){
 
     bool ret = false;
     if( Logg )
     {
-       QloggerInterface::LogId_t src_id = Logg->getId();
+       QLoggerInterface::LogId_t src_id = Logg->getId();
        if( Logg == m_id_obj_map.value( src_id, NULL ) )
        {
            if( m_id_con_map.values( src_id ).contains( dest_logger ) )
@@ -103,12 +103,12 @@ bool LogerTree::isLoggerConected( QloggerInterface* Logg, QloggerInterface::LogI
     return ret;//TODO - fix me
 }
 
-QloggerInterface::LogId_t LogerTree::getNewLoggerId(){
+QLoggerInterface::LogId_t LogerTree::getNewLoggerId(){
     int i;
     m_NextId++;
     //return m_NextId;
-    QList< QloggerInterface::LogId_t > keys = m_id_obj_map.keys();
-    for( i = QloggerInterface::ROOT_ID + 1; i < keys.count() ; i++  )
+    QList< QLoggerInterface::LogId_t > keys = m_id_obj_map.keys();
+    for( i = QLoggerInterface::ROOT_ID + 1; i < keys.count() ; i++  )
     {
         if( i < keys.value( i, -1 ) )
         {
@@ -118,7 +118,7 @@ QloggerInterface::LogId_t LogerTree::getNewLoggerId(){
     return i;
 }
 
-int LogerTree::removeFromLoggerList( QloggerInterface* log )
+int LogerTree::removeFromLoggerList( QLoggerInterface* log )
 {
     int ret = -1;
     if( log )
@@ -134,15 +134,15 @@ int LogerTree::removeFromLoggerList( QloggerInterface* log )
     return ret;
 }
 
-int LogerTree::addToLoggerList( QloggerInterface* log  ){
+int LogerTree::addToLoggerList( QLoggerInterface* log  ){
     int ret = -1;
     if( log )
     {
-        if( QloggerInterface::INALID_ID == log->getId() )
+        if( QLoggerInterface::INALID_ID == log->getId() )
         {
             log->setId( instance()->getNewLoggerId() );
         }
-        QloggerInterface* tempLog = m_id_obj_map.value( log->getId(), NULL );
+        QLoggerInterface* tempLog = m_id_obj_map.value( log->getId(), NULL );
         if( tempLog == NULL )
         {
             m_id_obj_map.insert( log->getId(), log );
@@ -162,19 +162,19 @@ int LogerTree::addToLoggerList( QloggerInterface* log  ){
     return ret;
 }
 
-int LogerTree::connectLogger( QloggerInterface* logger, QloggerInterface::LogId_t dest_logger_id )
+int LogerTree::connectLogger( QLoggerInterface* logger, QLoggerInterface::LogId_t dest_logger_id )
 {
 
     if( logger )
     {
-        QloggerInterface::LogId_t  dest_id = dest_logger_id;
-        QloggerInterface* destLogger =  m_id_obj_map.value( dest_id, NULL );
+        QLoggerInterface::LogId_t  dest_id = dest_logger_id;
+        QLoggerInterface* destLogger =  m_id_obj_map.value( dest_id, NULL );
         if( NULL == destLogger )
         {
-            if( QloggerInterface::ROOT_ID != dest_id )
+            if( QLoggerInterface::ROOT_ID != dest_id )
             {
                 //Destination logger doesn't exist - Try to Connect ROOT logger
-                destLogger = m_id_obj_map.value( QloggerInterface::ROOT_ID, NULL );
+                destLogger = m_id_obj_map.value( QLoggerInterface::ROOT_ID, NULL );
             }
         }
         if( destLogger )
@@ -198,19 +198,19 @@ int LogerTree::connectLogger( QloggerInterface* logger, QloggerInterface::LogId_
     return 0;
 }
 
-int LogerTree::disconnectLogger( QloggerInterface* logger ){
+int LogerTree::disconnectLogger( QLoggerInterface* logger ){
     int ret = -1;
     if( logger )
     {
-        QloggerInterface::LogId_t id = logger->getId();
-        if( id != QloggerInterface::INALID_ID )
+        QLoggerInterface::LogId_t id = logger->getId();
+        if( id != QLoggerInterface::INALID_ID )
         {
-            QList<QloggerInterface::LogId_t> con_ids = m_id_con_map.values(id);
+            QList<QLoggerInterface::LogId_t> con_ids = m_id_con_map.values(id);
             if( con_ids.count() > 0 )
             {
                 for( int i = 0; i < con_ids.count(); i++ )
                 {
-                    if( 0 != disconnectLogger( logger, con_ids.value( i, QloggerInterface::INALID_ID ) ) )
+                    if( 0 != disconnectLogger( logger, con_ids.value( i, QLoggerInterface::INALID_ID ) ) )
                     {
                         //TODO - dump some error
                     }
@@ -226,14 +226,14 @@ int LogerTree::disconnectLogger( QloggerInterface* logger ){
     return ret;
 }
 
-int LogerTree::disconnectLogger( QloggerInterface* logger, QloggerInterface::LogId_t id_dest ){
+int LogerTree::disconnectLogger( QLoggerInterface* logger, QLoggerInterface::LogId_t id_dest ){
     int ret = -1;
 
     if( logger  )
     {
         if( logger == m_id_obj_map.value( logger->getId(), NULL ) )
         {
-            QloggerInterface* dest_log = m_id_obj_map.value( id_dest, NULL );
+            QLoggerInterface* dest_log = m_id_obj_map.value( id_dest, NULL );
             disconnect( logger, dest_log );
             m_id_con_map.remove( logger->getId(), id_dest );
             ret = 0;
@@ -247,15 +247,15 @@ int LogerTree::disconnectLogger( QloggerInterface* logger, QloggerInterface::Log
     return ret;
 }
 
-MainLogger::MainLogger():QloggerInterface( QloggerInterface::ROOT_ID )
+MainLogger::MainLogger():QLoggerInterface( QLoggerInterface::ROOT_ID )
 {
 
 }
 
 LogerTree*  LogerTree::m_Tree;
 int         LogerTree::m_NextId;
-QMap<QloggerInterface::LogId_t, QloggerInterface*>               LogerTree::m_id_obj_map;   /**/
-QMultiMap<QloggerInterface::LogId_t, QloggerInterface::LogId_t>  LogerTree::m_id_con_map;
+QMap<QLoggerInterface::LogId_t, QLoggerInterface*>               LogerTree::m_id_obj_map;   /**/
+QMultiMap<QLoggerInterface::LogId_t, QLoggerInterface::LogId_t>  LogerTree::m_id_con_map;
 LogerTree::LogerTree()
 {
 

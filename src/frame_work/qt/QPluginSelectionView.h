@@ -14,7 +14,7 @@ class FRAME_WORKSHARED_EXPORT QPluginSelectionView : public QWidget
     Q_OBJECT
 
 public:
-    explicit QPluginSelectionView(QWidget *parent = 0, const QpluginFilter& filter = QpluginFilter(),
+    explicit QPluginSelectionView(QWidget *parent = 0, const QPluginFilter& filter = QPluginFilter(),
                                   const cfgViewTypeT& viewType = cfgViewTypeT()  );
     ~QPluginSelectionView();
     const PluginDescription getSelectedPlugin();

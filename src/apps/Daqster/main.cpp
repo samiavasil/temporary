@@ -225,8 +225,6 @@ int main(int argc, char *argv[])
     obj1.compatible(obj2);
 
     w.show();
-
-
 #ifdef TEST_ENBL_BIT_TEST
     testBits();
 #endif

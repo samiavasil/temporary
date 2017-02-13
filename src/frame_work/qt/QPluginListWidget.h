@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include <QTableWidget>
-#include "qt/QPluginFabrique.h"
-#include "qt/QpluginFilter.h"
+#include "qt/QPluginFactory.h"
+#include "qt/QPluginFilter.h"
 #include"base/global.h"
 
 #define ADD_BIT(x)  unsigned int x :1;
@@ -57,14 +57,14 @@ class FRAME_WORKSHARED_EXPORT QPluginListWidget : public QTableWidget
     Q_OBJECT
     
 public:
-    explicit QPluginListWidget( QWidget *parent = 0, const QpluginFilter& filter = QpluginFilter(),
+    explicit QPluginListWidget( QWidget *parent = 0, const QPluginFilter& filter = QPluginFilter(),
                                 const cfgViewTypeT& viewType = cfgViewTypeT() );
     ~QPluginListWidget();
     PluginDescription getSelectedPlugin();
     const QList< PluginDescription >& getPluginList();
-    void setFilter( const QpluginFilter& filter );
+    void setFilter( const QPluginFilter& filter );
     void setViewType( const cfgViewTypeT& viewType );
-    const QpluginFilter& filter();
+    const QPluginFilter& filter();
     const cfgViewTypeT&  viewType();
 
 protected:
@@ -90,7 +90,7 @@ signals:
     void rereadPLuginList();
 private:
     QList< PluginDescription > m_Plugins;
-    QpluginFilter m_Filter;
+    QPluginFilter m_Filter;
     cfgViewTypeT m_ViewType;
     int RightVisibleCol;
     int m_ConnToCheck;

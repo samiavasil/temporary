@@ -146,7 +146,7 @@ void QFraFrameWork::newView(){
     cfgViewTypeT view;
     view.hideDisabled(true).name(true).icon(true);
     QDialog dlg;
-    QPluginSelectionView* vv = new QPluginSelectionView( &dlg, QpluginFilter(DATA_OUT), view );
+    QPluginSelectionView* vv = new QPluginSelectionView( &dlg, QPluginFilter(DATA_OUT), view );
     connect( vv, SIGNAL(ok_selected()),&dlg, SLOT(accept()) );
     connect( vv, SIGNAL(cancel_selected()),&dlg, SLOT(reject()) );
     if( QDialog::Accepted == dlg.exec() ){

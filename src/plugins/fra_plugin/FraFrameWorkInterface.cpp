@@ -10,7 +10,7 @@ static bool bla;
 
 FraFrameWorkInterface::FraFrameWorkInterface(QObject* parent ):QPluginObjectsInterface(parent)
 {
-    LogerTree::connectLogger( this,QloggerInterface::ROOT_ID );
+    LogerTree::connectLogger( this,QLoggerInterface::ROOT_ID );
     DEBUG << "FraFrameWorkInterface object create";
     m_Icon.addFile(QString::fromUtf8(":/fra/icons/FrameWork.png"));
 }

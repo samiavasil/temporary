@@ -13,11 +13,11 @@
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-class FRAME_WORKSHARED_EXPORT QPluginFabrique:public QObject{
+class FRAME_WORKSHARED_EXPORT QPluginFactory:public QObject{
     Q_OBJECT
 public:
-    explicit QPluginFabrique( const char *name, QObject* parent = 0 );
-    ~QPluginFabrique();
+    explicit QPluginFactory( const char *name, QObject* parent = 0 );
+    ~QPluginFactory();
 
     QObject* cretate_plugin_object( QObject *parent = 0 );
 
@@ -45,6 +45,6 @@ protected:
 };
 
 
-void operator<<(  QDebug  Ostr, const QPluginFabrique* in);
+void operator<<(  QDebug  Ostr, const QPluginFactory* in);
 
 #endif // PLUGIN_DESCRIPTOR_H

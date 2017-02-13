@@ -3,7 +3,7 @@
 #include "qt/QPluginList.h"
 
 
-QPluginSelectionView::QPluginSelectionView(QWidget *parent, const QpluginFilter &filter, const cfgViewTypeT &viewType) :
+QPluginSelectionView::QPluginSelectionView(QWidget *parent, const QPluginFilter &filter, const cfgViewTypeT &viewType) :
     QWidget(parent),
     ui(new Ui::QPluginSelectionView),m_wd(this, filter, viewType)
 {

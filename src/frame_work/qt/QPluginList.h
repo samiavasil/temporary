@@ -6,8 +6,8 @@
 #include <QMap>
 #include "QPluginLoaderExt.h"
 #include <QTableWidgetItem>
-#include "qt/QPluginFabrique.h"
-#include "qt/QpluginFilter.h"
+#include "qt/QPluginFactory.h"
+#include "qt/QPluginFilter.h"
 
 #include "interfaces.h"
 namespace Ui {
@@ -25,9 +25,9 @@ protected:
 public:
     ~QPluginList();
     static QPluginList* Instance();
-    static QList<PluginDescription> configurePlugins( const QpluginFilter &filter = QpluginFilter() );
+    static QList<PluginDescription> configurePlugins( const QPluginFilter &filter = QPluginFilter() );
 
-    QList<PluginDescription> getAllPlugins( const QpluginFilter &filter );
+    QList<PluginDescription> getAllPlugins( const QPluginFilter &filter );
     QObject* cretate_plugin_object( const PluginDescription &desc , QObject *parent = 0 );
 private slots:
     void on_okButton_clicked();
@@ -50,7 +50,7 @@ protected slots:
 
 protected:
     static QPluginList* m_This;
-    static QMap< QString, QPluginFabrique*  > m_PluginList;
+    static QMap< QString, QPluginFactory*  > m_PluginList;
 private:
 
 };
