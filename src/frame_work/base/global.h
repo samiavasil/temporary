@@ -1,22 +1,7 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
-#include <qglobal.h>
 
-typedef qint8    int8;
-typedef qint16   int16;
-typedef qint32   int32;
-typedef qint64   int64;
-typedef quint8   u8;
-typedef quint16  u16;
-typedef quint32  u32;
-typedef quint64  u64;
-
-
-#if defined(FRAME_WORK_LIBRARY)
-#  define FRAME_WORKSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define FRAME_WORKSHARED_EXPORT Q_DECL_IMPORT
-#endif
+#include"build_cfg.h"
 
 enum{
 	NO_ERR,

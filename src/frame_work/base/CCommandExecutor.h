@@ -13,30 +13,14 @@ class FRAME_WORKSHARED_EXPORT CCommandExecutor {
     /**
      * Append new command to queue.
      */
-    virtual int appendCommand(CCommand * command) {
-       int ret;
-       lockObject();
-       ret = appendCommand_internal(command);
-       unlockObject();
-       return ret;
-    }
+    virtual int appendCommand(CCommand * command);
 
     /**
      * Flush all commands from Queue
      */
-    virtual void flushCommands(){
-        lockObject();
-        flushCommands_internal();
-        unlockObject();
-    }
+    virtual void flushCommands();
 
-    virtual int getCommNum() {
-        int count;
-        lockObject();
-        count = getCommNum_internal();
-        unlockObject();
-        return count;
-    }
+    virtual int getCommNum();
 
     /**
      * Pause execution of loaded in queue commands 
@@ -66,12 +50,15 @@ class FRAME_WORKSHARED_EXPORT CCommandExecutor {
     inline virtual void timerHandlerExecuteAllCommands();
 
     virtual int executeCommand(int comm_num) = 0;
+
     virtual int  removeCommand(int comm)     = 0;
     /**
      * Append new command to queue.
      */
     virtual int  appendCommand_internal(CCommand * command) = 0;
+
     virtual void flushCommands_internal()                   = 0;
+
     virtual int  getCommNum_internal()                      = 0;
 
   public:
@@ -102,19 +89,6 @@ class FRAME_WORKSHARED_EXPORT CCommandExecutor {
 /**
  * Timer based Commands handling loop
  */
-inline void CCommandExecutor::timerHandlerExecuteAllCommands() {
-    lockObject();                        
-     for( int i = 0; i < getCommNum(); i++ ){
-        if( 0 == executeCommand( i ) )   
-        {                                
-            removeCommand(i);
-            i--;
-        }                                
-    }                                    
-    if( 0 < getCommNum() ){              
-      startTimer( );   
-    }                                    
-    unlockObject();                               
-}
+
 
 #endif

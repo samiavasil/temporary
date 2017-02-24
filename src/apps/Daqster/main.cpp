@@ -174,7 +174,7 @@ DataType obj1(DataType::Real,    DataType::I32);
 DataType obj2(DataType::Complex, DataType::I32);
 
 
-#include "qt/QRegFactory.h"
+//#include "qt/QRegFactory.h"
 
 
 int main(int argc, char *argv[])

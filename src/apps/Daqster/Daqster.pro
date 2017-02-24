@@ -26,7 +26,8 @@ QT+=uitools
 else{
 CONFIG      += designer
 }
-LIBS += -L../../../bin/libs  -L../../../bin/extlibs -lframe_work -lqwt  -lQt5DesignerComponents
+LIBS += -L../../../bin/libs  -L../../../bin/extlibs -lframe_workd
+# -lqwt  -lQt5DesignerComponents
 
 #TODO: check is this need need -lQtDesignerComponents -lQtDesigner
 

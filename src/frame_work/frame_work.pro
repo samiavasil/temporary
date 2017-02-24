@@ -124,7 +124,8 @@ HEADERS +=\
     qt/QPluginSelectionView.h \
     qt/QPluginFactory.h \
     qt/QPluginFilter.h \
-    qt/QLoggerInterface.h
+    qt/QLoggerInterface.h \
+    base/build_cfg.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
