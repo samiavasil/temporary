@@ -20,7 +20,7 @@ class  DesignerCreator:  public QCreator
 public:
     explicit DesignerCreator( QObject * parent = NULL );
     virtual ~DesignerCreator( );
-    virtual bool Create(CFrameWork *fW);
+    virtual bool Create(QFrameWork *fW);
 protected:
     QWidget* loadUiFile(QWidget *parent, QString &file_name);
 public slots:

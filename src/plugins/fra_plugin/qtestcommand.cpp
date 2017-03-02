@@ -1,7 +1,7 @@
 #include "qtestcommand.h"
 
 #include "base/CPacket.h"
-#include "base/CPacketCollector.h"
+//#include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QProtocolLoader.h"
 #include<stdio.h>

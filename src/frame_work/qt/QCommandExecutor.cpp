@@ -1,11 +1,13 @@
-
+#include <QObject>
+#include <QTimer>
+#include "qt/QCommand.h"
 #include "qt/QCommandExecutor.h"
-#include "base/CCommand.h"
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-QCommandExecutor::QCommandExecutor(QObject * parent) :QThread(parent),m_mutex(QMutex::Recursive){
+QCommandExecutor::QCommandExecutor(QObject * pParent) :QThread(pParent),m_mutex(QMutex::Recursive){
+  m_CommandLoopTime = 10;
   m_timer = NULL;
 }
 
@@ -25,23 +27,54 @@ QCommandExecutor::~QCommandExecutor() {
   }
 }
 
-/**
- * Append new command to queue.
- */
-int QCommandExecutor::appendCommand_internal(CCommand * command) {
-  int ret = NO_ERR;                                     
-  if( command ){                                        
-      QCommand* qcomm = (QCommand *)command;            
-      /*TODO - Should add command type validation code*/
-      if( qcomm ){                                      
-        m_commands.append( qcomm );                     
-      }                                                 
-  }                                                     
-  else{                                                 
-      ret = WRONG_PARAMS;                               
-  }                                                     
-  return ret; 
+int QCommandExecutor::appendCommand(QCommand *pComm)
+{
+    int ret = NO_ERR;
+    m_mutex.lock();
+    if( pComm ){
+          m_commands.append( pComm );
+    }
+    else{
+        ret = WRONG_PARAMS;
+    }
+    m_mutex.unlock();
+    return ret;
 }
+
+void QCommandExecutor::flushCommands(){
+    m_mutex.lock();
+    QCommand * comm;
+    while( 0 < m_commands.count() ){
+        comm = m_commands.takeAt(0);
+        if( comm ){
+            comm->deleteLater();
+        }
+    }
+    m_mutex.unlock();
+}
+
+int QCommandExecutor::getCommNum() {
+    int count;
+    m_mutex.lock();
+    count = m_commands.count();
+    m_mutex.unlock();
+    return count;
+}
+
+/**
+ * Set command loop time
+ */
+void QCommandExecutor::setCommandLoopTime(int timeMs) {
+    m_CommandLoopTime = timeMs;
+}
+
+/**
+ * Return command loop time [ms]
+ */
+int QCommandExecutor::getCommandLoopTime() {
+  return m_CommandLoopTime;
+}
+
 
 /**
  * Implementation of virtual removeCommand function... Use this function only when object is locked. 
@@ -58,25 +91,13 @@ int QCommandExecutor::removeCommand(int comm) {
   return ret;                               
 }
 
-/**
- * Flush all commands from Queue
- */
-void QCommandExecutor::flushCommands_internal() {
-  QCommand * comm;                 
-  while( 0 < m_commands.count() ){ 
-      comm = m_commands.takeAt(0); 
-      if( comm ){                  
-          comm->deleteLater();     
-      }                            
-  }                                                          
-}
 
 /**
  * Pause execution of loaded in queue commands 
  */
 int QCommandExecutor::pauseExecution() {
   int ret = NO_ERR;                                  
-  lockObject();                                      
+  m_mutex.lock();
   if( true == isRunning() ){                         
       if( m_timer ){                                 
               emit stopTimer();
@@ -89,7 +110,7 @@ int QCommandExecutor::pauseExecution() {
       /*Thread isn't running*/                       
       ret = SOME_ERROR;                              
   }                                                  
-  unlockObject();                                    
+  m_mutex.unlock();
   return ret;             
 }
 
@@ -98,7 +119,7 @@ int QCommandExecutor::pauseExecution() {
  */
 int QCommandExecutor::continueExecution(){
     int ret = NO_ERR;
-    lockObject();
+    m_mutex.lock();
     if( true == isRunning() ){
         if( m_timer ){
                 DEBUG << "Run Command Execution loop";
@@ -112,7 +133,7 @@ int QCommandExecutor::continueExecution(){
         /*Thread isn't running*/
         ret = SOME_ERROR;
     }
-    unlockObject();
+    m_mutex.unlock();
     return ret;
 }
 
@@ -148,21 +169,13 @@ int QCommandExecutor::stopExecution() {
       return rt;
 }
 
-int QCommandExecutor::executeCommand(int comm_num) {
+int QCommandExecutor::executeCommand(int commNum) {
   int ret = 0;                                           
-  CCommand * comm = m_commands.value( comm_num, NULL);   
+  QCommand * comm = m_commands.value( commNum, NULL);
   if( comm ){                                            
       ret = comm->handler();                             
   }                                                      
   return ret;                                            
-}
-
-void QCommandExecutor::lockObject() {
-  m_mutex.lock();
-}
-
-void QCommandExecutor::unlockObject() {
-  m_mutex.unlock();
 }
 
 void QCommandExecutor::startTimer() {
@@ -175,9 +188,9 @@ void QCommandExecutor::startTimer() {
 void QCommandExecutor::run() {
     int retCode = NO_ERR;
     DEBUG << "Run Command Executor thread";
-   // lockObject();
+   // m_mutex.lock();
     retCode = initTimer();
-  //  unlockObject();
+  //  m_mutex.unlock();
     emit initReady();
     retCode = exec();                                           
     DEBUG << "Exit Command Executor Thread with code: " << retCode;
@@ -197,6 +210,17 @@ int QCommandExecutor::initTimer() {
  * Timer based Commands handling loop
  */
 void QCommandExecutor::timerHandlerExecuteCommands() {
-  timerHandlerExecuteAllCommands();
+  m_mutex.lock();
+  for( int i = 0; i < getCommNum(); i++ ){
+      if( 0 == executeCommand( i ) )
+      {
+          removeCommand(i);
+          i--;
+      }
+  }
+  if( 0 < getCommNum() ){
+      startTimer( );
+  }
+  m_mutex.unlock();
 }
 

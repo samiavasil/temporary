@@ -5,17 +5,16 @@
 #include "base/global.h"
 #include <QObject>
 
-#include "base/CCreator.h"
+class QFrameWork;
 
-class FRAME_WORKSHARED_EXPORT QCreator : public QObject, public CCreator {
-Q_OBJECT
-
+class FRAME_WORKSHARED_EXPORT QCreator : public QObject {
+  Q_OBJECT
   public:
-    explicit QCreator(QObject * parent = NULL);
+    explicit QCreator( QObject * parent = NULL );
 
-    virtual ~QCreator();
+    virtual bool Create( QFrameWork * fW ) = 0;
 
-    virtual void Free();
+    virtual void Free() = 0;
 
 };
 #endif

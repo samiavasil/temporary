@@ -4,12 +4,12 @@
 
 #include "base/CPortIO.h"
 #include "base/CProtocolPackFactory.h"
-#include "base/CCommandExecutor.h"
-#include "base/CPacketCollector.h"
+//#include "base/CPacketCollector.h"
 #include "base/CDataPlot.h"
 
-class CFrameWork;
-
+class QFrameWork;
+class QCommandExecutor;
+class QPacketCollector;
 /**
  *  
  */// class template with a template template parameter V
@@ -22,9 +22,9 @@ class FRAME_WORKSHARED_EXPORT CFrameWorkElementsFactory {
 
     virtual CProtocolPackFactory* createProtocol(const Element& type) = 0;
 
-    virtual CCommandExecutor* createCommandExecutor(const Element& type) = 0;
+    virtual QCommandExecutor* createCommandExecutor(const Element& type) = 0;
 
-    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk, const Element& type) = 0;
+    virtual QPacketCollector* createPacketCollector(QFrameWork * cFwk, const Element& type) = 0;
 
     virtual CDataPlot* createDataPlot(const Element& type) = 0;
 

@@ -3,8 +3,7 @@
 
 #include "global.h"
 
-typedef int pack_id_t;
-typedef int msg_id_t;
+
 
 class CProtocolLoader;
 class FRAME_WORKSHARED_EXPORT CProtocolDb

@@ -48,8 +48,6 @@ QEXTSERIALPORT_STATIC = yes
 #QEXTSERIALPORT_WITH_UDEV = yes
 
 SOURCES += \
-    base/CCommand.cpp \
-    base/CCommandExecutor.cpp \
     qt/QPacketCollector.cpp \
     qt/QCommandExecutor.cpp \
     qt/QCommand.cpp \
@@ -57,8 +55,6 @@ SOURCES += \
     base/CProtocolPackFactory.cpp \
     qt/QProtocolPackFactory.cpp \
     qt/QProtocolLoader.cpp \
-    base/CPacketCollector.cpp \
-    base/CFrameWork.cpp \
     base/CPacket.cpp \
     qt/QFrameWork.cpp \
     base/CFrameWorkElementsFactory.cpp \
@@ -68,7 +64,6 @@ SOURCES += \
     qt/QPluginList.cpp \
     qt/QPluginObjectsInterface.cpp \
     qt/QPortIO.cpp \
-    base/CCreator.cpp \
     qt/QCreator.cpp \
     qt/PluginDescription.cpp \
     qt/qdbg.cpp \
@@ -86,8 +81,6 @@ SOURCES += \
     qt/QPluginFilter.cpp
 
 HEADERS +=\
-    base/CCommand.h \
-    base/CCommandExecutor.h \
     qt/QPacketCollector.h \
     qt/QCommandExecutor.h \
     qt/QCommand.h \
@@ -97,8 +90,6 @@ HEADERS +=\
     qt/QProtocolPackFactory.h \
     qt/QProtocolLoader.h \
     qt/ProtoGen.h \
-    base/CPacketCollector.h \
-    base/CFrameWork.h \
     base/CPacket.h \
     qt/QFrameWork.h \
     base/CFrameWorkElementsFactory.h \
@@ -109,7 +100,6 @@ HEADERS +=\
     qt/interfaces.h \
     qt/QPluginObjectsInterface.h \
     qt/QPortIO.h \
-    base/CCreator.h \
     qt/QCreator.h \
     qt/PluginDescription.h \
     qt/qdbg.h \

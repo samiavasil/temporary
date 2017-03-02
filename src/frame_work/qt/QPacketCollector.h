@@ -5,7 +5,6 @@
 #include "base/global.h"
 #include <QObject>
 
-#include "base/CPacketCollector.h"
 #include <QMutex>
 
 #include <QList>
@@ -17,14 +16,14 @@ class CPortIO;
 class CPacket;
 class CProtocolPackFactory;
 
-class FRAME_WORKSHARED_EXPORT QPacketCollector : public QObject, public CPacketCollector {
-Q_OBJECT
+class FRAME_WORKSHARED_EXPORT QPacketCollector : public QObject {
+    Q_OBJECT
 
-  protected:
+protected:
     QList<CPacket *> m_PacketsList;
 
 
-  public:
+public:
     QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent = 0);
 
     virtual ~QPacketCollector();
@@ -35,6 +34,14 @@ Q_OBJECT
 
     virtual int getRecPacketNum();
 
+    bool isChained();
+
+    int setProtocolFactory(CProtocolPackFactory *protocol);
+
+    int setPort(CPortIO *port);
+
+    int receiveBytes();
+
 signals:
     int packetReceivedSignal();
 
@@ -42,7 +49,7 @@ public slots:
     void receivedBytesSlot();
 
 
-  protected:
+protected:
     virtual int appendReceivedBytes(const u8 * data, const int64 len);
 
     int collectPacket(CPacket * packet);
@@ -58,12 +65,30 @@ public slots:
     virtual void removeReceivedBytes(int byteNum);
 
 
-  private:
+private:
     QByteArray m_Data;
 
 
-  protected:
+protected:
+    typedef enum {
+        COL_IDLE,
+        COL_WAIT_FOR_HEADER,
+        COL_WAIT_FOR_PACK
+    } rec_states_t;
+
+    typedef enum {
+        TBD
+    } trans_states_t;
+
     QMutex m_Mutex;
+
+    CPortIO* m_PortIo;
+
+    CProtocolPackFactory* m_Protocol;
+
+    rec_states_t m_RecState;
+
+    trans_states_t m_TransState;
 
 };
 #endif

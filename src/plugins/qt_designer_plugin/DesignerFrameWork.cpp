@@ -1,7 +1,7 @@
 #include "DesignerFrameWork.h"
+#include "DesignerCreator.h"
 #include <QDebug>
 #include <QGridLayout>
-#include "base/CCreator.h"
 
 DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QObject *parent ):
     QFrameWork( creator , parent )
@@ -13,7 +13,15 @@ DesignerFrameWork::DesignerFrameWork(QCreator * creator  , QObject *parent ):
 DesignerFrameWork::~DesignerFrameWork()
 {
     //qDebug()<<"iooopiop"<<endl<<endl<<endl;
-    m_creator->Free();
+    if( m_creator )//TODO: Check this
+    {
+        DesignerCreator* creator = dynamic_cast<DesignerCreator*>(m_creator);
+        if( creator )
+        {
+           m_creator->Free();
+        }
+    }
+
 }
 
 void DesignerFrameWork::AddWidgetToControlArrea ( QWidget* widget )

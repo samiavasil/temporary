@@ -1,4 +1,3 @@
-
 #include "qt/QFrameWorkElementsFactory.h"
 #include "qt/QCommandExecutor.h"
 #include "qt/QProtocolPackFactory.h"
@@ -7,9 +6,7 @@
 #include "qt/QSerialPortIO.h"
 #include "base/CPortIO.h"
 #include "base/CProtocolPackFactory.h"
-#include "base/CCommandExecutor.h"
-#include "base/CPacketCollector.h"
-#include "base/CFrameWork.h"
+//#include "base/CPacketCollector.h"
 #include "base/CDataPlot.h"
 
 
@@ -61,7 +58,7 @@ template<typename Element> CProtocolPackFactory* QFrameWorkElementsFactory<Eleme
   return protocol;
 }
 
-template<typename Element> CCommandExecutor* QFrameWorkElementsFactory<Element>::createCommandExecutor(const Element &type) {
+template<typename Element> QCommandExecutor* QFrameWorkElementsFactory<Element>::createCommandExecutor(const Element &type) {
   DEBUG << "Create Command Executor";
   QCommandExecutor* exec = new QCommandExecutor(NULL);     
   if( 0 != exec ){                                         
@@ -72,7 +69,7 @@ template<typename Element> CCommandExecutor* QFrameWorkElementsFactory<Element>:
   return ( exec );                                         
 }
 
-template<typename Element> CPacketCollector* QFrameWorkElementsFactory<Element>::createPacketCollector( CFrameWork * cFwk,const Element& type ) {
+template<typename Element> QPacketCollector* QFrameWorkElementsFactory<Element>::createPacketCollector( QFrameWork * cFwk,const Element& type ) {
     DEBUG << "Create Packet Collector";
     QPacketCollector* coll = NULL;//TODO= new QPacketCollector(cFwk)
     if( 0 == coll ){                                 

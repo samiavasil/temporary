@@ -54,7 +54,7 @@ void dump_qobject_meta( QObject* obj ){
 #endif
 
 #include "QFraDeviceUI.h"
-bool QFraCreator::Create( CFrameWork *fW )
+bool QFraCreator::Create(QFrameWork *fW )
 {
     bool bRet = false;
  //   QPluginList::configurePlugins( );

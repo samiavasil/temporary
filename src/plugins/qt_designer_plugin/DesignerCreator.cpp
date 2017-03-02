@@ -69,7 +69,7 @@ DesignerCreator::~DesignerCreator( )
 
 #include <QGridLayout>
 
-bool DesignerCreator::Create( CFrameWork *fW )
+bool DesignerCreator::Create(QFrameWork *fW )
 {
     if( fW )
     {

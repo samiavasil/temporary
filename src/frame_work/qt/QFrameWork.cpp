@@ -1,6 +1,7 @@
 #include "qt/QFrameWork.h"
 #include "qt/QCreator.h"
 #include<qevent.h>
+
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
@@ -27,27 +28,50 @@ void QFwWidget::closeEvent(QCloseEvent *event)
     }
 }
 
-QFrameWork::QFrameWork(QCreator * creator, QObject * parent):QObject(parent),CFrameWork(creator){
-  DEBUG << "Create QFrameWork";
-   m_FwWin = new QFwWidget();
-   QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
-   m_FwWin->show();
+QFrameWork::QFrameWork(QCreator * creator, QObject * parent):QObject(parent){
+    m_creator = creator;
+    DEBUG << "Create QFrameWork";
+    m_FwWin = new QFwWidget();
+    QObject::connect(m_FwWin, SIGNAL(destroyFW()) , this, SLOT(deleteLater()));
+    m_FwWin->show();
 }
 
 QFrameWork::~QFrameWork() {
-  DEBUG << "Destroy QFrameWork";
-  if( m_FwWin ){
-    //  m_FwWin->deleteLater();//TODO: Check this - Deletedin close event see gore
-      m_FwWin = NULL;
-  }
-  emit fwDestroy();
+    DEBUG << "Destroy QFrameWork";
+    if( m_creator )
+    {
+        delete m_creator;
+        m_creator = 0;
+    }
+    if( m_FwWin ){
+        //  m_FwWin->deleteLater();//TODO: Check this - Deletedin close event see gore
+        m_FwWin = NULL;
+    }
+    emit fwDestroy();
 }
 
-//bool QFrameWork::Create() {
-//  if( m_creator )
-//    return m_creator->Create( this );
-//  else
-//    return true;
-//}
+bool QFrameWork::Create() {
+  bool bRet  = true;
+  if( m_creator )
+      bRet = m_creator->Create( this );
+  return bRet;
+}
+
+/**
+ * TODO: TBD
+ */
+void QFrameWork::setCreator(QCreator *creator) {
+  if( m_creator )
+  {
+    m_creator->Free();
+    delete m_creator;
+  }
+  m_creator = creator;
+  Create();
+}
+
+QMainWindow *QFrameWork::getFrameWorkWindow(){
+    return m_FwWin;
+}
 
 

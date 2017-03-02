@@ -7,12 +7,12 @@
 
 class QCommandExecutor;
 class QProtocolPackFactory;
-class CPacketCollector;
+class QPacketCollector;
 class CPortIO;
 class CProtocolPackFactory;
-class CCommandExecutor;
-class CPacketCollector;
-class CFrameWork;
+class QCommandExecutor;
+class QPacketCollector;
+class QFrameWork;
 class CControlView;
 class CDataPlot;
 
@@ -27,9 +27,9 @@ template<typename Element> class FRAME_WORKSHARED_EXPORT QFrameWorkElementsFacto
 
     virtual CProtocolPackFactory* createProtocol(const Element& type);
 
-    virtual CCommandExecutor* createCommandExecutor(const Element& type);
+    virtual QCommandExecutor* createCommandExecutor(const Element& type);
 
-    virtual CPacketCollector* createPacketCollector(CFrameWork * cFwk, const Element &type);
+    virtual QPacketCollector* createPacketCollector(QFrameWork * cFwk, const Element &type);
 
     virtual CControlView* createControlView(const Element& type);
 

@@ -1,30 +1,38 @@
 #ifndef _QCOMMANDEXECUTOR_H
 #define _QCOMMANDEXECUTOR_H
 
-
 #include "base/global.h"
 #include <QThread>
-
-#include "base/CCommandExecutor.h"
-#include <QTimer>
-
-#include "qt/QCommand.h"
 #include <QMutex>
-
 #include <QList>
 
-#include <QObject>
+class QCommand;
+class QTimer;
 
+class FRAME_WORKSHARED_EXPORT QCommandExecutor : public QThread {
+    Q_OBJECT
 
-class CCommand;
-
-class FRAME_WORKSHARED_EXPORT QCommandExecutor : public QThread, public CCommandExecutor {
-Q_OBJECT
-
-  public:
-    QCommandExecutor(QObject * parent = 0);
+public:
+    QCommandExecutor(QObject * pParent = 0);
 
     virtual ~QCommandExecutor();
+    /**
+     * Append new command to queue.
+     */
+    virtual int appendCommand(QCommand *pComm);
+
+    virtual void run();
+
+    /**
+     * Flush all commands from Queue
+     */
+    virtual void flushCommands();
+
+    virtual int getCommNum();
+
+    virtual void setCommandLoopTime(int timeMs);
+
+    virtual int getCommandLoopTime();
 
 public slots:
 
@@ -46,8 +54,9 @@ public slots:
      */
     virtual int stopExecution();
 
-  protected:
-    virtual int executeCommand(int comm_num);
+protected:
+
+    virtual int executeCommand(int commNum);
     /**
      * Implementation of virtual removeCommand function... Use this function only when object is locked.
      * It is will be good if you don't use it ( only implement it  ), because it is used in base class where
@@ -55,37 +64,10 @@ public slots:
      */
     virtual int removeCommand(int comm);
 
-    /**
-     * Append new command to queue.
-     */
-    virtual int appendCommand_internal(CCommand * command);
-     /**
-     * Flush all commands from Queue
-     */
-    virtual void flushCommands_internal();
-
-    inline virtual int getCommNum_internal();
-
-
-    virtual void lockObject();
-
-    virtual void unlockObject();
-
     virtual void startTimer();
 
-
-  public:
-    void run();
-
-
-  protected:
+protected:
     int initTimer();
-
-    QList<QCommand*> m_commands;
-
-    QMutex m_mutex;
-
-    QTimer* m_timer;
 
 protected slots:
     /**
@@ -99,10 +81,20 @@ signals:
     void stopTimer();
 
     void initReady();
+
+protected:
+
+    QList<QCommand*> m_commands;
+
+    QMutex m_mutex;
+
+    QTimer* m_timer;
+    /**
+     * Command loop execution time. All available loops are servised on every m_CommandLoopTime mili seconds.
+     */
+    int m_CommandLoopTime;
+
 };
 
-inline int QCommandExecutor::getCommNum_internal() {
-  return m_commands.count();
-}
 
 #endif

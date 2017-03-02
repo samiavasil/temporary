@@ -5,14 +5,8 @@
 #include "global.h"
 #include "base/CProtocolDb.h"
 
-#define  PACK_ID_TYPE_BIT_SIZE  (sizeof(pack_id_t)*8)
-#define  MSG_ID_TYPE_BIT_SIZE    (sizeof(msg_id_t)*8)
-#define  PKT_ID_INVALID     ((pack_id_t)(  (  (1<<(PACK_ID_TYPE_BIT_SIZE-1) ) -  ((unsigned int) 1) )|(PACK_ID_TYPE_BIT_SIZE-1) ))
-#define  MSG_ID_INVALID     ((msg_id_t)(  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - ((unsigned int) 1)  )|(MSG_ID_TYPE_BIT_SIZE-1)   ))
 
 class CPacket;
-
-
 class FRAME_WORKSHARED_EXPORT CProtocolPackFactory {
   public:
     CProtocolPackFactory( CProtocolDb* protDb = NULL );
