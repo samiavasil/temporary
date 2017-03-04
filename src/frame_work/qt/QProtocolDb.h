@@ -1,7 +1,7 @@
 #ifndef QPROTOCOLDB_H
 #define QPROTOCOLDB_H
-#include"base/CProtocolDb.h"
-#include"base/CProtocolLoader.h"
+#include "base/global.h"
+
 #include <QList>
 #include <QMap>
 #include <QObject>
@@ -12,8 +12,9 @@
 #define  PKT_ID_INVALID     ((pack_id_t)(  (  (1<<(PACK_ID_TYPE_BIT_SIZE-1) ) -  ((unsigned int) 1) )|(PACK_ID_TYPE_BIT_SIZE-1) ))
 #define  MSG_ID_INVALID     ((msg_id_t)(  (  (1<<(MSG_ID_TYPE_BIT_SIZE-1) )  - ((unsigned int) 1)  )|(MSG_ID_TYPE_BIT_SIZE-1)   ))
 
+class QProtocolLoader;
 
-class FRAME_WORKSHARED_EXPORT QProtocolDb : public CProtocolDb
+class FRAME_WORKSHARED_EXPORT QProtocolDb
 {
 public:
     virtual int addPacket(const pack_id_t id);
@@ -37,6 +38,13 @@ public:
     virtual int packetPayloadBitLen(const pack_id_t packId, int * payloadLenBits);
 
     virtual int setMessage(const msg_id_t msgId, const u8 * data);
+    int getProtocolHeaderLenBits() const;
+    void setProtocolHeaderLenBits(int lenBits);
+    int getProtocolPostFixLenBits() const;
+    void setProtocolPostFixLenBits(int lenBits);
+    int getMaxPacketLen();
+    void setMaxPacketLen(int max_size);
+    int loadProtocolDefinition(QProtocolLoader &protLd);
 protected:
     virtual void clearProtDefinitions();
 protected:
@@ -47,6 +55,11 @@ typedef struct{
 } msg_desc_t;
 
 protected:
+    int m_hDrLenBits;
+
+    int m_postFixLenBits;
+
+    int m_maxPacketSize;
 
     QMap< pack_id_t, QList<msg_id_t> > m_packMap;
 

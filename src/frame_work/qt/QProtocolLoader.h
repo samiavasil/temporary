@@ -3,7 +3,6 @@
 
 
 #include "base/global.h"
-#include "base/CProtocolLoader.h"
 
 enum{
 #define GEN_MSG_ENUMS
@@ -18,8 +17,8 @@ enum{
 
 };
 
-class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
-  protected:
+class FRAME_WORKSHARED_EXPORT QProtocolLoader {
+protected:
     virtual int readProtocolData();
 
     virtual int getMsgCount();
@@ -44,5 +43,6 @@ class FRAME_WORKSHARED_EXPORT QProtocolLoader : public CProtocolLoader {
 
     virtual int getPostFixLenBits();
 
+    friend class  QProtocolDb;
 };
 #endif

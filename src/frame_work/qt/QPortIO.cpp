@@ -4,7 +4,12 @@
 
 QPortIO::QPortIO(QObject * parent) :QObject(parent){
     m_PioWidget = NULL;
+    m_PortType = UNDEFINED_IO;
     DEBUG<<"Create QPortIO type[" << m_PortType <<"] ptr = "<<(void*)this;
+}
+
+QPortIO::portIo_type QPortIO::type() {
+  return m_PortType;
 }
 
 QPortIO::~QPortIO()

@@ -1,40 +1,37 @@
-#include "qt/QFrameWorkElementsFactory.h"
+#include "qt/QTestFrameWorkElementsFactory.h"
 #include "qt/QCommandExecutor.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QPacketCollector.h"
 #include "qt/QProtocolLoader.h"
 #include "qt/QSerialPortIO.h"
-#include "base/CPortIO.h"
-#include "base/CProtocolPackFactory.h"
-//#include "base/CPacketCollector.h"
-#include "base/CDataPlot.h"
+#include "base/QDataPlot.h"
 
 
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-template<typename Element> QFrameWorkElementsFactory<Element>::QFrameWorkElementsFactory() {
+template<typename Element> QTestFrameWorkElementsFactory<Element>::QTestFrameWorkElementsFactory() {
   DEBUG << "Create QFrameWorkElementsFactory";
 }
 
-template<typename Element> QFrameWorkElementsFactory<Element>::~QFrameWorkElementsFactory() {
+template<typename Element> QTestFrameWorkElementsFactory<Element>::~QTestFrameWorkElementsFactory() {
   DEBUG << "Destroy QFrameWorkElementsFactory";
 }
 
-template<typename Element> CPortIO* QFrameWorkElementsFactory<Element>::createPortIO(const Element &type) {
-  CPortIO* port = NULL;                            
+template<typename Element> QPortIO* QTestFrameWorkElementsFactory<Element>::createPortIO(const Element &type) {
+  QPortIO* port = NULL;                            
   DEBUG << "Create PortIo";
   switch( type ) {                                 
-  case CPortIO::SIMULATOR_IO :{      
+  case QPortIO::SIMULATOR_IO :{      
 
       break;                                       
   }                                                
-  case CPortIO::SERIALPORT_IO :{                   
+  case QPortIO::SERIALPORT_IO :{                   
       port = new QSerialPortIO();                  
       break;                                       
   }                                                
-  case CPortIO::USBPORT_IO :{                      
+  case QPortIO::USBPORT_IO :{                      
       break;                                       
   }                                                
   default:{                                        
@@ -49,16 +46,16 @@ template<typename Element> CPortIO* QFrameWorkElementsFactory<Element>::createPo
 
 #include"qt/QProtocolDb.h"//TODO
 #include"qt/QProtocolLoader.h"//TODO
-template<typename Element> CProtocolPackFactory* QFrameWorkElementsFactory<Element>::createProtocol(const Element &type) {
+template<typename Element> QProtocolPackFactory* QTestFrameWorkElementsFactory<Element>::createProtocol(const Element &type) {
   DEBUG << "Create Protocol";
-  CProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolDb());//TODO FIX ME
+  QProtocolPackFactory* protocol = new QProtocolPackFactory(new QProtocolDb());//TODO FIX ME
   if( 0 == protocol ){
       CRITICAL <<  "Can't create QProtocolPackFactory";
   }
   return protocol;
 }
 
-template<typename Element> QCommandExecutor* QFrameWorkElementsFactory<Element>::createCommandExecutor(const Element &type) {
+template<typename Element> QCommandExecutor* QTestFrameWorkElementsFactory<Element>::createCommandExecutor(const Element &type) {
   DEBUG << "Create Command Executor";
   QCommandExecutor* exec = new QCommandExecutor(NULL);     
   if( 0 != exec ){                                         
@@ -69,7 +66,7 @@ template<typename Element> QCommandExecutor* QFrameWorkElementsFactory<Element>:
   return ( exec );                                         
 }
 
-template<typename Element> QPacketCollector* QFrameWorkElementsFactory<Element>::createPacketCollector( QFrameWork * cFwk,const Element& type ) {
+template<typename Element> QPacketCollector* QTestFrameWorkElementsFactory<Element>::createPacketCollector( QFrameWork * cFwk,const Element& type ) {
     DEBUG << "Create Packet Collector";
     QPacketCollector* coll = NULL;//TODO= new QPacketCollector(cFwk)
     if( 0 == coll ){                                 
@@ -78,12 +75,12 @@ template<typename Element> QPacketCollector* QFrameWorkElementsFactory<Element>:
     return ( coll ); 
 }
 
-template<typename Element> CControlView* QFrameWorkElementsFactory<Element>::createControlView(const Element& type) {
+template<typename Element> CControlView* QTestFrameWorkElementsFactory<Element>::createControlView(const Element& type) {
   DEBUG << "Create Control View";
   return NULL;                 
 }
 
-template<typename Element> CDataPlot* QFrameWorkElementsFactory<Element>::createDataPlot(const Element& type) {
+template<typename Element> QDataPlot* QTestFrameWorkElementsFactory<Element>::createDataPlot(const Element& type) {
   DEBUG << "Create Data Plot";
    return NULL;
 }

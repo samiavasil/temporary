@@ -12,33 +12,33 @@
 #include <QByteArray>
 
 
-class CPortIO;
-class CPacket;
-class CProtocolPackFactory;
+class QPortIO;
+class QPacket;
+class QProtocolPackFactory;
 
 class FRAME_WORKSHARED_EXPORT QPacketCollector : public QObject {
     Q_OBJECT
 
 protected:
-    QList<CPacket *> m_PacketsList;
+    QList<QPacket *> m_PacketsList;
 
 
 public:
-    QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent = 0);
+    QPacketCollector(QPortIO * port, QProtocolPackFactory * protocol, QObject * parent = 0);
 
     virtual ~QPacketCollector();
 
     virtual int getRecPacket();
 
-    virtual int transmitPacket(CPacket * packet);
+    virtual int transmitPacket(QPacket * packet);
 
     virtual int getRecPacketNum();
 
     bool isChained();
 
-    int setProtocolFactory(CProtocolPackFactory *protocol);
+    int setProtocolFactory(QProtocolPackFactory *protocol);
 
-    int setPort(CPortIO *port);
+    int setPort(QPortIO *port);
 
     int receiveBytes();
 
@@ -52,7 +52,7 @@ public slots:
 protected:
     virtual int appendReceivedBytes(const u8 * data, const int64 len);
 
-    int collectPacket(CPacket * packet);
+    int collectPacket(QPacket * packet);
 
     virtual int getNumberOfReceivedBytes();
 
@@ -82,9 +82,9 @@ protected:
 
     QMutex m_Mutex;
 
-    CPortIO* m_PortIo;
+    QPortIO* m_PortIo;
 
-    CProtocolPackFactory* m_Protocol;
+    QProtocolPackFactory* m_Protocol;
 
     rec_states_t m_RecState;
 

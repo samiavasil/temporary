@@ -4,11 +4,11 @@
 #include "global.h"
 //#include"base/CProtocolPackFactory.h"
 
-class Q_DECL_EXPORT CPacket {
+class Q_DECL_EXPORT QPacket {
   public:
-    CPacket(const pack_id_t packType, int packLenBit);
+    QPacket(const pack_id_t packType, int packLenBit);
 
-    virtual ~CPacket();
+    virtual ~QPacket();
 
     virtual int setData(const u8 * data);
 

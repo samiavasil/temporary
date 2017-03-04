@@ -4,11 +4,11 @@
 #include<QMultiMap>
 #include <QObject>
 
-class QloggerInterface_private:public QObject
+class QLoggerInterface_private:public QObject
 {
     Q_OBJECT
 public:
-    QloggerInterface_private( QObject* parent );
+    QLoggerInterface_private( QObject* parent );
 public slots:
     virtual void Log( const QString& data );
 signals:
@@ -35,9 +35,9 @@ public:
     virtual void Log( const QString& data );
 
 protected:
-    QloggerInterface_private* getObject();
+    QLoggerInterface_private* getObject();
 protected:
-    QloggerInterface_private* m_Object;
+    QLoggerInterface_private* m_Object;
     QLoggerInterface::LogId_t m_Id;
     bool m_enLog;
     friend class LogerTree;

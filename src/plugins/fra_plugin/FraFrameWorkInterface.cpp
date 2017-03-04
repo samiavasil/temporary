@@ -1,6 +1,6 @@
 #include "FraFrameWorkInterface.h"
 #include "QFraFrameWork.h"
-#include "qt/QFrameWorkElementsFactory.h"
+#include "qt/QTestFrameWorkElementsFactory.h"
 #include "QFraCreator.h"
 
 //#define ENABLE_VERBOSE_DUMP

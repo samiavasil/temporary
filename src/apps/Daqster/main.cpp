@@ -1,11 +1,11 @@
 #include <QApplication>
 #include "mainwindow.h"
 #include "qt/QCommandExecutor.h"
-#include "base/CPacket.h"
+#include "base/QPacket.h"
 #include "qt/QCommand.h"
 
 #include "qt/QFrameWork.h"
-#include "qt/QFrameWorkElementsFactory.h"
+#include "qt/QTestFrameWorkElementsFactory.h"
 #include<stdio.h>
 
 

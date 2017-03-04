@@ -3,7 +3,6 @@
 
 
 #include "base/global.h"
-#include "base/CProtocolPackFactory.h"
 #include <QList>
 
 #include <QMap>
@@ -12,36 +11,46 @@
 
 
 
-class CPacket;
-class CProtocolDb;
+class QPacket;
+class QProtocolDb;
 
-class FRAME_WORKSHARED_EXPORT QProtocolPackFactory : public CProtocolPackFactory, public QObject {
-  public:
-    QProtocolPackFactory(  CProtocolDb* protDb , QObject * parent = 0);
+class FRAME_WORKSHARED_EXPORT QProtocolPackFactory : public QObject {
+public:
+    QProtocolPackFactory(  QProtocolDb* protDb  = NULL, QObject * parent = 0);
 
     virtual ~QProtocolPackFactory();
 
     virtual int getPacketLenFromData(const u8 * data);
 
     virtual int findPacketStart(const u8 * data, int len);
+    virtual int getMaxPacketLen() const;
+    int  getProtocolHeaderLenBits() const;
+    QProtocolDb* getProtocolDb();
 
-  protected:
-  typedef struct{
-      msg_id_t  msgID;
-      int bitLen;
-      u8*     data; 
-  } msg_desc_t; 
+    int attachProtocolDb( QProtocolDb *pDB);
+    QPacket *createPacket(const pack_id_t packId);
+    QPacket *createPacketFromData(const u8 *data);
+    virtual int addPacketHeader(QPacket * packet);
+    virtual int addPacketPostFix(QPacket * packet);
+protected:
+    typedef struct{
+        msg_id_t  msgID;
+        int bitLen;
+        u8*     data;
+    } msg_desc_t;
 
-  protected:
+protected:
 
     virtual pack_id_t getPacketTypeFromData(const u8 * data);
 
-    virtual int checkPacketConsistency(CPacket * packet);
-
-    virtual int addPacketHeader(CPacket * packet);
-
-    virtual int addPacketPostFix(CPacket * packet);
+    virtual int checkPacketConsistency(QPacket * packet);
 
     int calCulateCrc8(const u8 * data, int numBits);
+protected:
+    QProtocolDb*      m_pDB;
+    int setPacketMessage(QPacket *packet, msg_id_t msgId, const u8 *data);
+    int getPacketMessage(QPacket *packet, msg_id_t msgId, u8 *retData);
+    int getPacketHeader(QPacket *packet, u8 *header);
+    int getPacketPostFix(QPacket *packet, u8 *retPostFix);
 };
 #endif

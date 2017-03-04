@@ -1,13 +1,13 @@
 #include "qt/QPacketCollector.h"
-#include "base/CPortIO.h"
-#include "base/CPacket.h"
-#include "base/CProtocolPackFactory.h"
+#include "base/QPacket.h"
+#include "qt/QProtocolPackFactory.h"
+#include "qt/QPortIO.h"
 
 #define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
 
-QPacketCollector::QPacketCollector(CPortIO * port, CProtocolPackFactory * protocol, QObject * parent):
+QPacketCollector::QPacketCollector(QPortIO * port, QProtocolPackFactory * protocol, QObject * parent):
     QObject(parent),m_Mutex(QMutex::Recursive) {
     DEBUG << "Create QPacketCollector";
     m_PortIo   = port;
@@ -31,11 +31,11 @@ bool QPacketCollector::isChained() {
   return m_PortIo && m_Protocol;
 }
 
-int QPacketCollector::setProtocolFactory( CProtocolPackFactory * protocol ){
+int QPacketCollector::setProtocolFactory( QProtocolPackFactory * protocol ){
     m_Protocol = protocol;
 }
 
-int QPacketCollector::setPort( CPortIO * port ){
+int QPacketCollector::setPort( QPortIO * port ){
     m_PortIo = port;
 }
 
@@ -76,7 +76,7 @@ int QPacketCollector::receiveBytes() {
                   case COL_WAIT_FOR_PACK:{
                       if(  BITS_TO_BYTES_CEIL(m_Protocol->getPacketLenFromData( getReceivedBytes() )) <=  getNumberOfReceivedBytes()  )
                       {
-                          CPacket* packet = m_Protocol->createPacketFromData( getReceivedBytes() );
+                          QPacket* packet = m_Protocol->createPacketFromData( getReceivedBytes() );
                           if( ( NULL == packet )||( NO_ERR != collectPacket( packet ) ) ){
                               /*Packet not correct or packet start isn't calculate corectly.
                          Remove only one byte and try to find packet start again. Someting as
@@ -109,7 +109,7 @@ int QPacketCollector::getRecPacket() {
   return 0;
 }
 
-int QPacketCollector::transmitPacket(CPacket * packet) {
+int QPacketCollector::transmitPacket(QPacket * packet) {
     int ret = WRONG_PARAMS;                                                     
   
     if( packet && isChained() ){
@@ -153,7 +153,7 @@ int QPacketCollector::appendReceivedBytes(const u8 * data, const int64 len) {
   return ret;                                     
 }
 
-int QPacketCollector::collectPacket(CPacket * packet) {
+int QPacketCollector::collectPacket(QPacket * packet) {
   int ret = NO_ERR;                                                                                          
   static int a;                                                                                              
   if( packet ){                                                                                              

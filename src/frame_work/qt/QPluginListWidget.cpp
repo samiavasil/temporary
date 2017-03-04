@@ -120,7 +120,7 @@ QPluginListWidget::QPluginListWidget( QWidget *parent, const QPluginFilter &filt
     setColumnCount( 7 );
     setSortingEnabled(false);
     connect(this,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(OnitemChanged(QTableWidgetItem*)) );
-   // connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );//TODO: 
+    // connect(this,SIGNAL( activated(QModelIndex)),this,SLOT(OnItemActivated(QModelIndex)) );//TODO:
     connect(this,SIGNAL( rereadPLuginList()),this,SLOT(reloadPLuginList()),Qt::QueuedConnection );
     for( int i=0; i<7; i++ ){
         labels.append(col_name[i]);
@@ -155,7 +155,6 @@ QPluginListWidget::~QPluginListWidget()
 
 void QPluginListWidget::reloadPLuginList(){
 
-
     int itemSel = -1;
     int i = 0;
     bool oldSelection = false;
@@ -179,9 +178,9 @@ void QPluginListWidget::reloadPLuginList(){
     showCol( VERSION_COLUMN    , m_ViewType.version());
     showCol( ENABLE_COLUMN     , m_ViewType.enable());
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        horizontalHeader()->setResizeMode( col, QHeaderView::Stretch );
+    horizontalHeader()->setResizeMode( col, QHeaderView::Stretch );
 #else
-        horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 #endif
     foreach( PluginDescription desc, plugins ){
 
@@ -343,15 +342,15 @@ void QPluginListWidget::showCol( int col, bool show ){
 void QPluginListWidget::connectNotify ( const char * signal ){
     const char* ptr = SIGNAL(enablePlugin(PluginDescription,bool));
     if( !strcmp( signal, ptr )  ){
-        m_ConnToCheck = 100;     
+        m_ConnToCheck = 100;
         QObject::connectNotify (signal);
         reloadPLuginList();
     }
 }
 #else
-    #include <QMetaMethod>
+#include <QMetaMethod>
 void QPluginListWidget::connectNotify (const QMetaMethod & signal){
-   // const char* ptr = SIGNAL(enablePlugin(PluginDescription,bool));
+    // const char* ptr = SIGNAL(enablePlugin(PluginDescription,bool));
     if( signal == QMetaMethod::fromSignal(&QPluginListWidget::enablePlugin)  ){
         m_ConnToCheck = 100;
         QObject::connectNotify (signal);

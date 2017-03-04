@@ -51,15 +51,9 @@ SOURCES += \
     qt/QPacketCollector.cpp \
     qt/QCommandExecutor.cpp \
     qt/QCommand.cpp \
-    base/CProtocolLoader.cpp \
-    base/CProtocolPackFactory.cpp \
     qt/QProtocolPackFactory.cpp \
     qt/QProtocolLoader.cpp \
-    base/CPacket.cpp \
     qt/QFrameWork.cpp \
-    base/CFrameWorkElementsFactory.cpp \
-    qt/QFrameWorkElementsFactory.cpp \
-    base/CPortIO.cpp \
     qt/QPluginLoaderExt.cpp \
     qt/QPluginList.cpp \
     qt/QPluginObjectsInterface.cpp \
@@ -67,34 +61,29 @@ SOURCES += \
     qt/QCreator.cpp \
     qt/PluginDescription.cpp \
     qt/qdbg.cpp \
-    qt/QloggerInterface.cpp \
     qt/QSerialPortIO.cpp \
-    base/CProtocolDb.cpp \
     qt/QProtocolDb.cpp \
     qt/QRegFactory.cpp \
     base/CRegFactory.cpp \
     qt/QPluginViewProperty.cpp \
     qt/QPluginListWidget.cpp \
     qt/QPluginSelectionView.cpp \
-    base/CDataPlot.cpp \
     qt/QPluginFactory.cpp \
-    qt/QPluginFilter.cpp
+    qt/QPluginFilter.cpp \
+    base/QPacket.cpp \
+    qt/QLoggerInterface.cpp \
+    qt/QTestFrameWorkElementsFactory.cpp \
+    base/QDataPlot.cpp
 
 HEADERS +=\
     qt/QPacketCollector.h \
     qt/QCommandExecutor.h \
     qt/QCommand.h \
     base/global.h \
-    base/CProtocolLoader.h \
-    base/CProtocolPackFactory.h \
     qt/QProtocolPackFactory.h \
     qt/QProtocolLoader.h \
     qt/ProtoGen.h \
-    base/CPacket.h \
     qt/QFrameWork.h \
-    base/CFrameWorkElementsFactory.h \
-    qt/QFrameWorkElementsFactory.h \
-    base/CPortIO.h \
     qt/QPluginLoaderExt.h \
     qt/QPluginList.h \
     qt/interfaces.h \
@@ -105,7 +94,6 @@ HEADERS +=\
     qt/qdbg.h \
     base/debug.h \
     qt/QSerialPortIO.h \
-    base/CProtocolDb.h \
     qt/QProtocolDb.h \
     qt/QRegFactory.h \
     base/CRegFactory.h \
@@ -115,7 +103,11 @@ HEADERS +=\
     qt/QPluginFactory.h \
     qt/QPluginFilter.h \
     qt/QLoggerInterface.h \
-    base/build_cfg.h
+    base/build_cfg.h \
+    base/QPacket.h \
+    qt/QTestFrameWorkElementsFactory.h \
+    base/QFrameWorkElementsFactory.h \
+    base/QDataPlot.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

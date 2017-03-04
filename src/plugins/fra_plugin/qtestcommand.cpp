@@ -1,6 +1,6 @@
 #include "qtestcommand.h"
 
-#include "base/CPacket.h"
+#include "base/QPacket.h"
 //#include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QProtocolLoader.h"
@@ -49,7 +49,7 @@ int QtestCommand::handler() {
 #endif
 
 
-  CPacket* packet = NULL;
+  QPacket* packet = NULL;
   DEBUG <<   tr("Bliak[%1]").arg(a);
   if( a >= 1 ){
       a = 0;

@@ -1,12 +1,12 @@
 #include "base/debug.h"
 #include "QLoggerInterface.h"
 
-QloggerInterface_private::QloggerInterface_private( QObject* parent ):QObject( parent )
+QLoggerInterface_private::QLoggerInterface_private( QObject* parent ):QObject( parent )
 {
 
 }
 
-void QloggerInterface_private::Log( const QString& data )
+void QLoggerInterface_private::Log( const QString& data )
 {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     WARNING << "        LogHop: " <<  data.toAscii().constData();
@@ -18,7 +18,7 @@ void QloggerInterface_private::Log( const QString& data )
 
 QLoggerInterface::QLoggerInterface( QLoggerInterface::LogId_t id  ):m_Id( id ),m_enLog(true)
 {
-    m_Object = new QloggerInterface_private( NULL );
+    m_Object = new QLoggerInterface_private( NULL );
     LogerTree::instance()->addToLoggerList( this );
     enableLog( m_enLog );
 }
@@ -65,7 +65,7 @@ void QLoggerInterface::enableLog( bool enb )
    getObject()->blockSignals( (!m_enLog) );
 }
 
-QloggerInterface_private *QLoggerInterface::getObject()
+QLoggerInterface_private *QLoggerInterface::getObject()
 {
     return m_Object;//TODO - fix me
 }

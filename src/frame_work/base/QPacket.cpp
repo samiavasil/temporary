@@ -1,10 +1,10 @@
-#include "base/CPacket.h"
+#include "base/QPacket.h"
 #include <string.h>
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"
 
-CPacket::CPacket(const pack_id_t packType, int packLenBit) {
+QPacket::QPacket(const pack_id_t packType, int packLenBit) {
   DEBUG << "Create Packet[" << packType << "] - Bit size = " << packLenBit;
   m_packType        = packType;                                                              
   m_packLenBits     = packLenBit;                                                            
@@ -19,14 +19,14 @@ CPacket::CPacket(const pack_id_t packType, int packLenBit) {
   }
 }
 
-CPacket::~CPacket() {
+QPacket::~QPacket() {
     DEBUG << "Destroy Packet[" << m_packType << "]";
   if( m_data ){        
       delete [] m_data;
   }                    
 }
 
-int CPacket::setData(const u8 * data) {
+int QPacket::setData(const u8 * data) {
   int ret = NO_ERR;                                                
   if( data )                                                       
   {                                                                
@@ -38,23 +38,23 @@ int CPacket::setData(const u8 * data) {
   return ret;                                                      
 }
 
-const u8* CPacket::data() const {
+const u8* QPacket::data() const {
   return m_data;
 }
 
-int CPacket::packLenBits() const {
+int QPacket::packLenBits() const {
   return m_packLenBits;
 }
 
-int CPacket::packLenBytes() const {
+int QPacket::packLenBytes() const {
   return BITS_TO_BYTES_CEIL(m_packLenBits);
 }
 
-pack_id_t CPacket::packType() {
+pack_id_t QPacket::packType() {
   return m_packType;
 }
 
-int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
+int QPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
   int ret = NO_ERR;
 
   int ctr = bit_num;
@@ -119,7 +119,7 @@ int CPacket::setBits(int bit_offset, int bit_num, const u8 * data) {
   return ret;                                                                       
 }
 
-int CPacket::getBits(int bit_offset, int bit_num, u8 * res_data) {
+int QPacket::getBits(int bit_offset, int bit_num, u8 * res_data) {
   int ret = NO_ERR;                                                                               
   int byte_offset    = bit_offset/8;                                                              
   int offset_in_byte = bit_offset%8;                                                              
