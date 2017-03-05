@@ -1,7 +1,7 @@
 
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QProtocolDb.h"
-#include "base/QPacket.h"
+#include "qt/QPacket.h"
 
 //#define ENABLE_VERBOSE_DUMP
 #include "base/debug.h"

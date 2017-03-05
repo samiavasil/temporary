@@ -1,5 +1,5 @@
 
-#include "base/QDataPlot.h"
+#include "QDataPlot.h"
 
 QDataPlot::~QDataPlot() {
 }

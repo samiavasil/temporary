@@ -2,7 +2,7 @@
 #define _QTEST_FRAMEWORKELEMENTSFACTORY_H
 
 
-#include "base/QFrameWorkElementsFactory.h"
+#include "qt/QFrameWorkElementsFactory.h"
 #include<QList>
 
 class QCommandExecutor;

@@ -1,6 +1,6 @@
 #include "qtestcommand.h"
 
-#include "base/QPacket.h"
+#include "qt/QPacket.h"
 //#include "base/CPacketCollector.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QProtocolLoader.h"

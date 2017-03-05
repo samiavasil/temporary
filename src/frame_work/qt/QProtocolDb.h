@@ -17,6 +17,7 @@ class QProtocolLoader;
 class FRAME_WORKSHARED_EXPORT QProtocolDb
 {
 public:
+    virtual ~QProtocolDb(){}
     virtual int addPacket(const pack_id_t id);
 
     virtual int isTherePacketId(const pack_id_t id);

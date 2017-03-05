@@ -4,7 +4,7 @@
 #include "qt/QPacketCollector.h"
 #include "qt/QProtocolLoader.h"
 #include "qt/QSerialPortIO.h"
-#include "base/QDataPlot.h"
+#include "qt/QDataPlot.h"
 
 
 

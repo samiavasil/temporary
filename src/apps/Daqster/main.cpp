@@ -1,7 +1,7 @@
 #include <QApplication>
 #include "mainwindow.h"
 #include "qt/QCommandExecutor.h"
-#include "base/QPacket.h"
+#include "qt/QPacket.h"
 #include "qt/QCommand.h"
 
 #include "qt/QFrameWork.h"

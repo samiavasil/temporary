@@ -48,6 +48,7 @@ QEXTSERIALPORT_STATIC = yes
 #QEXTSERIALPORT_WITH_UDEV = yes
 
 SOURCES += \
+    base/CRegFactory.cpp \
     qt/QPacketCollector.cpp \
     qt/QCommandExecutor.cpp \
     qt/QCommand.cpp \
@@ -64,22 +65,24 @@ SOURCES += \
     qt/QSerialPortIO.cpp \
     qt/QProtocolDb.cpp \
     qt/QRegFactory.cpp \
-    base/CRegFactory.cpp \
     qt/QPluginViewProperty.cpp \
     qt/QPluginListWidget.cpp \
     qt/QPluginSelectionView.cpp \
     qt/QPluginFactory.cpp \
     qt/QPluginFilter.cpp \
-    base/QPacket.cpp \
     qt/QLoggerInterface.cpp \
     qt/QTestFrameWorkElementsFactory.cpp \
-    base/QDataPlot.cpp
+    qt/QDataPlot.cpp \
+    qt/QPacket.cpp
 
 HEADERS +=\
+    base/global.h \
+    base/debug.h \
+    base/CRegFactory.h \
+    base/build_cfg.h \
     qt/QPacketCollector.h \
     qt/QCommandExecutor.h \
     qt/QCommand.h \
-    base/global.h \
     qt/QProtocolPackFactory.h \
     qt/QProtocolLoader.h \
     qt/ProtoGen.h \
@@ -92,22 +95,19 @@ HEADERS +=\
     qt/QCreator.h \
     qt/PluginDescription.h \
     qt/qdbg.h \
-    base/debug.h \
     qt/QSerialPortIO.h \
     qt/QProtocolDb.h \
     qt/QRegFactory.h \
-    base/CRegFactory.h \
     qt/QPluginViewProperty.h \
     qt/QPluginListWidget.h \
     qt/QPluginSelectionView.h \
     qt/QPluginFactory.h \
     qt/QPluginFilter.h \
     qt/QLoggerInterface.h \
-    base/build_cfg.h \
-    base/QPacket.h \
     qt/QTestFrameWorkElementsFactory.h \
-    base/QFrameWorkElementsFactory.h \
-    base/QDataPlot.h
+    qt/QDataPlot.h \
+    qt/QFrameWorkElementsFactory.h \
+    qt/QPacket.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN

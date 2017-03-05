@@ -1,5 +1,5 @@
 #include "qt/QPacketCollector.h"
-#include "base/QPacket.h"
+#include "qt/QPacket.h"
 #include "qt/QProtocolPackFactory.h"
 #include "qt/QPortIO.h"
 
@@ -33,10 +33,12 @@ bool QPacketCollector::isChained() {
 
 int QPacketCollector::setProtocolFactory( QProtocolPackFactory * protocol ){
     m_Protocol = protocol;
+    return 0;//TODO: TBD
 }
 
 int QPacketCollector::setPort( QPortIO * port ){
     m_PortIo = port;
+    return 0;//TODO: TBD
 }
 
 int QPacketCollector::receiveBytes() {

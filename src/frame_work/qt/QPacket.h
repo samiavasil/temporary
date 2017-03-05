@@ -1,7 +1,7 @@
 #ifndef _CPACKET_H
 #define _CPACKET_H
 
-#include "global.h"
+#include "base/global.h"
 //#include"base/CProtocolPackFactory.h"
 
 class Q_DECL_EXPORT QPacket {
