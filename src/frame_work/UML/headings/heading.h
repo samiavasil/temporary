@@ -15,5 +15,5 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library
 General Public Licence for more details.
 
-Initial version of this file was generated on %date% at %time%
+Initial version of this file was created on %date% at %time%
 **************************************************************************/

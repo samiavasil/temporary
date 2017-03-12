@@ -1,5 +1,5 @@
 /************************************************************************
-                        %filename% - Copyright %author%
+                        Daqster/QBasePluginObject.cpp.cpp - Copyright vvasilev
 Daqster software
 Copyright (C) 2016, Vasil Vasilev,  Bulgaria
 
@@ -15,5 +15,21 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library
 General Public Licence for more details.
 
-Initial version of this file was created on %date% at %time%
+Initial version of this file was created on нд март 12 2017 at 20:54:50
 **************************************************************************/
+
+#include "QBasePluginObject.h"
+
+namespace Daqster {
+// Constructors/Destructors
+//  
+
+QBasePluginObject::QBasePluginObject (QObject *Parent):QObject( Parent ) {
+    m_InterfaceObject = NULL;
+}
+
+QBasePluginObject::~QBasePluginObject () {
+
+}
+
+}
